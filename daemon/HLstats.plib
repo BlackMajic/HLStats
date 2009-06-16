@@ -1,0 +1,403 @@
+#
+# $Id: HLstats.plib 620 2008-11-02 16:46:18Z jumpin_banana $
+# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/daemon/HLstats.plib $
+#
+# Original development:
+# +
+# + HLstats - Real-time player and clan rankings and statistics for Half-Life
+# + http://sourceforge.net/projects/hlstats/
+# +
+# + Copyright (C) 2001  Simon Garner
+# +
+#
+# Additional development:
+# +
+# + UA HLstats Team
+# + http://www.unitedadmins.com
+# + 2004 - 2007
+# +
+#
+#
+# Current development:
+# +
+# + Johannes 'Banana' Keßler
+# + http://hlstats.sourceforge.net
+# + 2007 - 2008
+# +
+#
+# HLstats - Real-time player and clan rankings and statistics for Half-Life
+# http://sourceforge.net/projects/hlstats/
+#
+# Copyright (C) 2001  Simon Garner
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License
+# as published by the Free Software Foundation; either version 2
+# of the License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+#
+
+
+# HLstats release version number
+
+$VERSION = "1.40";
+$g_version = $VERSION;
+
+%PATTERNS = ();
+%NAMES    = ();
+
+##
+## Common Functions
+##
+
+#
+# void error (string errormsg)
+#
+# Dies, and optionally mails error messages to $g_mailto.
+#
+
+sub error
+{
+	my $errormsg = $_[0];
+
+	if ($g_mailto && $g_mailpath)
+	{
+		system("echo \"$errormsg\" | $g_mailpath -s \"HLstats crashed `date`\" $g_mailto");
+	}
+
+	die("$errormsg\n");
+}
+
+
+#
+# string quoteSQL (string varQuote)
+#
+# Escapes all quote characters in a variable, making it suitable for use in an
+# SQL query. Returns the escaped version.
+#
+
+sub quoteSQL
+{
+	my $varQuote = $_[0];
+
+	$varQuote =~ s/\\/\\\\/g;	# replace \ with \\
+	$varQuote =~ s/'/\\'/g;		# replace ' with \'
+
+	return $varQuote;
+}
+
+
+#
+# result doQuery (string query)
+#
+# Executes the SQL query 'query' and returns the result identifier.
+#
+
+sub doQuery
+{
+	my ($query, $callref) = @_;
+
+	# fix for "mysql Server has gone away"
+	$db_conn ||= DBI->connect("DBI:mysql:$db_name:$db_host",$db_user, $db_pass)
+				or error("Unable to connect to MySQL server");
+
+	my $result = $db_conn->prepare($query)
+		or error("Unable to prepare query:\n$query\n$DBI::errstr\n$callref");
+	$result->execute
+		or error("Unable to execute query:\n$query\n$DBI::errstr\n$callref");
+
+	return $result;
+}
+
+
+#
+# string resolveIp (string ip, boolean quiet)
+#
+# Do a DNS reverse-lookup on an IP address and return the hostname, or empty
+# string on error.
+#
+
+sub resolveIp
+{
+	my ($ip, $quiet) = @_;
+	my ($host) = "";
+
+	unless ($g_dns_resolveip)
+	{
+		return "";
+	}
+
+	print "-- Resolving hostname (timeout $g_dns_timeout sec) for IP \"$ip\" ... "  if ($g_debug > 0 && !$quiet);
+
+	eval
+	{
+		$SIG{ALRM} = sub { die "DNS Timeout\n" };
+		alarm $g_dns_timeout;	# timeout after $g_dns_timeout sec
+		$host = gethostbyaddr(inet_aton($ip), AF_INET);
+		alarm 0;
+	};
+
+	if ($@)
+	{
+		my $error = $@;
+		chomp($error);
+
+		print "Error: $error ($host) ... "  if ($g_debug > 0 && !$quiet);
+		$host = "";		# some error occurred
+	}
+	elsif (!defined($host))
+	{
+		print "(No Host) ... "  if ($g_debug > 0 && !$quiet);
+		$host = "";		# ip did not resolve to any host
+	}
+
+	$host = lc($host);	# lowercase
+
+	print "\"$host\"\n"  if ($g_debug > 0 && !$quiet);
+
+	chomp($host);
+	return $host;
+}
+
+
+#
+# object queryHostGroups ()
+#
+# Returns result identifier.
+#
+
+sub queryHostGroups
+{
+	return &doQuery("
+		SELECT
+			pattern,
+			name,
+			LENGTH(pattern) AS patternlength
+		FROM
+			${db_prefix}_HostGroups
+		ORDER BY
+			patternlength DESC,
+			pattern ASC
+	");
+}
+
+
+#
+# string getHostGroup (string hostname[, object result])
+#
+# Return host group name if any match, or last 2 or 3 parts of hostname.
+#
+
+sub getHostGroup
+{
+	my ($hostname, $result) = @_;
+	my $hostgroup = "";
+
+	# User can define special named hostgroups in hlstats_HostGroups, i.e.
+	# '.adsl.someisp.net' => 'SomeISP ADSL'
+
+	unless (%PATTERNS)
+	{
+		$result = &queryHostGroups()  unless ($result);
+		$result->execute();
+
+		my $pid = 0;
+		while (my($pattern, $name) = $result->fetchrow_array())
+		{
+			$PATTERNS{$pid} = $pattern;
+			$NAMES{$pid} = $name;
+			$pid++;
+		}
+	}
+	foreach $pid (keys %PATTERNS)
+ 	{
+		$pattern =~ s/\\\*/[^.]*/g;	# allow basic shell-style globbing in pattern
+		# If is unresolved then check at the beginning...
+		if ($hostname =~ /$pattern$/)
+		{
+			$hostgroup = $name;
+			last;
+		}
+		if (($hostname =~ /^([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)$/) && ($hostname =~ /^$pattern/))
+		{
+			$hostgroup = $name;
+			last;
+		}
+	}
+
+	if ((!$hostgroup) && ($hostname !~ /^([0-9]+\.[0-9]+\.[0-9]+\.[0-9]+)$/))
+	{
+		#
+		# Group by last 2 or 3 parts of hostname, i.e. 'max1.xyz.someisp.net' as
+		# 'someisp.net', and 'max1.xyz.someisp.net.nz' as 'someisp.net.nz'.
+		# Unfortunately some countries do not have categorical SLDs, so this
+		# becomes more complicated. The dom_nosld array below contains a list of
+		# known country codes that do not use categorical second level domains.
+		# If a country uses SLDs and is not listed below, then it will be
+		# incorrectly grouped, i.e. 'max1.xyz.someisp.yz' will become
+		# 'xyz.someisp.yz', instead of just 'someisp.yz'.
+		#
+		# Please mail sgarner@hlstats.org with any additions.
+		#
+
+		my @dom_nosld = (
+			"ca", # Canada
+			"ch", # Switzerland
+			"be", # Belgium
+			"de", # Germany
+			"ee", # Estonia
+			"es", # Spain
+			"fi", # Finland
+			"fr", # France
+			"ie", # Ireland
+			"nl", # Netherlands
+			"no", # Norway
+			"ru", # Russia
+			"se", # Sweden
+			"net", # network
+			"org", #
+			"at", # Austria
+			"ch", # Switzerland
+			"us", # USA
+			"li", # lichtenstein
+			"uk", # GB
+			"dk", # denmark
+			"cn", # China
+			"pl", # Polen
+
+		);
+
+		my $dom_nosld = join("|", @dom_nosld);
+
+		if ($hostname =~ /([\w-]+\.(?:$dom_nosld|\w\w\w))$/)
+		{
+			$hostgroup = $1;
+		}
+		elsif ($hostname =~ /([\w-]+\.[\w-]+\.\w\w)$/)
+		{
+			$hostgroup = $1;
+		}
+		else
+		{
+			$hostgroup = $hostname;
+		}
+	}
+
+	return $hostgroup;
+}
+
+
+#
+# void doConf (object conf, hash directives)
+#
+# Walk through configuration directives, setting values of global variables.
+#
+
+sub doConf
+{
+	my ($conf, %directives) = @_;
+
+	while (($directive, $variable) = each(%directives))
+	{
+		my ($value) = $conf->get($directive);
+
+		if (defined($value))
+		{
+			$$variable = $value;
+		}
+	}
+}
+
+
+#
+# string rcon (string command[, string server_ip[, string server_port]])
+#
+# Executes the given command via Rcon.
+#
+
+sub rcon
+{
+	my ($command, $server_ip, $server_port) = @_;
+
+	return 0  unless ($g_rcon);
+
+	$server_ip   = $s_peerhost  unless ($server_ip);
+	$server_port = $s_peerport  unless ($server_port);
+	my ($server_type) = "new"; # Default to HL1 rcon
+
+	my $result = &doQuery("
+		SELECT
+			${db_prefix}_Servers.rcon_password,
+			${db_prefix}_Games.source AS source
+		FROM
+			${db_prefix}_Servers
+		LEFT JOIN ${db_prefix}_Games ON
+			${db_prefix}_Games.code = ${db_prefix}_Servers.game
+		WHERE
+			${db_prefix}_Servers.address='$server_ip'
+		AND
+			${db_prefix}_Servers.port='$server_port'
+	");
+	my ($password, $source) = $result->fetchrow_array();
+	$result->finish;
+
+	$server_type = "source" if ($source);
+
+	if ($password)
+	{
+		&printNotice("Doing rcon: $server_ip:$server_port, \"$password\", \"$command\"");
+		my $rcon;
+		$rcon = new KKrcon(
+			Password=>$password,
+			Host=>$server_ip,
+			Port=>$server_port,
+			Type=>$server_type
+		);
+
+		my $result = $rcon->execute($command);
+
+		if (my $error = $rcon->error())
+		{
+			&printNotice("Rcon error: $error");
+		}
+	}
+	else
+	{
+		return "";
+	}
+}
+
+
+
+#
+# string abbreviate (string thestring[, int maxlength)
+#
+# Returns thestring abbreviated to maxlength-3 characters plus "...", unless
+# thestring is shorter than maxlength.
+#
+
+sub abbreviate
+{
+	my ($thestring, $maxlength) = @_;
+
+	$maxlength = 12  unless ($maxlength);
+
+	if (length($thestring) > $maxlength)
+	{
+		$thestring = substr($thestring, 0, $maxlength - 3);
+		return "$thestring...";
+	}
+	else
+	{
+		return $thestring;
+	}
+}
+
+1;
