@@ -1,7 +1,38 @@
-HLstats ChangeLog
+HLStats ChangeLog
 ==============
 
-1.40 (2008-11-11)
+1.50 (18-06-2009)
+*) New: EloRating system. Can be activated and used sperate it along with the existing (thx to HampusW)
+*) New: EloRatung system: Level of verbose output can now be configured in hlstats conf
+*) New: Beta gamesupport for L4D
+*) New: Beta support for Zombie Panic
+*) New: IngamePoints option in hlstats.conf allows to de/active the skill report at kill/frag (thx to  Schlesie)
+*) New: At server configuration you can enter the default map. This map is used
+		if HLStats is unable to determine the map.
+*) New: /skill and /pskill now reports the KpD too. (Feature request: 2556961 )
+*) New: sm_psay for a private say command with sourceMod (thx to unkraut)
+*) New: a not to the installer, to activate cookies
+*) New: more map pics
+*) New: rcon say improvements and fixes in the rcon in EloRatingSystem
+*) Fixed: there were still some php short tags in some scripts (thx to psychonic and enemy)
+*) Fixed: Missing semicolon on hlstats-resolv.pl (thx to  freaker)
+*) Fixed: Missing & at the hlstats.sh script (thx to Shakal)
+*) Fixed: Possible error in query (sig.php) and include path(xml.php) (thx to Andre86)
+*) Fixed: Error for connects flash as no player data was in events table
+*) Fixed: tf2 gamesupport file
+*) Fixed: Error at player info page
+*) Changed: Improvements to the flash charts
+*) Changed: SQl Improvements to the database and queries which speeds at large amount of data
+*) Changed: hlstats.pl prints only info with -d
+*) Changed: hls_skill and hls_pskill are now skill and pskill
+*) Changed: Improved support for utf-8
+*) Changed: Improved base sql file. WARNING it will only work with mysql 4.1.x and newer
+*) Changed: DB Error shows only error and no user information
+*) Changed: Simplified the db class, since we only support mysql
+*) Changed: cleaned code base and now using PHP 5
+*) Changed: Improved Insurgency game support
+
+1.40 (11-11-2008)
 *) Fixed: Edit Clan details, no id given ( ticket:  2166174)
 *) Fixed: Rcon shown up in live stats ( ticket: 2166174 and 2180315)
 *) Fixed: TF2 SQl cleanup ( ticket: 2190031 )
@@ -11,7 +42,7 @@ HLstats ChangeLog
 *) Changed: Live stats works again but only with limited features ( ticket: 2182620,2190025,2206898)
 *) Updated: Some new weapon pics
 	1.40beta2 (2008-10-31)
-*) Changed: Reduced Live stats inforamtion since valve steam update
+*) Changed: Reduced Live stats information since valve steam update
 *) Changed: Improved support files (thx psychonic)
 *) Changed: Speedup for live stats (thx SLAiNTRAX)
 *) Fixed: bugs since 1.40beta
