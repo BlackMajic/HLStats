@@ -86,6 +86,7 @@ RconRecord 1
 #				"say" => ordinary say command (default)
 #				"admin_psay" => return a private say adminMod
 #				"amx_psay" => return a private say with amxMod
+#				"sm_psay" => return a private say with sourceMod
 RconSay "say"
 
 ##
@@ -162,3 +163,23 @@ PatchLoopbackIP 0
 #			This is conected with the DeleteDays setting. So the chat messages
 #			will be only hold in the DB for the DeleteDays value.
 LogChat 0
+
+# IngamePoints - Show ingame stat report if you kill / or be killed
+# 				The response is done via rcon and the option RconSay
+# 				from above is used
+# 				default 0=off 1=on
+IngamePoints 0
+
+# IgnoreBots - Completly ignore anything which has BOT
+# 				default 0=off 1=on
+IgnoreBots 0
+
+# the Elo rating system
+# developed by HampusW
+# 			here you can decide if you want to use this system
+#			IMPORTANT: Must match the value of EloRating in hlstats.conf !!
+#			Possible values are
+#			1) "0"		- Off. Do not use the ratins system at all.
+#			2) "1"		- Use the system and display it with the ordinary system
+#			3) "2"		- Only use the EloRating and show only the new one.
+EloRating "0"

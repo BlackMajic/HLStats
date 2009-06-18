@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: actioninfo.inc.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/actioninfo.inc.php $
+ * $Id: actioninfo.inc.php 635 2008-11-24 11:10:00Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/actioninfo.inc.php $
  *
  * Original development:
  * +
@@ -158,6 +158,6 @@ list($numitems, $totalact) = $db->fetch_row($resultCount);
 	<td width="50%" align="right"><?php echo $g_options["font_normal"]; ?>Back to <a href="<?php echo $g_options["scripturl"] . "?mode=actions&amp;game=$game"; ?>">Action Statistics</a><?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
 </table><p>
-<?
+<?php
 	$table->draw($result, $numitems, 90, "center");
 ?>

@@ -101,3 +101,4 @@ INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'css','ump45','H&K UMP45',
 INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'css','sg550','Sig SG-550 Sniper',1.70);
 INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'css','famas','Fusil Automatique',1.00);
 INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'css','galil','Galil',1.00);
+INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'css','PROP_PHYSICS','Rare Physics kill',10.00);

@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: binary_funcs.inc.php 501 2008-06-16 13:54:53Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/binary_funcs.inc.php $
+ * $Id: binary_funcs.inc.php 665 2009-02-27 11:34:48Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/binary_funcs.inc.php $
  *
  * Original development:
  * +
@@ -51,9 +51,10 @@
 function GetInt8($data, &$datastart)
 {
 	$temp = '';
-	$temp = ord($data{$datastart});
-	$datastart += 1;
-
+	if(isset($data{$datastart})) {
+		$temp = ord($data{$datastart});
+		$datastart += 1;
+	}
 	return $temp;
 }
 
@@ -87,13 +88,15 @@ function GetInt32($data, &$datastart)
 }
 
 // Null-Terminated String
-function GetString($data, &$datastart)
-{
+function GetString($data, &$datastart) 	{
 	$temp = '';
 	$counter = 0;
-	while (ord($data[$datastart+$counter++]) != 0)
-		$temp .= $data[$datastart+$counter-1];
-	$datastart += strlen($temp) + 1;
+	if(isset($data[$datastart])) {
+		while (ord($data[$datastart+$counter++])) {
+			$temp .= $data[$datastart+$counter-1];
+		}
+		$datastart += strlen($temp) + 1;
+	}
 
 	return $temp;
 }

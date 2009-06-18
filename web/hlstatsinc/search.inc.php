@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: search.inc.php 438 2008-04-09 12:26:43Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/search.inc.php $
+ * $Id: search.inc.php 653 2009-02-19 13:31:00Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/search.inc.php $
  *
  * Original development:
  * +
@@ -51,14 +51,28 @@
 		array("Search"=>"")
 	);
 
-	$sr_query = strval($_GET["q"]);
-	$sr_type  = strval($_GET["st"])
-		or "player";
-	$sr_game  = strval($_GET["game"]);
+	$sr_query = '';
+	$sr_type = 'player';
+	$sr_game = '';
+
+	if(!empty($_GET["q"])) {
+		$sr_query = sanitize($_GET["q"]);
+	}
+
+	if(!empty($_GET["q"])) {
+		if(validateInput($_GET["st"],'nospace') === true) {
+			$sr_type = $_GET["st"];
+		}
+	}
+
+	if(!empty($_GET["game"])) {
+		if(validateInput($_GET["game"],'nospace') === true) {
+			$sr_game = $_GET["game"];
+		}
+	}
 
 	$search = new Search($sr_query, $sr_type, $sr_game);
 
 	$search->drawForm(array("mode"=>"search"));
 	if ($sr_query || $sr_query == "0") $search->drawResults();
 ?>
-

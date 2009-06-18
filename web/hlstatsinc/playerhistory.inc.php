@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: playerhistory.inc.php 625 2008-11-11 10:01:09Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/playerhistory.inc.php $
+ * $Id: playerhistory.inc.php 653 2009-02-19 13:31:00Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/playerhistory.inc.php $
  *
  * Original development:
  * +
@@ -43,8 +43,15 @@
 
 	// Player History
 
-	$player = intval($_GET["player"])
-		or error("No player ID specified.");
+	$player = '';
+	if(!empty($_GET["player"])) {
+		if(validateInput($_GET["player"],'digit') === true) {
+			$player = $_GET["player"];
+		}
+		else {
+			error("No player ID specified.");
+		}
+	}
 
 	$db->query("
 		SELECT
@@ -90,7 +97,7 @@
 			"Player Details"=>$g_options["scripturl"] . "?mode=playerinfo&amp;player=$player",
 			"Event History"=>""
 		),
-		$playername
+		$pl_name
 	);
 
 	flush();

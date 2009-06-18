@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 #
 # $Id: hlstats-awards.pl 551 2008-08-24 13:01:34Z jumpin_banana $
-# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/daemon/hlstats-awards.pl $
+# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/daemon/hlstats-awards.pl $
 #
 # Original development:
 # +

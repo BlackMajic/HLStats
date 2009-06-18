@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: header.inc.php 438 2008-04-09 12:26:43Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/header.inc.php $
+ * $Id: header.inc.php 675 2009-03-03 21:09:45Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/header.inc.php $
  *
  * Original development:
  * +
@@ -50,11 +50,10 @@
 	 */
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-
 <html>
 <head>
-	<meta http-equiv='Content-Type' content='text/html; charset=utf-8'>
-	<title>HLstats
+	<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
+	<title>HLStats
 	  <?php
 		foreach ($title as $t) {
 			echo " - $t";

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: settings.xml 440 2008-04-09 12:34:54Z jumpin_banana $ -->
-<!-- $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/amcharts/line/settings.xml $ -->
+<!-- $Id: settings.xml 670 2009-03-03 07:33:06Z jumpin_banana $ -->
+<!-- $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/amcharts/line/settings.xml $ -->
 
 <!-- Value between [] brackets, for example [#FFFFFF] shows default value which is used if this parameter is not set -->
 <!-- This means, that if you are happy with this value, you can delete this line at all and reduce file size -->
@@ -21,7 +21,7 @@
   <reload_data_interval></reload_data_interval>               <!-- [0] (Number) how often data should be reloaded (time in seconds) If you are using this feature I strongly recommend to turn off zoom function (set <zoomable>false</zoomable>) -->
   <preloader_on_reload></preloader_on_reload>                 <!-- [false] (true / false) Whether to show preloaded when data or settings are reloaded -->
   <add_time_stamp></add_time_stamp>                           <!-- [false] (true / false) if true, a unique number will be added every time flash loads data. Mainly this feature is useful if you set reload _data_interval >0 -->
-  <precision></precision>                                     <!-- [2] (Number) shows how many numbers should be shown after comma for calculated values (percents, used only in stacked charts) -->
+  <precision>0</precision>                                     <!-- [2] (Number) shows how many numbers should be shown after comma for calculated values (percents, used only in stacked charts) -->
   <connect></connect>                                         <!-- [false] (true / false) whether to connect points if y data is missing -->
   <hide_bullets_count></hide_bullets_count>                   <!-- [] (Number) if there are more then hideBulletsCount points on the screen, bullets can be hidden, to avoid mess. Leave empty, or 0 to show bullets all the time. This rule doesn't influence if custom bullet is defined near y value, in data file -->
   <link_target></link_target>                                 <!-- [] (_blank, _top ...) -->
@@ -99,7 +99,7 @@
       <inside></inside>                                       <!-- [false] (true / false) if set to true, axis values will be displayed inside plot area. This setting will not work for values rotated by 1-89 degrees (0 and 90 only) -->
     </x>
     <y_left>                                                  <!-- y left axis -->
-      <enabled></enabled>                                     <!-- [true] (true / false) -->
+      <enabled>true</enabled>                                     <!-- [true] (true / false) -->
       <reverse></reverse>                                     <!-- [false] (true / false) whether to reverse this axis values or not. If set to true, values will start from biggest number and will end with a smallest number -->
       <rotate></rotate>                                       <!-- [0] (0 - 90) angle of rotation. If you want to rotate by degree from 1 to 89, you must have font.swf file in fonts folder -->
       <min></min>                                             <!-- [] (Number) minimum value of this axis. If empty, this value will be calculated automatically. -->
@@ -112,7 +112,7 @@
       <text_size></text_size>                                 <!-- [text_size] (Number) -->
       <unit></unit>                                           <!-- [] (text) unit which will be added to values on y axis-->
       <unit_position></unit_position>                         <!-- [right] (left / right) -->
-      <integers_only></integers_only>                         <!-- [false] (true / false) if set to true, values with decimals will be omitted -->
+      <integers_only>true</integers_only>                         <!-- [false] (true / false) if set to true, values with decimals will be omitted -->
       <inside></inside>                                       <!-- [false] (true / false) if set to true, axis values will be displayed inside plot area. This setting will not work for values rotated by 1-89 degrees (0 and 90 only) -->
     </y_left>
     <y_right>                                                 <!-- y right axis -->

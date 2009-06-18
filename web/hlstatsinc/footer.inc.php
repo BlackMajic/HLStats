@@ -1,7 +1,7 @@
 <?php
 /**
  * $Id: footer.inc.php 438 2008-04-09 12:26:43Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/footer.inc.php $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/footer.inc.php $
  *
  * Original development:
  * +

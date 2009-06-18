@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: hlquery_funcs.inc.php 618 2008-10-31 10:53:41Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/hlquery_funcs.inc.php $
+ * $Id: hlquery_funcs.inc.php 658 2009-02-20 15:16:03Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/hlquery_funcs.inc.php $
  *
  * Original development:
  * +
@@ -96,8 +96,8 @@ function GetServerData($command, $ip, $port) {
 			}
 			while ($data_status['unread_bytes']);
 
-			if (GetInt8($data, $tmp = 0) == 254)
-			{
+			$tmp = 0;
+			if (GetInt8($data, $tmp) == 254) {
 				# We have a split packet!
 				$datacounter = 0;
 
@@ -264,16 +264,15 @@ function Source_A2S_Info ($ip, $port)
 		return Decode_HL1_Info_Packet($serverdata);
 }
 
-function Source_A2S_Player ($ip, $port, $challenge)
-{
+function Source_A2S_Player ($ip, $port, $challenge) {
 	$cmd = "\xFF\xFF\xFF\xFF\x55".pack('l', $challenge);
 	if(!$serverdata = GetServerData($cmd, $ip, $port))
 		return array();
 
 	GetInt32($serverdata, $datastart);
-	$type = GetInt8($packet, $datastart);
-	if ($type == 65)
-	{
+	//$type = GetInt8($packet, $datastart);
+	$type = GetInt8($serverdata, $datastart);
+	if ($type == 65) {
 		$challenge = Decode_Challenge_Packet($serverdata, $datastart);
 		return Source_A2S_Player($ip, $port, $challenge);
 	}

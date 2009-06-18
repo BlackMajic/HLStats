@@ -1,7 +1,7 @@
 <?php
 /**
  * $Id: plugins.inc.php 556 2008-08-28 11:49:01Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/admintasks/plugins.inc.php $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admintasks/plugins.inc.php $
  *
  * Original development:
  * +

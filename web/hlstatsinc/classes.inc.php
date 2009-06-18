@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: classes.inc.php 438 2008-04-09 12:26:43Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/classes.inc.php $
+ * $Id: classes.inc.php 653 2009-02-19 13:31:00Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/classes.inc.php $
  *
  * Original development:
  * +
@@ -84,9 +84,9 @@ class Table
 		$this->sorthash = $sorthash;
 		$this->sort_default_order = $sort_default_order;
 
-		$this->page = intval($_GET[$var_page]);
-		$this->sort = sanitize($_GET[$var_sort]);
-		$this->sortorder = sanitize($_GET[$var_sortorder]);
+		if(!empty($_GET[$var_page])) $this->page = intval($_GET[$var_page]);
+		if(!empty($_GET[$var_sort])) $this->sort = sanitize($_GET[$var_sort]);
+		if(!empty($_GET[$var_sortorder])) $this->sortorder = sanitize($_GET[$var_sortorder]);
 
 
 		if ($this->page < 1) $this->page = 1;
@@ -218,6 +218,9 @@ class Table
 
 				if($col->name == "skill") {
 					// check if we have a top or flop
+					if(empty($rowdata['oldSkill'])) {
+						$rowdata['oldSkill'] = $rowdata['skill'];
+					}
 					if($rowdata['skill'] > $rowdata['oldSkill']) {
 						$cellbody .= "<img src=\"" . $g_options["imgdir"]
 						. "/skill_up.gif\" width='16' height='16' hspace='4' "
@@ -260,7 +263,7 @@ class Table
 						// check if image exists
 						if ($image)
 						{
-							$cellbody .= "<img src=\"" . $image["url"] . "\" " . $image["size"] . " border='0' alt=\"" . strToUpper($colval) . "\">";
+							$cellbody .= "<img src=\"" . $image["url"] . "\" " . $image["size"] . " border='0' title='".strToUpper($colval)."' alt=\"" . strToUpper($colval) . "\">";
 						}
 						else
 						{
@@ -322,13 +325,12 @@ class Table
 						break;
 				}
 
-				if ($col->link)
+				if (!empty($col->link))
 				{
 					$cellbody .= "</a>";
 				}
 
-				if ($col->append)
-				{
+				if (!empty($col->append)) {
 					$cellbody .= $col->append;
 				}
 

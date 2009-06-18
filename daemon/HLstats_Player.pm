@@ -1,7 +1,7 @@
 package HLstats_Player;
 #
-# $Id: HLstats_Player.pm 525 2008-07-23 07:11:52Z jumpin_banana $
-# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/daemon/HLstats_Player.pm $
+# $Id: HLstats_Player.pm 670 2009-03-03 07:33:06Z jumpin_banana $
+# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/daemon/HLstats_Player.pm $
 #
 # Original development:
 # +
@@ -70,6 +70,9 @@ sub new
 	$self->{deaths} = 0;
 	$self->{suicides} = 0;
 	$self->{skill}  = 1000;
+	$self->{rating} = 1500.0;
+	$self->{rd2}    = 122500.0;
+	$self->{rating_last} = 1;
 	$self->{game}   = 0;
 	$self->{team}   = "";
 	$self->{role}   = "";
@@ -199,14 +202,14 @@ sub setUniqueId
 
 		my $query = "
 			SELECT
-				skill
+				skill, rating, rd2, UNIX_TIMESTAMP(rating_last)
 			FROM
 				".$::db_prefix."_Players
 			WHERE
 				playerId='$playerid'
 		";
 		my $result = &::doQuery($query);
-		($self->{skill}) = $result->fetchrow_array;
+		($self->{skill}, $self->{rating}, $self->{rd2}, $self->{rating_last}) = $result->fetchrow_array;
 		$result->finish;
 	}
 	else
@@ -369,6 +372,9 @@ sub updateDB
 	my $deaths = $self->get("deaths");
 	my $suicides = $self->get("suicides");
 	my $skill  = $self->get("skill");
+	my $rating = $self->get("rating");
+	my $rd2 = $self->get("rd2");
+	my $rating_last = $self->get("rating_last");
 
 	unless ($playerid)
 	{
@@ -387,7 +393,10 @@ sub updateDB
 			deaths=deaths + $deaths,
 			suicides=suicides + $suicides,
 			oldSkill=skill,
-			skill=$skill
+			skill=$skill,
+			rating=$rating,
+			rd2=$rd2,
+			rating_last=FROM_UNIXTIME($rating_last)
 		WHERE
 			playerId='$playerid'
 	";
@@ -438,8 +447,7 @@ sub updateDB
 # players)
 #
 
-sub updateTimestamp
-{
+sub updateTimestamp {
 	my ($self, $timestamp) = @_;
 
 	$timestamp = $::ev_unixtime
@@ -455,8 +463,7 @@ sub updateTimestamp
 # Returns a string of information about the player.
 #
 
-sub getInfoString
-{
+sub getInfoString {
 	my ($self) = @_;
 
 	my $name = $self->get("name");

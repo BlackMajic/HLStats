@@ -69,9 +69,6 @@ define("DB_PASS", "#DB_PASS#");
 //           your web server.)
 define("DB_ADDR", "#DB_HOST#");
 
-// DB_TYPE - The database server type. Only "mysql" is supported currently
-define("DB_TYPE", "mysql");
-
 // DB_PREFIX - The table prefix. Default is hlstats (the leading _ will comes from the sql file)
 define("DB_PREFIX", "#DB_PREFIX#");
 
@@ -126,4 +123,14 @@ define("MODE", "#MODE#");
 // hide bot players from stats
 // values are 1 or 0
 define("HIDE_BOTS", "#HIDE_BOTS#");
+
+// the Elo rating system
+// developed by HampusW
+// 			here you can decide if you want to use this system
+//			IMPORTANT: Must match the value of EloRating in hlstats.conf !!
+//			Possible values are
+//			1) "0"		- Off. Do not use the ratins system at all.
+//			2) "1"		- Use the system and display it with the ordinary system
+//			3) "2"		- Only use the EloRating and show only the new one.
+define('ELORATING','0');
 ?>

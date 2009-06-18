@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: games.inc.php 606 2008-10-24 20:59:37Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/admintasks/games.inc.php $
+ * $Id: games.inc.php 658 2009-02-20 15:16:03Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admintasks/games.inc.php $
  *
  * Original development:
  * +
@@ -116,11 +116,12 @@
 		if($_POST['gameToDelete'] != "") {
 
 			// we need first the playids for this game
+			$players = array();
 			$query = $db->query("SELECT playerId FROM ".DB_PREFIX."_Players WHERE game = '".$_POST['gameToDelete']."'");
 			while($result = $db->fetch_row($query)) {
 				$players[]= $result[0];
 			}
-			if(count($players) > 0) {
+			if(!empty($players)) {
 				#die("Fatal error: No players found for this game.");
 				$playerIdString = implode(",",$players);
 				$query = "SHOW TABLES LIKE '".DB_PREFIX."_Events_%'";
@@ -186,7 +187,7 @@
 			echo "</li>";
 
 			// delete the players
-			if(count($players) > 0) {
+			if(!empty($players)) {
 				echo "<li>";
 				if($db->query("DELETE FROM ".DB_PREFIX."_Players WHERE playerId IN (".$playerIdString.")")) {
 					echo "".DB_PREFIX."_Players ok";
@@ -221,7 +222,7 @@
 				if(is_file($sqlDir."/".$file) && strstr($file,"gamesupport_")) {
 					$tmp = str_replace(array("gamesupport_",".sql"),"",$file);
 					$tmpArr = explode("__",$tmp);
-					if(!key_exists($tmpArr[1],$gamesArr)) {
+					if(!array_key_exists($tmpArr[1],$gamesArr)) {
 						// show only games which are not already installed
 						$tmp = str_replace("_"," ",$tmpArr[0]);
 						$files[$file] = $tmp;

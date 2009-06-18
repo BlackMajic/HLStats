@@ -15,44 +15,53 @@ INSERT IGNORE INTO ++DB_PREFIX++_Games VALUES ('tf2','Team Fortress 2','1','0');
 #
 # Awards
 #
-INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','fireaxe','Crowbar Maniac','murders with crowbar',NULL,NULL);
+INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','fireaxe','Axe Man','murders with fireaxe',NULL,NULL);
 INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','bat','Playin Baseball','bats',NULL,NULL);
 INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','tf_projectile_rocket','Rocketeer','kills with rocket',NULL,NULL);
 INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','shotgun_hwg','HWGuy Extraordinaire','ownings with ac',NULL,NULL);
 INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','sniperrifle','Red Dot Special','snipings',NULL,NULL);
 INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','flamethrower','Fire Man','roastings',NULL,NULL);
-INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','shovel','Diggin a hole','shovel',NULL,NULL);
+INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','shovel','Diggin a hole','kills with shovel',NULL,NULL);
+INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','axtinguisher','Axtinguisher','kills with axtinguisher',NULL,NULL);
+INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','backburner','Backburner','kills with backburner',NULL,NULL);
+INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','axtinguisher','Backstabber','backstab kills',NULL,NULL);
+INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','kill_assist','Best Backup','kill assist',NULL,NULL);
+INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','blutsauger','Blutsauger','kills with blutsauger',NULL,NULL);
+INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','bonesaw','Doctor\'s Certificate','kills with bonesaw',NULL,NULL);
+INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','bottle','Drunken Brawler','kills with bottle',NULL,NULL);
+INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','wrench','Mr. Fix-it','kills with wrench',NULL,NULL);
 
 
 #
 # Player Actions
 #
-INSERT INTO ++DB_PREFIX++_Actions VALUES(116, 'tf2', 'builtobject_OBJ_ATTACHMENT_SAPPER', 1, 0, '', 'Built Object - Attachment Sapper', '1', '0', '0', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(113, 'tf2', 'builtobject_OBJ_DISPENSER', 5, 0, '', 'Built Object - Dispenser', '1', '0', '0', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(112, 'tf2', 'builtobject_OBJ_SENTRYGUN', 5, 0, '', 'Built Object - Sentrygun', '1', '0', '0', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(121, 'tf2', 'builtobject_OBJ_TELEPORTER_ENTRANCE', 2, 0, '', 'Built Object - Teleporter Entrance', '1', '0', '0', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(119, 'tf2', 'builtobject_OBJ_TELEPORTER_EXIT', 2, 0, '', 'Built Object - Teleporter Exit', '1', '0', '0', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(122, 'tf2', 'captureblocked', 5, 2, '', 'Capture Blocked', '1', '0', '1', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(118, 'tf2', 'chargedeployed', 5, 0, '', 'Ubercharge', '1', '0', '0', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(120, 'tf2', 'domination', 5, 0, '', 'Domination', '1', '0', '0', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(131, 'tf2', 'flagevent_captured', 2, 0, '', 'Flagevent - Captured', '1', '', '', '');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(128, 'tf2', 'flagevent_defended', 2, 0, '', 'Flagevent - Defended', '1', '', '', '');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(127, 'tf2', 'flagevent_dropped', -2, 0, '', 'Flagevent - Dropped', '1', '', '', '');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(124, 'tf2', 'flagevent_picked_up', 2, 0, '', 'Flagevent - Picked Up', '1', '', '', '');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(125, 'tf2', 'killedobject_OBJ_ATTACHMENT_SAPPER', 2, 0, '', 'Killed Object - Attachment Sapper', '1', '0', '0', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(117, 'tf2', 'killedobject_OBJ_DISPENSER', 5, 0, '', 'Killed Object - Dispenser', '1', '0', '0', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(114, 'tf2', 'killedobject_OBJ_SENTRYGUN', 5, 0, '', 'Killed Object - Sentrygun', '1', '0', '0', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(123, 'tf2', 'killedobject_OBJ_SPY', 2, 0, '', 'Killed Object - Spy', '1', '0', '0', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(130, 'tf2', 'killedobject_OBJ_TELEPORTER_ENTRANCE', 2, 0, '', 'Killed Object - Teleporter Entrance', '1', '0', '0', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(126, 'tf2', 'killedobject_OBJ_TELEPORTER_EXIT', 2, 0, '', 'Killed Object - Teleporter Exit', '1', '0', '0', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(110, 'tf2', 'kill_assist', 2, 0, '', 'Kill Assist', '1', '0', '0', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(111, 'tf2', 'kill_assist_medic', 4, 0, '', 'Kill Assist - Medic', '1', '0', '0', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(134, 'tf2', 'Mini_Round_Win_Blue', 0, 2, 'Blue', 'Mini-Round Win - Team Blue', '0', '0', '0', '1');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(135, 'tf2', 'Mini_Round_Win_Red', 0, 2, 'Red', 'Mini-Round Win - Team Red', '0', '0', '0', '1');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(115, 'tf2', 'pointcaptured', 5, 2, '', 'Point Captured', '1', '0', '1', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(129, 'tf2', 'revenge', 5, 0, '', 'Revenge', '1', '0', '0', '0');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(133, 'tf2', 'Round_Win_Blue', 0, 10, 'Blue', 'Round Win - Team Blue', '0', '0', '1', '1');
-INSERT INTO ++DB_PREFIX++_Actions VALUES(132, 'tf2', 'Round_Win_Red', 0, 10, 'Red', 'Round Win - Team Red', '0', '0', '1', '1');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'builtobject_OBJ_ATTACHMENT_SAPPER', 1, 0, '', 'Built Object - Attachment Sapper', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'builtobject_OBJ_DISPENSER', 5, 0, '', 'Built Object - Dispenser', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'builtobject_OBJ_SENTRYGUN', 5, 0, '', 'Built Object - Sentrygun', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'builtobject_OBJ_TELEPORTER_ENTRANCE', 2, 0, '', 'Built Object - Teleporter Entrance', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'builtobject_OBJ_TELEPORTER_EXIT', 2, 0, '', 'Built Object - Teleporter Exit', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'captureblocked', 5, 2, '', 'Capture Blocked', '1', '0', '1', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'chargedeployed', 5, 0, '', 'Ubercharge', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'domination', 5, 0, '', 'Domination', '0', '1', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'flagevent_captured', 2, 0, '', 'Flagevent - Captured', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'flagevent_defended', 2, 0, '', 'Flagevent - Defended', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'flagevent_dropped', -2, 0, '', 'Flagevent - Dropped', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'flagevent_picked_up', 2, 0, '', 'Flagevent - Picked Up', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'killedobject_OBJ_ATTACHMENT_SAPPER', 2, 0, '', 'Killed Object - Attachment Sapper', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'killedobject_OBJ_DISPENSER', 5, 0, '', 'Killed Object - Dispenser', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'killedobject_OBJ_SENTRYGUN', 5, 0, '', 'Killed Object - Sentrygun', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'killedobject_OBJ_SPY', 2, 0, '', 'Killed Object - Spy', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'killedobject_OBJ_TELEPORTER_ENTRANCE', 2, 0, '', 'Killed Object - Teleporter Entrance', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'killedobject_OBJ_TELEPORTER_EXIT', 2, 0, '', 'Killed Object - Teleporter Exit', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'kill_assist', 2, 0, '', 'Kill Assist', '0', '1', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'kill_assist_medic', 4, 0, '', 'Kill Assist - Medic', '1', '0', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'Mini_Round_Win_Blue', 0, 2, 'Blue', 'Mini-Round Win - Team Blue', '0', '0', '0', '1');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'Mini_Round_Win_Red', 0, 2, 'Red', 'Mini-Round Win - Team Red', '0', '0', '0', '1');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'pointcaptured', 5, 2, '', 'Point Captured', '1', '0', '1', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'revenge', 5, 0, '', 'Revenge', '0', '1', '0', '0');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'Round_Win_Blue', 0, 10, 'Blue', 'Round Win - Team Blue', '0', '0', '1', '1');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'Round_Win_Red', 0, 10, 'Red', 'Round Win - Team Red', '0', '0', '1', '1');
+INSERT INTO ++DB_PREFIX++_Actions VALUES(NULL, 'tf2', 'hurt_firstblood', '5', '0', '', 'Firstblod', '1', '0', '0', '0');
 
 
 #
@@ -109,6 +118,8 @@ INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','world','World',1.00
 INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','wrench','Wrench',3.00);
 INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','syringegun_medic','Syringe Gun',1.80);
 INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','obj_sentrygun','Sentry Gun',1.00);
+INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','obj_sentrygun2','Sentry Gun Level 2',0.90);
+INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','obj_sentrygun3','Sentry Gun Level 3',0.80);
 INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','deflect_sticky','Deflect Sticky',4.00);
 INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','deflect_rocket','Deflect Rocket',4.00);
 INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','deflect_promode','Deflect Promode',4.00);
@@ -119,8 +130,10 @@ INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','axtinguisher','Axti
 INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','flaregun','Flare Gun',2.00);
 INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','blutsauger','Blutsauger',1.50);
 INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','backburner','Backburner',1.50);
-INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','natascher','Natascha',1.50);
+INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','natascha','Natascha',1.50);
 INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','gloves','Gloves',1.50);
-
+INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','taunt_heavy','Heavy taunt',5.00);
+INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','taunt_scout','Scout Taunt Kill',5.00);
+INSERT IGNORE INTO ++DB_PREFIX++_Weapons VALUES (NULL,'tf2','bat_wood','The Sandman',2.00);
 
 # end of file

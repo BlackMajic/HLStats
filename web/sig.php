@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: sig.php 591 2008-10-08 07:31:13Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/sig.php $
+ * $Id: sig.php 674 2009-03-03 20:21:46Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/sig.php $
  *
  * Original development:
  * +
@@ -41,6 +41,34 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+// Check PHP configuration
+if (version_compare(phpversion(), "5.2.6", "<")) {
+	die("HLstats requires PHP version 5.2.6 or newer (you are running PHP version " . phpversion() . ").");
+}
+
+if (!get_magic_quotes_gpc()) {
+	die("HLstats requires <b>magic_quotes_gpc</b> to be <i>enabled</i>. Check your php.ini or refer to the PHP manual for more information.");
+}
+
+if (get_magic_quotes_runtime()) {
+	die("HLstats requires <b>magic_quotes_runtime</b> to be <i>disabled</i>. Check your php.ini or refer to the PHP manual for more information.");
+}
+
+date_default_timezone_set('Europe/Berlin');
+
+// if you have problems with your installation
+// activate this paramter by setting it to true
+define('SHOW_DEBUG',true);
+
+// do not display errors in live version
+if(SHOW_DEBUG === true) {
+	error_reporting(8191);
+	ini_set('display_errors',true);
+}
+else {
+	ini_set('display_errors',false);
+}
+
 // load config
 require('hlstatsinc/hlstats.conf.inc.php');
 
@@ -56,9 +84,7 @@ require(INCLUDE_PATH . "/functions.inc.php");
 require(INCLUDE_PATH . "/classes.inc.php");
 
 // deb class and options
-$db_classname = "DB_" . DB_TYPE;
-$db = new $db_classname;
-
+$db = new DB_mysql();
 $g_options = getOptions();
 
 /**
@@ -158,8 +184,8 @@ if($g_options['allowSig'] == "1") {
 		$query = $db->query("SELECT serverId FROM ".DB_PREFIX."_Events_Connects
 					WHERE playerId = '".$playerId."' LIMIT 1");
 		$serverId = $db->fetch_array($query);
-		// no get the server info
-		$query = $db->query("SELECT address,port,name FROM ".DB_PREFIX."_Servers WHERE `serverId` = ".$serverId['serverId']."");
+		// now get the server info
+		$query = $db->query("SELECT address,port,name FROM ".DB_PREFIX."_Servers WHERE serverId = ".$serverId['serverId']);
 		$serverData = $db->fetch_array($query);
 
 		$font = $picPath.'svenings.ttf';

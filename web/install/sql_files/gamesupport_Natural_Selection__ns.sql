@@ -64,8 +64,6 @@ INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'ns','structure_built_team
 INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'ns','structure_destroyed_team_hive',2,0,'','Destroyed Alien Hive','1','0','0','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'ns','structure_built_team_armslab',1,0,'','Built Arms Lab','1','0','0','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'ns','structure_destroyed_team_armslab',2,0,'','Destroyed Arms Lab','1','0','0','0');
-INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'ns','structure_built_alienresourcetower',1,0,'','Built Alien Resource Tower','1','0','0','0');
-INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'ns','structure_destroyed_alienresourcetower',2,0,'','Destroyed Alien Resource Tower','1','0','0','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'ns','structure_built_sensorychamber',1,0,'','Built Sensory Chamber','1','0','0','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'ns','structure_destroyed_sensorychamber',2,0,'','Destroyed Sensory Chamber','1','0','0','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'ns','structure_built_team_prototypelab',1,0,'','Built Prototype Lab','1','0','0','0');
@@ -94,10 +92,8 @@ INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'ns','structure_built_item
 INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'ns','structure_built_item_jetpack',1,0,'','Created a Jetpack','1','0','0','0');
 
 
-INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'ns','research_start',1,0,'','Started Researching ','1','0','0','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'ns','research_cancel',-1,0,'','Stopped Researching ','1','0','0','0');
 
-INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'ns','recycle',-3,0,'','Structures Recycled','1','0','0','0');
 
 
 #

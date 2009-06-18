@@ -1,7 +1,7 @@
 #!/bin/bash
 #
 # $Id: import-logs.sh 436 2008-04-09 12:20:04Z jumpin_banana $
-# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/tools/import-logs.sh $
+# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/tools/import-logs.sh $
 #
 # Original development:
 # +

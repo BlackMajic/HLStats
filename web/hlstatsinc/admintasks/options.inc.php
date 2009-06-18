@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: options.inc.php 591 2008-10-08 07:31:13Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/admintasks/options.inc.php $
+ * $Id: options.inc.php 655 2009-02-20 08:34:08Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admintasks/options.inc.php $
  *
  * Original development:
  * +
@@ -130,13 +130,11 @@
 				}
 			}
 		}
-		function changeStyle($style)
-		{
+		function changeStyle($style) {
 			global $db;
 
 			$result = $db->query("SELECT keyname, `$style` FROM ".DB_PREFIX."_Style");
-			while($rowdata = $db->fetch_row($result))
-			{
+			while($rowdata = $db->fetch_row($result)) {
 				$key = $rowdata[0];
 				$data = $rowdata[1];
 				$db->query("UPDATE ".DB_PREFIX."_Options SET value='$data' WHERE keyname='$key'");
@@ -145,21 +143,18 @@
 		}
 	}
 
-	class Option
-	{
+	class Option {
 		var $name;
 		var $title;
 		var $type;
 
-		function Option ($name, $title, $type)
-		{
+		function Option ($name, $title, $type) {
 			$this->name = $name;
 			$this->title = $title;
 			$this->type = $type;
 		}
 
-		function draw ()
-		{
+		function draw () {
 			global $g_options, $optiondata;
 
 			$styletype = whichStyle();
@@ -196,8 +191,7 @@
 	echo $g_options["fontend_normal"];
 ?></td>
 	<td width="55%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php
-			switch ($this->type)
-			{
+			switch ($this->type) {
 				case "textarea":
 					echo "<textarea name=\"$this->name\" cols=35 rows=4 wrap=\"virtual\">";
 					echo htmlspecialchars($optiondata[$this->name]);
@@ -287,23 +281,18 @@
 	$optiongroups[7]->options[] = new Option("style", "Load Preset Style", "style_select");
 
 
-	if ($_POST)
-	{
+	if (isset($_POST['saveOptions'])) {
 		$styletype = whichStyle();
 		$style = $_POST['style'];
 
-		if($styletype != $style)
-		{
-			foreach ($optiongroups as $og)
-			{
+		if($styletype != $style) {
+			foreach ($optiongroups as $og) {
 				$og->changeStyle($style);
 			}
 			message("success", "Options updated successfully.");
 		}
-		else
-		{
-			foreach ($optiongroups as $og)
-			{
+		else {
+			foreach ($optiongroups as $og) {
 				$og->update();
 			}
 			message("success", "Options updated successfully.");
@@ -312,19 +301,17 @@
 
 
 	$result = $db->query("SELECT keyname, value FROM ".DB_PREFIX."_Options");
-	while ($rowdata = $db->fetch_row($result))
-	{
+	while ($rowdata = $db->fetch_row($result)) {
 		$optiondata[$rowdata[0]] = $rowdata[1];
 	}
 
-	foreach ($optiongroups as $og)
-	{
+	foreach ($optiongroups as $og) {
 		$og->draw();
 	}
 ?>
 
 <table width="75%" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td align="center"><input type="submit" value="  Apply  " class="submit"></td>
+	<td align="center"><input type="submit" name="saveOptions" value="  Apply  " class="submit"></td>
 </tr>
 </table>

@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: contents.inc.php 560 2008-09-02 20:38:08Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/contents.inc.php $
+ * $Id: contents.inc.php 671 2009-03-03 07:36:22Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/contents.inc.php $
  *
  * Original development:
  * +
@@ -41,13 +41,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
-	// Contents
-
 	$resultGames = $db->query("
 		SELECT
-			code,
-			name
+			code,name
 		FROM
 			".DB_PREFIX."_Games
 		WHERE
@@ -58,19 +54,24 @@
 
 	$num_games = $db->num_rows($resultGames);
 
-	if ($num_games == 1 || $game = $_GET["game"])
-	{
-		if ($num_games == 1)
-			list($game) = $db->fetch_row($resultGames);
-
+	if(!empty($_GET['game'])) {
+		if(validateInput($_GET['game'],'nospace')) {
+			$game = $_GET["game"];
+			include(INCLUDE_PATH . "/game.inc.php");
+		}
+		else {
+			die('Wrong input');
+		}
+	}
+	elseif ($num_games == 1) {
+		list($game) = $db->fetch_row($resultGames);
 		include(INCLUDE_PATH . "/game.inc.php");
 	}
-	else
-	{
+	else {
+
 		pageHeader(array("Contents"), array("Contents"=>""));
 		// should we hide the news ?
 		if(!$g_options['hideNews']) {
-
 			$db->query("
 				SELECT *
 				FROM
@@ -78,6 +79,8 @@
 				ORDER BY
 					date DESC
 			");
+
+		if($db->num_rows() > 0) {
 
 
 	?>
@@ -107,8 +110,7 @@
 
 	<?php
 		$i = 0;
-		while ($rowdata = $db->fetch_array())
-		{
+		while ($rowdata = $db->fetch_array()) {
 			if($i == 0) {
 	?>
 							<div class="newsBox" id="newsBox_<?php echo $i; ?>">
@@ -195,9 +197,9 @@
 			</td>
 		</tr>
 	</table>
-
 	<?php
 		}
+	}
 ?>
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">

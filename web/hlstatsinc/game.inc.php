@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: game.inc.php 560 2008-09-02 20:38:08Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/game.inc.php $
+ * $Id: game.inc.php 671 2009-03-03 07:36:22Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/game.inc.php $
  *
  * Original development:
  * +
@@ -59,6 +59,8 @@
 			ORDER BY
 				date DESC
 		");
+
+		if($db->num_rows() > 0) {
 
 
 ?>
@@ -178,6 +180,7 @@ function showNews(id) {
 </table>
 
 <?php
+		}
 	}
 ?>
 
@@ -254,10 +257,10 @@ These statistics should not be taken as a realistic measure of individual player
 				keyname='awards_numdays'
 		");
 
-		if ($db->num_rows($result) == 1)
+		$awards_numdays = 1;
+		if ($db->num_rows($result) == 1) {
 			list($awards_numdays) = $db->fetch_row($result);
-		else
-			$awards_numdays = 1;
+		}
 
 		$result = $db->query("
 			SELECT
@@ -270,11 +273,9 @@ These statistics should not be taken as a realistic measure of individual player
 		");
 		list($awards_d_date, $awards_s_date) = $db->fetch_row($result);
 
-		if ($db->num_rows($resultAwards) > 0 && $awards_d_date)
-		{
+		if ($db->num_rows($resultAwards) > 0 && $awards_d_date) {
 ?>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-
 <tr>
 	<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp; <?php if ($awards_numdays == 1) {echo "Daily";} else { echo "$awards_numdays Day";}; ?> Awards (<?php echo "$awards_s_date to $awards_d_date."; ?>)</b><?php echo $g_options["fontend_normal"];?><p>
 
@@ -285,8 +286,7 @@ These statistics should not be taken as a realistic measure of individual player
 
 <?php
 			$c = 0;
-			while ($awarddata = $db->fetch_array($resultAwards))
-			{
+			while ($awarddata = $db->fetch_array($resultAwards)) {
 				$colour = ($c % 2) + 1;
 				$c++;
 ?>
@@ -300,8 +300,7 @@ These statistics should not be taken as a realistic measure of individual player
 	<td width="70%"><?php
 				echo $g_options["font_normal"];
 
-				if ($awarddata["d_winner_id"])
-				{
+				if ($awarddata["d_winner_id"]) {
 					echo "<a href=\"" . $g_options["scripturl"] . "?mode=playerinfo&amp;player="
 						. $awarddata["d_winner_id"] . "\"><img src=\""
 						. $g_options["imgdir"] . "/player.gif\" width=16 height=16 "
@@ -309,8 +308,7 @@ These statistics should not be taken as a realistic measure of individual player
 						. htmlspecialchars($awarddata["d_winner_name"]) . "</b></a> ("
 						. $awarddata["d_winner_count"] . " " . htmlspecialchars($awarddata["verb"]) . ")";
 				}
-				else
-				{
+				else {
 					echo "&nbsp;&nbsp;(Nobody)";
 				}
 
@@ -370,17 +368,14 @@ These statistics should not be taken as a realistic measure of individual player
 		");
 
 		$i=0;
-		while ($rowdata = $db->fetch_array())
-		{
+		while ($rowdata = $db->fetch_array()) {
 			$c = ($i % 2) + 1;
 
-			if ($rowdata["statusurl"])
-			{
+			if ($rowdata["statusurl"]) {
 				$addr = "<a href=\"" . $rowdata["statusurl"] . "\">"
 					. $rowdata["addr"] . "</a>";
 			}
-			else
-			{
+			else {
 				$addr = $rowdata["addr"];
 			}
 ?>
@@ -396,7 +391,7 @@ These statistics should not be taken as a realistic measure of individual player
 					?></td>
 					<td align="center"><?php
 						echo $g_options["font_normal"];
-						echo "<a href=\"$g_options[scripturl]?mode=live_stats&amp;server=$rowdata[serverId]\">View</a>";
+						echo "<a href=\"$g_options[scripturl]?mode=livestats&amp;server=$rowdata[serverId]\">View</a>";
 						echo $g_options["fontend_normal"];
 					?></td>
 				</tr>
@@ -433,13 +428,15 @@ These statistics should not be taken as a realistic measure of individual player
 
 			$result = $db->query("
 				SELECT
-					DATE_FORMAT(MAX(eventTime), '%r, %a. %e %b.')
+					DATE_FORMAT(eventTime, '%r, %a. %e %b.')
 				FROM
 					".DB_PREFIX."_Events_Frags
 				LEFT JOIN ".DB_PREFIX."_Players ON
 					".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.serverId
 				WHERE
 					".DB_PREFIX."_Players.game='$game'
+				ORDER BY eventTime DESC
+				LIMIT 1
 			");
 			list($lastevent) = $db->fetch_row($result);
 ?>

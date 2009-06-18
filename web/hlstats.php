@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: hlstats.php 625 2008-11-11 10:01:09Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstats.php $
+ * $Id: hlstats.php 657 2009-02-20 09:49:57Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstats.php $
  *
  * Original development:
  * +
@@ -41,13 +41,40 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+// Check PHP configuration
+if (version_compare(phpversion(), "5.2.6", "<")) {
+	die("HLstats requires PHP version 5.2.6 or newer (you are running PHP version " . phpversion() . ").");
+}
+
+if (!get_magic_quotes_gpc()) {
+	die("HLstats requires <b>magic_quotes_gpc</b> to be <i>enabled</i>. Check your php.ini or refer to the PHP manual for more information.");
+}
+
+if (get_magic_quotes_runtime()) {
+	die("HLstats requires <b>magic_quotes_runtime</b> to be <i>disabled</i>. Check your php.ini or refer to the PHP manual for more information.");
+}
+
+date_default_timezone_set('Europe/Berlin');
+
+// if you have problems with your installation
+// activate this paramter by setting it to true
+define('SHOW_DEBUG',true);
+
+// do not display errors in live version
+if(SHOW_DEBUG === true) {
+	error_reporting(8191);
+	ini_set('display_errors',true);
+}
+else {
+	ini_set('display_errors',false);
+}
+
 // load config
 require('hlstatsinc/hlstats.conf.inc.php');
 
 /**
  * load required stuff
  *
- * functions functions.inc.php
  * db class
  * general classes like tablle class
  */
@@ -55,69 +82,31 @@ require(INCLUDE_PATH . "/db.inc.php");
 require(INCLUDE_PATH . "/functions.inc.php");
 require(INCLUDE_PATH . "/classes.inc.php");
 
-// do not report NOTICE warnings
-error_reporting(E_ALL ^ E_NOTICE);
 
 // set utf-8 header
 // we have to save all the stuff with utf-8 to make it work !!
 header("Content-type: text/html; charset=UTF-8");
-
-// Check PHP configuration
-
-if (version_compare(phpversion(), "4.1.0", "<")) {
-	error("HLstats requires PHP version 4.1.0 or newer (you are running PHP version " . phpversion() . ").");
-}
-
-if (!get_magic_quotes_gpc()) {
-	error("HLstats requires <b>magic_quotes_gpc</b> to be <i>enabled</i>. Check your php.ini or refer to the PHP manual for more information.");
-}
-
-if (get_magic_quotes_runtime()) {
-	error("HLstats requires <b>magic_quotes_runtime</b> to be <i>disabled</i>. Check your php.ini or refer to the PHP manual for more information.");
-}
 
 
 ////
 //// Initialisation
 ////
 
-define("VERSION", "1.40");
+define("VERSION", "development version");
 
-$db_classname = "DB_" . DB_TYPE;
-$db = new $db_classname;
-
+$db = new DB_mysql();
+$g_options = array();
 $g_options = getOptions();
 
 // set scripturl if not set in options
-if ($g_options["scripturl"] == "") {
-	$g_options["scripturl"] = $_SERVER['PHP_SELF'];
+if(empty($g_options['scripturl'])) {
+	$g_options["scripturl"] = 'hlstats.php';
 }
 
 
 ////
 //// Main
 ////
-
-if($_GET["mode"] == "") {
-	$mode = "";
-}
-else {
-	$mode = $_GET["mode"];
-}
-
-// process the logout
-if(isset($_GET['logout']) && $_GET['logout'] == "1") {
-	// destroy session and cookie
-
-	setcookie("authusername", '', mktime(12,0,0,1, 1, 1990));
-	setcookie("authpassword", '', mktime(12,0,0,1, 1, 1990));
-	setcookie("authsavepass", '', mktime(12,0,0,1, 1, 1990));
-	setcookie("authsessionStart", '', mktime(12,0,0,1, 1, 1990));
-
-	$_COOKIE = array();
-	$_SESSION = array();
-}
-
 $modes = array(
 	"players",
 	"clans",
@@ -133,13 +122,32 @@ $modes = array(
 	"search",
 	"admin",
 	"help",
-	"live_stats",
+	"livestats",
 	"playerchathistory"
 );
 
-if (!in_array($mode, $modes)) {
-	$mode = "contents";
+$mode = 'contents';
+if(!empty($_GET["mode"])) {
+	if(in_array($_GET["mode"], $modes) && validateInput($_GET['mode'],'nospace') === true ) {
+		$mode = $_GET['mode'];
+	}
 }
+
+// process the logout
+if(!empty($_GET['logout'])) {
+	if(validateInput($_GET['logout'],'digit') === true && $_GET['logout'] == "1") {
+		// destroy session and cookie
+
+		setcookie("authusername", '', mktime(12,0,0,1, 1, 1990));
+		setcookie("authpassword", '', mktime(12,0,0,1, 1, 1990));
+		setcookie("authsavepass", '', mktime(12,0,0,1, 1, 1990));
+		setcookie("authsessionStart", '', mktime(12,0,0,1, 1, 1990));
+
+		$_COOKIE = array();
+		$_SESSION = array();
+	}
+}
+
 
 include(INCLUDE_PATH . "/".$mode.".inc.php");
 

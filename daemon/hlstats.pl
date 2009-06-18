@@ -1,7 +1,7 @@
 #!/usr/bin/perl
 #
-# $Id: hlstats.pl 625 2008-11-11 10:01:09Z jumpin_banana $
-# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/daemon/hlstats.pl $
+# $Id: hlstats.pl 682 2009-05-25 12:11:09Z jumpin_banana $
+# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/daemon/hlstats.pl $
 #
 # Original development:
 # +
@@ -86,6 +86,7 @@ require "$opt_libdir/HLstats_Server.pm";
 require "$opt_libdir/HLstats_Player.pm";
 require "$opt_libdir/HLstats.plib";
 require "$opt_libdir/HLstats_EventHandlers.plib";
+require "$opt_libdir/HLstats_RatingSystem.pm";
 
 $|=1;
 Getopt::Long::Configure ("bundling");
@@ -101,12 +102,10 @@ Getopt::Long::Configure ("bundling");
 # Logs event information to stdout.
 #
 
-sub printEvent
-{
+sub printEvent {
 	my ($code, $description) = @_;
 
-	if ($g_debug > 0)
-	{
+	if ($g_debug > 0) {
 		print localtime(time) . "" unless ($ev_timestamp);
 		printf("%s: %21s - E%03d: %s\n",
 			$ev_timestamp, $s_addr, $code, $description);
@@ -120,8 +119,7 @@ sub printEvent
 # Prins a debugging notice to stdout.
 #
 
-sub printNotice
-{
+sub printNotice {
 	my ($notice) = @_;
 
 	if ($g_debug > 1)
@@ -137,8 +135,7 @@ sub printNotice
 # Adds an event to an Events table.
 #
 
-sub recordEvent
-{
+sub recordEvent {
 	my $table = shift;
 	my $getid = shift;
 	my @coldata = @_;
@@ -266,7 +263,7 @@ sub calcSkill
 		&printNotice("End calcSkill: victimSkill=$victimSkill");
 	}
 
-	return ($killerSkill, $victimSkill);
+	return ($killerSkill, $victimSkill, $modifier);
 }
 
 
@@ -384,7 +381,7 @@ sub updatePlayerProfile
 			playerId='$playerId'
 	");
 
-	&rcon("say SET command successful for '$playerName'.");
+	&rcon("SET command successful for '$playerName'.",1);
 	return 1;
 }
 
@@ -527,7 +524,8 @@ sub getServer
 	my $query = "
 		SELECT
 			serverId,
-			game
+			game,
+			defaultMap
 		FROM
 			${db_prefix}_Servers
 		WHERE
@@ -536,15 +534,17 @@ sub getServer
 	";
 	my $result = &doQuery($query);
 
-	if ($result->rows)
-	{
-		my ($serverId, $game) = $result->fetchrow_array;
+	if ($result->rows) {
+		my ($serverId, $game, $defaultMap) = $result->fetchrow_array;
 		$result->finish;
 
-		return new HLstats_Server($serverId, $address, $port, $game);
+		if($defaultMap eq "") {
+			$defaultMap = '';
+		}
+
+		return new HLstats_Server($serverId, $address, $port, $game, $defaultMap);
 	}
-	else
-	{
+	else {
 		$result->finish;
 
 		return 0;
@@ -609,16 +609,41 @@ sub getPlayerInfo
 {
 	my ($player, $forced_uniqueid) = @_;
 
-	if ($player =~ /^(.+)<(\d+)><([^<>]+)><([^<>]*)>$/)
-	{
-		my $name     = $1;
-		my $userid   = $2;
-		my $uniqueid = $3;
-		my $team     = $4;
+	my $name,$userid,$uniqeid,$team,$role;
+	
+	if ($player =~ /^([^<]+)<(\d+)><([^<>]*)><([^<>]*)><([^<>]*)>/) {
+		#
+		# L4D support
+		#
+		$name     = $1;
+		$userid   = $2;
+		$uniqueid = $3;
+		$team     = $4;
+		$role  = $5;
+
+		# the zombies do not have a uniqueid
+		if(!$uniqueid) {
+			$uniqueid = "zombie_".$userid;
+			$name .= "_".$userid;
+		}
+	}
+	elsif ($player =~ /^(.+)<(\d+)><([^<>]+)><([^<>]*)>$/) {
+		#
+		# normal hl games
+		#
+		$name     = $1;
+		$userid   = $2;
+		$uniqueid = $3;
+		$team     = $4;
+	}
+	else {
+		return 0;
+	}
 
 		# Don't connect Mr. Console or HLTV, they should not be recorded as players!
 		return 0 if ($uniqueid eq "Console");
 		return 0 if ($uniqueid eq "HLTV");
+	
 
 		if ($forced_uniqueid)
 		{
@@ -724,13 +749,9 @@ sub getPlayerInfo
 			name     => $name,
 			userid   => $userid,
 			uniqueid => $uniqueid,
-			team     => $team
+			team     => $team,
+			role    => $role
 		};
-	}
-	else
-	{
-		return 0;
-	}
 }
 
 
@@ -823,6 +844,11 @@ $g_bot_ids = "BOT:0";
 $g_lan_hack = 1;
 $g_patch_loopback_ip = 1; # by Simon Logic
 $g_log_chat = 0;
+$g_rcon_say = "say";
+$g_ingame_points = 0;
+$g_ignore_bots = 0;
+$g_rating_system = 0;
+$g_rating_system_verbose = 1;
 
 
 # Usage message
@@ -906,7 +932,12 @@ if ($opt_configfile && -r $opt_configfile)
 		"SkillMaxChange",	"g_skill_maxchange",
 		"PatchLoopbackIP",	"g_patch_loopback_ip",
 		"LogChat",			"g_log_chat",
-		"RconSay",			"g_rcon_say"
+		"RconSay",			"g_rcon_say",
+		"IngamePoints",		"g_ingame_points",
+		"IgnoreBots",		"g_ignore_bots",
+		"EloRating",		"g_rating_system",
+		"EloRatingVerbose",	"g_rating_system_verbose"
+
 	);
 
 	&doConf($conf, %directives);
@@ -942,14 +973,12 @@ GetOptions(
 	"t"					=> \$g_timestamp
 ) or die($usage);
 
-if ($opt_help)
-{
+if ($opt_help) {
 	print $usage;
 	exit(0);
 }
 
-if ($opt_version)
-{
+if ($opt_version) {
 	print "hlstats.pl (HLstats) $g_version\n"
 		. "Real-time player and clan rankings and statistics for Half-Life\n"
 		. "Copyright (C) 2001  Simon Garner\n\n";
@@ -981,8 +1010,7 @@ print "++ HLstats $g_version starting...\n\n";
 
 # Create the UDP socket
 
-if ($g_stdin)
-{
+if ($g_stdin) {
 	print "-- UDP listen socket disabled, reading log data from STDIN.\n";
 
 	if (!$g_server_ip || !$g_server_port)
@@ -998,8 +1026,7 @@ if ($g_stdin)
 		$s_peerport = $g_server_port;
 	}
 }
-else
-{
+else {
 	if ($s_ip) { $ip = $s_ip . ":"; } else { $ip = "port "; }
 	print "-- Opening UDP listen socket on $ip$s_port ... ";
 
@@ -1018,9 +1045,14 @@ print "-- Connecting to MySQL database '$db_name' on '$db_host' as user '$db_use
 
 $db_conn = DBI->connect(
 	"DBI:mysql:$db_name:$db_host",
-	$db_user, $db_pass, { RaiseError => 1, "mysql_enable_utf8" => 1 }
+	$db_user, $db_pass, { RaiseError => 1, "mysql_enable_utf8" => 1, 'mysql_auto_reconnect' => 1,
+				'ShowErrorStatement' => 1 }
 ) or die ("\nCan't connect to MySQL database '$db_name' on '$db_host'\n" .
 	"Server error: $DBI::errstr\n");
+
+&doQuery("SET character set utf8");
+&doQuery("SET NAMES utf8");
+
 
 print "connected OK\n";
 
@@ -1079,6 +1111,11 @@ print "\n++ HLstats is now running ($g_mode mode";
 if ($g_debug > 0) { print ", debug level $g_debug"; }
 print ").\n\n";
 
+# Init rating system
+if($g_rating_system eq "1" || $g_rating_system eq "2") {
+	$ratingsys = HLstats_RatingSystem->new();
+}
+
 # Main data loop
 
 $c = 0;
@@ -1096,20 +1133,27 @@ sub getLine
 	}
 }
 
-while ($loop = &getLine())
-{
-	if ($g_stdin)
-	{
+while ($loop = &getLine()) {
+
+	if ($g_stdin){
 		$s_output = $loop;
 	}
-	else
-	{
+	else {
 		$s_socket->recv($s_output, 1024);
 		$s_peerhost = $s_socket->peerhost;
 		$s_peerport = $s_socket->peerport;
 	}
 
 	$s_addr = "$s_peerhost:$s_peerport";
+
+	if($g_ignore_bots) {
+		### BOT REMOVAL
+		if($s_output =~ s/^BOT://g) {
+			&printEvent(999, "IGNORED: " . $s_output);
+			next;
+		}
+		### BOT REMOVAL
+	}
 
 	## strip tags
 	$s_output =~ s/[\r\n\0]//g;	# remove naughty characters
@@ -1120,8 +1164,7 @@ while ($loop = &getLine())
 	## strip tags end
 
 	# Get the server info, if we know the server, otherwise ignore the data
-	if (!$g_servers{$s_addr})
-	{
+	if (!$g_servers{$s_addr}) {
 		$g_servers{$s_addr} = &getServer($s_peerhost, $s_peerport);
 
 		if (!$g_servers{$s_addr}) {
@@ -1132,8 +1175,7 @@ while ($loop = &getLine())
 
 	# Get the datestamp (or complain)
 	# otherwise ignore the data and proceed to the next loop
-	if ($s_output =~ s/^.*L (\d\d)\/(\d\d)\/(\d{4}) - (\d\d):(\d\d):(\d\d):\s*//)
-	{
+	if ($s_output =~ s/^.*L (\d\d)\/(\d\d)\/(\d{4}) - (\d\d):(\d\d):(\d\d):\s*//) {
 		$ev_month = $1;
 		$ev_day   = $2;
 		$ev_year  = $3;
@@ -1158,8 +1200,7 @@ while ($loop = &getLine())
 			$ev_unixtime  = time();
 		}
 	}
-	else
-	{
+	else {
 		&printEvent(998, "MALFORMED DATA: " . $s_output);
 		next;
 	}
@@ -1178,8 +1219,13 @@ while ($loop = &getLine())
 	my %ev_properties = ();
 	my %ev_player = ();
 
-	if ($s_output =~ /^"([^"]+)" ([^"\(]+) "([^"]+)" [^"\(]+ "([^"]+)"(.*)$/)
-	{
+	if ($s_output =~ /^"([^"]+)" ([^"\(]+) "([^"]+)" [^"\(]+ "([^"]+)"(.*)$/) {
+
+		if ($g_debug > 2) {
+			print "## DEBUG : ".$s_output."\n";
+			print "## Match M1\n";
+		}
+
 		# Prototype: "player" verb "obj_a" ?... "obj_b"[properties]
 		# Matches:
 		#  8. Kills
@@ -1195,8 +1241,7 @@ while ($loop = &getLine())
 
 		%ev_properties = &getProperties($ev_properties);
 
-		if (like($ev_verb, "killed"))
-		{
+		if (like($ev_verb, "killed")) {
 			my $killerinfo = &getPlayerInfo($ev_player);
 			my $victiminfo = &getPlayerInfo($ev_obj_a);
 
@@ -1211,8 +1256,7 @@ while ($loop = &getLine())
 				);
 			}
 		}
-		elsif (like($ev_verb, "attacked"))
-		{
+		elsif (like($ev_verb, "attacked")) {
 			$ev_type = 9;
 			$ev_status = "(IGNORED) $s_output";
 		}
@@ -1249,6 +1293,11 @@ while ($loop = &getLine())
 	}
 	elsif ( $s_output =~ /^(?:\[STATSME\] )?"([^"]+)" triggered "(weaponstats\d{0,1})"(.*)$/ )
 	{
+		if ($g_debug > 2) {
+			print "## DEBUG : ".$s_output."\n";
+			print "## Match M2\n";
+		}
+
 		# Prototype: [STATSME] "player" triggered "weaponstats?"[properties]
 		# Matches:
 		# 501. Statsme weaponstats
@@ -1312,6 +1361,11 @@ while ($loop = &getLine())
 	}
 	elsif ( $s_output =~ /^(?:\[STATSME\] )?"([^"]+)" triggered "(latency|time)"(.*)$/ )
 	{
+		if ($g_debug > 2) {
+			print "## DEBUG : ".$s_output."\n";
+			print "## Match M3\n";
+		}
+
 		# Prototype: [STATSME] "player" triggered "latency|time"[properties]
 		# Matches:
 		# 503. Statsme latency
@@ -1362,6 +1416,11 @@ while ($loop = &getLine())
 	}
 	elsif ($s_output =~ /^"([^"]+)" ([^"\(]+) "([^"]+)"(.*)$/)
 	{
+		if ($g_debug > 2) {
+			print "## DEBUG : ".$s_output."\n";
+			print "## Match M4\n";
+		}
+
 		# Prototype: "player" verb "obj_a"[properties]
 		# Matches:
 		#  1. Connection
@@ -1547,10 +1606,16 @@ while ($loop = &getLine())
 	}
 	elsif ($s_output =~ /^"([^"]+)" ([^\(]+)(.*)$/)
 	{
+		if ($g_debug > 2) {
+			print "## DEBUG : ".$s_output."\n";
+			print "## Match M5\n";
+		}
+
 		# Prototype: "player" verb[properties]
 		# Matches:
 		#  2. Enter Game
 		#  3. Disconnection
+		#  l4d addition 46. spawned aka. the role/model change
 
 		$ev_player = $1;
 		$ev_verb   = $2;
@@ -1618,9 +1683,32 @@ while ($loop = &getLine())
 				}
 			}
 		}
+		elsif(like($ev_verb,"spawned")) {
+			#
+			# L4D role/model change support
+			# the role attribute is custom for l4d
+			#
+			my $playerinfo = &getPlayerInfo($ev_player);
+
+			$ev_type = 46;
+
+			if ($playerinfo)
+			{
+				$ev_status = &doEvent_RoleSelection(
+					$playerinfo->{"userid"},
+					$playerinfo->{"role"}
+				);
+			}
+
+		}
 	}
 	elsif ($s_output =~ /^Team "([^"]+)" ([^"\(]+) "([^"]+)" [^"\(]+ "([^"]+)" [^"\(]+(.*)$/)
 	{
+		if ($g_debug > 2) {
+			print "## DEBUG : ".$s_output."\n";
+			print "## Match M6\n";
+		}
+
 		# Prototype: Team "team" verb "obj_a" ?... "obj_b" ?...[properties]
 		# Matches:
 	    # 16. Round-End Team Score Report
@@ -1645,6 +1733,11 @@ while ($loop = &getLine())
 	}
 	elsif ($s_output =~ /^Team "([^"]+)" ([^"\(]+) "([^"]+)"(.*)$/)
 	{
+		if ($g_debug > 2) {
+			print "## DEBUG : ".$s_output."\n";
+			print "## Match M7\n";
+		}
+
 		# Prototype: Team "team" verb "obj_a"[properties]
 		# Matches:
 	    # 12. Team Objectives/Actions
@@ -1685,6 +1778,11 @@ while ($loop = &getLine())
 	}
 	elsif ($s_output =~ /^([^"\(]+) "([^"]+)" = "([^"]*)"(.*)$/)
 	{
+		if ($g_debug > 2) {
+			print "## DEBUG : ".$s_output."\n";
+			print "## Match M8\n";
+		}
+
 		# Prototype: verb "obj_a" = "obj_b"[properties]
 		# Matches:
 	    # 17. b) Server cvar "var" = "value"
@@ -1708,6 +1806,11 @@ while ($loop = &getLine())
 	}
 	elsif ($s_output =~ /^(Rcon|Bad Rcon): "rcon [^"]+"([^"]*)"\s+(.+)" from "([^"]+)"(.*)$/)
 	{
+		if ($g_debug > 2) {
+			print "## DEBUG : ".$s_output."\n";
+			print "## Match M9\n";
+		}
+
 		# Prototype: verb: "rcon ?..."obj_a" obj_b" from "obj_c"[properties]
 		# Matches:
 	    # 20. a) Rcon; b) Bad Rcon
@@ -1743,6 +1846,11 @@ while ($loop = &getLine())
 	}
 	elsif ($s_output =~ /^([^"\(]+) "([^"]+)"(.*)$/)
 	{
+		if ($g_debug > 2) {
+			print "## DEBUG : ".$s_output."\n";
+			print "## Match M10\n";
+		}
+
 		# Prototype: verb "obj_a"[properties]
 		# Matches:
 		# 13. World Objectives/Actions
@@ -1787,8 +1895,12 @@ while ($loop = &getLine())
 			);
 		}
 	}
-	elsif ($s_output =~ /^((?:Server cvars|Log file)[^\(]+)(.*)$/)
-	{
+	elsif ($s_output =~ /^((?:Server cvars|Log file)[^\(]+)(.*)$/) {
+		if ($g_debug > 2) {
+			print "## DEBUG : ".$s_output."\n";
+			print "## Match M11\n";
+		}
+
 		# Prototype: verb[properties]
 		# Matches:
 	    # 17. a) Server cvars start; c) Server cvars end
@@ -1799,37 +1911,37 @@ while ($loop = &getLine())
 
 		%ev_properties = &getProperties($ev_properties);
 
-		if (like($ev_verb, "Server cvars start"))
-		{
+		if (like($ev_verb, "Server cvars start")) {
 			$ev_type = 17;
 			$ev_status = &doEvent_ServerCvar(
 				"start"
 			);
 		}
-		elsif (like($ev_verb, "Server cvars end"))
-		{
+		elsif (like($ev_verb, "Server cvars end")) {
 			$ev_type = 17;
 			$ev_status = &doEvent_ServerCvar(
 				"end"
 			);
 		}
-		elsif (like($ev_verb, "Log file started"))
-		{
+		elsif (like($ev_verb, "Log file started")) {
 			$ev_type = 18;
 			$ev_status = &doEvent_LogFile(
 				"start"
 			);
 		}
-		elsif (like($ev_verb, "Log file closed"))
-		{
+		elsif (like($ev_verb, "Log file closed")) {
 			$ev_type = 18;
 			$ev_status = &doEvent_LogFile(
 				"end"
 			);
 		}
 	}
-	elsif ($s_output =~ /^\[ADMIN:?\]\s*(.+)$/)
-	{
+	elsif ($s_output =~ /^\[ADMIN:?\]\s*(.+)$/) {
+		if ($g_debug > 2) {
+			print "## DEBUG : ".$s_output."\n";
+			print "## Match M12\n";
+		}
+
 		# Prototype: [ADMIN] obj_a
 		# Matches:
 	    # Admin Mod messages
@@ -1842,8 +1954,12 @@ while ($loop = &getLine())
 			$ev_obj_a
 		);
 	}
-	elsif ($s_output =~ /^\[ADMIN:(.+)\] ADMIN Command: \1 used command (.+)$/)
-	{
+	elsif ($s_output =~ /^\[ADMIN:(.+)\] ADMIN Command: \1 used command (.+)$/) {
+		if ($g_debug > 2) {
+			print "## DEBUG : ".$s_output."\n";
+			print "## Match M13\n";
+		}
+
 		# Prototype: [ADMIN] obj_a
 		# Matches:
 	    # Admin Mod messages
@@ -1858,12 +1974,42 @@ while ($loop = &getLine())
 			$ev_obj_a
 		);
 	}
+	elsif ($s_output =~ /^\(DEATH\)"([^"]+)" ([^"\(]+) "([^"]+)" [^"\(]+ "([^"]+)"/) {
+		if ($g_debug > 2) {
+			print "## DEBUG : ".$s_output."\n";
+			print "## Match M14\n";
+		}
+
+		#
+		# l4d support ffor the kills
+		# this has a non standart log format
+		#
+		
+		$ev_killer = $1;
+		$ev_verb   = $2; # killed etc.
+		$ev_victim = $3;
+		$ev_weapon = $4;
+
+		if(like($ev_verb, "killed")) {
+			my $killerinfo = &getPlayerInfo($ev_killer);
+			my $victiminfo = &getPlayerInfo($ev_victim);
+
+			$ev_type = 48;
+
+			if ($killerinfo && $victiminfo) {
+				$ev_status = &doEvent_Frag(
+					$killerinfo->{"userid"},
+					$victiminfo->{"userid"},
+					$ev_weapon
+				);
+			}
+
+		}
+	}
 
 
-	if ($ev_type)
-	{
-		if ($g_debug > 2)
-		{
+	if ($ev_type) {
+		if ($g_debug > 2) {
 			print <<EOT
 type   = "$ev_type"
 team   = "$ev_team"
@@ -1875,41 +2021,35 @@ obj_c  = "$ev_obj_c"
 properties = "$ev_properties"
 EOT
 ;
-			while (my($key, $value) = each(%ev_properties))
-			{
+			while (my($key, $value) = each(%ev_properties)) {
 				print "property: \"$key\" = \"$value\"\n";
 			}
 
-			while (my($key, $value) = each(%ev_player))
-			{
+			while (my($key, $value) = each(%ev_player)) {
 				print "player $key = \"$value\"\n";
 			}
 		}
 
-		if ($ev_status ne "")
-		{
+		if ($ev_status ne "") {
 			&printEvent($ev_type, $ev_status);
 		}
-		else
-		{
+		else {
 			&printEvent($ev_type, "BAD DATA: $s_output");
 		}
 	}
-	else
-	{
+	else {
 		# Unrecognised event
 		&printEvent(999, "UNRECOGNISED: " . $s_output);
 	}
 
-
-
+	# Update the rating system.
+	if($g_rating_system eq "1" || $g_rating_system eq "2") {
+    	$ratingsys->update();
+    }
 
 	# Clean up
-
-	while ( my($pl, $player) = each(%g_players) )
-	{
-		if ( ($ev_unixtime - $player->{timestamp}) > 600 )
-		{
+	while ( my($pl, $player) = each(%g_players) ) {
+		if ( ($ev_unixtime - $player->{timestamp}) > 600 ) {
 			# we delete any player who is inactive for over 10 mins (600 sec)
 			# - they probably disconnected silently somehow.
 
@@ -1964,17 +2104,13 @@ EOT
 		}
 	}
 
-	if ($c % 500000 == 0)
-	{
-		if ($g_debug > 0)
-		{
+	if ($c % 500000 == 0) {
+		if ($g_debug > 0) {
 			print "\n-- Optimizing database: Optimizing tables...\n";
 		}
 
-		foreach $table (@g_allTables)
-		{
-			if ($g_debug > 0)
-			{
+		foreach $table (@g_allTables) {
+			if ($g_debug > 0) {
 				print "-> $table ... "
 			}
 
@@ -1982,14 +2118,12 @@ EOT
 				OPTIMIZE TABLE $table
 			");
 
-			if ($g_debug > 0)
-			{
+			if ($g_debug > 0) {
 				print "OK\n";
 			}
 		}
 
-		if ($g_debug > 0)
-		{
+		if ($g_debug > 0) {
 			print "-- Database optimization complete.\n\n";
 		}
 	}

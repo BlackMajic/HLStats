@@ -1,7 +1,7 @@
 <?php
 /**
  * $Id: adminauth.inc.php 438 2008-04-09 12:26:43Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/adminauth.inc.php $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/adminauth.inc.php $
  *
  * Original development:
  * +

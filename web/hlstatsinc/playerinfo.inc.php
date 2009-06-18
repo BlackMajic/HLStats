@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: playerinfo.inc.php 625 2008-11-11 10:01:09Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/playerinfo.inc.php $
+ * $Id: playerinfo.inc.php 678 2009-05-12 10:30:27Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/playerinfo.inc.php $
  *
  * Original development:
  * +
@@ -42,15 +42,30 @@
  */
 
 	// Player Details
+	$player = '';
+	$uniqueid = '';
+	$game = '';
+	$killLimit = 5;
 
-	$player = sanitize($_GET["player"]);
-	$uniqueid  = sanitize($_GET["uniqueid"]);
-	$game = sanitize($_GET["game"]);
-	$killLimit = sanitize($_GET['killLimit']);
-
-	// set the default kill limit
-	if($killLimit == "") {
-		$killLimit = 5;
+	if(!empty($_GET["player"])) {
+		if(validateInput($_GET["player"],'digit') === true) {
+			$player = $_GET["player"];
+		}
+	}
+	if(!empty($_GET["uniqueid"])) {
+		if(validateInput($_GET["uniqueid"],'digit') === true) {
+			$uniqueid  = $_GET["uniqueid"];
+		}
+	}
+	if(!empty($_GET["game"])) {
+		if(validateInput($_GET["game"],'nospace') === true) {
+			$game = $_GET["game"];
+		}
+	}
+	if(!empty($_GET['killLimit'])) {
+		if(validateInput($_GET['killLimit'],'digit') === true) {
+			$killLimit = $_GET['killLimit'];
+		}
 	}
 
 	if (!$player && $uniqueid) {
@@ -85,31 +100,64 @@
 		error("No player ID specified.");
 	}
 
-	$db->query("
-		SELECT
-			".DB_PREFIX."_Players.lastName,
-			".DB_PREFIX."_Players.clan,
-			".DB_PREFIX."_Players.fullName,
-			".DB_PREFIX."_Players.email,
-			".DB_PREFIX."_Players.homepage,
-			".DB_PREFIX."_Players.icq,
-			".DB_PREFIX."_Players.game,
-			".DB_PREFIX."_Players.skill,
-			".DB_PREFIX."_Players.oldSkill,
-			".DB_PREFIX."_Players.kills,
-			".DB_PREFIX."_Players.deaths,
-			IFNULL(kills/deaths, '-') AS kpd,
-			".DB_PREFIX."_Players.suicides,
-			CONCAT(".DB_PREFIX."_Clans.tag, ' ', ".DB_PREFIX."_Clans.name) AS clan_name
-		FROM
-			".DB_PREFIX."_Players
-		LEFT JOIN ".DB_PREFIX."_Clans ON
-			".DB_PREFIX."_Clans.clanId = ".DB_PREFIX."_Players.clan
-		WHERE
-			playerId='$player'
-	");
-	if ($db->num_rows() != 1)
-		error("No such player '$player'.");
+	if(defined('ELORATING') && ELORATING === "1") {
+		$db->query("
+			SELECT
+				".DB_PREFIX."_Players.lastName,
+				".DB_PREFIX."_Players.clan,
+				".DB_PREFIX."_Players.fullName,
+				".DB_PREFIX."_Players.email,
+				".DB_PREFIX."_Players.homepage,
+				".DB_PREFIX."_Players.icq,
+				".DB_PREFIX."_Players.game,
+				".DB_PREFIX."_Players.skill,
+				".DB_PREFIX."_Players.oldSkill,
+				".DB_PREFIX."_Players.kills,
+				ROUND(".DB_PREFIX."_Players.rating) as rating,
+				ROUND(SQRT(".DB_PREFIX."_Players.rd2)) as rd,
+				".DB_PREFIX."_Players.deaths,
+				IFNULL(kills/deaths, '-') AS kpd,
+				".DB_PREFIX."_Players.suicides,
+				CONCAT(".DB_PREFIX."_Clans.tag, ' ', ".DB_PREFIX."_Clans.name) AS clan_name
+			FROM
+				".DB_PREFIX."_Players
+			LEFT JOIN ".DB_PREFIX."_Clans ON
+				".DB_PREFIX."_Clans.clanId = ".DB_PREFIX."_Players.clan
+			WHERE
+				playerId='$player'
+		");
+		if ($db->num_rows() != 1)
+			error("No such player '$player'.");
+	}
+	elseif(defined('ELORATING') && ELORATING === "2") {
+	}
+	else {
+		$db->query("
+			SELECT
+				".DB_PREFIX."_Players.lastName,
+				".DB_PREFIX."_Players.clan,
+				".DB_PREFIX."_Players.fullName,
+				".DB_PREFIX."_Players.email,
+				".DB_PREFIX."_Players.homepage,
+				".DB_PREFIX."_Players.icq,
+				".DB_PREFIX."_Players.game,
+				".DB_PREFIX."_Players.skill,
+				".DB_PREFIX."_Players.oldSkill,
+				".DB_PREFIX."_Players.kills,
+				".DB_PREFIX."_Players.deaths,
+				IFNULL(kills/deaths, '-') AS kpd,
+				".DB_PREFIX."_Players.suicides,
+				CONCAT(".DB_PREFIX."_Clans.tag, ' ', ".DB_PREFIX."_Clans.name) AS clan_name
+			FROM
+				".DB_PREFIX."_Players
+			LEFT JOIN ".DB_PREFIX."_Clans ON
+				".DB_PREFIX."_Clans.clanId = ".DB_PREFIX."_Players.clan
+			WHERE
+				playerId='$player'
+		");
+		if ($db->num_rows() != 1)
+			error("No such player '$player'.");
+	}
 
 	$playerdata = $db->fetch_array();
 	$db->free_result();
@@ -224,7 +272,8 @@
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						if ($email = getEmailLink($playerdata["email"])) {
+        						$email = getEmailLink($playerdata["email"]);
+        						if (!empty($email)) {
         							echo $email;
         						}
         						else {
@@ -245,7 +294,8 @@
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						if ($url = getLink($playerdata["homepage"])) {
+        						$url = getLink($playerdata["homepage"]);
+        						if (!empty($url)) {
         							echo $url;
         						}
         						else {
@@ -348,13 +398,15 @@
         						echo $g_options["font_normal"];
         						$db->query("
         							SELECT
-        								DATE_FORMAT(MAX(eventTime), '%r, %a. %D %b.')
+        								DATE_FORMAT(eventTime, '%r, %a. %D %b.')
         							FROM
         								".DB_PREFIX."_Events_Connects
         							LEFT JOIN ".DB_PREFIX."_Servers ON
         								".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_Connects.serverId
         							WHERE
         								".DB_PREFIX."_Servers.game='$game' AND playerId='$player'
+        							ORDER BY eventTime DESC
+									LIMIT 1
         						");
         						list($lastevent) = $db->fetch_row();
 
@@ -504,17 +556,35 @@
 							ORDER BY skill DESC
 						");
 						$ranKnum = 1;
+						$row = '';
 						while ($row = $db->fetch_row()) {
 							$statsArr[$row[1]] = $ranKnum;
 							$ranKnum++;
 						}
-						echo "<b>" . $statsArr[$player] . "</b> (ordered by Skill)";
-
+						echo "<b>" . $statsArr[$player] . "</b> (ordered by Points)";
 						echo $g_options["fontend_normal"];
 					   ?>
 					</td>
 				</tr>
-
+<?php if(defined('ELORATING') && (ELORATING === "1" || ELORATING === "2")) { ?>
+				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
+					<td width="45%">
+					   <?php
+						echo $g_options["font_normal"];
+						echo "Rating (RD):";
+						echo $g_options["fontend_normal"];
+					   ?>
+					</td>
+					<td width="55%">
+					   <?php
+						echo $g_options["font_normal"];
+						echo "<b>".$playerdata["rating"]."</b>";
+						echo " (".$playerdata["rd"].")";
+						echo $g_options["fontend_normal"];
+					   ?>
+					</td>
+				</tr>
+<?php } ?>
 				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
 					<td width="45%">
 					   <?php
@@ -683,10 +753,12 @@
 			WHERE
 				".DB_PREFIX."_Servers.game='$game' AND playerId='$player'";
 		$query = $db->query($query);
+		$result = '';
+		$eventsArr = array();
 		while($result = $db->fetch_array($query)) {
 			$eventsArr[] = $result;
 		}
-		if(count($eventsArr) > 0) {
+		if(!empty($eventsArr)) {
 		    // group by day
 		    foreach ($eventsArr as $entry) {
 		    	$dateArr = explode(" ",$entry['eventTime']);
@@ -1771,7 +1843,7 @@ if ($db->num_rows($result) != 0) {
 	Show people this person has killed
 	<SELECT name="killLimit" onchange='changeLimit(this.options[this.selectedIndex].value)'>
 <?php
-  for($j = 0; $j < 16; $j++) {
+  for($j = 1; $j < 16; $j++) {
 		echo "<option value=$j";
 		if($killLimit == $j) { echo " selected"; }
 		echo ">$j</option>";
@@ -1796,10 +1868,11 @@ if ($db->num_rows($result) != 0) {
 		// get the kills
 		$query = "SELECT `eventTime` FROM `".DB_PREFIX."_Events_Frags` WHERE `killerId` = '".$player."'";
 		$query = $db->query($query);
+		$killsArr = array();
 		while($result = $db->fetch_array($query)) {
 			$killsArr[] = $result;
 		}
-		if(count($killsArr) > 0) {
+		if(!empty($killsArr)) {
 			$dateArr = "";
 			$eventsGruped = "";
 			$timeLineData = "";
@@ -1883,6 +1956,6 @@ if ($db->num_rows($result) != 0) {
     </tr>
     <tr>
     	<td width="100%" align="right"><br><br>
-    	<?php echo $g_options["font_small"]; ?><b>Admin Options:</b> <a href="<?php echo $g_options["scripturl"] . "?mode=admin&task=tools_editdetails_player&id=$player"; ?>">Edit Player Details</a><?php echo $g_options["fontend_small"]; ?></td>
+    	<?php echo $g_options["font_small"]; ?><b>Admin Options:</b> <a href="<?php echo $g_options["scripturl"] . "?mode=admin&task=toolsEditdetailsPlayer&id=$player"; ?>">Edit Player Details</a><?php echo $g_options["fontend_small"]; ?></td>
     </tr>
 </table>

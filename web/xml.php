@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: xml.php 603 2008-10-13 06:42:26Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/xml.php $
+ * $Id: xml.php 675 2009-03-03 21:09:45Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/xml.php $
  *
  * Original development:
  * +
@@ -41,8 +41,36 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+// Check PHP configuration
+if (version_compare(phpversion(), "5.2.6", "<")) {
+	die("HLstats requires PHP version 5.2.6 or newer (you are running PHP version " . phpversion() . ").");
+}
+
+if (!get_magic_quotes_gpc()) {
+	die("HLstats requires <b>magic_quotes_gpc</b> to be <i>enabled</i>. Check your php.ini or refer to the PHP manual for more information.");
+}
+
+if (get_magic_quotes_runtime()) {
+	die("HLstats requires <b>magic_quotes_runtime</b> to be <i>disabled</i>. Check your php.ini or refer to the PHP manual for more information.");
+}
+
+date_default_timezone_set('Europe/Berlin');
+
+// if you have problems with your installation
+// activate this paramter by setting it to true
+define('SHOW_DEBUG',true);
+
+// do not display errors in live version
+if(SHOW_DEBUG === true) {
+	error_reporting(8191);
+	ini_set('display_errors',true);
+}
+else {
+	ini_set('display_errors',false);
+}
+
 // load config
-require('hlstatsinc/hlstats.conf.inc.php');
+require('./hlstatsinc/hlstats.conf.inc.php');
 
 /**
  * load required stuff
@@ -56,8 +84,7 @@ require(INCLUDE_PATH . "/functions.inc.php");
 require(INCLUDE_PATH . "/classes.inc.php");
 
 // deb class and options
-$db_classname = "DB_" . DB_TYPE;
-$db = new $db_classname;
+$db = new DB_mysql();
 
 // get the hlstats options
 $g_options = getOptions();
@@ -74,11 +101,9 @@ if($g_options['allowXML'] == "1") {
 		 */
 		case 'playerlist':
 			$gameCode = sanitize($_GET['gameCode']);
-			if($gameCode != "") {
+			if(!empty($gameCode) && validateInput($gameCode,'nospace')) {
 				$query = "SELECT
-			    			t1.playerId,
-			    			lastName,
-			    			skill
+			    			t1.playerId,lastName,skill
 			    		FROM
 			    			hlstats_Players as t1 INNER JOIN hlstats_PlayerUniqueIds as t2
 			    			ON t1.playerId = t2.playerId
@@ -105,14 +130,31 @@ if($g_options['allowXML'] == "1") {
 
 		break;
 
+		case 'worldstats':
+			$gameCode = sanitize($_GET['gameCode']);
+			if(!empty($gameCode) && validateInput($gameCode,'nospace')) {
+				$query = "SELECT
+			    			t1.playerId,lastName,skill
+			    		FROM
+			    			hlstats_Players as t1 INNER JOIN hlstats_PlayerUniqueIds as t2
+			    			ON t1.playerId = t2.playerId
+			    		WHERE
+			    			t1.game='".$gameCode."'
+			    			AND t1.hideranking=0
+			    			AND t2.uniqueId not like 'BOT:%'
+			    		ORDER BY skill DESC
+			    		LIMIT 10";
+			}
+		break;
+
 		/**
-		 * return some information about the given server like live_stats view
+		 * return some information about the given server like livestats view
 		 */
 		case 'serverinfo':
 		default:
 			// we want some server info
 			$serverId = sanitize($_GET['serverId']);
-			if($serverId != "") {
+			if(!empty($serverId) && validateInput($serverId,'digit')) {
 				// check if we have such server
 				$db->query("
 						SELECT
@@ -214,7 +256,6 @@ if($g_options['allowXML'] == "1") {
 						$server_players = Source_A2S_Player($server_ip, $server_port, $query_challenge);
 
 						$server_details = Format_Info_Array($server_details);
-						# If HLstats currently stores the rcon, might as well try to get more data from a HL status
 
 						// the nextmap
 						if (isset($server_rules['cm_nextmap'])) {
@@ -222,6 +263,9 @@ if($g_options['allowXML'] == "1") {
 						}
 						elseif (isset($server_rules['amx_nextmap'])) {
 							$server_details['nextmap'] = $server_rules['amx_nextmap'];
+						}
+						elseif (isset($server_rules['mani_nextmap'])) {
+							$server_details['nextmap'] = $server_rules['mani_nextmap'];
 						}
 						if(isset($server_details['nextmap']) && $server_details['nextmap'] != "") {
 							$xmlBody .= "<nextmap>".$server_details['nextmap']."</nextmap>";
@@ -239,6 +283,9 @@ if($g_options['allowXML'] == "1") {
 						elseif (isset($server_rules['mp_timeleft'])) {
 							$server_details['timeleft'] = sprintf('%02u:%02u', ($server_rules['mp_timeleft'] / 60), ($server_rules['mp_timeleft'] % 60));
 						}
+						elseif (isset($server_rules['mani_timeleft'])) {
+							$server_details['timeleft'] = $server_rules['mani_timeleft'];
+						}
 						if (isset($server_details['timeleft'])) {
 							$xmlBody .= "<timeleft>".$server_details['timeleft']."</timeleft>";
 						}
@@ -247,35 +294,6 @@ if($g_options['allowXML'] == "1") {
 						if ($server_rules['mp_fraglimit'] > 0) {
 							$xmlBody .= "<fragsmax>".$server_rules['mp_fraglimit']."</fragsmax>";
 							$xmlBody .= "<fragsleft>".$server_rules['mp_fragsleft']."</fragsleft>";
-						}
-
-						// if we have rcon get some more info
-						if ($server_rcon !== false) {
-							if ($serverData['source'] == 1) {
-								$server_players_tmp = $server_players;
-								$server_status = Source_Rcon($server_ip, $server_port, $server_rcon, 'status');
-							}
-							else {
-								$server_status = HalfLife_Rcon($server_ip, $server_port, $server_rcon, 'status', $query_challenge);
-							}
-
-							if ($server_status !== false) {
-								# Rcon worked
-								$server_players = array();
-								$server_hltv = array();
-								Parse_HL_Status($server_status, $serverData['source'], $server_players, $server_hltv);
-
-								if ($server_details['hltvcount'] > 0) {
-									$xmlBody .= "<hltv>".$server_details['hltvcount']."</hltv>";
-								}
-
-								if ($server_details['players_connecting'] > 0) {
-									$xmlBody .= "<playersConnecting>".$server_details['players_connecting']."</playersConnecting>";
-								}
-							}
-						}
-						else {
-							// we have no rcon set
 						}
 					}
 					else {

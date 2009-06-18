@@ -42,7 +42,6 @@ INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'tfc','Teleporter_Exit_Fin
 INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'tfc','Built_Dispenser',8,0,'0','Built Dispenser','1','0','0','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'tfc','Discovered_Spy',2,0,'0','Discovered a Spy','1','0','0','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'tfc','Dispenser_Destroyed',5,0,'0','Dispenser Destroyed','1','0','0','0');
-INSERT IGNORE INTO ++DB_PREFIX++_Actions VALUES (NULL,'tfc','Built_Dispenser',8,0,'0','Built Dispenser','1','0','0','0');
 
 
 #

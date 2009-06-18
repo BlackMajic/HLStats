@@ -1,7 +1,7 @@
 <?php
 /**
  * $Id: weaponinfo.inc.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/weaponinfo.inc.php $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/weaponinfo.inc.php $
  *
  * Original development:
  * +

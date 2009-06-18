@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!-- $Id: settings.xml 448 2008-04-10 14:38:43Z jumpin_banana $ -->
-<!-- $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/amcharts/pie/settings.xml $ -->
+<!-- $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/amcharts/pie/settings.xml $ -->
 
 <!-- Value between [] brackets, for example [#FFFFFF] shows default value which is used if this parameter is not set -->
 <!-- This means, that if you are happy with this value, you can delete this line at all and reduce file size         -->

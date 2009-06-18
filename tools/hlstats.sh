@@ -1,7 +1,7 @@
 #!/bin/bash
 #
-# $Id: hlstats.sh 570 2008-09-15 14:19:53Z jumpin_banana $
-# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/tools/hlstats.sh $
+# $Id: hlstats.sh 638 2008-11-26 15:18:35Z jumpin_banana $
+# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/tools/hlstats.sh $
 #
 # Original development:
 # +
@@ -60,7 +60,7 @@ case "$1" in
             echo "HLstats already running!"
         else
             rm -rf hlstats.pid
-            perl ../daemon/hlstats.pl >/dev/null 2>&1
+            perl ../daemon/hlstats.pl >/dev/null 2>&1 &
             echo $! >hlstats.pid
             echo "PID file created."
             echo "HLstats Started successfully!"

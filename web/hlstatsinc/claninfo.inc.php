@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: claninfo.inc.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/claninfo.inc.php $
+ * $Id: claninfo.inc.php 657 2009-02-20 09:49:57Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/claninfo.inc.php $
  *
  * Original development:
  * +
@@ -43,10 +43,26 @@
 
 
 	// Clan Details
+	$clan = '';
+	$game = '';
 
-	$clan = sanitize($_GET["clan"])
-		or error("No clan ID specified.");
-	$game = sanitize($_GET['game']);
+	if(!empty($_GET["clan"])) {
+		if(validateInput($_GET["clan"],'digit') === true) {
+			$clan = $_GET["clan"];
+		}
+		else {
+			error("No clan ID specified.");
+		}
+	}
+
+	if(!empty($_GET['game'])) {
+		if(validateInput($_GET["clan"],'nospace') === true) {
+			$game = $_GET['game'];
+		}
+		else {
+			error("No clan ID specified.");
+		}
+	}
 
 	$db->query("
 		SELECT
@@ -341,7 +357,7 @@
 
 <tr>
 	<td width="100%" align="right"><br><br>
-	<?php echo $g_options["font_small"]; ?><b>Admin Options:</b> <a href="<?php echo $g_options["scripturl"] . "?mode=admin&amp;task=tools_editdetails_clan&amp;id=$clan"; ?>">Edit Clan Details</a><?php echo $g_options["fontend_small"]; ?></td>
+	<?php echo $g_options["font_small"]; ?><b>Admin Options:</b> <a href="<?php echo $g_options["scripturl"] . "?mode=admin&amp;task=toolsEditdetailsClan&amp;id=$clan"; ?>">Edit Clan Details</a><?php echo $g_options["fontend_small"]; ?></td>
 </tr>
 
 </table><p>

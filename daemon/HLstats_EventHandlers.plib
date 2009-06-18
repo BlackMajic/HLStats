@@ -1,6 +1,6 @@
 #
-# $Id: HLstats_EventHandlers.plib 625 2008-11-11 10:01:09Z jumpin_banana $
-# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/daemon/HLstats_EventHandlers.plib $
+# $Id: HLstats_EventHandlers.plib 682 2009-05-25 12:11:09Z jumpin_banana $
+# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/daemon/HLstats_EventHandlers.plib $
 #
 # Original development:
 # +
@@ -65,10 +65,10 @@ sub doEvent_Connect
 		$hostname = &resolveIp($ipAddr);
 		$hostgroup = "";
 
-		if ($hostname)
-		{
-			$hostgroup = &getHostGroup($hostname);
-		}
+		#if ($hostname)
+		#{
+		#	$hostgroup = &getHostGroup($hostname);
+		#}
 
 		if ($g_mode eq "LAN")
 		{
@@ -202,6 +202,9 @@ sub doEvent_TeamSelection
 	{
 		$player->set("team", $team);
 
+		if($g_rating_system eq "1" || $g_rating_system eq "2") {
+			$ratingsys->player_joined($player);
+        }
 		&recordEvent(
 			"ChangeTeam", 0,
 			$player->get("playerid"),
@@ -359,16 +362,12 @@ sub doEvent_Frag
 			$killerName = $killer->get("name");
 			$victimName = $victim->get("name");
 
-			if($g_rcon_say eq "admin_psay") {
-				&rcon("admin_command admin_psay $killerName You got $killerskill\(+$killerdiff\) for killing $victimName");
-				&rcon("admin_command admin_psay $victimName You got $victimskill\($victimdiff\) for being killed by $killerName");
-
+			if($g_ingame_points) {
+				&rcon("$killerName You got $killerskill\(+$killerdiff\) for killing $victimName",1);
 			}
-			elsif ($g_rcon_say eq "amx_psay") {
-				&rcon("amx_psay $playerName You are on rank $ranknumber of $totalplayers with $skill points!");
 
-				&rcon("amx_psay $killerName You got $killerskill\(+$killerdiff\) for killing $victimName");
-				&rcon("amx_psay $victimName You got $victimskill\($victimdiff\) for being killed by $killerName");
+			if($g_rating_system eq "1" || $g_rating_system eq "2") {
+				$ratingsys->player_scored($killer, 5.0*$weapon_modifier);
 			}
 		}
 		else
@@ -387,6 +386,10 @@ sub doEvent_Frag
 			$killer->updateDB();
 
 			$desc = "TEAMKILL: ";
+
+			if($g_rating_system eq "1" || $g_rating_system eq "2") {
+				$ratingsys->player_scored($killer, -60);
+			}
 		}
 	}
 	else
@@ -461,6 +464,12 @@ sub doEvent_PlayerPlayerAction
 			{
 				&rewardTeam($team, $reward_team, $actionid);
 			}
+
+			if ($reward_player != 0) {
+				if($g_rating_system eq "1" || $g_rating_system eq "2") {
+                	$ratingsys->player_scored($player, $reward_player);
+                }
+            }
 		}
 		else
 		{
@@ -554,6 +563,11 @@ sub doEvent_PlayerAction
 			{
 				&rewardTeam($team, $reward_team, $actionid);
 			}
+			if ($reward_player != 0) {
+				if($g_rating_system eq "1" || $g_rating_system eq "2") {
+                	$ratingsys->player_scored($player, $reward_player);
+                }
+            }
 		}
 		else
 		{
@@ -667,7 +681,18 @@ sub doEvent_WorldAction
 	#print "##";
 	#print $ev_prop{winner};
 
-	# tf2 extension
+
+    if($action eq "Round_Start") {
+    	if($g_rating_system eq "1" || $g_rating_system eq "2") {
+        	$ratingsys->round_start();
+        }
+    }
+    elsif($action eq "Round_Win") {
+    	if($g_rating_system eq "1" || $g_rating_system eq "2") {
+        	$ratingsys->round_end();
+        }
+    }
+	# tf2 extensions
 	if($ev_prop{winner}) {
 		$action .= "_" . $ev_prop{winner};
 	}
@@ -805,18 +830,19 @@ sub doEvent_Chat
 				playerId='" . $player->get("playerid") . "'
 		");
 
-		&rcon("say '$playerName' is now $hidedesc the rankings.");
+		&rcon("'$playerName' is now $hidedesc the rankings.");
 	}
-	elsif (($message =~ /^\/hls_skill$/i))	{
+	elsif (($message =~ /^\/skill$/i))	{
 		my $result = &doQuery("
 				SELECT
-					skill
+					skill,
+					IFNULL(kills/deaths, '-') AS kpd
 				FROM
 					${db_prefix}_Players
 				WHERE
 					playerId='" . $player->get("playerid") . "'
 			");
-		my ($skill) = $result->fetchrow_array;
+		my ($skill,$kpd) = $result->fetchrow_array;
 
 		my $playerName = $player->get("name");
 
@@ -832,18 +858,19 @@ sub doEvent_Chat
 		my $result = &doQuery("SELECT COUNT(skill) FROM ${db_prefix}_Players");
 		my ($totalplayers) = $result->fetchrow_array;
 
-		&rcon("say $playerName is on rank $ranknumber of $totalplayers with $skill points!");
-	}
-	elsif (($message =~ /^\/hls_pskill$/i))	{
+		&rcon("$playerName Rank: $ranknumber of $totalplayers; Points: $skill; KpD: $kpd!");
+	}	
+	elsif (($message =~ /^\/pskill$/i))	{
 		my $result = &doQuery("
 				SELECT
-					skill
+					skill,
+					IFNULL(kills/deaths, '-') AS kpd
 				FROM
 					${db_prefix}_Players
 				WHERE
 					playerId='" . $player->get("playerid") . "'
 			");
-		my ($skill) = $result->fetchrow_array;
+		my ($skill,$kpd) = $result->fetchrow_array;
 
 		my $playerName = $player->get("name");
 
@@ -859,15 +886,7 @@ sub doEvent_Chat
 		my $result = &doQuery("SELECT COUNT(skill) FROM ${db_prefix}_Players");
 		my ($totalplayers) = $result->fetchrow_array;
 
-		if($g_rcon_say eq "admin_psay") {
-			&rcon("admin_command admin_psay $playerName You are on rank $ranknumber of $totalplayers with $skill points!");
-		}
-		elsif ($g_rcon_say eq "amx_psay") {
-			&rcon("amx_psay $playerName You are on rank $ranknumber of $totalplayers with $skill points!");
-		}
-		else {
-			&rcon("say $playerName is on rank $ranknumber of $totalplayers with $skill points!");
-		}
+		&rcon("$playerName Rank $ranknumber of $totalplayers; Points $skill; KpD: $kpd!",1);
 	}
 
 	return $playerstr . " $type \"$message\"";
@@ -952,24 +971,20 @@ sub doEvent_LogFile
 # 019. Map
 #
 
-sub doEvent_ChangeMap
-{
+sub doEvent_ChangeMap {
 	my ($type, $newmap) = @_;
 
 	$g_servers{$s_addr}->{map} = $newmap;
 	&printNotice("Current map for server \"$s_addr\" is now \"" .
 		$g_servers{$s_addr}->{map} . "\"");
 
-	if ($type eq "loading")
-	{
+	if ($type eq "loading") {
 		return "Loading map \"$newmap\"";
 	}
-	elsif ($type eq "started")
-	{
+	elsif ($type eq "started") {
 		return "Started map \"$newmap\"";
 	}
-	else
-	{
+	else {
 		return "Map \"$newmap\": $type";
 	}
 }

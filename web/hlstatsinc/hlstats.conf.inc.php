@@ -1,6 +1,6 @@
 <?php
 /**
- * $Id: hlstats.conf.inc.php 626 2008-11-11 11:01:44Z jumpin_banana $
+ * $Id: hlstats.conf.inc.php 681 2009-05-15 09:15:15Z jumpin_banana $
  *
  * Original development:
  * +
@@ -55,7 +55,7 @@
 ///
 
 // DB_NAME - The name of the database
-define("DB_NAME", "hlstats");
+define("DB_NAME", "hlstats_dev");
 
 // DB_USER - The username to connect to the database as
 define("DB_USER", "user");
@@ -68,9 +68,6 @@ define("DB_PASS", "test");
 //           use a Unix domain socket, if your mysqld is on the same box as
 //           your web server.)
 define("DB_ADDR", "localhost");
-
-// DB_TYPE - The database server type. Only "mysql" is supported currently
-define("DB_TYPE", "mysql");
 
 // DB_PREFIX - The table prefix. Default is hlstats (the leading _ will comes from the sql file)
 define("DB_PREFIX", "hlstats");
@@ -108,7 +105,7 @@ define("INCLUDE_PATH", "./hlstatsinc");
 // DELETEDAYS - How many days the Event History covers. Must match the value
 //              of DeleteDays in hlstats.conf.
 //              default = 5
-define("DELETEDAYS", 5);
+define("DELETEDAYS", 0);
 
 // MODE - Sets the player-tracking mode. Must match the value of Mode in
 //        hlstats.conf. Possible values:
@@ -125,5 +122,15 @@ define("MODE", "Normal");
 
 // hide bot players from stats
 // values are 1 or 0
-define("HIDE_BOTS", "0");
+define("HIDE_BOTS", "");
+
+// the Elo rating system
+// developed by HampusW
+// 			here you can decide if you want to use this system
+//			IMPORTANT: Must match the value of EloRating in hlstats.conf !!
+//			Possible values are
+//			1) "0"		- Off. Do not use the rating system at all.
+//			2) "1"		- Use the system and display it with the ordinary system
+//			3) "2"		- Only use the EloRating and show only the new one.
+define('ELORATING','0');
 ?>

@@ -44,9 +44,15 @@
 
 
 	// Player Chat History
-
-	$player = intval($_GET["player"])
-		or error("No player ID specified.");
+	$player = '';
+	if(!empty($_GET["player"])) {
+		if(validateInput($_GET["player"],'digit') === true) {
+			$player = $_GET["player"];
+		}
+		else {
+			error("No player ID specified.");
+		}
+	}
 
 	$db->query("
 		SELECT
@@ -90,7 +96,7 @@
 			"Player Details"=>$g_options["scripturl"] . "?mode=playerinfo&amp;player=$player",
 			"Event Chat History"=>""
 		),
-		$playername
+		$pl_name
 	);
 
 	flush();

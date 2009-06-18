@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: mapinfo.inc.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/mapinfo.inc.php $
+ * $Id: mapinfo.inc.php 677 2009-05-11 10:12:12Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/mapinfo.inc.php $
  *
  * Original development:
  * +
@@ -131,8 +131,7 @@
 
 </table><p>
 <?php // figure out URL and absolute path of image
-	$imgurl = $g_options["imgdir"] . "/maps/$game/"
-		. "$map";
+	$imgurl = $g_options["imgdir"] . "/maps/$game/". "$map";
 
 	$image = getImage("/maps/$game/$map");
 

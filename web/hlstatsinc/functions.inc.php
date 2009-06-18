@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: functions.inc.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/functions.inc.php $
+ * $Id: functions.inc.php 654 2009-02-19 15:52:53Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/functions.inc.php $
  *
  * Original development:
  * +
@@ -48,9 +48,7 @@
 // processing.
 //
 
-function error ($message, $exit=true)
-{
-	global $g_options;
+function error ($message, $exit=true) {
 ?>
 <table border="1" cellspacing="0" cellpadding="5">
 <tr>
@@ -73,16 +71,14 @@ function error ($message, $exit=true)
 // be excluded from the returned query string.
 //
 
-function makeQueryString($key, $value, $notkeys = array())
-{
+function makeQueryString($key, $value, $notkeys = array()) {
+	$querystring = "";
 
 	if (!is_array($notkeys))
 		$notkeys = array();
 
-	foreach ($_GET as $k=>$v)
-	{
-		if ($k && $k != $key && !in_array($k, $notkeys))
-		{
+	foreach ($_GET as $k=>$v) {
+		if ($k && $k != $key && !in_array($k, $notkeys)) {
 			$querystring .= urlencode($k) . "=" . urlencode($v) . "&amp;";
 		}
 	}
@@ -432,5 +428,78 @@ function makeXMLSave($string) {
 	$string = str_replace($aSearch,$aReplace, $string);
 
 	return $string;
+}
+
+/**
+ * valide if given string is correct
+ *
+ * @param string $string
+ * @param string $mode
+ */
+function validateInput($string,$mode) {
+	$ret = false;
+	if(!empty($string) && !empty($mode)) {
+		switch ($mode) {
+			case 'nospace':
+				$pattern = '/[^\p{L}\p{N}]/u';
+				$value = preg_replace($pattern, '', $string);
+				if($string === $value) {
+					 $ret = true;
+				}
+			break;
+			case 'digit':
+				$pattern = '/[^\p{N}]/u';
+				$value = preg_replace($pattern, '', $string);
+				if($string === $value) {
+					 $ret = true;
+				}
+			break;
+
+			case 'text':
+				$pattern = '/[^\p{L}\p{N}\p{P}]/u';
+				$value = preg_replace($pattern, '', $string);
+				if($string === $value) {
+					 $ret = true;
+				}
+			break;
+		}
+	}
+	return $ret;
+}
+
+/**
+ * check and email if valid
+ *
+ * @param sctring email
+ * @return boolean
+ * @author  Dave Child 	http://www.ilovejackdaniels.com/
+ * @desc valids an email
+ */
+function check_email_address($email) {
+	// First, we check that there's one @ symbol, and that the lengths are right
+	if (!ereg("[^@]{1,64}@[^@]{1,255}", $email)) {
+		// Email invalid because wrong number of characters in one section, or wrong number of @ symbols.
+		return false;
+	}
+	// Split it into sections to make life easier
+	$email_array = explode("@", $email);
+	$local_array = explode(".", $email_array[0]);
+	for ($i = 0; $i < sizeof($local_array); $i++) {
+		if (!ereg("^(([A-Za-z0-9!#$%&'*+/=?^_`{|}~-][A-Za-z0-9!#$%&'*+/=?^_`{|}~\.-]{0,63})|(\"[^(\\|\")]{0,62}\"))$", $local_array[$i])) {
+			return false;
+		}
+	}
+	if (!ereg("^\[?[0-9\.]+\]?$", $email_array[1])) { // Check if domain is IP. If not, it should be valid domain name
+		$domain_array = explode(".", $email_array[1]);
+		if (sizeof($domain_array) < 2) {
+			return false; // Not enough parts to domain
+		}
+		for ($i = 0; $i < sizeof($domain_array); $i++) {
+			if (!ereg("^(([A-Za-z0-9][A-Za-z0-9-]{0,61}[A-Za-z0-9])|([A-Za-z0-9]+))$", $domain_array[$i])) {
+				return false;
+			}
+		}
+	}
+	return true;
 }
 ?>

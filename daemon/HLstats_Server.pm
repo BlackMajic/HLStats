@@ -1,7 +1,7 @@
 package HLstats_Server;
 #
-# $Id: HLstats_Server.pm 435 2008-04-09 12:19:03Z jumpin_banana $
-# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/daemon/HLstats_Server.pm $
+# $Id: HLstats_Server.pm 666 2009-02-27 12:50:38Z jumpin_banana $
+# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/daemon/HLstats_Server.pm $
 #
 # Original development:
 # +
@@ -48,7 +48,7 @@ package HLstats_Server;
 
 sub new
 {
-	my ($class_name, $serverId, $address, $port, $game) = @_;
+	my ($class_name, $serverId, $address, $port, $game, $defaultMap) = @_;
 
 	my ($self) = {};
 
@@ -59,7 +59,7 @@ sub new
 	$self->{port}    = $port;
 	$self->{game}    = $game;
 
-	$self->{map}     = "";
+	$self->{map}     = $defaultMap;
 	$self->{numplayers} = 0;
 
 	return $self;

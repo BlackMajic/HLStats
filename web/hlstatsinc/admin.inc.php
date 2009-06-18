@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: admin.inc.php 554 2008-08-25 07:55:13Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/admin.inc.php $
+ * $Id: admin.inc.php 667 2009-02-27 14:15:07Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admin.inc.php $
  *
  * Original development:
  * +
@@ -56,9 +56,15 @@
 
 			if (isset($_POST["authusername"]) && $_POST['authusername'] != "") {
 
-				$this->username = sanitize($_POST["authusername"]);
-				$this->password = sanitize($_POST["authpassword"]);
-				$this->savepass = sanitize($_POST["authsavepass"]);
+				if(!empty($_POST["authusername"])) {
+					$this->username = sanitize($_POST["authusername"]);
+				}
+				if(!empty($_POST["authpassword"])) {
+					$this->password = sanitize($_POST["authpassword"]);
+				}
+				if(!empty($_POST["authsavepass"])) {
+					$this->savepass = sanitize($_POST["authsavepass"]);
+				}
 				$this->sessionStart = 0;
 
 				# clear POST vars so as not to confuse the receiving page
@@ -69,10 +75,18 @@
 			}
 			elseif (isset($_COOKIE["authusername"]) && $_COOKIE['authusername'] != "") {
 
-				$this->username 	= sanitize($_COOKIE["authusername"]);
-				$this->password 	= sanitize($_COOKIE["authpassword"]);
-				$this->savepass 	= sanitize($_COOKIE["authsavepass"]);
-				$this->sessionStart = sanitize($_COOKIE["authsessionStart"]);
+				if(!empty($_COOKIE["authusername"])) {
+					$this->username = sanitize($_COOKIE["authusername"]);
+				}
+				if(!empty($_COOKIE["authpassword"])) {
+					$this->password = sanitize($_COOKIE["authpassword"]);
+				}
+				if(!empty($_COOKIE["authsavepass"])) {
+					$this->savepass = sanitize($_COOKIE["authsavepass"]);
+				}
+				if(!empty($_COOKIE["authsessionStart"])) {
+					$this->sessionStart = sanitize($_COOKIE["authsessionStart"]);
+				}
 
 				$this->session = true;
 
@@ -164,8 +178,7 @@
 			}
 		}
 
-		function checkPass()
-		{
+		function checkPass() {
 			global $db;
 
 			$db->query("
@@ -177,8 +190,7 @@
 					username='$this->username'
 			");
 
-			if ($db->num_rows() == 1)
-			{
+			if ($db->num_rows() == 1) {
 				// The username is OK
 
 				$this->userdata = $db->fetch_array();
@@ -233,7 +245,7 @@
 						$this->error = false;
 					}
 					else {
-						$this->error = "The password you supplied is incorrect.";
+						$this->error = "Wrong authentication data.";
 					}
 					$this->password = "";
 					$this->printAuth();
@@ -242,7 +254,7 @@
 			else {
 				// The username is wrong
 				$this->ok = false;
-				$this->error = "The username you supplied is not valid.";
+				$this->error = "Wrong authentication data.";
 				$this->printAuth();
 			}
 		}
@@ -270,15 +282,13 @@
 	}
 
 
-	class AdminTask
-	{
+	class AdminTask {
 		var $title = "";
 		var $acclevel = 0;
 		var $type = "";
 		var $description = "";
 
-		function AdminTask ($title, $acclevel, $type="general", $description="")
-		{
+		function AdminTask ($title, $acclevel, $type="general", $description="") {
 			$this->title = $title;
 			$this->acclevel = $acclevel;
 			$this->type = $type;
@@ -311,9 +321,14 @@
 			global $db;
 
 			$okcols = 0;
-			foreach ($this->columns as $col)
-			{
-				$value = $_POST["new_$col->name"];
+			$qcols = '';
+			$qvals = '';
+			foreach ($this->columns as $col) {
+				$value = '';
+				if(!empty($_POST["new_$col->name"])) {
+					$value = $_POST["new_$col->name"];
+				}
+
 
 				if ($value != "") {
 					if ($col->type == "ipaddress" && !checkIP($value)) {
@@ -331,7 +346,7 @@
 							$qvals .= "MD5('$value')";
 						}
 						else {
-							$qvals .= "'".sanitize($value)."'";
+							$qvals .= "'".mysql_escape_string(($value))."'";
 						}
 
 						if ($col->type != "select" && $col->type != "hidden" && $value != $col->datasource)
@@ -344,8 +359,7 @@
 				}
 			}
 
-			if ($okcols > 0 && !$this->errors)
-			{
+			if ($okcols > 0 && !$this->errors) {
 				$db->query("
 					INSERT INTO
 						$this->table
@@ -367,11 +381,11 @@
 				$this->newerror = false;
 			}
 
-			if (is_array($_POST["rows"])) {
+			if (!empty($_POST["rows"])) {
 				foreach ($_POST["rows"] as $row) {
 					$row = stripslashes($row);
 
-					if ($_POST[$row . "_delete"]) {
+					if (!empty($_POST[$row . "_delete"])) {
 						$db->query("
 							DELETE FROM
 								$this->table
@@ -379,21 +393,22 @@
 								$this->keycol='" . addslashes($row) . "'
 						");
 					}
-					else
-					{
+					else {
 						$rowerror = false;
 
 						$query = "UPDATE $this->table SET ";
 						$i=0;
-						foreach ($this->columns as $col)
-						{
-							$value = $_POST[$row . "_" . $col->name];
+						foreach ($this->columns as $col) {
+							$value = '';
+							if(!empty($_POST[$row . "_" . $col->name])) {
+								$value = $_POST[$row . "_" . $col->name];
+							}
+
 
 							if ($col->type == "password" && $value == "(encrypted)")
 								continue;
 
-							if ($value == "" && $col->required)
-							{
+							if ($value == "" && $col->required) {
 								$this->errors[] = "Required column '$col->title' must have a value for row '$row'";
 								$rowerror = true;
 							}
@@ -404,32 +419,27 @@
 
 							if ($i > 0) $query .= ", ";
 
-							if ($col->type == "password")
-							{
+							if ($col->type == "password") {
 								$query .= $col->name . "=MD5('$value')";
 							}
-							else
-							{
-								$query .= $col->name . "='".sanitize($value)."'";
+							else {
+								$query .= $col->name . "='".mysql_escape_string(($value))."'";
 							}
 							$i++;
 						}
 						$query .= " WHERE $this->keycol='" . addslashes($row) . "'";
 
-						if (!$rowerror)
-						{
+						if (!$rowerror) {
 							$db->query($query);
 						}
 					}
 				}
 			}
 
-			if ($this->error())
-			{
+			if ($this->error()) {
 				return false;
 			}
-			else
-			{
+			else {
 				return true;
 			}
 		}
@@ -523,40 +533,35 @@
 		}
 
 
-		function drawfields ($rowdata=array(), $new=false, $stripslashes=false)
-		{
+		function drawfields ($rowdata=array(), $new=false, $stripslashes=false) {
 			global $g_options, $db;
 
 			$i=0;
-			foreach ($this->columns as $col)
-			{
-				if ($new)
-				{
+			foreach ($this->columns as $col) {
+				if ($new) {
 					$keyval = "new";
-					$rowdata[$col->name] = $rowdata["new_$col->name"];
+					if(!empty($rowdata["new_$col->name"])) {
+						$rowdata[$col->name] = $rowdata["new_$col->name"];
+					}
 					if ($stripslashes) $rowdata[$col->name] = stripslashes($rowdata[$col->name]);
 				}
-				else
-				{
+				else {
 					$keyval = $rowdata[$this->keycol];
 					if ($stripslashes) $keyval = stripslashes($keyval);
 				}
 
-				if ($col->type != "hidden")
-				{
+				if ($col->type != "hidden") {
 					echo "<td bgcolor=\"" . $g_options["table_bgcolor1"] . "\">";
 				}
 
-				if ($i == 0 && !$new)
-				{
+				if ($i == 0 && !$new) {
 					echo "<input type=\"hidden\" name=\"rows[]\" value=\"" . htmlspecialchars($keyval) . "\">";
 				}
 
 				if ($col->maxlength < 1)
 					$col->maxlength = "";
 
-				switch ($col->type)
-				{
+				switch ($col->type) {
 					case "select":
 						unset($coldata);
 
@@ -602,25 +607,23 @@
 
 						$gotcval = false;
 
-						foreach ($coldata as $k=>$v)
-						{
-							if ($rowdata[$col->name] == $k)
-							{
-								$selected = " selected";
-								$gotcval = true;
-							}
-							else
-							{
-								$selected = "";
+						foreach ($coldata as $k=>$v) {
+							$selected = "";
+							if(!empty($rowdata[$col->name])) {
+								if ($rowdata[$col->name] == $k) {
+									$selected = " selected";
+									$gotcval = true;
+								}
 							}
 
 							echo "<option value=\"$k\"$selected>$v\n";
 						}
 
-						if (!$gotcval)
-						{
-							echo "<option value=\"" . $rowdata[$col->name] . "\" selected>"
-								. $rowdata[$col->name] . "\n";
+						if (!$gotcval) {
+							if(!empty($rowdata[$col->name])) {
+								echo "<option value=\"",$rowdata[$col->name],"\" selected>",$rowdata[$col->name],"\n";
+							}
+
 						}
 
 						echo "</select>";
@@ -628,7 +631,11 @@
 
 					case "checkbox":
 						$selectedval = "1";
-						$value = $rowdata[$col->name];
+						$value = '';
+						if(!empty($rowdata[$col->name])) {
+							$value = $rowdata[$col->name];
+						}
+
 
 						if ($value == $selectedval) $selected = " checked";
 						else $selected = "";
@@ -643,10 +650,15 @@
 						break;
 
 					default:
-						if ($col->datasource != "" && !isset($rowdata[$col->name]))
+						$value='';
+						if ($col->datasource != "" && !isset($rowdata[$col->name])) {
 							$value = $col->datasource;
-						else
-							$value = $rowdata[$col->name];
+						}
+						else {
+							if(!empty($rowdata[$col->name])) {
+								$value = $rowdata[$col->name];
+							}
+						}
 
 						echo "<input type=\"text\" name=\"" . $keyval
 							. "_$col->name\" size=$col->width "
@@ -700,52 +712,47 @@
 
 
 
-	class PropertyPage
-	{
+	class PropertyPage {
 		var $table;
 		var $keycol;
 		var $keyval;
 		var $propertygroups = array();
 
-		function PropertyPage ($table, $keycol, $keyval, $groups)
-		{
+		function PropertyPage ($table, $keycol, $keyval, $groups) {
 			$this->table  = $table;
 			$this->keycol = $keycol;
 			$this->keyval = $keyval;
 			$this->propertygroups = $groups;
 		}
 
-		function draw ($data)
-		{
-			foreach ($this->propertygroups as $group)
-			{
+		function draw ($data) {
+			foreach ($this->propertygroups as $group) {
 				$group->draw($data);
 			}
 		}
 
-		function update ()
-		{
+		function update () {
 			global $db;
 
 			$setstrings = array();
-			foreach ($this->propertygroups as $group)
-			{
-				foreach ($group->properties as $prop)
-				{
-					if($_POST[$prop->name] != "") {
+			foreach ($this->propertygroups as $group) {
+				foreach ($group->properties as $prop) {
+					if(!empty($_POST[$prop->name])) {
 						$setstrings[] = $prop->name . "='" . $_POST[$prop->name] . "'";
 					}
 				}
 			}
 
-			$db->query("
-				UPDATE
-					" . $this->table . "
-				SET
-					" . implode(",\n", $setstrings) . "
-				WHERE
-					" . $this->keycol . "='" . $this->keyval . "'
-			");
+			if(!empty($setstrings)) {
+				$db->query("
+					UPDATE
+						" . $this->table . "
+					SET
+						" . implode(",\n", $setstrings) . "
+					WHERE
+						" . $this->keycol . "='" . $this->keyval . "'
+				");
+			}
 		}
 	}
 
@@ -754,14 +761,12 @@
 		var $title = "";
 		var $properties = array();
 
-		function PropertyPage_Group ($title, $properties)
-		{
+		function PropertyPage_Group ($title, $properties) {
 			$this->title = $title;
 			$this->properties = $properties;
 		}
 
-		function draw ($data)
-		{
+		function draw ($data) {
 			global $g_options;
 ?>
 <b><?php echo $this->title; ?></b><br>
@@ -770,9 +775,10 @@
 <tr valign="top" bgcolor="<?php echo $g_options["table_border"]; ?>">
 	<td><table width="100%" border="0" cellspacing="1" cellpadding="4">
 <?php
-			foreach ($this->properties as $prop)
-			{
-				$prop->draw($data[$prop->name]);
+			foreach ($this->properties as $prop) {
+				if(key_exists($prop->name,$data)) {
+					$prop->draw($data[$prop->name]);
+				}
 			}
 ?>
 		</table></td>
@@ -783,22 +789,19 @@
 		}
 	}
 
-	class PropertyPage_Property
-	{
+	class PropertyPage_Property {
 		var $name;
 		var $title;
 		var $type;
 
-		function PropertyPage_Property ($name, $title, $type, $datasource="")
-		{
+		function PropertyPage_Property ($name, $title, $type, $datasource="") {
 			$this->name  = $name;
 			$this->title = $title;
 			$this->type  = $type;
 			$this->datasource = $datasource;
 		}
 
-		function draw ($value)
-		{
+		function draw ($value) {
 			global $g_options;
 ?>
 <tr valign="middle">
@@ -852,8 +855,7 @@
 	}
 
 
-	function message ($icon, $msg)
-	{
+	function message ($icon, $msg) {
 		global $g_options;
 ?>
 		<table width="60%" border="0" cellspacing="0" cellpadding="0">
@@ -878,8 +880,22 @@
 
 	pageHeader(array("Admin"), array("Admin"=>""));
 
-	$selTask = sanitize($_GET["task"]);
-	$selGame = sanitize($_GET["admingame"]);
+	$selTask = '';
+	$selGame = '';
+
+	if(!empty($_GET["task"])) {
+		if(validateInput($_GET["task"],'nospace') === true) {
+			$selTask = $_GET["task"];
+		}
+	}
+
+	if(!empty($_GET["admingame"])) {
+		if(validateInput($_GET["admingame"],'nospace') === true) {
+			$selGame = $_GET["admingame"];
+		}
+	}
+
+
 ?>
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
@@ -892,44 +908,50 @@
 	$admintasks["options"]			= new AdminTask("HLstats Options", 100);
 	$admintasks["adminusers"]		= new AdminTask("Admin Users", 100);
 	$admintasks["games"]			= new AdminTask("Games", 100);
-	$admintasks["hostgroups"]		= new AdminTask("Host Groups", 100);
 	$admintasks["clantags"]			= new AdminTask("Clan Tag Patterns", 80);
 	$admintasks["plugins"]			= new AdminTask("Server Plugins", 80);
 
 	// Game Settings
 	$admintasks["servers"]			= new AdminTask("Servers", 100, "game");
-	$admintasks["resetgame"]			= new AdminTask("Reset", 100, "game");
+	$admintasks["resetgame"]		= new AdminTask("Reset", 100, "game");
 	$admintasks["actions"]			= new AdminTask("Actions", 80, "game");
 	$admintasks["teams"]			= new AdminTask("Teams", 80, "game");
 	$admintasks["roles"]			= new AdminTask("Roles", 80, "game");
 	$admintasks["weapons"]			= new AdminTask("Weapons", 80, "game");
-	$admintasks["awards_weapons"]	= new AdminTask("Weapon Awards", 80, "game");
-	$admintasks["awards_actions"]	= new AdminTask("Action Awards", 80, "game");
+	$admintasks["awardsWeapons"]	= new AdminTask("Weapon Awards", 80, "game");
+	$admintasks["awardsActions"]	= new AdminTask("Action Awards", 80, "game");
 
 	// Tools
-	$admintasks["tools_editdetails"] = new AdminTask("Edit Player or Clan Details", 80, "tool",
+	$admintasks["toolsEditdetails"] = new AdminTask("Edit Player or Clan Details", 80, "tool",
 		"Edit a player or clan's profile information.");
-	$admintasks["tools_adminevents"] = new AdminTask("Admin-Event History", 80, "tool",
+	$admintasks["toolsAdminevents"] = new AdminTask("Admin-Event History", 80, "tool",
 		"View event history of logged Rcon commands and Admin Mod messages.");
-	$admintasks["tools_ipstats"]	= new AdminTask("Host Statistics", 80, "tool",
+	$admintasks["toolsIpstats"]	= new AdminTask("Host Statistics", 80, "tool",
 		"See which ISPs your players are using.");
-	$admintasks["tools_optimize"]	= new AdminTask("Optimize Database", 100, "tool",
+	$admintasks["toolsOptimize"]	= new AdminTask("Optimize Database", 100, "tool",
 		"This operation tells the MySQL server to clean up the database tables,
 			optimizing them for better performance. It is recommended that you run this at least once a month.");
-	$admintasks["tools_reset"]		= new AdminTask("Reset Statistics", 100, "tool",
+	$admintasks["toolsReset"]		= new AdminTask("Reset Statistics", 100, "tool",
 				"Delete all players, clans and events from the database.");
-	$admintasks["tools_news"]		= new AdminTask("News at Front page", 80, "tool",
+	$admintasks["toolsNews"]		= new AdminTask("News at Front page", 80, "tool",
 				"Write news to the front page.");
 
 	// Sub-Tools
-	$admintasks["tools_editdetails_player"] = new AdminTask("Edit Player Details", 80, "subtool",
+	$admintasks["toolsEditdetailsPlayer"] = new AdminTask("Edit Player Details", 80, "subtool",
 			"Edit a player's profile information.");
-	$admintasks["tools_editdetails_clan"]   = new AdminTask("Edit Clan Details", 80, "subtool",
+	$admintasks["toolsEditdetailsClan"]   = new AdminTask("Edit Clan Details", 80, "subtool",
 			"Edit a clan's profile information.");
 
 	// Show Tool
-	if ($admintasks[$selTask] && $admintasks[$selTask]->type == "tool" || $admintasks[$selTask]->type == "subtool")
-	{
+	$check = false;
+	if(!empty($admintasks[$selTask])) {
+		if(is_object($admintasks[$selTask])) {
+			if($admintasks[$selTask]->type == "tool" || $admintasks[$selTask]->type == "subtool") {
+				$check = true;
+			}
+		}
+	}
+	if ($check === true) {
 		$task = $admintasks[$selTask];
 		$code = $selTask;
 ?>
@@ -1014,7 +1036,7 @@ alt="rightarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mo
 ?>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&admingame=<?php echo $gamecode; ?>" name="<?php echo $code; ?>"><?php echo $task->title; ?></a></b><p>
 
-<form method="POST" action="<?php echo $g_options["scripturl"]; ?>?mode=admin&admingame=<?php echo $gamecode; ?>&task=<?php echo $code; if($_GET['advanced']) { echo "&advanced=1"; } ?>#<?php echo $code; ?>">
+<form method="POST" action="<?php echo $g_options["scripturl"]; ?>?mode=admin&admingame=<?php echo $gamecode; ?>&task=<?php echo $code; if(!empty($_GET['advanced'])) { echo "&advanced=1"; } ?>#<?php echo $code; ?>">
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 

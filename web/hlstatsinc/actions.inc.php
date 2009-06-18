@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: actions.inc.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/hlstatsinc/actions.inc.php $
+ * $Id: actions.inc.php 670 2009-03-03 07:33:06Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/actions.inc.php $
  *
  * Original development:
  * +
@@ -101,8 +101,7 @@ $db->query("
 
 list($totalactions) = $db->fetch_row();
 
-$result = $db->query("
-	SELECT
+$result = "SELECT
 		".DB_PREFIX."_Actions.code,
 		".DB_PREFIX."_Actions.description,
 		COUNT(".DB_PREFIX."_Events_PlayerActions.id) AS obj_count,
@@ -120,7 +119,8 @@ $result = $db->query("
 	ORDER BY
 		$tblPlayerActions->sort $tblPlayerActions->sortorder,
 		$tblPlayerActions->sort2 $tblPlayerActions->sortorder
-");
+";
+$result = $db->query($result);
 ?>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -128,6 +128,6 @@ $result = $db->query("
 	<td width="50%" align="right"><?php echo $g_options["font_normal"]; ?>Back to <a href="<?php echo $g_options["scripturl"] . "?game=$game"; ?>"><?php echo $gamename; ?></a><?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
 </table><p>
-<?
+<?php
 	$tblPlayerActions->draw($result, $db->num_rows($result), 90);
 ?>

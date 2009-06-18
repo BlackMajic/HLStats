@@ -1,7 +1,7 @@
 <?php
 /**
- * $Id: index.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/tags/v1.40/web/install/index.php $
+ * $Id: index.php 675 2009-03-03 21:09:45Z jumpin_banana $
+ * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/install/index.php $
  *
  * Original development:
  * +
@@ -41,32 +41,91 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-/**
- * make get vars save
- *
- * @param string $text
- * @return string
- */
-function sanitize($text) {
-	return htmlentities(strip_tags($text), ENT_QUOTES, "UTF-8");
+
+// Check PHP configuration
+if (version_compare(phpversion(), "5.2.6", "<")) {
+	die("HLstats requires PHP version 5.2.6 or newer (you are running PHP version " . phpversion() . ").");
 }
 
-// do not report NOTICE warnings
-error_reporting(E_ALL ^ E_NOTICE);
+if (!get_magic_quotes_gpc()) {
+	die("HLstats requires <b>magic_quotes_gpc</b> to be <i>enabled</i>. Check your php.ini or refer to the PHP manual for more information.");
+}
+
+if (get_magic_quotes_runtime()) {
+	die("HLstats requires <b>magic_quotes_runtime</b> to be <i>disabled</i>. Check your php.ini or refer to the PHP manual for more information.");
+}
+
+// if you have problems with your installation
+// activate this paramter by setting it to true
+define('SHOW_DEBUG',true);
+
+// do not display errors in live version
+if(SHOW_DEBUG === true) {
+	error_reporting(8191);
+	ini_set('display_errors',true);
+}
+else {
+	ini_set('display_errors',false);
+}
+
+// load required functions
+require('../hlstatsinc/functions.inc.php');
 
 session_name('hlstatsInstall');
 session_set_cookie_params(1800);
 session_start();
 
+if(!empty($_GET['step'])) {
+	if(is_numeric($_GET['step'])) {
+		$_GET['step'] = $_GET['step'];
+	}
+	else {
+		$_GET['step'] = '';
+	}
+}
+else {
+	$_GET['step'] = '';
+}
+
+$return = array();
+$return['db']['error'] = false;
+$return['db']['success'] = false;
+$return['db']['status'] = '';
 
 //// process the single steps
 if(isset($_POST['saveDBSettings'])) {
+	$dbHost = '';
+	$dbName = '';
+	$dbPass = '';
+	$dbUser = '';
+
 	// check for required values
-	$dbHost = sanitize($_POST['dbHost']);
-	$dbName = sanitize($_POST['dbName']);
-	$dbUser = sanitize($_POST['dbUser']);
-	$dbPass = sanitize($_POST['dbPass']);
-	$dbPre = sanitize($_POST['dbPrefix']);
+	if(!empty($_POST['dbHost'])) {
+		if(validateInput($_POST['dbHost'],'text') === true) {
+			$dbHost = $_POST['dbHost'];
+		}
+	}
+	if(!empty($_POST['dbName'])) {
+		if(validateInput($_POST['dbName'],'text') === true) {
+			$dbName = $_POST['dbName'];
+		}
+	}
+	if(!empty($_POST['dbUser'])) {
+		if(validateInput($_POST['dbUser'],'nospace') === true) {
+			$dbUser = $_POST['dbUser'];
+		}
+	}
+	if(!empty($_POST['dbPass'])) {
+		if(validateInput($_POST['dbPass'],'nospace') === true) {
+			$dbPass = $_POST['dbPass'];
+		}
+	}
+	if(!empty($_POST['dbPrefix'])) {
+		if(validateInput($_POST['dbPrefix'],'nospace') === true) {
+			$dbPre = $_POST['dbPrefix'];
+		}
+	}
+
 
 	if($dbHost != "" && $dbName != "" && $dbUser != "" && $dbPass != "") {
 		// check if the data is valid
@@ -95,11 +154,32 @@ if(isset($_POST['saveDBSettings'])) {
 	}
 }
 
+$return['admin']['error'] = false;
+$return['admin']['status'] = '';
+$return['admin']['success'] = false;
+
 if(isset($_POST['saveAdminSettings'])) {
+	$aName = '';
+	$aPass = '';
+	$aMail = '';
 	// check for required values
-	$aName = sanitize($_POST['adminName']);
-	$aPass = sanitize($_POST['adminPass']);
-	$aMail = sanitize($_POST['adminMail']);
+	if(!empty($_POST['adminName'])) {
+		if(validateInput($_POST['adminName'],'nospace') === true) {
+			$aName = $_POST['adminName'];
+		}
+	}
+	// check for required values
+	if(!empty($_POST['adminPass'])) {
+		if(validateInput($_POST['adminPass'],'nospace') === true) {
+			$aPass = $_POST['adminPass'];
+		}
+	}
+	// check for required values
+	if(!empty($_POST['adminMail'])) {
+		if(check_email_address($_POST['adminMail']) === true) {
+			$aMail = $_POST['adminMail'];
+		}
+	}
 
 	if($aName != "" && $aPass != "" ) {
 		// save the data into $_SESSION
@@ -115,9 +195,18 @@ if(isset($_POST['saveAdminSettings'])) {
 	}
 }
 
+$return['set']['success'] = false;
+$return['set']['status'] = '';
+$return['set']['error'] = false;
+
 if(isset($_POST['saveSetSettings'])) {
 	// check for required values
-	$setDays = sanitize($_POST['setDeleteDays']);
+	$setDays = '';
+	if(!empty($_POST['setDeleteDays'])) {
+		if(validateInput($_POST['setDeleteDays'],'digit') === true) {
+			$setDays = $_POST['setDeleteDays'];
+		}
+	}
 
 	if($setDays != "") {
 		$_SESSION['set']['setDeleteDays'] = $setDays;
@@ -143,6 +232,10 @@ if(isset($_POST['saveSetSettings'])) {
 
 // the final process
 // create db and settings here.
+$return['final']['error'] = false;
+$return['final']['status'] = '';
+$return['final']['success'] = false;
+
 if(isset($_POST['saveAllSettings'])) {
 	// creat db connection
 	$db_con = mysql_connect($_SESSION['db']['dbHost'],$_SESSION['db']['dbUser'],$_SESSION['db']['dbPass']) OR die("Unable to connect to DB Server !");
@@ -156,13 +249,18 @@ if(isset($_POST['saveAllSettings'])) {
 
 	// replace the prefix
 	$hlSql = str_replace("#DB_PREFIX#",$_SESSION['db']['dbPrefix'],$hlSql);
-
 	$queries = explode(";",$hlSql);
 	foreach ($queries as $query) {
 	    $query = trim($query);
+	    $query = str_replace("\t",'',$query);
+	    $query = str_replace("\n",'',$query);
+	    $query = str_replace("\r",'',$query);
+
 	    if($query != "") {
 	        $run = mysql_query(trim($query));
             if($run != true) {
+            	var_dump(mysql_error());
+            	exit();
                 break;
             }
 	    }
@@ -369,6 +467,9 @@ header("Content-type: text/html; charset=UTF-8");
 			switch ($_GET['step']) {
 				case '1':
 				// set default prefix
+				if(empty($_SESSION['db']['dbPrefix'])) {
+					$_SESSION['db']['dbPrefix'] = '';
+				}
 				if($_SESSION['db']['dbPrefix'] == "") {
 					$dbPrefix = "hlstats";
 				}
@@ -383,7 +484,7 @@ header("Content-type: text/html; charset=UTF-8");
 				about the database hostname.<br />
 				<br />
 				<?php
-					if($return['db']['error']) {
+					if($return['db']['error'] === true) {
 						echo "<div class='error'>";
 						if($return['db']['status'] == "1") {
 							echo "Please provide all the input fields !";
@@ -409,25 +510,25 @@ header("Content-type: text/html; charset=UTF-8");
 							Hostname
 						</td>
 						<td>
-							<input type="text" name="dbHost" value="<?php echo $_SESSION['db']['dbHost']; ?>" />
+							<input type="text" name="dbHost" value="<?php if(!empty($_SESSION['db']['dbHost'])) echo $_SESSION['db']['dbHost']; ?>" />
 						</td>
 					</tr>
 					<tr>
 						<td>Database Name</td>
 						<td>
-							<input type="text" name="dbName" value="<?php echo $_SESSION['db']['dbName']; ?>" />
+							<input type="text" name="dbName" value="<?php if(!empty($_SESSION['db']['dbName'])) echo $_SESSION['db']['dbName']; ?>" />
 						</td>
 					</tr>
 					<tr>
 						<td>Database User</td>
 						<td>
-							<input type="text" name="dbUser" value="<?php echo $_SESSION['db']['dbUser']; ?>" />
+							<input type="text" name="dbUser" value="<?php if(!empty($_SESSION['db']['dbUser'])) echo $_SESSION['db']['dbUser']; ?>" />
 						</td>
 					</tr>
 					<tr>
 						<td>Database Passwort</td>
 						<td>
-							<input type="text" name="dbPass" value="<?php echo $_SESSION['db']['dbPass']; ?>" />
+							<input type="text" name="dbPass" value="<?php if(!empty($_SESSION['db']['dbPass'])) echo $_SESSION['db']['dbPass']; ?>" />
 						</td>
 					</tr>
 					<tr>
@@ -475,7 +576,7 @@ header("Content-type: text/html; charset=UTF-8");
 									Username:
 								</td>
 								<td>
-									<input type="text" name="adminName" value="<?php echo $_SESSION['admin']['adminName']; ?>" />
+									<input type="text" name="adminName" value="<?php if(!empty($_SESSION['admin']['adminName'])) echo $_SESSION['admin']['adminName']; ?>" />
 								</td>
 							</tr>
 							<tr>
@@ -483,7 +584,7 @@ header("Content-type: text/html; charset=UTF-8");
 									Password:
 								</td>
 								<td>
-									<input type="text" name="adminPass" value="<?php echo $_SESSION['admin']['adminPass']; ?>" />
+									<input type="text" name="adminPass" value="<?php if(!empty($_SESSION['admin']['adminPass'])) echo $_SESSION['admin']['adminPass']; ?>" />
 								</td>
 							</tr>
 							<tr>
@@ -491,7 +592,7 @@ header("Content-type: text/html; charset=UTF-8");
 									E-Mail:
 								</td>
 								<td>
-									<input type="text" name="adminMail" value="<?php echo $_SESSION['admin']['adminMail']; ?>" />
+									<input type="text" name="adminMail" value="<?php if(!empty($_SESSION['admin']['adminMail'])) echo $_SESSION['admin']['adminMail']; ?>" />
 									<i>(sending error messages)</i>
 								</td>
 							</tr>
@@ -516,7 +617,7 @@ header("Content-type: text/html; charset=UTF-8");
 				case '3':
 					if($_SESSION['step1'] == "run" && $_SESSION['step2'] == "run") {
 
-					if($_SESSION['set']['setDeleteDays'] == "") {
+					if(empty($_SESSION['set']['setDeleteDays'])) {
 						$_SESSION['set']['setDeleteDays'] = "5";
 					}
 				?>
@@ -546,7 +647,7 @@ header("Content-type: text/html; charset=UTF-8");
 									HLstats Daemon Port
 								</td>
 								<td>
-									<input type="text" name="setPort" size="6" value="<?php echo $_SESSION['set']['setPort']; ?>" />
+									<input type="text" name="setPort" size="6" value="<?php if(!empty($_SESSION['set']['setPort'])) echo $_SESSION['set']['setPort']; ?>" />
 									The port to which the gameserver sends the log data (default is 27500). <br />
 									Leave if empty to use the default one.
 								</td>
@@ -559,7 +660,7 @@ header("Content-type: text/html; charset=UTF-8");
 									HLstats Daemon IP
 								</td>
 								<td>
-									<input type="text" name="setIP" value="<?php echo $_SESSION['set']['setIP']; ?>" /><br />
+									<input type="text" name="setIP" value="<?php if(!empty($_SESSION['set']['setIP'])) echo $_SESSION['set']['setIP']; ?>" /><br />
 									The ip from the box on which the daemon runs.<br />
 									Leave it empty for automatic. It could be that your provider forces you to use one !
 								</td>
@@ -572,7 +673,7 @@ header("Content-type: text/html; charset=UTF-8");
 									Delete Days:
 								</td>
 								<td>
-									<input type="text" name="setDeleteDays" size="2" value="<?php echo $_SESSION['set']['setDeleteDays']; ?>" />
+									<input type="text" name="setDeleteDays" size="2" value="<?php if(!empty($_SESSION['set']['setDeleteDays'])) echo $_SESSION['set']['setDeleteDays']; ?>" />
 									How long events for each player should be kept in the database.<br />
 									The value can be 0. Which means the data will be kept forever.
 								</td>
@@ -585,6 +686,11 @@ header("Content-type: text/html; charset=UTF-8");
 									Mode:
 								</td>
 								<td>
+									<?php
+										if(empty($_SESSION['set']['setMode'])) {
+											$_SESSION['set']['setMode'] = '';
+										}
+									?>
 									<select name="setMode">
 										<option value="Normal" <?php if($_SESSION['set']['setMode'] == "Normal") echo "selected"; ?>>Normal</option>
 										<option value="NameTrack" <?php if($_SESSION['set']['setMode'] == "NameTrack") echo "selected"; ?>>NameTrack</option>
@@ -604,6 +710,11 @@ header("Content-type: text/html; charset=UTF-8");
 									Hide Bots:
 								</td>
 								<td>
+									<?php
+										if(empty($_SESSION['set']['setBots'])) {
+											$_SESSION['set']['setBots'] = '';
+										}
+									?>
 									<select name="setBots">
 										<option value="0" <?php if($_SESSION['set']['setBots'] == "0") echo "selected"; ?>>No</option>
 										<option value="1" <?php if($_SESSION['set']['setBots'] == "1") echo "selected"; ?>>Yes</option>
@@ -667,8 +778,8 @@ header("Content-type: text/html; charset=UTF-8");
 								<b>The configuration file for the daemon has been saved here:</b><br />
 								-- <?php echo dirname(__FILE__)."/hlstats.conf"; ?> --<br />
 								<br />
-								Use this file and move it to the location of your daemon folder and overwrite the
-								existing configuration file.
+								Use this file and move it into the location of your daemon folder and overwrite the
+								existing (hlstats.conf) configuration file.
 							</div>
 						<?php
 						}
@@ -814,16 +925,22 @@ header("Content-type: text/html; charset=UTF-8");
 					$_SESSION = array();
 
 					// check if we have access to the config files.
+					$fhConfSample = false;
+					$fhConfDaemon = false;
+					$fhConfWeb = false;
+
 					$fhConfSample = is_readable("conf.sample.php");
 					$fhConfDaemon = is_readable("conf.sample.pl.php");
 					$fhConfWeb = is_writeable("../hlstatsinc/hlstats.conf.inc.php");
 
 				?>
 				<div class="headline">Welcome</div>
-				This installer will guide you through the steps to install your copy of HLstats.<br />
+				This installer will guide you through the steps to install your copy of HLStats.<br />
 				<br />
 				This Installer is build to run once. If you repeat the install process all configured data will
 				be lost. AND all the stats.....<br />
+				<br />
+				<b>ATTENTION: Make sure your browser accepts cookies, otherwise the installer will complain about missing data !</b><br />
 				<br />
 				<div style="background-color: #FFFF88; border: 1px solid #CDEB8B; padding: 3px;">
 					<b>The installer needs access to:</b><br />
@@ -831,14 +948,14 @@ header("Content-type: text/html; charset=UTF-8");
 						<li>
 							Config sample files :<br />
 							<?php
-								if($fhConfSample) {
+								if($fhConfSample === true) {
 									echo '<span style="color: green;">conf.sample.php OK</span>';
 								}
 								else {
 									echo '<b>'.dirname(__FILE__).'/conf.sample.php</b> <span style="color: red;">is not readable !</span>';
 								}
 								echo "<br />";
-								if($fhConfDaemon) {
+								if($fhConfDaemon === true) {
 									echo '<span style="color: green;">conf.sample.pl.php OK</span>';
 								}
 								else {
@@ -850,11 +967,11 @@ header("Content-type: text/html; charset=UTF-8");
 						<li>
 							Real config file web :<br />
 							<?php
-								if($fhConfWeb) {
+								if($fhConfWeb === true) {
 									echo '<span style="color: green;">hlstats.conf.inc.php OK</span>';
 								}
 								else {
-									echo '<b>'.str_replace("install/","",dirname(__FILE__)).'/include/hlstats.conf.inc.php</b> <span style="color: red;">is not writeable !</span>';
+									echo '<b>'.str_replace("install/","",dirname(__FILE__)).'/hlstatsinc/hlstats.conf.inc.php</b> <span style="color: red;">is not writeable !</span>';
 								}
 							?>
 						</li>
@@ -867,7 +984,8 @@ header("Content-type: text/html; charset=UTF-8");
 				<br />
 				Ok lets start:<br />
 				<br />
-				<a href="index.php?step=1">Start &#187;</a>
+				<a href="index.php?step=1">Start &#187;</a><br />
+				<br />
 				<?php
 			}
 		?>
