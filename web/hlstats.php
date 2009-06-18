@@ -92,7 +92,7 @@ header("Content-type: text/html; charset=UTF-8");
 //// Initialisation
 ////
 
-define("VERSION", "development version");
+define("VERSION", "1.50");
 
 $db = new DB_mysql();
 $g_options = array();

@@ -153,7 +153,7 @@ UseTimestamp 0
 #              Set higher for even more debugging information. Set to 0 for
 #              quiet operation. It is recommended that you set this to 1 when
 #              first configuring HLstats, to help diagnose any problems.
-DebugLevel 0
+DebugLevel 1
 
 # PatchLoopbackIP - Set to 1 to replace player IP 127.0.0.1 (aka loopback) with
 #                   remote host IP. This works for LAN mode only.
@@ -183,3 +183,15 @@ IgnoreBots 0
 #			2) "1"		- Use the system and display it with the ordinary system
 #			3) "2"		- Only use the EloRating and show only the new one.
 EloRating "0"
+
+# Elo rating system verbose
+# developed by HampusW
+#			how verbose this system will be.
+#			The Rating system will give feedback via rcon to the server/player
+#			See the RconSay setting above for more details
+#			Possible values are:
+#			1) "0"	- Off. Do no be verbose at all.
+#			2) "1"	- Show only if you score (default)
+#			3) "2"	- Show as you score and show info to the opponent
+#			4) "3"	- Show al lot of stuff
+EloRatingVerbose "1"

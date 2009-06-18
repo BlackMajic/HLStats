@@ -55,7 +55,7 @@
 ///
 
 // DB_NAME - The name of the database
-define("DB_NAME", "hlstats_dev");
+define("DB_NAME", "hlstats");
 
 // DB_USER - The username to connect to the database as
 define("DB_USER", "user");
