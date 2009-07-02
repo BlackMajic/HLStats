@@ -229,13 +229,13 @@ sub rcon
 
 		if($private) {
 			if($g_rcon_say eq "admin_psay") {
-				$command = "admin_command admin_psay ".$command;
+				$command = "admin_command admin_psay \"$command\"";
 			}
 			elsif ($g_rcon_say eq "amx_psay") {
-				$command = "amx_psay ".$command;
+				$command = "amx_psay \"$command\"";
 			}
 			elsif ($g_rcon_say eq "sm_psay") {
-				$command = "sm_psay ".$command;
+				$command = "sm_psay \"$command\"";
 			}
 			else {
 				return ""; # if we have set to prive msg but have RconSay to "say" then do nothing
