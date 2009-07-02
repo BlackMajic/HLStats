@@ -1,0 +1,3 @@
+How to update an existing installation can be found here:
+
+http://half-life-statistics.org/Documentation/Update.html
