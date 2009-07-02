@@ -1,11 +1,8 @@
 <?php
 /**
- * $Id: hlstats.php 657 2009-02-20 09:49:57Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstats.php $
- *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +10,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +20,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -42,16 +39,16 @@
  */
 
 // Check PHP configuration
-if (version_compare(phpversion(), "5.2.6", "<")) {
-	die("HLstats requires PHP version 5.2.6 or newer (you are running PHP version " . phpversion() . ").");
+if (version_compare(phpversion(), "5.0.0", "<")) {
+	die("HLStats requires PHP version 5.0.0 or newer (you are running PHP version " . phpversion() . ").");
 }
 
 if (!get_magic_quotes_gpc()) {
-	die("HLstats requires <b>magic_quotes_gpc</b> to be <i>enabled</i>. Check your php.ini or refer to the PHP manual for more information.");
+	die("HLStats requires <b>magic_quotes_gpc</b> to be <i>enabled</i>. Check your php.ini or refer to the PHP manual for more information.");
 }
 
 if (get_magic_quotes_runtime()) {
-	die("HLstats requires <b>magic_quotes_runtime</b> to be <i>disabled</i>. Check your php.ini or refer to the PHP manual for more information.");
+	die("HLStats requires <b>magic_quotes_runtime</b> to be <i>disabled</i>. Check your php.ini or refer to the PHP manual for more information.");
 }
 
 date_default_timezone_set('Europe/Berlin');
@@ -66,19 +63,17 @@ if(SHOW_DEBUG === true) {
 	ini_set('display_errors',true);
 }
 else {
+	error_reporting(8191);
 	ini_set('display_errors',false);
 }
 
 // load config
-require('hlstatsinc/hlstats.conf.inc.php');
+require('hlstatsinc/hlstats.conf.php');
 
 /**
  * load required stuff
- *
- * db class
  * general classes like tablle class
  */
-require(INCLUDE_PATH . "/db.inc.php");
 require(INCLUDE_PATH . "/functions.inc.php");
 require(INCLUDE_PATH . "/classes.inc.php");
 
@@ -87,16 +82,24 @@ require(INCLUDE_PATH . "/classes.inc.php");
 // we have to save all the stuff with utf-8 to make it work !!
 header("Content-type: text/html; charset=UTF-8");
 
-
 ////
 //// Initialisation
 ////
 
-define("VERSION", "1.50");
+define("VERSION", "development version");
 
-$db = new DB_mysql();
+$db_con = mysql_connect(DB_ADDR,DB_USER,DB_PASS);
+$db_sel = mysql_select_db(DB_NAME,$db_con);
+
+/**
+ * load the options
+ */
 $g_options = array();
 $g_options = getOptions();
+
+if(empty($g_options)) {
+	error('Failed to load options.');
+}
 
 // set scripturl if not set in options
 if(empty($g_options['scripturl'])) {
@@ -148,8 +151,25 @@ if(!empty($_GET['logout'])) {
 	}
 }
 
+$game = '';
+if(isset($_GET['game'])) {
+	$check = validateInput($_GET['game'],'nospace');
+	if($check === true) {
+		$game = $_GET['game'];
+
+		$query = mysql_query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='".mysql_escape_string($game)."'");
+		if(mysql_num_rows($query) < 1) {
+			error("No such game '$game'.");
+		}
+		else {
+			$result = mysql_fetch_assoc($query);
+			$gamename = $result['name'];
+		}
+	}
+}
 
 include(INCLUDE_PATH . "/".$mode.".inc.php");
 
 pageFooter();
+mysql_close($db_con);
 ?>

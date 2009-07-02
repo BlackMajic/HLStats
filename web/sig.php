@@ -1,11 +1,8 @@
 <?php
 /**
- * $Id: sig.php 674 2009-03-03 20:21:46Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/sig.php $
- *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +10,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +20,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -42,16 +39,16 @@
  */
 
 // Check PHP configuration
-if (version_compare(phpversion(), "5.2.6", "<")) {
-	die("HLstats requires PHP version 5.2.6 or newer (you are running PHP version " . phpversion() . ").");
+if (version_compare(phpversion(), "5.0.0", "<")) {
+	die("HLStats requires PHP version 5.0.0 or newer (you are running PHP version " . phpversion() . ").");
 }
 
 if (!get_magic_quotes_gpc()) {
-	die("HLstats requires <b>magic_quotes_gpc</b> to be <i>enabled</i>. Check your php.ini or refer to the PHP manual for more information.");
+	die("HLStats requires <b>magic_quotes_gpc</b> to be <i>enabled</i>. Check your php.ini or refer to the PHP manual for more information.");
 }
 
 if (get_magic_quotes_runtime()) {
-	die("HLstats requires <b>magic_quotes_runtime</b> to be <i>disabled</i>. Check your php.ini or refer to the PHP manual for more information.");
+	die("HLStats requires <b>magic_quotes_runtime</b> to be <i>disabled</i>. Check your php.ini or refer to the PHP manual for more information.");
 }
 
 date_default_timezone_set('Europe/Berlin');
@@ -70,7 +67,7 @@ else {
 }
 
 // load config
-require('hlstatsinc/hlstats.conf.inc.php');
+require('hlstatsinc/hlstats.conf.php');
 
 /**
  * load required stuff
@@ -79,12 +76,14 @@ require('hlstatsinc/hlstats.conf.inc.php');
  * db class
  * general classes like table class
  */
-require(INCLUDE_PATH . "/db.inc.php");
 require(INCLUDE_PATH . "/functions.inc.php");
 require(INCLUDE_PATH . "/classes.inc.php");
 
 // deb class and options
-$db = new DB_mysql();
+$db_con = mysql_connect(DB_ADDR,DB_USER,DB_PASS);
+$db_sel = mysql_select_db(DB_NAME,$db_con);
+
+// get the hlstats options
 $g_options = getOptions();
 
 /**
@@ -155,15 +154,15 @@ if($g_options['allowSig'] == "1") {
 		}
 
 		// get the player data
-		$query = $db->query("SELECT * FROM ".DB_PREFIX."_Players WHERE playerId = '".$playerId."'");
-		$playerData = $db->fetch_array($query);
+		$query = mysql_query("SELECT * FROM ".DB_PREFIX."_Players WHERE playerId = '".$playerId."'");
+		$playerData = mysql_fetch_assoc($query);
 		if($playerData === false) {
 			// no player data !
 			echo "No data found";
 			exit();
 		}
 		// rank
-		$db->query("
+		$query = mysql_query("
 			SELECT
 				skill,playerId
 			FROM
@@ -173,20 +172,25 @@ if($g_options['allowSig'] == "1") {
 			ORDER BY skill DESC
 		");
 		$ranKnum = 1;
-		while ($row = $db->fetch_row()) {
-			$statsArr[$row[1]] = $ranKnum;
+		while ($row = mysql_fetch_assoc($query)) {
+			$statsArr[$row['playerId']] = $ranKnum;
 			$ranKnum++;
 		}
 		$playerRank = $statsArr[$playerId];
 		$playerWholeRank = count($statsArr);
+		mysql_free_result($query);
 
 		// server info
-		$query = $db->query("SELECT serverId FROM ".DB_PREFIX."_Events_Connects
+		$query = mysql_query("SELECT serverId FROM ".DB_PREFIX."_Events_Connects
 					WHERE playerId = '".$playerId."' LIMIT 1");
-		$serverId = $db->fetch_array($query);
+		$result = mysql_fetch_assco($query);
+		$serverId = $result['serverId'];
+		mysql_free_result($query);
+
 		// now get the server info
-		$query = $db->query("SELECT address,port,name FROM ".DB_PREFIX."_Servers WHERE serverId = ".$serverId['serverId']);
-		$serverData = $db->fetch_array($query);
+		$query = mysql_query("SELECT address,port,name FROM ".DB_PREFIX."_Servers WHERE serverId = ".$serverId['serverId']);
+		$serverData = mysql_fetch_assoc($query);
+		mysql_free_result($query);
 
 		$font = $picPath.'svenings.ttf';
 		switch ($style) {

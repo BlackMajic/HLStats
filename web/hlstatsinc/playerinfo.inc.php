@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: playerinfo.inc.php 678 2009-05-12 10:30:27Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/playerinfo.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -41,165 +39,157 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-	// Player Details
-	$player = '';
-	$uniqueid = '';
-	$game = '';
-	$killLimit = 5;
+// Player Details
+$player = '';
+$uniqueid = '';
+$killLimit = 5;
 
-	if(!empty($_GET["player"])) {
-		if(validateInput($_GET["player"],'digit') === true) {
-			$player = $_GET["player"];
-		}
+if(!empty($_GET["player"])) {
+	if(validateInput($_GET["player"],'digit') === true) {
+		$player = $_GET["player"];
 	}
-	if(!empty($_GET["uniqueid"])) {
-		if(validateInput($_GET["uniqueid"],'digit') === true) {
-			$uniqueid  = $_GET["uniqueid"];
-		}
+}
+if(!empty($_GET["uniqueid"])) {
+	if(validateInput($_GET["uniqueid"],'digit') === true) {
+		$uniqueid  = $_GET["uniqueid"];
 	}
-	if(!empty($_GET["game"])) {
-		if(validateInput($_GET["game"],'nospace') === true) {
-			$game = $_GET["game"];
-		}
+}
+if(!empty($_GET['killLimit'])) {
+	if(validateInput($_GET['killLimit'],'digit') === true) {
+		$killLimit = $_GET['killLimit'];
 	}
-	if(!empty($_GET['killLimit'])) {
-		if(validateInput($_GET['killLimit'],'digit') === true) {
-			$killLimit = $_GET['killLimit'];
-		}
-	}
+}
 
-	if (!$player && $uniqueid) {
-		if (!$game) {
-			header("Location: " . $g_options["scripturl"] . "?mode=search&st=uniqueid&q=$uniqueid");
-			exit;
-		}
-
-		$db->query("
-			SELECT
-				playerId
-			FROM
-				".DB_PREFIX."_PlayerUniqueIds
-			WHERE
-				uniqueId='$uniqueid'
-				AND game='$game'
-		");
-
-		if ($db->num_rows() > 1) {
-			header("Location: " . $g_options["scripturl"] . "?mode=search&st=uniqueid&q=$uniqueid&game=$game");
-			exit;
-		}
-		elseif ($db->num_rows() < 1) {
-			error("No players found matching uniqueId '$uniqueid'");
-		}
-		else {
-			list($player) = $db->fetch_row();
-			$player = intval($player);
-		}
-	}
-	elseif (!$player && !$uniqueid) {
-		error("No player ID specified.");
+if (!$player && $uniqueid) {
+	if (!$game) {
+		header("Location: " . $g_options["scripturl"] . "?mode=search&st=uniqueid&q=$uniqueid");
+		exit;
 	}
 
-	if(defined('ELORATING') && ELORATING === "1") {
-		$db->query("
-			SELECT
-				".DB_PREFIX."_Players.lastName,
-				".DB_PREFIX."_Players.clan,
-				".DB_PREFIX."_Players.fullName,
-				".DB_PREFIX."_Players.email,
-				".DB_PREFIX."_Players.homepage,
-				".DB_PREFIX."_Players.icq,
-				".DB_PREFIX."_Players.game,
-				".DB_PREFIX."_Players.skill,
-				".DB_PREFIX."_Players.oldSkill,
-				".DB_PREFIX."_Players.kills,
-				ROUND(".DB_PREFIX."_Players.rating) as rating,
-				ROUND(SQRT(".DB_PREFIX."_Players.rd2)) as rd,
-				".DB_PREFIX."_Players.deaths,
-				IFNULL(kills/deaths, '-') AS kpd,
-				".DB_PREFIX."_Players.suicides,
-				CONCAT(".DB_PREFIX."_Clans.tag, ' ', ".DB_PREFIX."_Clans.name) AS clan_name
-			FROM
-				".DB_PREFIX."_Players
-			LEFT JOIN ".DB_PREFIX."_Clans ON
-				".DB_PREFIX."_Clans.clanId = ".DB_PREFIX."_Players.clan
-			WHERE
-				playerId='$player'
-		");
-		if ($db->num_rows() != 1)
-			error("No such player '$player'.");
+	$query = mysql_query("SELECT playerId FROM ".DB_PREFIX."_PlayerUniqueIds
+		WHERE uniqueId='".mysql_escape_string($uniqueid)."'
+			AND game='".mysql_escape_string($game)."'
+	");
+
+	if (mysql_num_rows($query) > 1) {
+		header("Location: " . $g_options["scripturl"] . "?mode=search&st=uniqueid&q=$uniqueid&game=$game");
+		exit;
 	}
-	elseif(defined('ELORATING') && ELORATING === "2") {
+	elseif (mysql_num_rows($query) < 1) {
+		error("No players found matching uniqueId '$uniqueid'");
 	}
 	else {
-		$db->query("
-			SELECT
-				".DB_PREFIX."_Players.lastName,
-				".DB_PREFIX."_Players.clan,
-				".DB_PREFIX."_Players.fullName,
-				".DB_PREFIX."_Players.email,
-				".DB_PREFIX."_Players.homepage,
-				".DB_PREFIX."_Players.icq,
-				".DB_PREFIX."_Players.game,
-				".DB_PREFIX."_Players.skill,
-				".DB_PREFIX."_Players.oldSkill,
-				".DB_PREFIX."_Players.kills,
-				".DB_PREFIX."_Players.deaths,
-				IFNULL(kills/deaths, '-') AS kpd,
-				".DB_PREFIX."_Players.suicides,
-				CONCAT(".DB_PREFIX."_Clans.tag, ' ', ".DB_PREFIX."_Clans.name) AS clan_name
-			FROM
-				".DB_PREFIX."_Players
-			LEFT JOIN ".DB_PREFIX."_Clans ON
-				".DB_PREFIX."_Clans.clanId = ".DB_PREFIX."_Players.clan
-			WHERE
-				playerId='$player'
-		");
-		if ($db->num_rows() != 1)
-			error("No such player '$player'.");
+		$result = mysql_fetch_assoc($query);
+		$player = $result['playerId'];
 	}
+	mysql_free_result($query);
+}
+elseif (!$player && !$uniqueid) {
+	error("No player ID specified.");
+}
 
-	$playerdata = $db->fetch_array();
-	$db->free_result();
+if(defined('ELORATING') && ELORATING === "1") {
+	$query = mysql_query("
+		SELECT
+			".DB_PREFIX."_Players.lastName,
+			".DB_PREFIX."_Players.clan,
+			".DB_PREFIX."_Players.fullName,
+			".DB_PREFIX."_Players.email,
+			".DB_PREFIX."_Players.homepage,
+			".DB_PREFIX."_Players.icq,
+			".DB_PREFIX."_Players.game,
+			".DB_PREFIX."_Players.skill,
+			".DB_PREFIX."_Players.oldSkill,
+			".DB_PREFIX."_Players.kills,
+			ROUND(".DB_PREFIX."_Players.rating) as rating,
+			ROUND(SQRT(".DB_PREFIX."_Players.rd2)) as rd,
+			".DB_PREFIX."_Players.deaths,
+			IFNULL(kills/deaths, '-') AS kpd,
+			".DB_PREFIX."_Players.suicides,
+			CONCAT(".DB_PREFIX."_Clans.tag, ' ', ".DB_PREFIX."_Clans.name) AS clan_name
+		FROM
+			".DB_PREFIX."_Players
+		LEFT JOIN ".DB_PREFIX."_Clans ON
+			".DB_PREFIX."_Clans.clanId = ".DB_PREFIX."_Players.clan
+		WHERE
+			playerId='$player'
+	");
+	if (mysql_num_rows($query) != 1)
+		error("No such player '$player'.");
+}
+elseif(defined('ELORATING') && ELORATING === "2") {
+	//@todo
+}
+else {
+	$queryPlayer = mysql_query("
+		SELECT
+			".DB_PREFIX."_Players.lastName,
+			".DB_PREFIX."_Players.clan,
+			".DB_PREFIX."_Players.fullName,
+			".DB_PREFIX."_Players.email,
+			".DB_PREFIX."_Players.homepage,
+			".DB_PREFIX."_Players.icq,
+			".DB_PREFIX."_Players.game,
+			".DB_PREFIX."_Players.skill,
+			".DB_PREFIX."_Players.oldSkill,
+			".DB_PREFIX."_Players.kills,
+			".DB_PREFIX."_Players.deaths,
+			IFNULL(kills/deaths, '-') AS kpd,
+			".DB_PREFIX."_Players.suicides,
+			CONCAT(".DB_PREFIX."_Clans.tag, ' ', ".DB_PREFIX."_Clans.name) AS clan_name
+		FROM
+			".DB_PREFIX."_Players
+		LEFT JOIN ".DB_PREFIX."_Clans ON
+			".DB_PREFIX."_Clans.clanId = ".DB_PREFIX."_Players.clan
+		WHERE
+			playerId='".mysql_escape_string($player)."'
+	");
+	if (mysql_num_rows($queryPlayer) != 1)
+		error("No such player '$player'.");
+}
 
-	$pl_name = $playerdata["lastName"];
-	if (strlen($pl_name) > 10) {
-		$pl_shortname = substr($pl_name, 0, 8) . "...";
-	}
-	else {
-		$pl_shortname = $pl_name;
-	}
-	$pl_name = ereg_replace(" ", "&nbsp;", htmlspecialchars($pl_name));
-	$pl_shortname = ereg_replace(" ", "&nbsp;", htmlspecialchars($pl_shortname));
-	$pl_urlname = urlencode($playerdata["lastName"]);
+$playerdata = mysql_fetch_assoc($queryPlayer);
+mysql_free_result($queryPlayer);
+
+$pl_name = $playerdata["lastName"];
+if (strlen($pl_name) > 10) {
+	$pl_shortname = substr($pl_name, 0, 8) . "...";
+}
+else {
+	$pl_shortname = $pl_name;
+}
+$pl_name = ereg_replace(" ", "&nbsp;", htmlspecialchars($pl_name));
+$pl_shortname = ereg_replace(" ", "&nbsp;", htmlspecialchars($pl_shortname));
+$pl_urlname = urlencode($playerdata["lastName"]);
 
 
-	$game = $playerdata["game"];
-	$db->query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='$game'");
-	if ($db->num_rows() != 1) {
-		$gamename = ucfirst($game);
-	}
-	else {
-		list($gamename) = $db->fetch_row();
-	}
+$game = $playerdata["game"];
+$query = mysql_query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='".mysql_escape_string($game)."'");
+if (mysql_num_rows($query) != 1) {
+	$gamename = ucfirst($game);
+}
+else {
+	$result = mysql_fetch_assoc($query);
+	$gamename = $result['name'];
+}
+mysql_free_result($query);
 
-    // show header
-	pageHeader(
-		array($gamename, "Player Details", $pl_name),
-		array(
-			$gamename=>$g_options["scripturl"] . "?game=$game",
-			"Player Rankings"=>$g_options["scripturl"] . "?mode=players&game=$game",
-			"Player Details"=>""
-		),
-		$pl_name
-	);
+// show header
+pageHeader(
+	array($gamename, "Player Details", $pl_name),
+	array(
+		$gamename=>$g_options["scripturl"] . "?game=$game",
+		"Player Rankings"=>$g_options["scripturl"] . "?mode=players&game=$game",
+		"Player Details"=>""
+	),
+	$pl_name
+);
 
-	if($g_options['useFlash'] == "1") {
-	    // we want use the flash graphics
+if($g_options['useFlash'] == "1") { // we want use the flash graphics
 ?>
     <script type="text/javascript" src="<?php echo INCLUDE_PATH; ?>/amcharts/swfobject.js"></script>
 <?php
-	}
+}
 ?>
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
@@ -352,7 +342,7 @@
         							echo "IP Addresses:";
         						}
         						else {
-        							echo "Unique IDs:";
+        							echo "Unique ID(s):";
         						}
         						echo $g_options["fontend_normal"];
         					   ?>
@@ -364,21 +354,18 @@
         						    echo "(Unknown.)";
         						}
         						else {
-        							$db->query("
-        								SELECT
-        									uniqueId
-        								FROM
-        									".DB_PREFIX."_PlayerUniqueIds
-        								WHERE
-        									playerId='$player'
+        							$query = mysql_query("
+        								SELECT uniqueId
+        								FROM ".DB_PREFIX."_PlayerUniqueIds
+        								WHERE playerId='".mysql_escape_string($player)."'
         							");
 
-        							$i=0;
-        							while (list($uqid) = $db->fetch_row()) {
-        								if ($i > 0) echo ", ";
-        								echo $uqid;
-        								$i++;
+        							while ($result = mysql_fetch_assoc($query)) {
+        								$ustr = $result['uniqueId'].",";
         							}
+        							$ustr = trim($ustr,',');
+        							echo $ustr;
+        							mysql_free_result($query);
         						}
         						echo $g_options["fontend_normal"];
         					   ?>
@@ -396,27 +383,26 @@
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						$db->query("
-        							SELECT
-        								DATE_FORMAT(eventTime, '%r, %a. %D %b.')
-        							FROM
-        								".DB_PREFIX."_Events_Connects
+        						$query = mysql_query("
+        							SELECT DATE_FORMAT(eventTime, '%r, %a. %D %b.') AS eventTime
+        							FROM ".DB_PREFIX."_Events_Connects
         							LEFT JOIN ".DB_PREFIX."_Servers ON
         								".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_Connects.serverId
-        							WHERE
-        								".DB_PREFIX."_Servers.game='$game' AND playerId='$player'
+        							WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
+        								AND playerId='".mysql_escape_string($player)."'
         							ORDER BY eventTime DESC
-									LIMIT 1
-        						");
-        						list($lastevent) = $db->fetch_row();
+        							LIMIT 1");
+        						$result = mysql_fetch_assoc($query);
+        						$lastevent = $result['eventTime'];
 
-        						if ($lastevent) {
+        						if (!empty($lastevent)) {
         							echo $lastevent;
         						}
         						else {
         							echo "(No info)";
         						}
         				        echo $g_options["fontend_normal"];
+        				        mysql_free_result($query);
         				     ?>
         				   </td>
         				</tr>
@@ -431,25 +417,25 @@
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						$db->query("
-        							SELECT
-        								SEC_TO_TIME(SUM(TIME_TO_SEC(time))) AS tTime
-        							FROM
-        								".DB_PREFIX."_Events_StatsmeTime
+        						$query = mysql_query("
+        							SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(time))) AS tTime
+        							FROM ".DB_PREFIX."_Events_StatsmeTime
         							LEFT JOIN ".DB_PREFIX."_Servers ON
         								".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_StatsmeTime.serverId
-        							WHERE
-        								".DB_PREFIX."_Servers.game='$game' AND playerId='$player'
+        							WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
+        									AND playerId='".mysql_escape_string($player)."'
         						");
-        						list($tTime) = $db->fetch_row();
+        						$result = mysql_fetch_assoc($query);
+        						$tTime = $result['tTime'];
 
-        						if ($tTime) {
+        						if (!empty($tTime)) {
         							echo $tTime;
         						}
         						else {
         							echo "(No info)";
         						}
         				        echo $g_options["fontend_normal"];
+        				        mysql_free_result($query);
         				        ?>
         				    </td>
         				</tr>
@@ -465,26 +451,26 @@
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						$db->query("
-        							SELECT
-        								ROUND(SUM(ping) /
-        									COUNT(ping), 1) AS av_ping
-        							FROM
-        								".DB_PREFIX."_Events_StatsmeLatency
+        						$query = mysql_query("
+        							SELECT ROUND(SUM(ping) / COUNT(ping), 1) AS av_ping
+        							FROM ".DB_PREFIX."_Events_StatsmeLatency
         							LEFT JOIN ".DB_PREFIX."_Servers ON
         								".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_StatsmeLatency.serverId
         							WHERE
         								".DB_PREFIX."_Servers.game='$game' AND playerId='$player'
         						");
-        						list($av_ping) = $db->fetch_row();
+        						$result = mysql_fetch_assoc($query);
+        						$av_ping = $result['av_ping'];
 
-        						if ($av_ping) {
+        						if (!empty($av_ping)) {
         							echo $av_ping;
         						}
         						else {
         							echo "(No info)";
         						}
-        				        echo $g_options["fontend_normal"]; ?>
+        				        echo $g_options["fontend_normal"];
+        				        mysql_free_result($query);
+        				       	?>
         				   </td>
         				</tr>
     				</table>
@@ -546,21 +532,19 @@
 					   <?php
 						echo $g_options["font_normal"];
 
-						$db->query("
-							SELECT
-								skill,playerId
-							FROM
-								".DB_PREFIX."_Players
-							WHERE
-								game='$game'
+						$query = mysql_query("
+							SELECT skill,playerId
+							FROM ".DB_PREFIX."_Players
+							WHERE game='".mysql_escape_string($game)."'
 							ORDER BY skill DESC
 						");
 						$ranKnum = 1;
 						$row = '';
-						while ($row = $db->fetch_row()) {
-							$statsArr[$row[1]] = $ranKnum;
+						while ($row = mysql_fetch_assoc($query)) {
+							$statsArr[$row['playerId']] = $ranKnum;
 							$ranKnum++;
 						}
+						mysql_free_result($query);
 						echo "<b>" . $statsArr[$player] . "</b> (ordered by Points)";
 						echo $g_options["fontend_normal"];
 					   ?>
@@ -597,19 +581,18 @@
 					   <?php
 						echo $g_options["font_normal"];
 						echo $playerdata["kills"];
-						$db->query("
-							SELECT
-								COUNT(*)
-							FROM
-								".DB_PREFIX."_Events_Frags
+						$query = mysql_query("
+							SELECT COUNT(*) as kc
+							FROM ".DB_PREFIX."_Events_Frags
 							LEFT JOIN ".DB_PREFIX."_Servers ON
 								".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Frags.serverId
-							WHERE
-								".DB_PREFIX."_Servers.game='$game' AND killerId='$player'
-						");
-						list($realkills) = $db->fetch_row();
+							WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
+								AND killerId='".mysql_escape_string($player)."'");
+						$result = mysql_fetch_assoc($query);
+						$realkills = $result['kc'];
 						echo " ($realkills)";
 						echo $g_options["fontend_normal"];
+						mysql_free_result($query);
 					   ?>
 					</td>
 				</tr>
@@ -677,20 +660,20 @@
 					   <?php
 						echo $g_options["font_normal"];
 
-						$db->query("
-							SELECT
-								COUNT(*)
-							FROM
-								".DB_PREFIX."_Events_Teamkills
+						$query = mysql_query("
+							SELECT COUNT(*) tk
+							FROM ".DB_PREFIX."_Events_Teamkills
 							LEFT JOIN ".DB_PREFIX."_Servers ON
 								".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Teamkills.serverId
-							WHERE
-								".DB_PREFIX."_Servers.game='$game' AND killerId='$player'
+							WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
+								AND killerId='".mysql_escape_string($player)."'
 						");
-						list($playerdata["teamkills"]) = $db->fetch_row();
+						$result = mysql_fetch_assoc($query);
+						$playerdata["teamkills"] = $result['tk'];
 
 						echo $playerdata["teamkills"];
 						echo $g_options["fontend_normal"];
+						mysql_free_result($query);
 					   ?>
 					</td>
 				</tr>
@@ -707,7 +690,7 @@
 					   <?php
 						echo $g_options["font_normal"];
 
-						$db->query("
+						$query = mysql_query("
 							SELECT
 								IFNULL(ROUND((SUM(".DB_PREFIX."_Events_Statsme.hits)
 									/ SUM(".DB_PREFIX."_Events_Statsme.shots) * 100), 1), 0.0) AS accuracy
@@ -716,17 +699,20 @@
 							LEFT JOIN ".DB_PREFIX."_Servers ON
 								".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Statsme.serverId
 							WHERE
-								".DB_PREFIX."_Servers.game='$game' AND playerId='$player'
+								".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
+								AND playerId='".mysql_escape_string($player)."'
 						");
-						list($playerdata["accuracy"]) = $db->fetch_row();
+						$result = mysql_fetch_assoc($query);
+						$playerdata["accuracy"] = $result['accuracy'];
 
-						if ($playerdata["accuracy"] == 0){
+						if (empty($playerdata["accuracy"])){
 							echo "(Unknown.)";
 						}
 						else {
 							echo $playerdata["accuracy"] . "%";
 						}
 						echo $g_options["fontend_normal"];
+						mysql_free_result($query);
 					   ?>
 					</td>
 				</tr>
@@ -743,7 +729,7 @@
 <p>&nbsp;</p>
 <?php
 	if($g_options['useFlash'] == "1") {
-		$query = "SELECT
+		$query = mysql_query("SELECT
 				".DB_PREFIX."_Events_StatsmeTime.*,
 				TIME_TO_SEC(".DB_PREFIX."_Events_StatsmeTime.time) as tTime
 			FROM
@@ -751,11 +737,10 @@
 			LEFT JOIN ".DB_PREFIX."_Servers ON
 				".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_StatsmeTime.serverId
 			WHERE
-				".DB_PREFIX."_Servers.game='$game' AND playerId='$player'";
-		$query = $db->query($query);
-		$result = '';
+				".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
+				AND playerId='".mysql_escape_string($player)."'");
 		$eventsArr = array();
-		while($result = $db->fetch_array($query)) {
+		while($result = mysql_fetch_assoc($query)) {
 			$eventsArr[] = $result;
 		}
 		if(!empty($eventsArr)) {
@@ -901,7 +886,7 @@
 		"aliases"
 	);
 
-	$result = $db->query("
+	$result = mysql_query("
 		SELECT
 			name,
 			lastuse,
@@ -916,22 +901,15 @@
 		FROM
 			".DB_PREFIX."_PlayerNames
 		WHERE
-			playerId=$player
+			playerId='".mysql_escape_string($player)."'
 		ORDER BY
-			$tblAliases->sort $tblAliases->sortorder
-		LIMIT $tblAliases->startitem,$tblAliases->numperpage
+			".$tblAliases->sort." ".$tblAliases->sortorder."
+		LIMIT ".$tblAliases->startitem.",".$tblAliases->numperpage."
 	");
 
-	$resultCount = $db->query("
-		SELECT
-			COUNT(*)
-		FROM
-			".DB_PREFIX."_PlayerNames
-		WHERE
-			playerId=$player
-	");
-
-	list($numitems) = $db->fetch_row($resultCount);
+	$resultCount = mysql_query("SELECT COUNT(*) pl FROM ".DB_PREFIX."_PlayerNames WHERE playerId=".mysql_escape_string($player)."");
+	$result = mysql_fetch_assoc($resultCount);
+	$numitems = $result['pl'];
 
 	if ($numitems > 1) {
 ?>
@@ -984,7 +962,7 @@
 		"playeractions"
 	);
 
-	$result = $db->query("
+	$query = mysql_query("
 		SELECT
 			".DB_PREFIX."_Actions.description,
 			COUNT(".DB_PREFIX."_Events_PlayerActions.id) AS obj_count,
@@ -996,15 +974,16 @@
 		LEFT JOIN ".DB_PREFIX."_Servers ON
 			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_PlayerActions.serverId
 		WHERE
-			".DB_PREFIX."_Servers.game='$game' AND ".DB_PREFIX."_Events_PlayerActions.playerId=$player
+			".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
+			AND ".DB_PREFIX."_Events_PlayerActions.playerId=".mysql_escape_string($player)."
 		GROUP BY
 			".DB_PREFIX."_Actions.id
 		ORDER BY
-			$tblPlayerActions->sort $tblPlayerActions->sortorder,
-			$tblPlayerActions->sort2 $tblPlayerActions->sortorder
+			".$tblPlayerActions->sort." ".$tblPlayerActions->sortorder.",
+			".$tblPlayerActions->sort2." ".$tblPlayerActions->sortorder."
 	");
 
-	$numitems = $db->num_rows($result);
+	$numitems = mysql_num_fields($query);
 
 	if ($numitems > 0) {
 ?>
@@ -1019,7 +998,7 @@
 	<td colspan="2">
 	<div style="margin-top: 10px; margin-left: 40px;">
 		<?php
-			$tblPlayerActions->draw($result, $numitems, 100);
+			$tblPlayerActions->draw($query, $numitems, 100);
 		?>
 	</div>
 	</td>
@@ -1057,7 +1036,7 @@
 		"playerplayeractions"
 	);
 
-	$result = $db->query("
+	$query = mysql_query("
 		SELECT
 			".DB_PREFIX."_Actions.description,
 			COUNT(".DB_PREFIX."_Events_PlayerPlayerActions.id) AS obj_count,
@@ -1069,15 +1048,16 @@
 		LEFT JOIN ".DB_PREFIX."_Servers ON
 			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_PlayerPlayerActions.serverId
 		WHERE
-			".DB_PREFIX."_Servers.game='$game' AND ".DB_PREFIX."_Events_PlayerPlayerActions.playerId=$player
+			".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
+			AND ".DB_PREFIX."_Events_PlayerPlayerActions.playerId=".mysql_escape_string($player)."
 		GROUP BY
 			".DB_PREFIX."_Actions.id
 		ORDER BY
-			$tblPlayerPlayerActions->sort $tblPlayerPlayerActions->sortorder,
-			$tblPlayerPlayerActions->sort2 $tblPlayerPlayerActions->sortorder
+			".$tblPlayerPlayerActions->sort." ".$tblPlayerPlayerActions->sortorder.",
+			".$tblPlayerPlayerActions->sort2." ".$tblPlayerPlayerActions->sortorder."
 	");
 
-	$numitems = $db->num_rows($result);
+	$numitems = mysql_num_rows($query);
 
 	if ($numitems > 0) {
 ?>
@@ -1095,7 +1075,7 @@
 	<td colspan="2">
 	<div style="margin-top: 10px; margin-left: 40px;">
 		<?php
-			$tblPlayerPlayerActions->draw($result, $numitems, 100);
+			$tblPlayerPlayerActions->draw($query, $numitems, 100);
 		?>
 	</div>
 	</td>
@@ -1139,17 +1119,11 @@
 		"teams"
 	);
 
-	$db->query("
-		SELECT
-			COUNT(*)
-		FROM
-			".DB_PREFIX."_Events_ChangeTeam
-		WHERE
-			playerId=$player
-	");
-	list($numteamjoins) = $db->fetch_row();
+	$queryTjoins = mysql_query("SELECT COUNT(*) AS tj FROM ".DB_PREFIX."_Events_ChangeTeam WHERE playerId=".mysql_escape_string($player)."");
+	$result = mysql_fetch_assoc($queryTjoins);
+	$numteamjoins = $result['tj'];
 
-	$result = $db->query("
+	$query = mysql_query("
 		SELECT
 			IFNULL(".DB_PREFIX."_Teams.name, ".DB_PREFIX."_Events_ChangeTeam.team) AS name,
 			COUNT(".DB_PREFIX."_Events_ChangeTeam.id) AS teamcount,
@@ -1161,18 +1135,18 @@
 		LEFT JOIN ".DB_PREFIX."_Servers ON
 			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_ChangeTeam.serverId
 		WHERE
-			".DB_PREFIX."_Teams.game='$game'
-		AND ".DB_PREFIX."_Servers.game='$game'
-		AND ".DB_PREFIX."_Events_ChangeTeam.playerId=$player
+			".DB_PREFIX."_Teams.game='".mysql_escape_string($game)."'
+		AND ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
+		AND ".DB_PREFIX."_Events_ChangeTeam.playerId=".mysql_escape_string($player)."
 		AND (hidden <>'1' OR hidden IS NULL)
 		GROUP BY
 			".DB_PREFIX."_Events_ChangeTeam.team
 		ORDER BY
-			$tblTeams->sort $tblTeams->sortorder,
-			$tblTeams->sort2 $tblTeams->sortorder
+			".$tblTeams->sort." ".$tblTeams->sortorder.",
+			".$tblTeams->sort2." ".$tblTeams->sortorder."
 	");
 
-	$numitems = $db->num_rows($result);
+	$numitems = mysql_num_rows($query);
 
 	if ($numitems > 0) {
 ?>
@@ -1190,7 +1164,7 @@
 	<td colspan="2">
 	<div style="margin-top: 10px; margin-left: 40px;">
 	<?php
-		$tblTeams->draw($result, $numitems, 100);
+		$tblTeams->draw($query, $numitems, 100);
 	?>
 	</div>
 	</td>
@@ -1233,17 +1207,12 @@
 		"roles"
 	);
 
-	$db->query("
-		SELECT
-			COUNT(*)
-		FROM
-			".DB_PREFIX."_Events_ChangeRole
-		WHERE
-			playerId=$player
-	");
-	list($numrolejoins) = $db->fetch_row();
+	$queryRoles = mysql_query("SELECT COUNT(*) AS rj FROM ".DB_PREFIX."_Events_ChangeRole WHERE playerId=".mysql_escape_string($player)."");
+	$result = mysql_fetch_assoc($queryRoles);
+	$numrolejoins = $result['rj'];
+	mysql_free_result($queryRoles);
 
-	$result = $db->query("
+	$query = mysql_query("
 		SELECT
 			IFNULL(".DB_PREFIX."_Roles.name, ".DB_PREFIX."_Events_ChangeRole.role) AS name,
 			COUNT(".DB_PREFIX."_Events_ChangeRole.id) AS rolecount,
@@ -1255,15 +1224,17 @@
 		LEFT JOIN ".DB_PREFIX."_Servers ON
 			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_ChangeRole.serverId
 		WHERE
-			".DB_PREFIX."_Servers.game='$game' AND ".DB_PREFIX."_Events_ChangeRole.playerId=$player AND (hidden <>'1' OR hidden IS NULL)
+			".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
+			AND ".DB_PREFIX."_Events_ChangeRole.playerId=".mysql_escape_string($player)."
+			AND (hidden <>'1' OR hidden IS NULL)
 		GROUP BY
 			".DB_PREFIX."_Events_ChangeRole.role
 		ORDER BY
-			$tblRoles->sort $tblRoles->sortorder,
-			$tblRoles->sort2 $tblRoles->sortorder
+			".$tblRoles->sort." ".$tblRoles->sortorder.",
+			".$tblRoles->sort2." ".$tblRoles->sortorder."
 	");
 
-	$numitems = $db->num_rows($result);
+	$numitems = mysql_num_rows($query);
 
 	if ($numitems > 0) {
 ?>
@@ -1281,7 +1252,7 @@
 	<td colspan="2">
 	<div style="margin-top: 10px; margin-left: 40px;">
 	<?php
-		$tblRoles->draw($result, $numitems, 100);
+		$tblRoles->draw($query, $numitems, 100);
 	?>
 	</div></td>
 </tr>
@@ -1329,13 +1300,12 @@
 		"weapons"
 	);
 
-	$result = $db->query("
+	$query = mysql_query("
 		SELECT
-
 			".DB_PREFIX."_Events_Frags.weapon,
 			IFNULL(".DB_PREFIX."_Weapons.modifier, 1.00) AS modifier,
 			COUNT(".DB_PREFIX."_Events_Frags.weapon) AS kills,
-			COUNT(".DB_PREFIX."_Events_Frags.weapon) / $realkills * 100 AS percent
+			COUNT(".DB_PREFIX."_Events_Frags.weapon) / ".mysql_escape_string($realkills)." * 100 AS percent
 		FROM
 			".DB_PREFIX."_Events_Frags
 		LEFT JOIN ".DB_PREFIX."_Weapons ON
@@ -1343,13 +1313,13 @@
 		LEFT JOIN ".DB_PREFIX."_Servers ON
 			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Frags.serverId
 		WHERE
-			".DB_PREFIX."_Servers.game='$game' AND ".DB_PREFIX."_Events_Frags.killerId=$player
-			AND (".DB_PREFIX."_Weapons.game='$game' OR ".DB_PREFIX."_Weapons.weaponId IS NULL)
+			".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."' AND ".DB_PREFIX."_Events_Frags.killerId=$player
+			AND (".DB_PREFIX."_Weapons.game='".mysql_escape_string($game)."' OR ".DB_PREFIX."_Weapons.weaponId IS NULL)
 		GROUP BY
 			".DB_PREFIX."_Events_Frags.weapon
 		ORDER BY
-			$tblWeapons->sort $tblWeapons->sortorder,
-			$tblWeapons->sort2 $tblWeapons->sortorder
+			".$tblWeapons->sort." ".$tblWeapons->sortorder.",
+			".$tblWeapons->sort2." ".$tblWeapons->sortorder."
 	");
 ?>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
@@ -1366,13 +1336,12 @@
 	<td colspan="2">
 	<div style="margin-top: 10px; margin-left: 40px;">
 		<?php
-			$tblWeapons->draw($result, $db->num_rows($result), 100);
+			$tblWeapons->draw($query, mysql_num_rows($query), 100);
 		?>
 	</div>
 	</td>
 </tr>
 </table><p>
-<!-- Begin StatsMe Addon 1.0 by JustinHoMi@aol.com -->
 <?php
 	flush();
 	$tblWeaponstats = new Table(
@@ -1444,7 +1413,7 @@
 		"weaponstats"
 	);
 
-	$result = $db->query("
+	$query = mysql_query("
 		SELECT
 			".DB_PREFIX."_Events_Statsme.weapon AS smweapon,
 			SUM(".DB_PREFIX."_Events_Statsme.kills) AS smkills,
@@ -1462,15 +1431,16 @@
 		LEFT JOIN ".DB_PREFIX."_Servers ON
 			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Statsme.serverId
 		WHERE
-			".DB_PREFIX."_Servers.game='$game' AND ".DB_PREFIX."_Events_Statsme.PlayerId=$player
+			".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
+			AND ".DB_PREFIX."_Events_Statsme.PlayerId=".mysql_escape_string($player)."
 		GROUP BY
 			".DB_PREFIX."_Events_Statsme.weapon
 		ORDER BY
-			$tblWeaponstats->sort $tblWeaponstats->sortorder,
-			$tblWeaponstats->sort2 $tblWeaponstats->sortorder
+			".$tblWeaponstats->sort." ".$tblWeaponstats->sortorder.",
+			".$tblWeaponstats->sort2." ".$tblWeaponstats->sortorder."
 	");
 
-if ($db->num_rows($result) != 0) {
+if (mysql_num_rows($query) != 0) {
 ?>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -1486,12 +1456,11 @@ if ($db->num_rows($result) != 0) {
 	<td colspan="2">
 	<div style="margin-top: 10px; margin-left: 40px;">
 	<?php
-		$tblWeaponstats->draw($result, $db->num_rows($result), 100);
+		$tblWeaponstats->draw($query, mysql_num_rows($query), 100);
 	?>
 	</div></td>
 </tr>
 </table><p>
-<!-- End StatsMe Addon 1.0 by JustinHoMi@aol.com -->
 <?php
 }
 	flush();
@@ -1564,7 +1533,7 @@ if ($db->num_rows($result) != 0) {
 		"weaponstats2"
 	);
 
-	$result = $db->query("
+	$query = mysql_query("
 		SELECT
 			".DB_PREFIX."_Events_Statsme2.weapon AS smweapon,
 			SUM(".DB_PREFIX."_Events_Statsme2.head) AS smhead,
@@ -1582,15 +1551,16 @@ if ($db->num_rows($result) != 0) {
 		LEFT JOIN ".DB_PREFIX."_Servers ON
 			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Statsme2.serverId
 		WHERE
-			".DB_PREFIX."_Servers.game='$game' AND ".DB_PREFIX."_Events_Statsme2.PlayerId=$player
+			".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
+			AND ".DB_PREFIX."_Events_Statsme2.PlayerId=".mysql_escape_string($player)."
 		GROUP BY
 			".DB_PREFIX."_Events_Statsme2.weapon
 		ORDER BY
-			$tblWeaponstats2->sort $tblWeaponstats2->sortorder,
-			$tblWeaponstats2->sort2 $tblWeaponstats2->sortorder
+			".$tblWeaponstats2->sort." ".$tblWeaponstats2->sortorder.",
+			".$tblWeaponstats2->sort2." ".$tblWeaponstats2->sortorder."
 	");
 
-if ($db->num_rows($result) != 0) {
+if (mysql_num_rows($query) != 0) {
 ?>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -1606,7 +1576,7 @@ if ($db->num_rows($result) != 0) {
 	<td colspan="2">
 	<div style="margin-top: 10px; margin-left: 40px;">
 	<?php
-		$tblWeaponstats2->draw($result, $db->num_rows($result), 100);
+		$tblWeaponstats2->draw($query, mysql_num_rows($query), 100);
 	?>
 	</div>
 	</td>
@@ -1659,25 +1629,25 @@ if ($db->num_rows($result) != 0) {
 		"maps"
 	);
 
-	$result = $db->query("
+	$query = mysql_query("
 		SELECT
 			IF(map='', '(Unaccounted)', map) AS map,
-			SUM(killerId=$player) AS kills,
-			SUM(victimId=$player) AS deaths,
-			IFNULL(SUM(killerId=$player) / SUM(victimId=$player), '-') AS kpd,
-			ROUND(CONCAT(SUM(killerId=$player)) / $realkills * 100, 2) AS percentage # workaround weird mysql bug
+			SUM(killerId=".mysql_escape_string($player).") AS kills,
+			SUM(victimId=".mysql_escape_string($player).") AS deaths,
+			IFNULL(SUM(killerId=".mysql_escape_string($player).") / SUM(victimId=".mysql_escape_string($player)."), '-') AS kpd,
+			ROUND(CONCAT(SUM(killerId=".mysql_escape_string($player).")) / ".mysql_escape_string($realkills)." * 100, 2) AS percentage
 		FROM
 			".DB_PREFIX."_Events_Frags
 		LEFT JOIN ".DB_PREFIX."_Servers ON
 			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Frags.serverId
 		WHERE
-			".DB_PREFIX."_Servers.game='$game' AND killerId='$player'
-			OR victimId='$player'
+			".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."' AND killerId='".mysql_escape_string($player)."'
+			OR victimId='".mysql_escape_string($player)."'
 		GROUP BY
 			map
 		ORDER BY
-			$tblMaps->sort $tblMaps->sortorder,
-			$tblMaps->sort2 $tblMaps->sortorder
+			".$tblMaps->sort." ".$tblMaps->sortorder.",
+			".$tblMaps->sort2." ".$tblMaps->sortorder."
 	");
 ?>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
@@ -1694,7 +1664,7 @@ if ($db->num_rows($result) != 0) {
 	<td colspan="2">
 	<div style="margin-top: 10px; margin-left: 40px;">
 	<?php
-		$tblMaps->draw($result, $db->num_rows($result), 100);
+		$tblMaps->draw($query, mysql_num_rows($query), 100);
 	?>
 	</div></td>
 </tr>
@@ -1737,8 +1707,8 @@ if ($db->num_rows($result) != 0) {
 
 
 	//there might be a better way to do this, but I could not figure one out.
-	 $db->query("DROP TABLE IF EXISTS ".DB_PREFIX."_Frags_Kills");
-	 $db->query("
+	 mysql_query("DROP TABLE IF EXISTS ".DB_PREFIX."_Frags_Kills");
+	 mysql_query("
 		CREATE TEMPORARY TABLE ".DB_PREFIX."_Frags_Kills
 		(
 			playerId INT(10),
@@ -1746,7 +1716,7 @@ if ($db->num_rows($result) != 0) {
 			deaths INT(10)
 		)
 	");
-	 $db->query("
+	 mysql_query("
 			INSERT INTO
 				".DB_PREFIX."_Frags_Kills
 				(
@@ -1761,10 +1731,10 @@ if ($db->num_rows($result) != 0) {
 					LEFT JOIN ".DB_PREFIX."_Servers ON
 						".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Frags.serverId
 					WHERE
-						".DB_PREFIX."_Servers.game='$game' AND killerId = $player
+						".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."' AND killerId = ".mysql_escape_string($player)."
 	");
 
-	 $db->query("
+	 mysql_query("
 			INSERT INTO
 				".DB_PREFIX."_Frags_Kills
 				(
@@ -1779,10 +1749,11 @@ if ($db->num_rows($result) != 0) {
 					LEFT JOIN ".DB_PREFIX."_Servers ON
 						".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Frags.serverId
 					WHERE
-						".DB_PREFIX."_Servers.game='$game' AND victimId = $player
+						".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
+						AND victimId = ".mysql_escape_string($player)."
 		");
 
-		$result = $db->query("
+		$query = mysql_query("
 				SELECT
 					".DB_PREFIX."_Players.lastName AS name,
 					Count(".DB_PREFIX."_Frags_Kills.kills) AS kills,
@@ -1801,13 +1772,13 @@ if ($db->num_rows($result) != 0) {
 				GROUP BY
 					".DB_PREFIX."_Frags_Kills.playerId
 				HAVING
-					Count(".DB_PREFIX."_Frags_Kills.kills) >= $killLimit
+					Count(".DB_PREFIX."_Frags_Kills.kills) >= ".mysql_escape_string($killLimit)."
 				ORDER BY
-	            $tblPlayerKillStats->sort $tblPlayerKillStats->sortorder,
-	            $tblPlayerKillStats->sort2 $tblPlayerKillStats->sortorder
+	            ".$tblPlayerKillStats->sort." ".$tblPlayerKillStats->sortorder.",
+	            ".$tblPlayerKillStats->sort2." ".$tblPlayerKillStats->sortorder."
 		");
 
-	$numitems = $db->num_rows($result);
+	$numitems = mysql_num_rows($query);
 
 
 ?>
@@ -1826,7 +1797,7 @@ if ($db->num_rows($result) != 0) {
 	<div style="margin-top: 10px; margin-left: 40px;">
 	<?php
 	if ($numitems > 0) {
-    	$tblPlayerKillStats->draw($result, $numitems, 100);
+    	$tblPlayerKillStats->draw($query, $numitems, 100);
   	}
   	else {
   		echo $g_options["font_normal"]."Data out of selected range".$g_options["fontend_normal"];
@@ -1866,10 +1837,9 @@ if ($db->num_rows($result) != 0) {
 <?php
 	if($g_options['useFlash'] == "1") {
 		// get the kills
-		$query = "SELECT `eventTime` FROM `".DB_PREFIX."_Events_Frags` WHERE `killerId` = '".$player."'";
-		$query = $db->query($query);
+		$query = mysql_query("SELECT `eventTime` FROM `".DB_PREFIX."_Events_Frags` WHERE `killerId` = '".mysql_escape_string($player)."'");
 		$killsArr = array();
-		while($result = $db->fetch_array($query)) {
+		while($result = mysql_fetch_assoc($query)) {
 			$killsArr[] = $result;
 		}
 		if(!empty($killsArr)) {

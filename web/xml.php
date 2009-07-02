@@ -1,11 +1,8 @@
 <?php
 /**
- * $Id: xml.php 675 2009-03-03 21:09:45Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/xml.php $
- *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +10,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +20,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -42,16 +39,16 @@
  */
 
 // Check PHP configuration
-if (version_compare(phpversion(), "5.2.6", "<")) {
-	die("HLstats requires PHP version 5.2.6 or newer (you are running PHP version " . phpversion() . ").");
+if (version_compare(phpversion(), "5.0.0", "<")) {
+	die("HLStats requires PHP version 5.0.0 or newer (you are running PHP version " . phpversion() . ").");
 }
 
 if (!get_magic_quotes_gpc()) {
-	die("HLstats requires <b>magic_quotes_gpc</b> to be <i>enabled</i>. Check your php.ini or refer to the PHP manual for more information.");
+	die("HLStats requires <b>magic_quotes_gpc</b> to be <i>enabled</i>. Check your php.ini or refer to the PHP manual for more information.");
 }
 
 if (get_magic_quotes_runtime()) {
-	die("HLstats requires <b>magic_quotes_runtime</b> to be <i>disabled</i>. Check your php.ini or refer to the PHP manual for more information.");
+	die("HLStats requires <b>magic_quotes_runtime</b> to be <i>disabled</i>. Check your php.ini or refer to the PHP manual for more information.");
 }
 
 date_default_timezone_set('Europe/Berlin');
@@ -70,7 +67,7 @@ else {
 }
 
 // load config
-require('./hlstatsinc/hlstats.conf.inc.php');
+require('./hlstatsinc/hlstats.conf.php');
 
 /**
  * load required stuff
@@ -79,12 +76,12 @@ require('./hlstatsinc/hlstats.conf.inc.php');
  * db class
  * general classes like table class
  */
-require(INCLUDE_PATH . "/db.inc.php");
 require(INCLUDE_PATH . "/functions.inc.php");
 require(INCLUDE_PATH . "/classes.inc.php");
 
 // deb class and options
-$db = new DB_mysql();
+$db_con = mysql_connect(DB_ADDR,DB_USER,DB_PASS);
+$db_sel = mysql_select_db(DB_NAME,$db_con);
 
 // get the hlstats options
 $g_options = getOptions();
@@ -102,7 +99,7 @@ if($g_options['allowXML'] == "1") {
 		case 'playerlist':
 			$gameCode = sanitize($_GET['gameCode']);
 			if(!empty($gameCode) && validateInput($gameCode,'nospace')) {
-				$query = "SELECT
+				$query = mysql_query("SELECT
 			    			t1.playerId,lastName,skill
 			    		FROM
 			    			hlstats_Players as t1 INNER JOIN hlstats_PlayerUniqueIds as t2
@@ -112,10 +109,9 @@ if($g_options['allowXML'] == "1") {
 			    			AND t1.hideranking=0
 			    			AND t2.uniqueId not like 'BOT:%'
 			    		ORDER BY skill DESC
-			    		LIMIT 10";
-				$res = $db->query($query);
+			    		LIMIT 10");
 				$xmlBody = "<players info='top 10 playerlist'>";
-				while ($playerData = $db->fetch_array($res)) {
+				while ($playerData = mysql_fetch_assoc($query)) {
 					$xmlBody .="<player>";
 					$xmlBody .="<name><![CDATA[".htmlentities($playerData['lastName'],ENT_COMPAT,"UTF-8")."]]></name>";
 					$xmlBody .="<skill>".$playerData['skill']."</skill>";
@@ -156,7 +152,7 @@ if($g_options['allowXML'] == "1") {
 			$serverId = sanitize($_GET['serverId']);
 			if(!empty($serverId) && validateInput($serverId,'digit')) {
 				// check if we have such server
-				$db->query("
+				$query = mysql_query("
 						SELECT
 							s.serverId,
 							s.name,
@@ -175,9 +171,9 @@ if($g_options['allowXML'] == "1") {
 						WHERE
 							serverId=".$serverId."
 							");
-				if ($db->num_rows() === 1) {
+				if (mysql_num_rows($query) === 1) {
 					// get the server data
-					$serverData = $db->fetch_array();
+					$serverData = mysql_fetch_assoc($query);
 
 					$xmlBody = "<server>";
 					$xmlBody .= "<name>".$serverData['name']."</name>";

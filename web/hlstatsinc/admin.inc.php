@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: admin.inc.php 667 2009-02-27 14:15:07Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admin.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -102,19 +100,10 @@
 		}
 
 		function checkCookieAuth() {
-			global $db;
-
-			$db->query("
-				SELECT
-					*
-				FROM
-					".DB_PREFIX."_Users
-				WHERE
-					username='$this->username'
-			");
-			if ($db->num_rows() == 1) {
-				$this->userdata = $db->fetch_array();
-				$db->free_result();
+			$query = mysql_query(" SELECT * FROM ".DB_PREFIX."_Users WHERE username='$this->username'");
+			if (mysql_num_rows($query) == 1) {
+				$this->userdata = mysql_fetch_assoc($query);
+				mysql_free_result($query);
 
 				if (md5($this->username) == $this->password) {
 					$this->ok = true;
@@ -179,22 +168,14 @@
 		}
 
 		function checkPass() {
-			global $db;
+			$query = mysql_query("SELECT * FROM ".DB_PREFIX."_Users
+						WHERE username='$this->username'");
 
-			$db->query("
-				SELECT
-					*
-				FROM
-					".DB_PREFIX."_Users
-				WHERE
-					username='$this->username'
-			");
-
-			if ($db->num_rows() == 1) {
+			if (mysql_num_rows($query) == 1) {
 				// The username is OK
 
-				$this->userdata = $db->fetch_array();
-				$db->free_result();
+				$this->userdata = mysql_fetch_assoc($query);
+				mysql_free_result($query);
 
 				if (md5($this->password) == $this->userdata["password"]) {
 					// The username and the password are OK
@@ -316,9 +297,7 @@
 			$this->showid = $showid;
 		}
 
-		function update ()
-		{
-			global $db;
+		function update () {
 
 			$okcols = 0;
 			$qcols = '';
@@ -360,7 +339,7 @@
 			}
 
 			if ($okcols > 0 && !$this->errors) {
-				$db->query("
+				mysql_query("
 					INSERT INTO
 						$this->table
 						(
@@ -372,8 +351,8 @@
 					)",
 					false
 				);
-				if ($db->dberror()) {
-					$this->errors[] = "DB Error: " . $db->dberror();
+				if (mysql_error()) {
+					$this->errors[] = "DB Error: " . mysql_error();
 				}
 			}
 			elseif ($okcols == 0) {
@@ -386,7 +365,7 @@
 					$row = stripslashes($row);
 
 					if (!empty($_POST[$row . "_delete"])) {
-						$db->query("
+						mysql_query("
 							DELETE FROM
 								$this->table
 							WHERE
@@ -430,7 +409,7 @@
 						$query .= " WHERE $this->keycol='" . addslashes($row) . "'";
 
 						if (!$rowerror) {
-							$db->query($query);
+							mysql_query($query);
 						}
 					}
 				}
@@ -446,7 +425,7 @@
 
 		function draw ($result)
 		{
-			global $g_options, $db;
+			global $g_options;
 ?>
 <table width="75%" border="0" cellspacing="0" cellpadding="0">
 
@@ -483,7 +462,7 @@
 		</tr>
 
 <?php
-			while ($rowdata = $db->fetch_array($result))
+			while ($rowdata = mysql_fetch_assoc($result))
 			{
 				echo "\n<tr>\n";
 				echo "<td align=\"center\" bgcolor=\"" . $g_options["table_bgcolor1"] . "\">";
@@ -534,7 +513,7 @@
 
 
 		function drawfields ($rowdata=array(), $new=false, $stripslashes=false) {
-			global $g_options, $db;
+			global $g_options;
 
 			$i=0;
 			foreach ($this->columns as $col) {
@@ -587,9 +566,9 @@
 							list($col_table, $col_col) = explode(".", $col->datasource);
 							list($col_col, $col_key, $col_where) = explode("/", $col_col);
 							if ($col_where) $col_where = "WHERE $col_where";
-							$col_result = $db->query("SELECT $col_key, $col_col FROM $col_table $col_where ORDER BY $col_key");
+							$col_result = mysql_query("SELECT $col_key, $col_col FROM $col_table $col_where ORDER BY $col_key");
 							$coldata = array();
-							while (list($k, $v) = $db->fetch_row($col_result))
+							while (list($k, $v) = mysql_fetch_assoc($col_result))
 							{
 								$coldata[$k] = $v;
 							}
@@ -732,7 +711,6 @@
 		}
 
 		function update () {
-			global $db;
 
 			$setstrings = array();
 			foreach ($this->propertygroups as $group) {
@@ -744,7 +722,7 @@
 			}
 
 			if(!empty($setstrings)) {
-				$db->query("
+				mysql_query("
 					UPDATE
 						" . $this->table . "
 					SET
@@ -905,7 +883,7 @@
 	echo $g_options["font_normal"];
 
 	// General Settings
-	$admintasks["options"]			= new AdminTask("HLstats Options", 100);
+	$admintasks["options"]			= new AdminTask("HLStats Options", 100);
 	$admintasks["adminusers"]		= new AdminTask("Admin Users", 100);
 	$admintasks["games"]			= new AdminTask("Games", 100);
 	$admintasks["clantags"]			= new AdminTask("Clan Tag Patterns", 80);
@@ -1010,7 +988,7 @@ alt="rightarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mo
 ?>
 &nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Game Settings</b><p>
 <?php
-		$gamesresult = $db->query("
+		$gamesresult = mysql_query("
 			SELECT
 				name,
 				code
@@ -1018,7 +996,7 @@ alt="rightarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mo
 				".DB_PREFIX."_Games
 		");
 
-		while ($gamedata = $db->fetch_array($gamesresult))
+		while ($gamedata = mysql_fetch_assoc($gamesresult))
 		{
 			$gamename = $gamedata["name"];
 			$gamecode = $gamedata["code"];

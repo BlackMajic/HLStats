@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: tools_adminevents.inc.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admintasks/tools_adminevents.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -85,8 +83,8 @@
 		"sortorder"
 	);
 
-	$db->query("DROP TABLE IF EXISTS ".DB_PREFIX."_AdminEventHistory");
-	$db->query("
+	mysql_query("DROP TABLE IF EXISTS ".DB_PREFIX."_AdminEventHistory");
+	mysql_query("
 		CREATE TEMPORARY TABLE ".DB_PREFIX."_AdminEventHistory
 		(
 			eventType VARCHAR(32) NOT NULL,
@@ -97,12 +95,9 @@
 		)
 	");
 
-	function insertEvents ($table, $select)
-	{
-		global $db;
-
+	function insertEvents ($table, $select) {
 		$select = str_replace("<table>", "".DB_PREFIX."_Events_$table", $select);
-		$db->query("
+		mysql_query("
 			INSERT INTO
 				".DB_PREFIX."_AdminEventHistory
 				(
@@ -151,7 +146,7 @@
 		$where = "WHERE eventType='$type'";
 	}
 
-	$result = $db->query("
+	$query = mysql_query("
 		SELECT
 			eventTime,
 			eventType,
@@ -168,15 +163,9 @@
 			$table->startitem,$table->numperpage
 	");
 
-	$resultCount = $db->query("
-		SELECT
-			COUNT(*)
-		FROM
-			".DB_PREFIX."_AdminEventHistory
-		$where
-	");
-
-	list($numitems) = $db->fetch_row($resultCount);
+	$resultCount = mysql_query("SELECT COUNT(*) AS ac FROM ".DB_PREFIX."_AdminEventHistory $where");
+	$result = mysql_fetch_assoc($resultCount);
+	$numitems = $result['ac'];
 ?>
 <form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
 <input type="hidden" name="mode" value="admin">
@@ -185,7 +174,7 @@
 <input type="hidden" name="sortorder" value="<?php if(!empty($sortorder)) echo $sortorder; ?>">
 
 <b>&#149;</b> Show only events of type: <?php
-	$resultTypes = $db->query("
+	$resultTypes = mysql_query("
 		SELECT
 			DISTINCT eventType
 		FROM
@@ -196,14 +185,14 @@
 
 	$types[""] = "(All)";
 
-	while (list($k) = $db->fetch_row($resultTypes))
+	while ($result = mysql_fetch_assoc($resultTypes))
 	{
-		$types[$k] = $k;
+		$types[$result['eventType']] = $result['eventType'];
 	}
 
 	echo getSelect("type", $types, $type);
 ?> <input type="submit" value="Filter" class="smallsubmit"><p>
 </form>
 <?php
-	$table->draw($result, $numitems, 100, "");
+	$table->draw($query, $numitems, 100, "");
 ?>

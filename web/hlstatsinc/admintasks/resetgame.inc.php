@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: resetgame.inc.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admintasks/resetgame.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -47,9 +45,9 @@
 	if (isset($_POST['submitReset'])) {
 
 		// we need first the playids for this game
-		$query = $db->query("SELECT playerId FROM ".DB_PREFIX."_Players WHERE game = '".$gamecode."'");
-		while($result = $db->fetch_row($query)) {
-			$players[]= $result[0];
+		$query = mysql_query("SELECT playerId FROM ".DB_PREFIX."_Players WHERE game = '".$gamecode."'");
+		while($result = mysql_fetch_assoc($query)) {
+			$players[]= $result['playerId'];
 		}
 		if(count($players) < 1) {
 			die("Fatal error: No players found for this game.");
@@ -57,14 +55,13 @@
 		$playerIdString = implode(",",$players);
 
 
-		$query = "SHOW TABLES LIKE '".DB_PREFIX."_Events_%'";
-		$result = $db->query($query);
-		if ($db->num_rows() < 1) {
+		$query = mysql_query("SHOW TABLES LIKE '".DB_PREFIX."_Events_%'");
+		if (mysql_num_rows($query) < 1) {
 			die("Fatal error: No events tables found with query:<p><pre>$query</pre><p>
 				There may be something wrong with your hlstats database or your version of MySQL.");
 		}
 
-		while (list($table) = $db->fetch_row($result)) {
+		while (list($table) = mysql_fetch_array($result)) {
 			$dbtables[] = $table;
 		}
 

@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: games.inc.php 658 2009-02-20 15:16:03Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admintasks/games.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -54,7 +52,7 @@
 					foreach ($inputStrArr as $line) {
 						$line = trim($line);
 						if(!preg_match("/^#/",$line) && $line != "") {
-							$query = $db->query($line);
+							$query = mysql_query($line);
 							if(!$query) {
 								echo("Query Failed: ".$line);
 								$i++;
@@ -71,13 +69,14 @@
 
 				case 'select':
 					// read the gamesupport_file
-					if(file_exists("install/sql_files/".$_POST['newGame'])) {
+					$check = validateInput($_POST['newGame'],'nospace');
+					if(file_exists(INCLUDE_PATH."/sql_files/".$_POST['newGame']) && $check === true) {
 						/*
 						$fh = fopen("install/sql_files/".$_POST['newGame'],"r");
 						$sqlContent = fread($fh,filesize("install/sql_files/".$_POST['newGame']));
 						fclose($fh);
 						*/
-						$sqlContent = file_get_contents("install/sql_files/".$_POST['newGame']);
+						$sqlContent = file_get_contents(INCLUDE_PATH."/sql_files/".$_POST['newGame']);
 						$sqlContent = str_replace(array("\n","\t","\r"),array("\n"),$sqlContent);
 						// replace the table prefix with the constant
 						$sqlContent = str_replace("++DB_PREFIX++",DB_PREFIX,$sqlContent);
@@ -87,7 +86,7 @@
 						foreach ($sqlContentArr as $line) {
 							$line = trim($line);
 							if(!preg_match("/^#/",$line) && $line != "") {
-								$query = $db->query($line);
+								$query = mysql_query($line);
 								if(!$query) {
 									echo("Query Failed: ".$line);
 									$i++;
@@ -117,22 +116,21 @@
 
 			// we need first the playids for this game
 			$players = array();
-			$query = $db->query("SELECT playerId FROM ".DB_PREFIX."_Players WHERE game = '".$_POST['gameToDelete']."'");
-			while($result = $db->fetch_row($query)) {
-				$players[]= $result[0];
+			$query = mysql_query("SELECT playerId FROM ".DB_PREFIX."_Players WHERE game = '".mysql_escape_string($_POST['gameToDelete'])."'");
+			while($result = mysql_fetch_assoc($query)) {
+				$players[]= $result['playerId'];
 			}
 			if(!empty($players)) {
 				#die("Fatal error: No players found for this game.");
 				$playerIdString = implode(",",$players);
-				$query = "SHOW TABLES LIKE '".DB_PREFIX."_Events_%'";
-				$result = $db->query($query);
-				if ($db->num_rows() < 1) {
+				$query = mysql_query("SHOW TABLES LIKE '".DB_PREFIX."_Events_%'");
+				if (mysql_num_rows($query) < 1) {
 					die("Fatal error: No events tables found with query:<p><pre>$query</pre><p>
 						There may be something wrong with your hlstats database or your version of MySQL.");
 				}
 
 				$dbtables = array();
-				while (list($table) = $db->fetch_row($result)) {
+				while (list($table) = mysql_fetch_assoc($query)) {
 					$dbtables[] = $table;
 				}
 
@@ -140,7 +138,7 @@
 				foreach($dbtables as $table) {
 					echo "<li>";
 					if($table == '".DB_PREFIX."_Events_Frags' || $table == '".DB_PREFIX."_Events_Teamkills') {
-						if($db->query("DELETE FROM ".$table."
+						if(mysql_query("DELETE FROM ".$table."
 										WHERE killerId IN (".$playerIdString.")
 											OR victimId IN (".$playerIdString.")", false)) {
 							echo $table." ok.";
@@ -150,7 +148,7 @@
 						}
 					}
 					else {
-						if($db->query("DELETE FROM ".$table."
+						if(mysql_query("DELETE FROM ".$table."
 										WHERE playerId IN (".$playerIdString.")", false)) {
 							echo $table." ok.";
 						}
@@ -168,7 +166,7 @@
 									DB_PREFIX.'_Teams', DB_PREFIX.'_Weapons');
 			foreach($gameTables as $gt) {
 				echo "<li>";
-				if($db->query("DELETE FROM ".$gt." WHERE game = '".$_POST['gameToDelete']."'")) {
+				if(mysql_query("DELETE FROM ".$gt." WHERE game = '".$_POST['gameToDelete']."'")) {
 					echo $gt." ok";
 				}
 				else {
@@ -178,7 +176,7 @@
 			}
 
 			echo "<li>";
-			if($db->query("DELETE FROM ".DB_PREFIX."_Games WHERE code='".$_POST['gameToDelete']."'")) {
+			if(mysql_query("DELETE FROM ".DB_PREFIX."_Games WHERE code='".$_POST['gameToDelete']."'")) {
 				echo "".DB_PREFIX."_Games ok";
 			}
 			else {
@@ -189,7 +187,7 @@
 			// delete the players
 			if(!empty($players)) {
 				echo "<li>";
-				if($db->query("DELETE FROM ".DB_PREFIX."_Players WHERE playerId IN (".$playerIdString.")")) {
+				if(mysql_query("DELETE FROM ".DB_PREFIX."_Players WHERE playerId IN (".$playerIdString.")")) {
 					echo "".DB_PREFIX."_Players ok";
 				}
 				else {
@@ -203,14 +201,14 @@
 	}
 	else {
 		// get the games from the db
-		$query = $db->query("SELECT code,name FROM ".DB_PREFIX."_Games ORDER BY name");
+		$query = mysql_query("SELECT code,name FROM ".DB_PREFIX."_Games ORDER BY name");
 		$gamesArr = array();
-		while ($result = $db->fetch_row($query)) {
-			$gamesArr[$result[0]] = $result[1];
+		while ($result = mysql_fetch_assoc($query)) {
+			$gamesArr[$result['code']] = $result['name'];
 		}
 
 		// get the available gamesupport files.
-		$sqlDir = getcwd()."/install/sql_files";
+		$sqlDir = INCLUDE_PATH."/sql_files";
 		if(file_exists($sqlDir)) {
 			$addMode = "select";
 			// read the gamesupport files

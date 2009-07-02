@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: adminusers.inc.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admintasks/adminusers.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -59,18 +57,18 @@
 
 ?>
 
-Usernames and passwords can be set up for access to this HLstats Admin area. For most sites you will only want one admin user - yourself. Some sites may however need to give administration access to several people.<p>
+Usernames and passwords can be set up for access to this HLStats Admin area. For most sites you will only want one admin user - yourself. Some sites may however need to give administration access to several people.<p>
 
 <b>Note</b> Passwords are encrypted in the database and so cannot be viewed. However, you can change a user's password by entering a new plain text value in the Password field.<p>
 
 <b>Access Levels</b><br>
 
-&#149; <i>Restricted</i> users only have access to the Host Groups, Clan Tag Patterns, Weapons, Teams, Awards and Actions configuration areas. This means these users cannot set Options or add new Games, Servers or Admin Users to HLstats, or use any of the admin Tools.<br>
+&#149; <i>Restricted</i> users only have access to the Host Groups, Clan Tag Patterns, Weapons, Teams, Awards and Actions configuration areas. This means these users cannot set Options or add new Games, Servers or Admin Users to HLStats, or use any of the admin Tools.<br>
 &#149; <i>Administrator</i> users have full, unrestricted access.<p>
 
 <?php
 
-	$result = $db->query("
+	$query = mysql_query("
 		SELECT
 			username,
 			'(encrypted)' AS password,
@@ -81,7 +79,7 @@ Usernames and passwords can be set up for access to this HLstats Admin area. For
 			username
 	");
 
-	$edlist->draw($result);
+	$edlist->draw($query);
 ?>
 
 <table width="75%" border="0" cellspacing="0" cellpadding="0">

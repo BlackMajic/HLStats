@@ -1,11 +1,8 @@
 #!/usr/bin/perl
 #
-# $Id: hlstats.pl 682 2009-05-25 12:11:09Z jumpin_banana $
-# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/daemon/hlstats.pl $
-#
 # Original development:
 # +
-# + HLstats - Real-time player and clan rankings and statistics for Half-Life
+# + HLStats - Real-time player and clan rankings and statistics for Half-Life
 # + http://sourceforge.net/projects/hlstats/
 # +
 # + Copyright (C) 2001  Simon Garner
@@ -13,7 +10,7 @@
 #
 # Additional development:
 # +
-# + UA HLstats Team
+# + UA HLStats Team
 # + http://www.unitedadmins.com
 # + 2004 - 2007
 # +
@@ -26,7 +23,7 @@
 # + 2007 - 2008
 # +
 #
-# HLstats - Real-time player and clan rankings and statistics for Half-Life
+# HLStats - Real-time player and clan rankings and statistics for Half-Life
 # http://sourceforge.net/projects/hlstats/
 #
 # Copyright (C) 2001  Simon Garner
@@ -51,14 +48,7 @@
 ##
 
 # $opt_configfile_name - Filename of configuration file.
-$opt_configfile_name = "hlstats.conf";
-
-# $opt_libdir - Directory to look in for local required files
-#               (our *.plib, *.pm files).
-# not needed anymore
-# replaced by dirname funtion below
-#$opt_libdir = "./";
-
+$opt_configfile_name = "hlstats.conf.ini";
 
 ##
 ##
@@ -74,13 +64,13 @@ use Time::Local;
 use IO::Socket;
 use DBI;
 use Digest::MD5;
-
 use File::Basename;
+
+use Config::Tiny; ## new config syntax
 
 $opt_libdir = dirname(__FILE__);
 $opt_configfile = "$opt_libdir/$opt_configfile_name";
 
-require "$opt_libdir/ConfigReaderSimple.pm";
 require "$opt_libdir/KKrcon.pm";
 require "$opt_libdir/HLstats_Server.pm";
 require "$opt_libdir/HLstats_Player.pm";
@@ -91,764 +81,59 @@ require "$opt_libdir/HLstats_RatingSystem.pm";
 $|=1;
 Getopt::Long::Configure ("bundling");
 
-
-##
-## Functions
-##
-
-#
-# void printEvent (int code, string description)
-#
-# Logs event information to stdout.
-#
-
-sub printEvent {
-	my ($code, $description) = @_;
-
-	if ($g_debug > 0) {
-		print localtime(time) . "" unless ($ev_timestamp);
-		printf("%s: %21s - E%03d: %s\n",
-			$ev_timestamp, $s_addr, $code, $description);
-	}
-}
-
-
-#
-# void printNotice (string notice)
-#
-# Prins a debugging notice to stdout.
-#
-
-sub printNotice {
-	my ($notice) = @_;
-
-	if ($g_debug > 1)
-	{
-		print ">> $notice\n";
-	}
-}
-
-
-#
-# void recordEvent (string table, array cols, bool getid, [mixed eventData ...])
-#
-# Adds an event to an Events table.
-#
-
-sub recordEvent {
-	my $table = shift;
-	my $getid = shift;
-	my @coldata = @_;
-
-	my @cols = @{$g_eventTables{$table}};
-	my $lastid = -1;
-
-	my $insertType = "";
-	$insertType = " DELAYED" if ($db_lowpriority);
-
-	my $query = "
-		INSERT$insertType INTO
-			${db_prefix}_Events_$table
-			(
-				eventTime,
-				serverId,
-				map"
-	;
-
-	foreach $i (@cols)
-	{
-		$query .= ",\n$i";
-	}
-
-	$query .= "
-			)
-		VALUES
-		(
-			$ev_datetime,
-			'$g_servers{$s_addr}->{id}',
-			'$g_servers{$s_addr}->{map}'"
-	;
-
-	for $i (@coldata)
-	{
-		$query .= ",\n'" . &quoteSQL($i) . "'";
-	}
-
-	$query .= "
-		)
-	";
-
-	my $result = &doQuery($query);
-
-	if ($getid)
-	{
-		$result = &doQuery("SELECT LAST_INSERT_ID()");
-		($lastid) = $result->fetchrow_array;
-		return $lastid;
-	}
-
-	$result->finish;
-}
-
-
-#
-# array calcSkill (int killerSkill, int victimSkill, string weapon)
-#
-# Returns an array, where the first index contains the killer's new skill, and
-# the second index contains the victim's new skill.
-#
-
-sub calcSkill
-{
-	my ($killerSkill, $victimSkill, $weapon) = @_;
-	my @newSkill;
-
-	$killerSkill = 1 if ($killerSkill < 1);
-	$victimSkill = 1 if ($victimSkill < 1);
-
-	if ($g_debug > 2)
-	{
-		&printNotice("Begin calcSkill: killerSkill=$killerSkill");
-		&printNotice("Begin calcSkill: victimSkill=$victimSkill");
-	}
-
-	# Look up the weapon's skill modifier
-	my $query = "
-		SELECT
-			modifier
-		FROM
-			${db_prefix}_Weapons
-		WHERE
-			code='" . &quoteSQL($weapon) . "' AND
-			game='$g_servers{$s_addr}->{game}'
-	";
-	my $result = &doQuery($query);
-
-	if ($result->rows)
-	{
-		($modifier) = $result->fetchrow_array;
-	}
-	else
-	{
-		# if the weapon has no modifier specified, then we default to 1.
-		$modifier = 1.00;
-	}
-	$result->finish;
-
-	# Calculate the new skills
-	my $killerSkillChange = ($victimSkill / $killerSkill) * 5 * $modifier;
-	my $victimSkillChange = ($victimSkill / $killerSkill) * 5 * $modifier;
-
-	if ($killerSkillChange > $g_skill_maxchange)
-	{
-		&printNotice("Capping killer skill change of $killerSkillChange to $g_skill_maxchange") if ($g_debug > 2);
-		$killerSkillChange = $g_skill_maxchange;
-	}
-	if ($victimSkillChange > $g_skill_maxchange)
-	{
-		&printNotice("Capping victim skill change of $victimSkillChange to $g_skill_maxchange") if ($g_debug > 2);
-		$victimSkillChange = $g_skill_maxchange;
-	}
-
-	$killerSkill += $killerSkillChange;
-	$victimSkill -= $victimSkillChange;
-
-	# we want int not float
-	$killerSkill = sprintf("%d", $killerSkill + 0.5);
-	$victimSkill = sprintf("%d", $victimSkill + 0.5);
-
-	if ($g_debug > 2)
-	{
-		&printNotice("End calcSkill: killerSkill=$killerSkill");
-		&printNotice("End calcSkill: victimSkill=$victimSkill");
-	}
-
-	return ($killerSkill, $victimSkill, $modifier);
-}
-
-
-#
-# void rewardTeam (string team, int reward, int actionid)
-#
-# Gives members of 'team' an extra 'reward' skill points. Members of the team
-# who have been inactive (no events) for more than 2 minutes are not rewarded.
-#
-
-sub rewardTeam
-{
-	my ($team, $reward, $actionid) = @_;
-
-	my $player;
-
-	&printNotice("Rewarding team \"$team\" with \"$reward\" skill for action \"$actionid\" ...");
-
-	foreach $player (values(%g_players))
-	{
-		my $player_team = $player->get("team");
-		my $player_server = $player->get("server");
-		my $player_timestamp = $player->get("timestamp");
-
-		if ($player_team eq $team && $player_server eq $s_addr
-			&& ($ev_unixtime - $player_timestamp < 120))
-		{
-			if ($g_debug > 2)
-			{
-				&printNotice("Rewarding " . $player->getInfoString() . " with \"$reward\" skill for action \"$actionid\"");
-			}
-
-			&recordEvent(
-				"TeamBonuses", 0,
-				$player->get("playerid"),
-				$actionid,
-				$reward
-			);
-
-			$player->increment("skill", $reward, 1);
-			$player->updateDB();
-		}
-	}
-}
-
-
-#
-# int getPlayerId (int uniqueId)
-#
-# Looks up a player's ID number, from their unique (WON) ID. Returns their PID.
-#
-
-sub getPlayerId
-{
-	my ($uniqueId) = @_;
-
-	my $query = "
-		SELECT
-			playerId
-		FROM
-			${db_prefix}_PlayerUniqueIds
-		WHERE
-			uniqueId='" . &::quoteSQL($uniqueId) . "' AND
-			game='" . $g_servers{$s_addr}->{game} . "'
-	";
-	my $result = &doQuery($query);
-
-	if ($result->rows)
-	{
-		my ($playerId) = $result->fetchrow_array;
-		$result->finish;
-		return $playerId;
-	}
-	else
-	{
-		$result->finish;
-		return 0;
-	}
-}
-
-
-
-#
-# int updatePlayerProfile (object player, string field, string value)
-#
-# Updates a player's profile information in the database.
-#
-
-sub updatePlayerProfile
-{
-	my ($player, $field, $value) = @_;
-
-	unless ($player)
-	{
-		&printNotice("updatePlayerInfo: Bad player");
-		return 0;
-	}
-
-	$value = &quoteSQL($value);
-
-	if ($value eq "none" || $value eq " ")
-	{
-		$value = "";
-	}
-
-	my $playerName = &abbreviate($player->get("name"));
-	my $playerId   = $player->get("playerid");
-
-	&doQuery("
-		UPDATE
-			${db_prefix}_Players
-		SET
-			$field='$value'
-		WHERE
-			playerId='$playerId'
-	");
-
-	&rcon("SET command successful for '$playerName'.",1);
-	return 1;
-}
-
-
-
-
-#
-# mixed getClanId (string name)
-#
-# Looks up a player's clan ID from their name. Compares the player's name to tag
-# patterns in hlstats_ClanTags. Patterns look like:  [AXXXXX] (matches 1 to 6
-# letters inside square braces, e.g. [ZOOM]Player)  or  =\*AAXX\*= (matches
-# 2 to 4 letters between an equals sign and an asterisk, e.g.  =*RAGE*=Player).
-#
-# Special characters in the pattern:
-#    A    matches one character  (i.e. a character is required)
-#    X    matches zero or one characters  (i.e. a character is optional)
-#    a    matches literal A or a
-#    x    matches literal X or x
-#
-# If no clan exists for the tag, it will be created. Returns the clan's ID, or
-# 0 if the player is not in a clan.
-#
-
-sub getClanId
-{
-	my ($name) = @_;
-
-	my $clanTag  = "";
-	my $clanName = "";
-	my $clanId   = 0;
-
-	my $result = &doQuery("
-		SELECT
-			pattern,
-			position,
-			LENGTH(pattern) AS pattern_length
-		FROM
-			${db_prefix}_ClanTags
-		ORDER BY
-			pattern_length DESC,
-			id
-	");
-
-	while ( my($pattern, $position) = $result->fetchrow_array)
-	{
-		my $regpattern = quotemeta($pattern);
-		$regpattern =~ s/([A-Za-z0-9]+[A-Za-z0-9_-]*)/\($1\)/; # to find clan name from tag
-		$regpattern =~ s/A/./g;
-		$regpattern =~ s/X/.?/g;
-
-		if ($g_debug > 2)
-		{
-			&printNotice("regpattern=$regpattern");
-		}
-
-		if ((($position eq "START" || $position eq "EITHER") && $name =~ /^($regpattern).+/i) ||
-			(($position eq "END"   || $position eq "EITHER") && $name =~ /.+($regpattern)$/i))
-		{
-			if ($g_debug > 2)
-			{
-				&printNotice("pattern \"$regpattern\" matches \"$name\"! 1=\"$1\" 2=\"$2\"");
-			}
-
-			$clanTag  = $1;
-			$clanName = $2;
-			last;
-		}
-	}
-
-	unless ($clanTag)
-	{
-		return 0;
-	}
-
-	my $query = "
-		SELECT
-			clanId
-		FROM
-			${db_prefix}_Clans
-		WHERE
-			tag='" . &quoteSQL($clanTag) . "' AND
-			game='$g_servers{$s_addr}->{game}'
-	";
-	$result = &doQuery($query);
-
-	if ($result->rows)
-	{
-		($clanId) = $result->fetchrow_array;
-		$result->finish;
-		return $clanId;
-	}
-	else
-	{
-		# The clan doesn't exist yet, so we create it.
-		$query = "
-			INSERT INTO
-				${db_prefix}_Clans
-				(
-					tag,
-					name,
-					game
-				)
-			VALUES
-			(
-				'" . &quoteSQL($clanTag)  . "',
-				'" . &quoteSQL($clanName) . "',
-				'$g_servers{$s_addr}->{game}'
-			)
-		";
-		$result = &doQuery($query);
-		$result->finish;
-
-		$result = &doQuery("SELECT LAST_INSERT_ID()");
-		($clanId) = $result->fetchrow_array;
-
-		&printNotice("Created clan \"$clanName\" <C:$clanId> with tag "
-				. "\"$clanTag\" for player \"$name\"");
-
-		return $clanId;
-	}
-}
-
-
-
-#
-# object getServer (string address, int port)
-#
-# Looks up a server's ID number in the Servers table, by searching for a
-# matching IP address and port. NOTE you must specify IP addresses in the
-# Servers table, NOT hostnames.
-#
-# Returns a new "Server object".
-#
-
-sub getServer
-{
-	my ($address, $port) = @_;
-
-	my $query = "
-		SELECT
-			serverId,
-			game,
-			defaultMap
-		FROM
-			${db_prefix}_Servers
-		WHERE
-			address='$address' AND
-			port='$port'
-	";
-	my $result = &doQuery($query);
-
-	if ($result->rows) {
-		my ($serverId, $game, $defaultMap) = $result->fetchrow_array;
-		$result->finish;
-
-		if($defaultMap eq "") {
-			$defaultMap = '';
-		}
-
-		return new HLstats_Server($serverId, $address, $port, $game, $defaultMap);
-	}
-	else {
-		$result->finish;
-
-		return 0;
-	}
-}
-
-
-#
-# boolean sameTeam (string team1, string team2)
-#
-# This should be expanded later to allow for team alliances (e.g. TFC-hunted).
-#
-
-sub sameTeam
-{
-	my ($team1, $team2) = @_;
-
-	if ($team1 eq $team2)
-	{
-		if ($team1 ne "" && $team1 ne "Unassigned")
-		{
-			return 1;
-		}
-		else
-		{
-			return 0;
-		}
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-
-#
-# string getPlayerInfoString (object player, string ident)
-#
-
-sub getPlayerInfoString
-{
-	my ($player) = shift;
-	my @ident = @_;
-
-	if ($player) {
-		return $player->getInfoString();
-	}
-	else {
-		return "(" . join(",", @ident) . ")";
-	}
-}
-
-
-
-#
-# array getPlayerInfo (string player, string forced_uniqueid)
-#
-# Get a player's name, uid, wonid and team from "Name<uid><wonid><team>".
-#
-
-sub getPlayerInfo
-{
-	my ($player, $forced_uniqueid) = @_;
-
-	my $name,$userid,$uniqeid,$team,$role;
-	
-	if ($player =~ /^([^<]+)<(\d+)><([^<>]*)><([^<>]*)><([^<>]*)>/) {
-		#
-		# L4D support
-		#
-		$name     = $1;
-		$userid   = $2;
-		$uniqueid = $3;
-		$team     = $4;
-		$role  = $5;
-
-		# the zombies do not have a uniqueid
-		if(!$uniqueid) {
-			$uniqueid = "zombie_".$userid;
-			$name .= "_".$userid;
-		}
-	}
-	elsif ($player =~ /^(.+)<(\d+)><([^<>]+)><([^<>]*)>$/) {
-		#
-		# normal hl games
-		#
-		$name     = $1;
-		$userid   = $2;
-		$uniqueid = $3;
-		$team     = $4;
-	}
-	else {
-		return 0;
-	}
-
-		# Don't connect Mr. Console or HLTV, they should not be recorded as players!
-		return 0 if ($uniqueid eq "Console");
-		return 0 if ($uniqueid eq "HLTV");
-	
-
-		if ($forced_uniqueid)
-		{
-			$uniqueid = $forced_uniqueid;
-		}
-		elsif ($g_mode eq "NameTrack")
-		{
-			$uniqueid = $name;
-		}
-		else
-		{
-			if (($uniqueid =~ /PENDING/) || ($uniqueid =~ /VALVE_ID_LAN/))
-			{
-				return {
-					name     => $name,
-					userid   => $userid,
-					uniqueid => $uniqueid,
-					team     => $team
-				};
-			}
-
-			foreach $botid (split(/:/, $g_bot_ids))
-			{
-				if ($botid eq $uniqueid)
-				{
-					$md5 = Digest::MD5->new;
-					$md5->add($name);
-					$md5->add($s_addr);
-
-					$uniqueid = "BOT:" . $md5->hexdigest;
-
-					$forced_uniqueid = $uniqueid if ($g_mode eq "LAN");
-
-					last;
-				}
-			}
-		}
-
-		if ($g_players{"$s_addr/$userid"})
-		{
-			$haveplayer = 1;
-		}
-		else
-		{
-			$haveplayer = 0;
-		}
-
-		if ($haveplayer &&
-			$g_players{"$s_addr/$userid"}->get("uniqueid") eq $uniqueid)
-		{
-			my $player = $g_players{"$s_addr/$userid"};
-
-			$player->set("name", $name);
-			$player->set("team", $team);
-
-			$player->updateTimestamp();
-		}
-		else
-		{
-			if ($g_mode ne "LAN" || $forced_uniqueid)
-			{
-				# Add the player to our hash of player objects
-
-				$g_players{"$s_addr/$userid"} = new HLstats_Player(
-					server => $s_addr,
-					userid => $userid,
-					uniqueid => $uniqueid,
-					name => $name,
-					team => $team
-				);
-
-				# Increment number of players on server
-
-				$g_servers{$s_addr}->{numplayers}++ if (!$haveplayer);
-				&printNotice("NumPlayers ($s_addr): $g_servers{$s_addr}->{numplayers} (Connect)");
-
-				delete($g_lan_noplayerinfo_hack->{"$userid"}) if ($g_lan_hack);
-			}
-			elsif ($g_mode eq "LAN" && $g_lan_hack &&
-					$g_lan_noplayerinfo_hack->{"$userid"}->{"name"} eq $name &&
-					$g_lan_noplayerinfo_hack->{"$userid"}->{"server"} eq $s_addr)
-			{
-				$g_players{"$s_addr/$userid"} = new HLstats_Player(
-					server => $s_addr,
-					userid => $userid,
-					uniqueid => $g_lan_noplayerinfo_hack->{"$userid"}->{"ipaddress"},
-					name => $name,
-					team => $team
-				);
-
-				delete($g_lan_noplayerinfo_hack->{"$userid"});
-
-				$g_servers{$s_addr}->{numplayers}++ if (!$haveplayer);
-				&printNotice("NumPlayers ($s_addr): $g_servers{$s_addr}->{numplayers} (LAN Connect)");
-			}
-			else
-			{
-				&printNotice("No player object available for player \"$name\" <U:$userid>");
-			}
-		}
-
-		return {
-			name     => $name,
-			userid   => $userid,
-			uniqueid => $uniqueid,
-			team     => $team,
-			role    => $role
-		};
-}
-
-
-#
-# hash getProperties (string propstring)
-#
-# Parse (key "value") properties into a hash.
-#
-
-sub getProperties
-{
-	my ($propstring) = @_;
-	my %properties;
-
-	while ($propstring =~ s/^\s*\((\S+)(?: "([^"]+)")?\)//) {
-		if (defined($2)) {
-			$properties{$1} = $2;
-		}
-		else {
-			$properties{$1} = 1; # boolean property
-		}
-	}
-
-	return %properties;
-}
-
-
-#
-# boolean like (string subject, string compare)
-#
-# Returns true if 'subject' equals 'compare' with optional whitespace.
-#
-
-sub like
-{
-	my ($subject, $compare) = @_;
-
-	if ($subject =~ /^\s*\Q$compare\E\s*$/)
-	{
-		return 1;
-	}
-	else
-	{
-		return 0;
-	}
-}
-
-
-
-
-
 ##
 ## MAIN
 ##
 
+## load config with config-tiny module
+$Config = Config::Tiny->read("$opt_libdir/hlstats.conf.ini");
+if($Config::Tiny::errstr ne '') {
+	print "Config file not found !\n";
+	print $Config::Tiny::errstr;
+	print "\n";
+	exit(0)
+}
+$db_name = $Config->{Database}->{DBName};
+$db_host = $Config->{Database}->{DBHost};
+$db_user = $Config->{Database}->{DBUsername};
+$db_pass = $Config->{Database}->{DBPassword};
+$db_prefix = $Config->{Database}->{DBPrefix};
+$db_lowpriority = $Config->{Database}->{DBLowPriority};
+
+# @todo: renames
+$s_ip = $Config->{System}->{BindIP};
+$s_port = $Config->{System}->{Port};
+$g_mailto = $Config->{System}->{MailTo};
+$g_mailpath = $Config->{System}->{MailPath};
+$g_debug = $Config->{System}->{DebugLevel};
+$g_stdin = $Config->{System}->{Stdin};
+$g_server_ip = $Config->{System}->{ServerIP};
+$g_server_port = $Config->{System}->{ServerPort};
+$g_timestamp = $Config->{System}->{Timestamp};
+$g_dns_resolveip = $Config->{System}->{DNSResolveIP};
+$g_dns_timeout = $Config->{System}->{DNSTimeout};
+
+$g_mode = $Config->{Options}->{Mode};
+$g_deletedays = $Config->{Options}->{DeleteDays};
+$g_rcon = $Config->{Rcon}->{Rcon};
+$g_rcon_record = $Config->{Rcon}->{RconRecord};
+$g_rcon_ignoreself = $Config->{Rcon}->{RconIgnoreSelf};
+$g_minplayers = $Config->{Options}->{MinPlayers};
+$g_skill_maxchange = $Config->{Options}->{SkillMaxChange};
+$g_log_chat = $Config->{Options}->{LogChat};
+$g_rcon_say = $Config->{Rcon}->{RconSay};
+$g_ignore_bots = $Config->{Options}->{IgnoreBots};
+$g_ingame_points = $Config->{Options}->{IngamePoints};
+$g_rating_system = $Config->{Options}->{EloRating};
+$g_rating_system_verbose = $Config->{Options}->{EloRatingVerbose};
+
 # Options
+# default values
 
 $opt_help = 0;
 $opt_version = 0;
-
-$db_host = "localhost";
-$db_user = "";
-$db_pass = "";
-$db_name = "hlstats";
-$db_prefix = "hlstats";
-$db_lowpriority = 1;
-
-$s_ip = "";
-$s_port = "27500";
-
-$g_mailto = "";
-$g_mailpath = "/bin/mail";
-$g_mode = "Normal";
-$g_deletedays = 5;
-$g_requiremap = 0;
-$g_debug = 1;
-$g_nodebug = 0;
-$g_rcon = 1;
-$g_rcon_ignoreself = 0;
-$g_rcon_record = 1;
-$g_stdin = 0;
-$g_server_ip = "";
-$g_server_port = 27015;
-$g_timestamp = 0;
-$g_dns_resolveip = 1;
-$g_dns_timeout = 5;
-$g_minplayers = 2;
-$g_skill_maxchange = 100;
 $g_bot_ids = "BOT:0";
 $g_lan_hack = 1;
-$g_patch_loopback_ip = 1; # by Simon Logic
-$g_log_chat = 0;
-$g_rcon_say = "say";
-$g_ingame_points = 0;
-$g_ignore_bots = 0;
-$g_rating_system = 0;
-$g_rating_system_verbose = 1;
 
 
 # Usage message
@@ -861,7 +146,6 @@ a MySQL database.
   -h, --help                      display this help and exit
   -v, --version                   output version information and exit
   -d, --debug                     enable debugging output (-dd for more)
-  -n, --nodebug                   disables above; reduces debug level
   -m, --mode=MODE                 player tracking mode (Normal, LAN or NameTrack)  [$g_mode]
       --db-host=HOST              database ip or ip:port  [$db_host]
       --db-name=DATABASE          database name  [$db_name]
@@ -884,7 +168,7 @@ a MySQL database.
       --nostdin                   disables above
       --server-ip                 specify data source IP address for --stdin
       --server-port               specify data source port for --stdin  [$g_server_port]
-  -t, --timestamp                 tells HLstats to use the timestamp in the log
+  -t, --timestamp                 tells HLStats to use the timestamp in the log
                                     data, instead of the current time on the
                                     database server, when recording events
       --notimestamp               disables above
@@ -897,55 +181,9 @@ Most options can be specified in the configuration file:
 Note: Options set on the command line take precedence over options set in the
 configuration file. The configuration file name is set at the top of hlstats.pl.
 
-HLstats: http://hlstats.sourceforge.net
+HLStats: http://www.hlstats-community.org
 EOT
 ;
-
-# Read Config File
-
-if ($opt_configfile && -r $opt_configfile)
-{
-	$conf = ConfigReaderSimple->new($opt_configfile);
-	$conf->parse();
-
-	%directives = (
-		"DBHost",			"db_host",
-		"DBUsername",		"db_user",
-		"DBPassword",		"db_pass",
-		"DBName",			"db_name",
-		"DBPrefix",			"db_prefix",
-		"DBLowPriority",	"db_lowpriority",
-		"BindIP",			"s_ip",
-		"Port",				"s_port",
-		"MailTo",			"g_mailto",
-		"MailPath",			"g_mailpath",
-		"Mode",				"g_mode",
-		"DeleteDays",		"g_deletedays",
-		"DebugLevel",		"g_debug",
-		"UseTimestamp",		"g_timestamp",
-		"DNSResolveIP",		"g_dns_resolveip",
-		"DNSTimeout",		"g_dns_timeout",
-		"RconIgnoreSelf",	"g_rcon_ignoreself",
-		"Rcon",				"g_rcon",
-		"RconRecord",		"g_rcon_record",
-		"MinPlayers",		"g_minplayers",
-		"SkillMaxChange",	"g_skill_maxchange",
-		"PatchLoopbackIP",	"g_patch_loopback_ip",
-		"LogChat",			"g_log_chat",
-		"RconSay",			"g_rcon_say",
-		"IngamePoints",		"g_ingame_points",
-		"IgnoreBots",		"g_ignore_bots",
-		"EloRating",		"g_rating_system",
-		"EloRatingVerbose",	"g_rating_system_verbose"
-
-	);
-
-	&doConf($conf, %directives);
-}
-else
-{
-	print "-- Warning: unable to open configuration file '$opt_configfile'\n";
-}
 
 # Read Command Line Arguments
 
@@ -953,7 +191,7 @@ GetOptions(
 	"help|h"			=> \$opt_help,
 	"version|v"			=> \$opt_version,
 	"debug|d+"			=> \$g_debug,
-	"nodebug|n+"		=> \$g_nodebug,
+#	"nodebug|n+"		=> \$g_nodebug,
 	"mode|m=s"			=> \$g_mode,
 	"db-host=s"			=> \$db_host,
 	"db-name=s"			=> \$db_name,
@@ -979,7 +217,7 @@ if ($opt_help) {
 }
 
 if ($opt_version) {
-	print "hlstats.pl (HLstats) $g_version\n"
+	print "hlstats.pl (HLStats) $g_version\n"
 		. "Real-time player and clan rankings and statistics for Half-Life\n"
 		. "Copyright (C) 2001  Simon Garner\n\n";
 
@@ -999,13 +237,10 @@ if ($g_mode ne "Normal" && $g_mode ne "LAN" && $g_mode ne "NameTrack") {
 	$g_mode = "Normal";
 }
 
-$g_debug -= $g_nodebug;
-$g_debug = 0 if ($g_debug < 0);
-
 
 # Startup
 
-print "++ HLstats $g_version starting...\n\n";
+print "++ HLStats $g_version starting...\n\n";
 
 
 # Create the UDP socket
@@ -1107,7 +342,7 @@ while ( ($row) = $result->fetchrow_array ) {
 }
 $result->finish;
 
-print "\n++ HLstats is now running ($g_mode mode";
+print "\n++ HLStats is now running ($g_mode mode";
 if ($g_debug > 0) { print ", debug level $g_debug"; }
 print ").\n\n";
 
@@ -1146,14 +381,14 @@ while ($loop = &getLine()) {
 
 	$s_addr = "$s_peerhost:$s_peerport";
 
+	### BOT REMOVAL
 	if($g_ignore_bots) {
-		### BOT REMOVAL
 		if($s_output =~ s/^BOT://g) {
 			&printEvent(999, "IGNORED: " . $s_output);
 			next;
 		}
-		### BOT REMOVAL
 	}
+	### BOT REMOVAL
 
 	## strip tags
 	$s_output =~ s/[\r\n\0]//g;	# remove naughty characters
@@ -1450,7 +685,7 @@ while ($loop = &getLine()) {
 
 			if ($g_mode eq "LAN")
 			{
-				if($g_patch_loopback_ip && ($ipAddr eq '127.0.0.1' || $ipAddr eq 'loopback'))
+				if($ipAddr eq '127.0.0.1' || $ipAddr eq 'loopback')
 				{
 					$ipAddr = $s_peerhost;
 				}
@@ -1984,7 +1219,7 @@ while ($loop = &getLine()) {
 		# l4d support ffor the kills
 		# this has a non standart log format
 		#
-		
+
 		$ev_killer = $1;
 		$ev_verb   = $2; # killed etc.
 		$ev_victim = $3;

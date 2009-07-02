@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: search.inc.php 653 2009-02-19 13:31:00Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/search.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -41,38 +39,35 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+require(INCLUDE_PATH . "/search-class.inc.php");
 
-	// Search
+pageHeader(
+	array("Search"),
+	array("Search"=>"")
+);
 
-	require(INCLUDE_PATH . "/search-class.inc.php");
+$sr_query = '';
+$sr_type = 'player';
+$sr_game = '';
 
-	pageHeader(
-		array("Search"),
-		array("Search"=>"")
-	);
+if(!empty($_GET["q"])) {
+	$sr_query = sanitize($_GET["q"]);
+}
 
-	$sr_query = '';
-	$sr_type = 'player';
-	$sr_game = '';
-
-	if(!empty($_GET["q"])) {
-		$sr_query = sanitize($_GET["q"]);
+if(!empty($_GET["q"])) {
+	if(validateInput($_GET["st"],'nospace') === true) {
+		$sr_type = $_GET["st"];
 	}
+}
 
-	if(!empty($_GET["q"])) {
-		if(validateInput($_GET["st"],'nospace') === true) {
-			$sr_type = $_GET["st"];
-		}
+if(!empty($_GET["game"])) {
+	if(validateInput($_GET["game"],'nospace') === true) {
+		$sr_game = $_GET["game"];
 	}
+}
 
-	if(!empty($_GET["game"])) {
-		if(validateInput($_GET["game"],'nospace') === true) {
-			$sr_game = $_GET["game"];
-		}
-	}
+$search = new Search($sr_query, $sr_type, $sr_game);
 
-	$search = new Search($sr_query, $sr_type, $sr_game);
-
-	$search->drawForm(array("mode"=>"search"));
-	if ($sr_query || $sr_query == "0") $search->drawResults();
+$search->drawForm(array("mode"=>"search"));
+if ($sr_query || $sr_query == "0") $search->drawResults();
 ?>

@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: servers.inc.php 666 2009-02-27 12:50:38Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admintasks/servers.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -70,7 +68,7 @@
 
 ?>
 <p>Enter the addresses of all servers that you want to accept data from here.</p>
-<p>HLstats can use Rcon to give feedback to users when they <a href="<?php echo $g_options["scripturl"]; ?>?mode=help#set">update their profile</a> if you enable Rcon support in hlstats.conf and specify an Rcon Password for each server.</p>
+<p>HLStats can use Rcon to give feedback to users when they <a href="<?php echo $g_options["scripturl"]; ?>?mode=help#set">update their profile</a> if you enable Rcon support in hlstats.conf and specify an Rcon Password for each server.</p>
 <p>The Default map is used to sepecify the map if HLStats is unable to determine the map.</p>
 
 <?php

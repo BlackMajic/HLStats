@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: tools_news.inc.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admintasks/tools_news.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -52,7 +50,7 @@
 		}
 		else {
 			$newsdate = date("Y-m-d H:i:s");
-			$result = $db->query("INSERT INTO ".DB_PREFIX."_News
+			$result = mysql_query("INSERT INTO ".DB_PREFIX."_News
 								VALUES ('',
 										'".$newsdate."',
 										'".$auth->userdata["username"]."',
@@ -66,7 +64,7 @@
 
 	if(isset($_POST['editNews'])) {
 		if(isset($_POST['newsDelete']) && $_POST['newsDelete'] == "1") {
-			$result = $db->query("DELETE FROM ".DB_PREFIX."_News
+			$result = mysql_query("DELETE FROM ".DB_PREFIX."_News
 										WHERE id = '".$_GET['saveEdit']."'
 									");
 			echo "<b>News has been deleted.</b><br><br>";
@@ -80,7 +78,7 @@
 			}
 			else {
 				$newsdate = date("Y-m-d H:i:s");
-				$result = $db->query("UPDATE ".DB_PREFIX."_News
+				$result = mysql_query("UPDATE ".DB_PREFIX."_News
 										SET date = '".$newsdate."',
 											user = '".$auth->userdata["username"]."',
 											email = '".$_POST["email"]."',
@@ -106,7 +104,7 @@ if(!empty($_GET['editpost'])) {
 	if(!empty($_GET['editpost'])) {
 		$postnr = sanitize($_GET['editpost']);
 	}
-	$result = $db->query("SELECT * FROM ".DB_PREFIX."_News WHERE id = $postnr");
+	$result = mysql_query("SELECT * FROM ".DB_PREFIX."_News WHERE id = $postnr");
 	$post = mysql_fetch_array($result);
 ?>
 
@@ -216,8 +214,10 @@ else {
 		"sortorder"
 	);
 
-$result = $db->query("SELECT * FROM ".DB_PREFIX."_News ORDER BY $table->sort $table->sortorder, $table->sort2 $table->sortorder LIMIT $table->startitem,$table->numperpage");
-$resultCount = $db->query("SELECT COUNT(*) FROM ".DB_PREFIX."_News");
-list($numitems) = $db->fetch_row($resultCount);
-$table->draw($result, $numitems, 100, "");
+$query = mysql_query("SELECT * FROM ".DB_PREFIX."_News
+	ORDER BY ".$table->sort." ".$table->sortorder.", ".$table->sort2." ".$table->sortorder."
+	LIMIT ".$table->startitem.",".$table->numperpage."");
+$resultCount = mysql_query("SELECT COUNT(*) AS nc FROM ".DB_PREFIX."_News");
+$numitems = $resultCount['nc'];
+$table->draw($query, $numitems, 100, "");
 ?>

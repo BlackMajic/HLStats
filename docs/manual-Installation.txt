@@ -1,0 +1,2 @@
+If you want to install hlstats by hand (not using the installer):
+http://half-life-statistics.org/Documentation/Administration/Manual+Installation.html

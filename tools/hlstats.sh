@@ -1,11 +1,8 @@
 #!/bin/bash
 #
-# $Id: hlstats.sh 638 2008-11-26 15:18:35Z jumpin_banana $
-# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/tools/hlstats.sh $
-#
 # Original development:
 # +
-# + HLstats - Real-time player and clan rankings and statistics for Half-Life
+# + HLStats - Real-time player and clan rankings and statistics for Half-Life
 # + http://sourceforge.net/projects/hlstats/
 # +
 # + Copyright (C) 2001  Simon Garner
@@ -13,7 +10,7 @@
 #
 # Additional development:
 # +
-# + UA HLstats Team
+# + UA HLStats Team
 # + http://www.unitedadmins.com
 # + 2004 - 2007
 # +
@@ -26,7 +23,7 @@
 # + 2007 - 2008
 # +
 #
-# HLstats - Real-time player and clan rankings and statistics for Half-Life
+# HLStats - Real-time player and clan rankings and statistics for Half-Life
 # http://sourceforge.net/projects/hlstats/
 #
 # Copyright (C) 2001  Simon Garner
@@ -53,53 +50,53 @@ cd $saveDir;
 
 case "$1" in
  start)
-     echo "Starting HLstats...";
+     echo "Starting HLStats...";
      if [ -f hlstats.pid ]; then
         kill -0 `cat hlstats.pid` >/dev/null 2>&1
         if [ "$?" == "0" ]; then
-            echo "HLstats already running!"
+            echo "HLStats already running!"
         else
             rm -rf hlstats.pid
             perl ../daemon/hlstats.pl >/dev/null 2>&1 &
             echo $! >hlstats.pid
             echo "PID file created."
-            echo "HLstats Started successfully!"
+            echo "HLStats Started successfully!"
         fi
      else
         perl ../daemon/hlstats.pl >/dev/null 2>&1 &
         echo $! >hlstats.pid
         echo "PID file created."
-        echo "HLstats Started successfully!"
+        echo "HLStats Started successfully!"
      fi
  ;;
  stop)
-     echo "Stopping HLstats..."
+     echo "Stopping HLStats..."
      kill -9 `cat hlstats.pid` >/dev/null 2>&1
      if [ "$?" == "0" ]; then
         rm -rf hlstats.pid
-        echo "HLstats Stopped successfully."
+        echo "HLStats Stopped successfully."
      else
-        echo "HLstats is not running!"
+        echo "HLStats is not running!"
      fi
  ;;
  restart)
-     echo "Restarting HLstats..."
+     echo "Restarting HLStats..."
      kill -9 `cat hlstats.pid` >/dev/null 2>&1
      if [ "$?" == "0" ]; then
          rm -rf hlstats.pid
          perl ../daemon/hlstats.pl >/dev/null 2>&1 &
          echo $! >hlstats.pid
          echo "PID file created."
-         echo "HLstats Restarted successfully!"
+         echo "HLStats Restarted successfully!"
      else
-         echo "HLstats is not running!"
+         echo "HLStats is not running!"
          if [ -f hlstats.pid ]; then
            rm -rf hlstats.pid
          fi
          perl ../daemon/hlstats.pl >/dev/null 2>&1 &
          echo $! >hlstats.pid
          echo "PID file created."
-         echo "HLstats Started successfully!"
+         echo "HLStats Started successfully!"
      fi
  ;;
  *)

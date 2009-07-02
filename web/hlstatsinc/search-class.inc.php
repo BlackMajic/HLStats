@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: search-class.inc.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/search-class.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -54,14 +52,12 @@
 		var $uniqueid_string_plural = "Unique IDs";
 
 
-		function Search ($query, $type, $game)
-		{
+		function Search ($query, $type, $game) {
 			$this->query = $query;
 			$this->type  = $type;
 			$this->game  = $game;
 
-			if (MODE == "LAN")
-			{
+			if (MODE == "LAN") {
 				$this->uniqueid_string = "IP Address";
 				$this->uniqueid_string_plural = "IP Addresses";
 			}
@@ -69,7 +65,7 @@
 
 		function drawForm ($getvars=array(), $searchtypes=-1)
 		{
-			global $g_options, $db;
+			global $g_options;
 
 			if (!is_array($searchtypes))
 			{
@@ -123,10 +119,10 @@
 						<?php
 							$games[""] = "(All)";
 
-							$db->query("SELECT code, name FROM ".DB_PREFIX."_Games WHERE hidden='0' ORDER BY name");
-							while ($db->fetch_row())
+							$query = mysql_query("SELECT code, name FROM ".DB_PREFIX."_Games WHERE hidden='0' ORDER BY name");
+							while ($result = mysql_fetch_assoc($query))
 							{
-								$games[$db->rowdata[0]] = $db->rowdata[1];
+								$games[$result['code']] = $result['name'];
 							}
 
 							echo getSelect("game", $games, $this->game);
@@ -144,9 +140,8 @@
 <?php
 		}
 
-		function drawResults ($link_player=-1, $link_clan=-1)
-		{
-			global $g_options, $db;
+		function drawResults ($link_player=-1, $link_clan=-1) {
+			global $g_options;
 
 			if ($link_player == -1) $link_player = "mode=playerinfo&amp;player=%k";
 			if ($link_clan   == -1) $link_clan   = "mode=claninfo&amp;clan=%k";
@@ -200,7 +195,7 @@
 				else
 					$andgame = "";
 
-				$result = $db->query("
+				$query = mysql_query("
 					SELECT
 						".DB_PREFIX."_PlayerNames.playerId,
 						".DB_PREFIX."_PlayerNames.name,
@@ -213,29 +208,28 @@
 						".DB_PREFIX."_Games.code = ".DB_PREFIX."_Players.game
 					WHERE
 						".DB_PREFIX."_Games.hidden='0' AND
-						".DB_PREFIX."_PlayerNames.name LIKE '%$sr_query%'
-						$andgame
+						".DB_PREFIX."_PlayerNames.name LIKE '%".mysql_escape_string($sr_query)."%'
+						".$andgame."
 					ORDER BY
-						$table->sort $table->sortorder,
-						$table->sort2 $table->sortorder
-					LIMIT $table->startitem,$table->numperpage
+						".$table->sort." ".$table->sortorder.",
+						".$table->sort2." ".$table->sortorder."
+					LIMIT ".$table->startitem.",".$table->numperpage."
 				");
 
-				$resultCount = $db->query("
+				$queryCount = mysql_query("
 					SELECT
-						COUNT(*)
+						COUNT(*) AS pn
 					FROM
 						".DB_PREFIX."_PlayerNames
 					LEFT JOIN ".DB_PREFIX."_Players ON
 						".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_PlayerNames.playerId
 					WHERE
-						".DB_PREFIX."_PlayerNames.name LIKE '%$sr_query%'
-						$andgame
-				");
+						".DB_PREFIX."_PlayerNames.name LIKE '%".mysql_escape_string($sr_query)."%'
+						".$andgame."");
+				$result = mysql_fetch_assoc($queryCount);
+				$numitems = $result['pn'];
 
-				list($numitems) = $db->fetch_row($resultCount);
-
-				$table->draw($result, $numitems, 90);
+				$table->draw($query, $numitems, 90);
 			}
 			elseif ($this->type == "uniqueid")
 			{
@@ -279,7 +273,7 @@
 				else
 					$andgame = "";
 
-				$result = $db->query("
+				$query = mysql_query("
 					SELECT
 						".DB_PREFIX."_PlayerUniqueIds.uniqueId,
 						".DB_PREFIX."_PlayerUniqueIds.playerId,
@@ -293,29 +287,28 @@
 						".DB_PREFIX."_Games.code = ".DB_PREFIX."_PlayerUniqueIds.game
 					WHERE
 						".DB_PREFIX."_Games.hidden='0' AND
-						".DB_PREFIX."_PlayerUniqueIds.uniqueId LIKE '%$sr_query%'
-						$andgame
+						".DB_PREFIX."_PlayerUniqueIds.uniqueId LIKE '%".mysql_escape_string($sr_query)."%'
+						".$andgame."
 					ORDER BY
-						$table->sort $table->sortorder,
-						$table->sort2 $table->sortorder
-					LIMIT $table->startitem,$table->numperpage
-				");
+						".$table->sort." ".$table->sortorder.",
+						".$table->sort2." ".$table->sortorder."
+					LIMIT ".$table->startitem.",".$table->numperpage."");
 
-				$resultCount = $db->query("
+				$queryCount = mysql_query("
 					SELECT
-						COUNT(*)
+						COUNT(*) AS pu
 					FROM
 						".DB_PREFIX."_PlayerUniqueIds
 					LEFT JOIN ".DB_PREFIX."_Players ON
 						".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_PlayerUniqueIds.playerId
 					WHERE
-						".DB_PREFIX."_PlayerUniqueIds.uniqueId LIKE '%$sr_query%'
-						$andgame
+						".DB_PREFIX."_PlayerUniqueIds.uniqueId LIKE '%".mysql_escape_string($sr_query)."%'
+						".$andgame."
 				");
+				$result = mysql_fetch_assoc($queryCount);
+				$numitems = $result['pu'];
 
-				list($numitems) = $db->fetch_row($resultCount);
-
-				$table->draw($result, $numitems, 90);
+				$table->draw($query, $numitems, 90);
 			}
 			elseif ($this->type == "clan")
 			{
@@ -359,7 +352,7 @@
 				else
 					$andgame = "";
 
-				$result = $db->query("
+				$query = mysql_query("
 					SELECT
 						".DB_PREFIX."_Clans.clanId,
 						".DB_PREFIX."_Clans.tag,
@@ -382,22 +375,21 @@
 					LIMIT $table->startitem,$table->numperpage
 				");
 
-				$resultCount = $db->query("
-					SELECT
-						COUNT(*)
+				$queryCount = mysql_query("
+					SELECT COUNT(*) AS cc
 					FROM
 						".DB_PREFIX."_Clans
 					WHERE
 						(
-							tag LIKE '%$sr_query%'
-							OR name LIKE '%$sr_query%'
+							tag LIKE '%".mysql_escape_string($sr_query)."%'
+							OR name LIKE '%".mysql_escape_string($sr_query)."%'
 						)
-						$andgame
+						".$andgame."
 				");
+				$result = mysql_fetch_assoc($queryCount);
+				$numitems = $result['cc'];
 
-				list($numitems) = $db->fetch_row($resultCount);
-
-				$table->draw($result, $numitems, 90);
+				$table->draw($query, $numitems, 90);
 			}
 
 			echo "<p><center>"

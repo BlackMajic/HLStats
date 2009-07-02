@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: actioninfo.inc.php 635 2008-11-24 11:10:00Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/actioninfo.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -40,43 +38,36 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+$action = false;
+if(!empty($_GET["action"])) {
+	if(validateInput($_GET["action"],'nospace') === true) {
+		$action = $_GET["action"];
+	}
+	else {
+		error("No action specified.");
+	}
+}
 
-// Action Details
-
-// Addon created by Rufus (rufus@nonstuff.de)
-
-$game = sanitize($_GET['game']);
-$action = sanitize($_GET['action']);
-
-$action = $_GET["action"]
-	or error("No action ID specified.");
-
-$db->query("
-	SELECT
-		description
-	FROM
-		".DB_PREFIX."_Actions
-	WHERE
-		code='$action'
-		AND game='$game'
-");
-
-if ($db->num_rows() != 1)
-{
+$query = mysql_query("SELECT description FROM ".DB_PREFIX."_Actions
+					WHERE code='".mysql_escape_string($action)."'
+						AND game='".mysql_escape_string($game)."'");
+if (mysql_num_rows($query) != 1) {
 	$act_name = ucfirst($action);
 }
-else
-{
-	$actiondata = $db->fetch_array();
-	$db->free_result();
-	$act_name = $actiondata["description"];
+else {
+	$result = mysql_fetch_assoc($query);
+	$act_name = $result["description"];
 }
+mysql_free_result($query);
 
-$db->query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='$game'");
-if ($db->num_rows() != 1)
+$query = mysql_query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='".mysql_escape_string($game)."'");
+if (mysql_num_rows($query) != 1) {
 	error("Invalid or no game specified.");
-else
-	list($gamename) = $db->fetch_row();
+}
+else {
+	$result = mysql_fetch_assoc($query);
+	$gamename = $result['name'];
+}
 
 pageHeader(
 	array($gamename, "Action Details", $act_name),
@@ -115,7 +106,7 @@ $table = new Table(
 	50
 );
 
-$result = $db->query("
+$query = mysql_query("
 	SELECT
 		".DB_PREFIX."_Events_PlayerActions.playerId,
 		".DB_PREFIX."_Players.lastName AS playerName,
@@ -124,23 +115,23 @@ $result = $db->query("
 	FROM
 		".DB_PREFIX."_Events_PlayerActions, ".DB_PREFIX."_Players, ".DB_PREFIX."_Actions
 	WHERE
-		".DB_PREFIX."_Actions.code = '$action' AND
-		".DB_PREFIX."_Players.game = '$game' AND
+		".DB_PREFIX."_Actions.code = '".mysql_escape_string($action)."' AND
+		".DB_PREFIX."_Players.game = '".mysql_escape_string($game)."' AND
 		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_PlayerActions.playerId AND
 		".DB_PREFIX."_Events_PlayerActions.actionId = ".DB_PREFIX."_Actions.id AND
 		".DB_PREFIX."_Players.hideranking<>'1'
 	GROUP BY
 		".DB_PREFIX."_Events_PlayerActions.playerId
 	ORDER BY
-		$table->sort $table->sortorder,
-		$table->sort2 $table->sortorder
-	LIMIT $table->startitem,$table->numperpage
+		".$table->sort." ".$table->sortorder.",
+		".$table->sort2." ".$table->sortorder."
+	LIMIT ".$table->startitem.",".$table->numperpage."
 ");
 
-$resultCount = $db->query("
+$queryCount = mysql_query("
 	SELECT
-		COUNT(DISTINCT ".DB_PREFIX."_Events_PlayerActions.playerId),
-		COUNT(".DB_PREFIX."_Events_PlayerActions.Id)
+		COUNT(DISTINCT ".DB_PREFIX."_Events_PlayerActions.playerId) AS ac,
+		COUNT(".DB_PREFIX."_Events_PlayerActions.Id) AS tc
 	FROM
 		".DB_PREFIX."_Events_PlayerActions, ".DB_PREFIX."_Players, ".DB_PREFIX."_Actions
 	WHERE
@@ -149,8 +140,9 @@ $resultCount = $db->query("
 		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_PlayerActions.playerId AND
 		".DB_PREFIX."_Events_PlayerActions.actionId = ".DB_PREFIX."_Actions.id
 ");
-
-list($numitems, $totalact) = $db->fetch_row($resultCount);
+$result = mysql_fetch_assoc($queryCount);
+$numitems = $result['ac'];
+$totalact = $result['tc'];
 ?>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -159,5 +151,5 @@ list($numitems, $totalact) = $db->fetch_row($resultCount);
 </tr>
 </table><p>
 <?php
-	$table->draw($result, $numitems, 90, "center");
+	$table->draw($query, $numitems, 90, "center");
 ?>

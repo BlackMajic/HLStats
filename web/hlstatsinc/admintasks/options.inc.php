@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: options.inc.php 655 2009-02-20 08:34:08Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admintasks/options.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -44,11 +42,9 @@
 	if ($auth->userdata["acclevel"] < 100) die ("Access denied!");
 
 	function whichStyle() {
-		global $db;
-
-		$result = $db->query("SELECT value FROM ".DB_PREFIX."_Options WHERE keyname = 'style'");
-		$data = $db->fetch_row($result);
-		return $data['0'];
+		$query = mysql_query("SELECT value FROM ".DB_PREFIX."_Options WHERE keyname = 'style'");
+		$data = mysql_fetch_assoc($query);
+		return $data['value'];
 	}
 
 
@@ -86,13 +82,11 @@
 
 		function update ()
 		{
-			global $db;
-
 			foreach ($this->options as $opt)
 			{
 				$optval = $_POST[$opt->name];
 
-				$result = $db->query("
+				$query = mysql_query("
 					SELECT
 						value
 					FROM
@@ -101,9 +95,9 @@
 						keyname='$opt->name'
 				");
 
-				if ($db->num_rows($result) == 1)
+				if (mysql_num_rows($query) == 1)
 				{
-					$result = $db->query("
+					$query = mysql_query("
 						UPDATE
 							".DB_PREFIX."_Options
 						SET
@@ -114,7 +108,7 @@
 				}
 				else
 				{
-					$result = $db->query("
+					$query = mysql_query("
 						INSERT INTO
 							".DB_PREFIX."_Options
 							(
@@ -130,16 +124,15 @@
 				}
 			}
 		}
-		function changeStyle($style) {
-			global $db;
 
-			$result = $db->query("SELECT keyname, `$style` FROM ".DB_PREFIX."_Style");
-			while($rowdata = $db->fetch_row($result)) {
+		function changeStyle($style) {
+			$query = mysql_query("SELECT keyname, `$style` FROM ".DB_PREFIX."_Style");
+			while($rowdata = mysql_fetch_array($query)) {
 				$key = $rowdata[0];
 				$data = $rowdata[1];
-				$db->query("UPDATE ".DB_PREFIX."_Options SET value='$data' WHERE keyname='$key'");
+				mysql_query("UPDATE ".DB_PREFIX."_Options SET value='$data' WHERE keyname='$key'");
 			}
-			$db->query("UPDATE ".DB_PREFIX."_Options SET value = '$style' WHERE keyname = 'style' ");
+			mysql_query("UPDATE ".DB_PREFIX."_Options SET value = '$style' WHERE keyname = 'style' ");
 		}
 	}
 
@@ -300,18 +293,17 @@
 	}
 
 
-	$result = $db->query("SELECT keyname, value FROM ".DB_PREFIX."_Options");
-	while ($rowdata = $db->fetch_row($result)) {
-		$optiondata[$rowdata[0]] = $rowdata[1];
+	$query = mysql_query("SELECT keyname, value FROM ".DB_PREFIX."_Options");
+	while ($rowdata = mysql_fetch_assoc($query)) {
+		$optiondata[$rowdata['keyname']] = $rowdata['value'];
 	}
 
 	foreach ($optiongroups as $og) {
 		$og->draw();
 	}
 ?>
-
 <table width="75%" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td align="center"><input type="submit" name="saveOptions" value="  Apply  " class="submit"></td>
-</tr>
+	<tr>
+		<td align="center"><input type="submit" name="saveOptions" value="  Apply  " class="submit"></td>
+	</tr>
 </table>

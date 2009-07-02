@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: classes.inc.php 653 2009-02-19 13:31:00Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/classes.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -122,7 +120,7 @@ class Table
 
 	function draw ($result, $numitems, $width=100, $align="center")
 	{
-		global $g_options, $game, $db;
+		global $g_options, $game;
 
 		$numpages = ceil($numitems / $this->numperpage);
 ?>
@@ -179,7 +177,7 @@ class Table
 
 		$rank = ($this->page - 1) * $this->numperpage + 1;
 
-		while ($rowdata = $db->fetch_array($result))
+		while ($rowdata = mysql_fetch_assoc($result))
 		{
 			echo "<tr>\n";
 			$i = 0;

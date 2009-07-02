@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: hlquery_funcs.inc.php 658 2009-02-20 15:16:03Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/hlquery_funcs.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -154,7 +152,7 @@ function GetServerData($command, $ip, $port) {
 		if (strstr($command, "\xFF\xFF\xFF\xFFrcon"))
 		{
 			# check if header part is found
-			# Hostname: HLstats 0wns \o/
+			# Hostname: HLStats 0wns \o/
 			if (strstr($formated_data, 'hostname: '))
 			{
 				# Woohoo found

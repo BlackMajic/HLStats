@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: live_stats.inc.php 618 2008-10-31 10:53:41Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/live_stats.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -45,7 +43,16 @@
 	// The binary functions need to be included
 	// Along with the HL Query functions
 
-$serverId = sanitize($_GET['server']);
+$serverId = '';
+if(!empty($_GET["server"])) {
+	if(validateInput($_GET["server"],'digit') === true) {
+		$serverId = $_GET["server"];
+	}
+	else {
+		error("No server ID specified.");
+	}
+}
+
 
 $time = microtime();
 $time = explode(' ', $time);
@@ -55,7 +62,7 @@ $start = $time;
 include(INCLUDE_PATH.'/binary_funcs.inc.php');
 include(INCLUDE_PATH.'/hlquery_funcs.inc.php');
 
-$db->query("
+$query = mysql_query("
 		SELECT
 			s.serverId,
 			s.name,
@@ -74,11 +81,11 @@ $db->query("
 		WHERE
 			serverId=".$serverId."
 			");
-if ($db->num_rows() != 1) {
+if (mysql_num_rows($query) != 1) {
 	error("Invalid or no server specified.");
 }
 else {
-	$server = $db->fetch_array();
+	$server = mysql_fetch_assoc($query);
 }
 
 pageHeader(
@@ -89,8 +96,7 @@ pageHeader(
 	)
 );
 
-if ($server['publicaddress'])
-{
+if ($server['publicaddress']) {
 	# Port maybe different
 	$temp = explode(':', $server['publicaddress']);
 	$server_ip = $server['address'];
@@ -101,8 +107,7 @@ if ($server['publicaddress'])
 		$server_port = $server['port'];
 	}
 }
-else
-{
+else {
 	$server_ip = $server['address'];
 	$server_port = $server['port'];
 }
@@ -136,7 +141,7 @@ $server_rules = Source_A2S_Rules($server_ip, $server_port, &$query_challenge);
 $server_players = Source_A2S_Player($server_ip, $server_port, &$query_challenge);
 
 $server_details = Format_Info_Array($server_details);
-# If HLstats currently stores the rcon, might as well try to get more data from a HL status
+# If HLStats currently stores the rcon, might as well try to get more data from a HL status
 
 // since the rcon is broken we deaktivate this.... 31.10.2008 banana
 $server_rcon  = false;
@@ -465,9 +470,9 @@ if ($server_rules) {
 						<select name="rules" style="width: 200px;">
 <?php
 	# Load our plugin list
-	$db->query("SELECT * FROM ".DB_PREFIX."_Server_Addons");
+	$query = mysql_query("SELECT * FROM ".DB_PREFIX."_Server_Addons");
 
-	while ($addon_list = $db->fetch_array())
+	while ($addon_list = mysql_fetch_assoc($query))
 		$server_addon[$addon_list['rule']] = array('addon' => $addon_list['addon'], 'url' => $addon_list['url']);
 
 	ksort($server_rules);

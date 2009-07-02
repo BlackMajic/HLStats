@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: tools_reset.inc.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admintasks/tools_reset.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -50,10 +48,10 @@
 	if (isset($_POST['confirm'])) {
 		$query = "SHOW TABLES LIKE '".DB_PREFIX."_Events_%'";
 
-		$result = $db->query($query);
-		if ($db->num_rows() < 1) die("Fatal error: No events tables found with query:<p><pre>$query</pre><p>There may be something wrong with your hlstats database or your version of MySQL.");
+		$query = mysql_query($query);
+		if (mysql_num_rows($query) < 1) die("Fatal error: No events tables found with query:<p><pre>$query</pre><p>There may be something wrong with your hlstats database or your version of MySQL.");
 
-		while (list($table) = $db->fetch_row($result))
+		while (list($table) = mysql_fetch_array($uery))
 		{
 			$dbtables[] = $table;
 		}
@@ -68,17 +66,17 @@
 		echo "<ul>\n";
 		foreach ($dbtables as $dbt) {
 			echo "<li>$dbt ... ";
-			if ($db->query("TRUNCATE TABLE $dbt", false)) {
+			if (mysql_query("TRUNCATE TABLE $dbt", false)) {
 				echo "OK\n";
 			}
 			else {
-				$db->query("DELETE FROM $dbt");
+				mysql_query("DELETE FROM $dbt");
 				echo "OK\n";
 			}
 		}
 
 		echo "<li>Clearing awards ... ";
-		$db->query("UPDATE ".DB_PREFIX."_Awards SET d_winner_id=NULL, d_winner_count=NULL");
+		mysql_query("UPDATE ".DB_PREFIX."_Awards SET d_winner_id=NULL, d_winner_count=NULL");
 		echo "OK\n";
 
 		echo "</ul>\n";
@@ -86,7 +84,7 @@
 		echo "Done.<p>";
 
 		// add a last reset row into hlstats_options
-		$db->query("UPDATE ".DB_PREFIX."_Options SET value = '".time()."'
+		mysql_query("UPDATE ".DB_PREFIX."_Options SET value = '".time()."'
 						WHERE `keyname` = 'reset_date'");
 	}
 	else {

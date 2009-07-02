@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: actions.inc.php 670 2009-03-03 07:33:06Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/actions.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -41,25 +39,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
-
-// Action Statistics
-
-// Addon Created by Rufus (rufus@nonstuff.de)
-
-$game = sanitize($_GET['game']);
-
-$db->query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='$game'");
-if ($db->num_rows() < 1) error("No such game '$game'.");
-
-list($gamename) = $db->fetch_row();
-$db->free_result();
-
 pageHeader(
 	array($gamename, "Action Statistics"),
 	array($gamename=>"%s?game=$game", "Action Statistics"=>"")
 );
-
 
 $tblPlayerActions = new Table(
 	array(
@@ -89,19 +72,16 @@ $tblPlayerActions = new Table(
 	"obj_sortorder"
 );
 
-$db->query("
-	SELECT
-		COUNT(*)
-	FROM
-		".DB_PREFIX."_Actions, ".DB_PREFIX."_Events_PlayerActions
-	WHERE
-		".DB_PREFIX."_Events_PlayerActions.actionId = ".DB_PREFIX."_Actions.id
-		AND ".DB_PREFIX."_Actions.game='$game'
-");
+$queryActionsCount = mysql_query("
+	SELECT COUNT(*) ac
+	FROM ".DB_PREFIX."_Actions, ".DB_PREFIX."_Events_PlayerActions
+	WHERE ".DB_PREFIX."_Events_PlayerActions.actionId = ".DB_PREFIX."_Actions.id
+		AND ".DB_PREFIX."_Actions.game='".mysql_escape_string($game)."'");
+$result = mysql_fetch_assoc($queryActionsCount);
+$totalactions = $result['ac'];
+mysql_free_result($queryActionsCount);
 
-list($totalactions) = $db->fetch_row();
-
-$result = "SELECT
+$queryActions = mysql_query("SELECT
 		".DB_PREFIX."_Actions.code,
 		".DB_PREFIX."_Actions.description,
 		COUNT(".DB_PREFIX."_Events_PlayerActions.id) AS obj_count,
@@ -110,24 +90,24 @@ $result = "SELECT
 		".DB_PREFIX."_Actions, ".DB_PREFIX."_Events_PlayerActions, ".DB_PREFIX."_Players
 	WHERE
 		".DB_PREFIX."_Events_PlayerActions.playerId = ".DB_PREFIX."_Players.playerId
-		AND ".DB_PREFIX."_Players.game='$game'
+		AND ".DB_PREFIX."_Players.game='".mysql_escape_string($game)."'
 		AND ".DB_PREFIX."_Events_PlayerActions.actionId = ".DB_PREFIX."_Actions.id
-		AND ".DB_PREFIX."_Actions.game='$game'
+		AND ".DB_PREFIX."_Actions.game='".mysql_escape_string($game)."'
 		AND ".DB_PREFIX."_Players.hideranking = 0
 	GROUP BY
 		".DB_PREFIX."_Actions.id
 	ORDER BY
-		$tblPlayerActions->sort $tblPlayerActions->sortorder,
-		$tblPlayerActions->sort2 $tblPlayerActions->sortorder
-";
-$result = $db->query($result);
+		".$tblPlayerActions->sort." ".$tblPlayerActions->sortorder.",
+		".$tblPlayerActions->sort2." ".$tblPlayerActions->sortorder."");
 ?>
+<p>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td width="50%"><?php echo $g_options["font_normal"]; ?>From a total of <b><?php echo $totalactions; ?></b> actions (Last <?php echo DELETEDAYS; ?> Days)<?php echo $g_options["fontend_normal"]; ?></td>
 	<td width="50%" align="right"><?php echo $g_options["font_normal"]; ?>Back to <a href="<?php echo $g_options["scripturl"] . "?game=$game"; ?>"><?php echo $gamename; ?></a><?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
-</table><p>
+</table>
+</p>
 <?php
-	$tblPlayerActions->draw($result, $db->num_rows($result), 90);
+	$tblPlayerActions->draw($queryActions, mysql_num_rows($queryActions), 90);
 ?>

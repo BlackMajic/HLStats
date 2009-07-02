@@ -1,10 +1,10 @@
 #
-# HLstats Database Upgrade file
+# HLStats Database Upgrade file
 # -----------------------------
 #
 # REPLACE #DB_PREFIX# WITH YOUR CURRENT HLSTATS PREFIX eg. hlstats
 #
-# To upgrade an existing HLstats 1.40 database to version 1.50:
+# To upgrade an existing HLStats 1.40 database to version 1.50:
 #
 #   mysql hlstats_db_name < upgrade_from_1.40.sql
 #

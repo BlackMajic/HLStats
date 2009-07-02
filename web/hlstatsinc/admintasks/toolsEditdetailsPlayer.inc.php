@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: tools_editdetails_player.inc.php 652 2009-01-23 15:52:37Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admintasks/tools_editdetails_player.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -74,7 +72,7 @@
 							suicides = 0,
 							skill = 1000
 						WHERE `playerId` = '".$id."'";
-			$db->query($query);
+			mysql_query($query);
 
 		}
 		unset($_POST['reset']);
@@ -83,16 +81,10 @@
 	}
 
 
-	$result = $db->query("
-		SELECT *
-		FROM
-			".DB_PREFIX."_Players
-		WHERE
-			playerId='$id'
-	");
-	if ($db->num_rows() < 1) die("No player exists with ID #$id");
+	$query = mysql_query("SELECT * FROM ".DB_PREFIX."_Players WHERE playerId='$id'");
+	if (mysql_num_rows($query) < 1) die("No player exists with ID #$id");
 
-	$data = $db->fetch_array($result);
+	$data = mysql_fetch_assoc($query);
 	$data['reset'] = '';
 
 	echo $g_options["font_title"];

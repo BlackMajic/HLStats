@@ -1,0 +1,155 @@
+# This file is used by hlstats.pl, hlstats-awards.pl.
+# Note that many options can be overridden on the command line; try running with
+# the --help switch for details of available command line options.
+
+##
+## Database Settings
+##
+[Database]
+# Database server "address" or "address:port". Address can be an IP or a hostname.
+DBHost = localhost
+
+# Name of the database to use.
+DBName = hlstats
+
+# User to connect to the database as.
+DBUsername = user
+
+# Password for the database user.
+DBPassword = test
+
+# Table prefix. Default is hlstats
+DBPrefix = hlstats
+
+# Use INSERT DELAYED and DELETE LOW_PRIORITY for some queries.
+DBLowPriority = 0
+
+##
+## System settings
+##
+[System]
+# IP address to bind to (leave empty to use all interfaces)
+BindIP =
+
+# Port to listen on for log data from the game servers.
+Port = 27500
+
+# E-mail address to mail database errors to. (See also MailPath.)
+MailTo = mail@some.domain.tld
+
+# Path to the 'mail' program -- usually /bin/mail
+MailPath = /bin/mail
+
+# Set this to 1 to have debugging information printed on stdout
+# Set higher for even more debugging information
+# 0 means no output at all
+DebugLevel = 1
+
+# Decide if we use the log stream or STDIN
+# normally no need to change this
+Stdin = 0
+
+# set this only if you use STDIN
+ServerIP =
+
+# set this only if you use STDIN
+ServerPort = 27015
+
+# set this only if you use STDIN
+Timestamp = 0
+
+# Resolve player IP addresses to hostnames. Requires a working DNS setup
+# (on the box running hlstats.pl). 1=on 0=off
+DNSResolveIP = 0
+
+# Time in seconds to wait for DNS queries to complete before cancelling.
+# However, while hlstats.pl is waiting for an IP to resolve it cannot be parsing log data.
+DNSTimeout = 5
+
+##
+## General options
+##
+[Options]
+# Sets the player-tracking mode
+# Normal     - Recommended for public Internet server use
+# NameTrack  - Players will be tracked by nickname
+# LAN        - Players will be tracked by IP Address
+Mode = Normal
+
+# HLStats will automatically delete history events from the
+# events tables when they are over this many days old.
+# This is important for performance reasons.
+# Set lower if you are logging a large number of game servers or find the load on
+# the MySQL server is too high
+## A value of 0 means no delete days
+# ++ Note: Make sure you change the setting of DELETEDAYS at the
+# top of hlstatsinc/hlstats.conf.php, as well
+DeleteDays = 5
+
+# Specifies the minimum number of players required in the server
+# for most player events to be recorded
+MinPlayers = 2
+
+# Specifies the maximum number of skill points a player can
+# gain at one time through frags. Because players with low
+# skill ratings gain more for killing players with high skill
+# ratings, this cap is needed to prevent e.g. a player with a
+# skill rating of '100' killing a player with a skill rating of
+# '2000' and therefore gaining several hundred or thousand
+# skill points. Instead they cannot gain more than the value
+# specified here. (Default is 100 skill points maximum change.)
+SkillMaxChange = 100
+
+# Show ingame stat report if you kill / or be killed
+# The response is done via rcon and the option RconSay
+# (below) isused.
+IngamePoints = 0
+
+# the Elo rating system
+# developed by HampusW
+# IMPORTANT: Must match the value of EloRating in hlstatsinc/hlstats.conf.inc.php
+# "0"      - Off. Do not use the rating system at all (only the current one).
+# "1"      - Use the system and display it with the ordinary system
+# "2"      - Only use the EloRating and show only the new one.
+EloRating = 0
+
+# how verbose this system will be
+# The Rating system will give feedback via rcon to the server/player
+# See the RconSay setting above for more details
+# "0"  - Off. Do no be verbose at all.
+# "1"  - Show only if you score (default)
+# "2"  - Show as you score and show info to the opponent
+# "3"  - Show al lot of stuff
+EloRatingVerbose = 1
+
+# Log all your chat massages
+# This is conected with the DeleteDays setting. So the chat messages
+# will be only hold in the DB for the DeleteDays value.
+LogChat = 0
+
+# Completly ignore anything which has BOT
+# default 0=off 1=on
+IgnoreBots = 0
+
+##
+## Rcon settings
+##
+[Rcon]
+# Allow HLStats to send Rcon commands to the game servers.
+# 1=on 0=off
+Rcon = 1
+
+# Sets whether to record Rcon commands to the Admin event table
+# 1=on 0=off
+RconRecord = 1
+
+# Ignore (do not log) Rcon commands originating from the same IP as the server being Rcon'd
+# 1=on 0=off
+RconIgnoreSelf = 0
+
+# How the Rcon say command would be returned
+# say > ordinary say command (default)
+# admin_psay > return a private say adminMod
+# amx_psay > return a private say with amxMod
+# sm_psay > return a private say with sourceMod
+RconSay = say

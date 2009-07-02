@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: plugins.inc.php 556 2008-08-28 11:49:01Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admintasks/plugins.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -110,7 +108,7 @@ These default addons should help make understanding this feature easier.<br><br>
 
 <?php
 
-	$result = $db->query("
+	$query = mysql_query("
 		SELECT
 			rule,
 			addon,
@@ -122,7 +120,7 @@ These default addons should help make understanding this feature easier.<br><br>
 		ASC
 	");
 
-	$edlist->draw($result);
+	$edlist->draw($query);
 ?>
 
 <table width="75%" border="0" cellspacing="0" cellpadding="0">

@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: players.inc.php 670 2009-03-03 07:33:06Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/players.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -41,47 +39,38 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-	// Player Rankings
-	$game = sanitize($_GET['game']);
-
-	$db->query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='$game'");
-	if ($db->num_rows() < 1) error("No such game '$game'.");
-
-	list($gamename) = $db->fetch_row();
-	$db->free_result();
-
-	if (isset($_GET["minkills"])) {
-		$minkills = sanitize($_GET["minkills"]);
+$minkills = 1;
+if (isset($_GET["minkills"])) {
+	$check = validateInput($_GET['minkills'],'digit');
+	if($check === true) {
+		$minkills = $_GET["minkills"];
 	}
-	else {
-		$minkills = 1;
-	}
+}
 
-	// the rating system
-	if (isset($_GET["rdlimit"])) {
-		$rdlimit = sanitize($_GET["rdlimit"]);
-	}
-	else {
-		$rdlimit = 100;
-	}
-    $rd2limit = $rdlimit * $rdlimit;
+// the rating system
+$rdlimit = 100;
+if (isset($_GET["rdlimit"])) {
+	$check = validateInput($_GET['rdlimit'],'digit');
+	$rdlimit = $_GET["rdlimit"];
+}
+$rd2limit = $rdlimit * $rdlimit;
 
-	pageHeader(
-		array($gamename, "Player Rankings"),
-		array($gamename=>"%s?game=$game", "Player Rankings"=>"")
-	);
+pageHeader(
+	array($gamename, "Player Rankings"),
+	array($gamename=>"%s?game=$game", "Player Rankings"=>"")
+);
 ?>
 
 <form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
-<input type="hidden" name="mode" value="search">
-<input type="hidden" name="game" value="<?php echo $game; ?>">
-<input type="hidden" name="st" value="player">
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
-<tr valign="bottom">
-	<td width="75%"><?php echo $g_options["font_normal"]; ?><b>&#149;</b> Find a player: <input type="text" name="q" size=20 maxlength=64 class="textbox"> <input type="submit" value="Search" class="smallsubmit"><?php echo $g_options["fontend_normal"]; ?></td>
-	<td width="25%" align="right" nowrap><?php echo $g_options["font_normal"]; ?>Go to <a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="clan.gif">Clan Rankings</a><?php echo $g_options["fontend_normal"]; ?></td>
-</tr>
-</table>
+	<input type="hidden" name="mode" value="search">
+	<input type="hidden" name="game" value="<?php echo $game; ?>">
+	<input type="hidden" name="st" value="player">
+	<table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
+	<tr valign="bottom">
+		<td width="75%"><?php echo $g_options["font_normal"]; ?><b>&#149;</b> Find a player: <input type="text" name="q" size=20 maxlength=64 class="textbox"> <input type="submit" value="Search" class="smallsubmit"><?php echo $g_options["fontend_normal"]; ?></td>
+		<td width="25%" align="right" nowrap><?php echo $g_options["font_normal"]; ?>Go to <a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="clan.gif">Clan Rankings</a><?php echo $g_options["fontend_normal"]; ?></td>
+	</tr>
+	</table>
 </form>
 
 <?php
@@ -92,32 +81,34 @@
     	echo '<script type="text/javascript" src="'.INCLUDE_PATH.'/amcharts/swfobject.js"></script>';
 
         // get the connects
-        $query = "SELECT DATE_FORMAT(`".DB_PREFIX."_Events_Connects`.`eventTime`,'%Y-%m-%d') AS eventTime,
-        					`".DB_PREFIX."_Events_Connects`.`playerId`
-                            FROM `".DB_PREFIX."_Events_Connects`
-                            LEFT JOIN `".DB_PREFIX."_Players` ON `".DB_PREFIX."_Events_Connects`.`playerId` = `".DB_PREFIX."_Players`.`playerId`
-                            WHERE `".DB_PREFIX."_Players`.`game` = '".$game."'";
+        $query = mysql_query("SELECT DATE_FORMAT(`".DB_PREFIX."_Events_Connects`.`eventTime`,'%Y-%m-%d') AS eventTime,
+        				`".DB_PREFIX."_Events_Connects`.`playerId`
+						FROM `".DB_PREFIX."_Events_Connects`
+						LEFT JOIN `".DB_PREFIX."_Players`
+							ON `".DB_PREFIX."_Events_Connects`.`playerId` = `".DB_PREFIX."_Players`.`playerId`
+						WHERE `".DB_PREFIX."_Players`.`game` = '".mysql_escape_string($game)."'");
 
-        $query = $db->query($query);
-        while ($result = $db->fetch_array($query)) {
+        while ($result = mysql_fetch_assoc($query)) {
             // we group by day
             //$dataArr = explode(" ",$result['eventTime']);
         	$playersArr[$result['eventTime']][] = $result['playerId'];
         }
+        mysql_free_result($query);
 
 		//unset($dataArr);
         // get the disconnects
-		$query = "SELECT DATE_FORMAT(`".DB_PREFIX."_Events_Disconnects`.`eventTime`,'%Y-%m-%d') AS eventTime,
+		$query = mysql_query("SELECT DATE_FORMAT(`".DB_PREFIX."_Events_Disconnects`.`eventTime`,'%Y-%m-%d') AS eventTime,
 						`".DB_PREFIX."_Events_Disconnects`.`playerId`
 		                FROM `".DB_PREFIX."_Events_Disconnects`
-		                LEFT JOIN `".DB_PREFIX."_Players` ON `".DB_PREFIX."_Events_Disconnects`.`playerId` = `".DB_PREFIX."_Players`.`playerId`
-		                WHERE `".DB_PREFIX."_Players`.`game` = '".$game."'";
-        $query = $db->query($query);
-        while ($result = $db->fetch_array($query)) {
+		                LEFT JOIN `".DB_PREFIX."_Players`
+		                	ON `".DB_PREFIX."_Events_Disconnects`.`playerId` = `".DB_PREFIX."_Players`.`playerId`
+		                WHERE `".DB_PREFIX."_Players`.`game` = '".mysql_escape_string($game)."'");
+        while ($result = mysql_fetch_assoc($query)) {
             // we group by day
             //$dataArr = explode(" ",$result['eventTime']);
         	$playersDisconnectArr[$result['eventTime']][] = $result['playerId'];
         }
+        mysql_free_result($query);
         //unset($dataArr);
 
 		if(!empty($playersArr) && !empty($playersDisconnectArr)) {
@@ -192,19 +183,17 @@
 		}
 
     	// most time online
-    	$query = "SELECT
-				".DB_PREFIX."_Events_StatsmeTime.*,
-				TIME_TO_SEC(".DB_PREFIX."_Events_StatsmeTime.time) as tTime
-			FROM
-				".DB_PREFIX."_Events_StatsmeTime
-			LEFT JOIN ".DB_PREFIX."_Servers ON ".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_StatsmeTime.serverId
-			WHERE
-				".DB_PREFIX."_Servers.game='$game'";
+    	$query = mysql_query("SELECT ".DB_PREFIX."_Events_StatsmeTime.*,
+					TIME_TO_SEC(".DB_PREFIX."_Events_StatsmeTime.time) as tTime
+					FROM ".DB_PREFIX."_Events_StatsmeTime
+					LEFT JOIN ".DB_PREFIX."_Servers
+						ON ".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_StatsmeTime.serverId
+					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'");
 
-		$query = $db->query($query);
-		while($result = $db->fetch_array($query)) {
+		while($result = mysql_fetch_assoc($query)) {
 			$onlineArr[$result['playerId']][] = $result;
 		}
+		mysql_free_result($query);
 
 		if(!empty($onlineArr)) {
 			// summ the time up for each player
@@ -220,11 +209,11 @@
 			$topPlayers = array_slice($eventsGruped,0,5,true);
 			// now get the player names
 			foreach ($topPlayers as $pId=>$tP) {
-				$query = "SELECT `lastName` FROM `".DB_PREFIX."_Players` WHERE `playerId` = '".$pId."'";
-				$query = $db->query($query);
-				$result = $db->fetch_array($query);
+				$query = mysql_query("SELECT `lastName` FROM `".DB_PREFIX."_Players` WHERE `playerId` = '".$pId."'");
+				$result = mysql_fetch_assoc($query);
 				$topPlayersArr[$pId]['time'] = $tP;
 				$topPlayersArr[$pId]['name'] = $result['lastName'];
+				mysql_free_result($query);
 			}
 
 			// build the graph data
@@ -426,16 +415,16 @@
 			";
 
 		}
-		$result = $db->query($query);
+		$result = mysql_query($query);
 
-		$query = "SELECT COUNT(*)
+		$query = "SELECT COUNT(*) AS pc
 					FROM `".DB_PREFIX."_Players`
 					WHERE game='".$game."'
 						AND hideranking=0
 						AND rd2 <= $rd2limit";
-		$resultCount = $db->query($query);
+		$resultCount = mysql_fetch_assoc($query);
 
-		list($numitems) = $db->fetch_row($resultCount);
+		$numitems = $resultCount['pc'];
 	}
 	elseif(defined('ELORATING') && (ELORATING === "2")) {
 		// we want only the rating system
@@ -508,7 +497,7 @@
 
 		}
 		else {
-			$query = "SELECT
+			$queryPlayers = mysql_query("SELECT
 					t1.playerId,
 					t1.lastName,
 					t1.skill,
@@ -519,44 +508,36 @@
 				FROM
 					".DB_PREFIX."_Players as t1
 				WHERE
-					t1.game='$game'
+					t1.game='".mysql_escape_string($game)."'
 					AND t1.hideranking=0
-					AND t1.kills >= $minkills
+					AND t1.kills >= '".mysql_escape_string($minkills)."'
 				GROUP BY t1.playerId
 				ORDER BY
-					$table->sort $table->sortorder,
-					$table->sort2 $table->sortorder,
+					".$table->sort." ".$table->sortorder.",
+					".$table->sort2." ".$table->sortorder.",
 					lastName ASC
-				LIMIT $table->startitem,$table->numperpage
-			";
+				LIMIT ".$table->startitem.",".$table->numperpage."");
 
 		}
-		$result = $db->query($query);
 
-		$query = "SELECT COUNT(*)
+		$query = mysql_query("SELECT COUNT(*) as pc
 					FROM `".DB_PREFIX."_Players`
-					WHERE game='".$game."'
+					WHERE game='".mysql_escape_string($game)."'
 						AND hideranking=0
-						AND kills >= $minkills";
-		$resultCount = $db->query($query);
-
-		list($numitems) = $db->fetch_row($resultCount);
+						AND kills >= ".mysql_escape_string($minkills)."");
+		$resultCount = mysql_fetch_assoc($query);
+		$numitems = $resultCount['pc'];
 	}
 	// output
-	$table->draw($result, $numitems, 90);
+	$table->draw($queryPlayers, $numitems, 90);
 ?>
 <p>
 <form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
+<input type="hidden" name="game" value="<?php echo $game; ?>" />
+<input type="hidden" name="mode" value="players" />
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
 	<tr valign="bottom">
 		<td width="75%"><?php echo $g_options["font_normal"]; ?>
-	<?php
-		foreach ($_GET as $k=>$v) {
-			if ($k != "minkills") {
-				echo "		<input type=\"hidden\" name=\"$k\" value=\"" . htmlspecialchars($v) . "\">\n";
-			}
-		}
-	?>
 			<b>&#149;</b>
 			<?php if (defined('ELORATING') && (ELORATING === "1" || ELORATING === "2")) { ?>
 				Don't show players with an RD higher than <input type="text" name="rdlimit" size=4 maxlength=3 value="<?php echo $rdlimit; ?>" class="textbox"> of 350. <input type="submit" value="Apply" class="smallsubmit"> (lower RD = more accurate rating)

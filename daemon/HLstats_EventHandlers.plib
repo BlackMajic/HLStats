@@ -1,10 +1,6 @@
-#
-# $Id: HLstats_EventHandlers.plib 682 2009-05-25 12:11:09Z jumpin_banana $
-# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/daemon/HLstats_EventHandlers.plib $
-#
 # Original development:
 # +
-# + HLstats - Real-time player and clan rankings and statistics for Half-Life
+# + HLStats - Real-time player and clan rankings and statistics for Half-Life
 # + http://sourceforge.net/projects/hlstats/
 # +
 # + Copyright (C) 2001  Simon Garner
@@ -12,7 +8,7 @@
 #
 # Additional development:
 # +
-# + UA HLstats Team
+# + UA HLStats Team
 # + http://www.unitedadmins.com
 # + 2004 - 2007
 # +
@@ -25,7 +21,7 @@
 # + 2007 - 2008
 # +
 #
-# HLstats - Real-time player and clan rankings and statistics for Half-Life
+# HLStats - Real-time player and clan rankings and statistics for Half-Life
 # http://sourceforge.net/projects/hlstats/
 #
 # Copyright (C) 2001  Simon Garner
@@ -64,11 +60,6 @@ sub doEvent_Connect
 	{
 		$hostname = &resolveIp($ipAddr);
 		$hostgroup = "";
-
-		#if ($hostname)
-		#{
-		#	$hostgroup = &getHostGroup($hostname);
-		#}
 
 		if ($g_mode eq "LAN")
 		{
@@ -859,7 +850,7 @@ sub doEvent_Chat
 		my ($totalplayers) = $result->fetchrow_array;
 
 		&rcon("$playerName Rank: $ranknumber of $totalplayers; Points: $skill; KpD: $kpd!");
-	}	
+	}
 	elsif (($message =~ /^\/pskill$/i))	{
 		my $result = &doQuery("
 				SELECT

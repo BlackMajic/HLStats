@@ -1,11 +1,9 @@
 #!/usr/bin/perl
 #
-# $Id: hlstats-awards.pl 551 2008-08-24 13:01:34Z jumpin_banana $
-# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/daemon/hlstats-awards.pl $
 #
 # Original development:
 # +
-# + HLstats - Real-time player and clan rankings and statistics for Half-Life
+# + HLStats - Real-time player and clan rankings and statistics for Half-Life
 # + http://sourceforge.net/projects/hlstats/
 # +
 # + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
 #
 # Additional development:
 # +
-# + UA HLstats Team
+# + UA HLStats Team
 # + http://www.unitedadmins.com
 # + 2004 - 2007
 # +
@@ -117,7 +115,7 @@ Most options can be specified in the configuration file:
 Note: Options set on the command line take precedence over options set in the
 configuration file.
 
-HLstats: http://hlstats.sourceforge.net
+HLStats: http://www.hlstats-community.org
 EOT
 ;
 
@@ -174,7 +172,7 @@ if ($opt_version)
 
 # Startup
 
-print "++ HLstats Awards $g_version starting...\n\n";
+print "++ HLStats Awards $g_version starting...\n\n";
 
 # Connect to the database
 

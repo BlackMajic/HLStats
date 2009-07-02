@@ -1,0 +1,1 @@
+How to install HLStats please see the docs folder.

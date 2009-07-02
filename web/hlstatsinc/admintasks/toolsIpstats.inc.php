@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: tools_ipstats.inc.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admintasks/tools_ipstats.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -104,23 +102,17 @@
 		if ($hostgroup == "(Unresolved IP Addresses)")
 			$hostgroup = "";
 
-		$result = $db->query("
-			SELECT
-				COUNT(*),
-				COUNT(DISTINCT ipAddress)
-			FROM
-				".DB_PREFIX."_Events_Connects
-			WHERE
-				hostgroup='$hostgroup'
-		");
+		$query = mysql_query("SELECT COUNT(*) AS ipc,COUNT(DISTINCT ipAddress) AS ic
+					FROM ".DB_PREFIX."_Events_Connects WHERE hostgroup='$hostgroup'");
+		$result = mysql_fetch_assoc($query);
+		$totalconnects = $result['ipc'];
+		$numitems = $result['ic'];
 
-		list($totalconnects, $numitems) = $db->fetch_row($result);
-
-		$result = $db->query("
+		$query = mysql_query("
 			SELECT
 				IF(hostname='', ipAddress, hostname) AS host,
 				COUNT(hostname) AS freq,
-				(COUNT(hostname) / $totalconnects) * 100 AS percent
+				(COUNT(hostname) / ".$totalconnects.") * 100 AS percent
 			FROM
 				".DB_PREFIX."_Events_Connects
 			WHERE
@@ -128,13 +120,12 @@
 			GROUP BY
 				host
 			ORDER BY
-				$table->sort $table->sortorder,
-				$table->sort2 $table->sortorder
+				".$table->sort." ".$table->sortorder.",
+				".$table->sort2." ".$table->sortorder."
 			LIMIT
-				$table->startitem,$table->numperpage
-		");
+				".$table->startitem.",".$table->numperpage."");
 
-		$table->draw($result, $numitems, 100, "");
+		$table->draw($query, $numitems, 100, "");
 	}
 	else
 	{
@@ -168,32 +159,27 @@
 			50				// numperpage
 		);
 
-		$result = $db->query("
-			SELECT
-				COUNT(*),
-				COUNT(DISTINCT hostgroup)
-			FROM
-				".DB_PREFIX."_Events_Connects
-		");
+		$query = mysql_query("SELECT COUNT(*) AS ec, COUNT(DISTINCT hostgroup) AS hc FROM ".DB_PREFIX."_Events_Connects");
+		$result = mysql_fetch_assoc($query);
+		$totalconnects = $result['ec'];
+		$numitems = $result['hc'];
 
-		list($totalconnects, $numitems) = $db->fetch_row($result);
-
-		$result = $db->query("
+		$query = mysql_query("
 			SELECT
 				IF(hostgroup='', '(Unresolved IP Addresses)', hostgroup) AS hostgroup,
 				COUNT(hostgroup) AS freq,
-				(COUNT(hostgroup) / $totalconnects) * 100 AS percent
+				(COUNT(hostgroup) / ".$totalconnects.") * 100 AS percent
 			FROM
 				".DB_PREFIX."_Events_Connects
 			GROUP BY
 				hostgroup
 			ORDER BY
-				$table->sort $table->sortorder,
-				$table->sort2 $table->sortorder
+				".$table->sort." ".$table->sortorder.",
+				".$table->sort2." ".$table->sortorder."
 			LIMIT
-				$table->startitem,$table->numperpage
+				".$table->startitem.",".$table->numperpage."
 		");
 
-		$table->draw($result, $numitems, 100, "");
+		$table->draw($query, $numitems, 100, "");
 	}
 ?>

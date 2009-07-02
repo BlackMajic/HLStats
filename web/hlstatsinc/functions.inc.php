@@ -1,11 +1,8 @@
 <?php
 /**
- * $Id: functions.inc.php 654 2009-02-19 15:52:53Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/functions.inc.php $
- *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +10,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +20,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -61,7 +58,6 @@ function error ($message, $exit=true) {
 <?php if ($exit) exit;
 }
 
-
 //
 // string makeQueryString (string key, string value, [array notkeys])
 //
@@ -92,28 +88,20 @@ function makeQueryString($key, $value, $notkeys = array()) {
 //
 // array getOptions (void)
 //
-// Retrieves HLstats option and style settings from the database.
+// Retrieves HLStats option and style settings from the database.
 //
 
-function getOptions()
-{
-	global $db;
-
-	$result  = $db->query("SELECT keyname, value FROM ".DB_PREFIX."_Options");
-	$numrows = $db->num_rows($result);
-
-	if ($numrows)
-	{
-		while ($rowdata = $db->fetch_row($result))
+function getOptions() {
+	$query  = mysql_query("SELECT keyname, value FROM ".DB_PREFIX."_Options");
+	if (mysql_num_rows($query) > 0) {
+		while ($rowdata = mysql_fetch_assoc($query))
 		{
-			$options[$rowdata[0]] = $rowdata[1];
+			$options[$rowdata['keyname']] = $rowdata['value'];
 		}
 		return $options;
 	}
 	else
 	{
-		error("Warning: Could not find any options in table " .
-			"<b>".DB_PREFIX."_Options</b>, database <b>" . DB_NAME . "</b>. Check HLstats configuration.");
 		return array();
 	}
 }
@@ -125,8 +113,7 @@ function getOptions()
 // Prints the page heading.
 //
 
-function pageHeader($title, $location)
-{
+function pageHeader($title, $location) {
 	global $g_options;
 	include(INCLUDE_PATH . "/header.inc.php");
 }
@@ -431,7 +418,7 @@ function makeXMLSave($string) {
 }
 
 /**
- * valide if given string is correct
+ * validate if given string is correct
  *
  * @param string $string
  * @param string $mode
@@ -441,7 +428,7 @@ function validateInput($string,$mode) {
 	if(!empty($string) && !empty($mode)) {
 		switch ($mode) {
 			case 'nospace':
-				$pattern = '/[^\p{L}\p{N}]/u';
+				$pattern = '/[^\p{L}\p{N}\p{P}]/u';
 				$value = preg_replace($pattern, '', $string);
 				if($string === $value) {
 					 $ret = true;

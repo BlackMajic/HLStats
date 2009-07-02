@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: weaponinfo.inc.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/weaponinfo.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -41,112 +39,101 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-	// Weapon Details
-
-	$weapon = sanitize($_GET["weapon"])
-		or error("No weapon ID specified.");
-
-	$game = sanitize($_GET['game']);
-
-	$db->query("
-		SELECT
-			name
-		FROM
-			".DB_PREFIX."_Weapons
-		WHERE
-			code='$weapon'
-			AND game='$game'
-	");
-
-	if ($db->num_rows() != 1)
-	{
-		$wep_name = ucfirst($weapon);
+$weapon = false;
+if(!empty($_GET["weapon"])) {
+	if(validateInput($_GET["weapon"],'nospace') === true) {
+		$weapon = $_GET["weapon"];
 	}
-	else
-	{
-		$weapondata = $db->fetch_array();
-		$db->free_result();
-		$wep_name = $weapondata["name"];
+	else {
+		error("No weapon specified.");
 	}
+}
 
-	$db->query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='$game'");
-	if ($db->num_rows() != 1)
-		error("Invalid or no game specified.");
-	else
-		list($gamename) = $db->fetch_row();
+$query = mysql_query("SELECT name FROM ".DB_PREFIX."_Weapons
+				WHERE code='".mysql_escape_string($weapon)."'
+				AND game='".mysql_escape_string($game)."'");
+if (mysql_num_rows($query) != 1) {
+	$wep_name = ucfirst($weapon);
+}
+else {
+	$result = mysql_fetch_assoc($query);
+	$wep_name = $result["name"];
+}
+mysql_free_result($query);
 
-	pageHeader(
-		array($gamename, "Weapon Details", htmlspecialchars($wep_name)),
-		array(
-			$gamename=>$g_options["scripturl"] . "?game=$game",
-			"Weapon Statistics"=>$g_options["scripturl"] . "?mode=weapons&amp;game=$game",
-			"Weapon Details"=>""
+pageHeader(
+	array($gamename, "Weapon Details", htmlspecialchars($wep_name)),
+	array(
+		$gamename=>$g_options["scripturl"] . "?game=$game",
+		"Weapon Statistics"=>$g_options["scripturl"] . "?mode=weapons&amp;game=$game",
+		"Weapon Details"=>""
+	),
+	$wep_name
+);
+
+
+
+$table = new Table(
+	array(
+		new TableColumn(
+			"killerName",
+			"Player",
+			"width=60&align=left&icon=player&link=" . urlencode("mode=playerinfo&amp;player=%k")
 		),
-		$wep_name
-	);
-
-
-
-	$table = new Table(
-		array(
-			new TableColumn(
-				"killerName",
-				"Player",
-				"width=60&align=left&icon=player&link=" . urlencode("mode=playerinfo&amp;player=%k")
-			),
-			new TableColumn(
-				"frags",
-				ucfirst($weapon) . " kills",
-				"width=35&align=right"
-			),
+		new TableColumn(
+			"frags",
+			ucfirst($weapon) . " kills",
+			"width=35&align=right"
 		),
-		"killerId", // keycol
-		"frags", // sort_default
-		"killerName", // sort_default2
-		true, // showranking
-		50 // numperpage
-	);
+	),
+	"killerId", // keycol
+	"frags", // sort_default
+	"killerName", // sort_default2
+	true, // showranking
+	50 // numperpage
+);
 
-	$result = $db->query("
-		SELECT
-			".DB_PREFIX."_Events_Frags.killerId,
-			".DB_PREFIX."_Players.lastName AS killerName,
-			COUNT(".DB_PREFIX."_Events_Frags.weapon) AS frags
-		FROM
-			".DB_PREFIX."_Events_Frags
-		LEFT JOIN ".DB_PREFIX."_Players ON
-			".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.killerId
-		WHERE
-			".DB_PREFIX."_Events_Frags.weapon='$weapon'
-			AND ".DB_PREFIX."_Players.game='$game'
-			AND ".DB_PREFIX."_Players.hideranking<>'1'
-		GROUP BY
-			".DB_PREFIX."_Events_Frags.killerId
-		ORDER BY
-			$table->sort $table->sortorder,
-			$table->sort2 $table->sortorder
-		LIMIT $table->startitem,$table->numperpage
-	");
+$query = mysql_query("
+	SELECT
+		".DB_PREFIX."_Events_Frags.killerId,
+		".DB_PREFIX."_Players.lastName AS killerName,
+		COUNT(".DB_PREFIX."_Events_Frags.weapon) AS frags
+	FROM
+		".DB_PREFIX."_Events_Frags
+	LEFT JOIN ".DB_PREFIX."_Players ON
+		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.killerId
+	WHERE
+		".DB_PREFIX."_Events_Frags.weapon='".mysql_escape_string($weapon)."'
+		AND ".DB_PREFIX."_Players.game='".mysql_escape_string($game)."'
+		AND ".DB_PREFIX."_Players.hideranking<>'1'
+	GROUP BY
+		".DB_PREFIX."_Events_Frags.killerId
+	ORDER BY
+		".$table->sort." ".$table->sortorder.",
+		".$table->sort2." ".$table->sortorder."
+	LIMIT ".$table->startitem.",".$table->numperpage."");
 
-	$resultCount = $db->query("
-		SELECT
-			COUNT(DISTINCT ".DB_PREFIX."_Events_Frags.killerId),
-			SUM(".DB_PREFIX."_Events_Frags.weapon='$weapon')
-		FROM
-			".DB_PREFIX."_Events_Frags
-		LEFT JOIN ".DB_PREFIX."_Players ON
-			".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.killerId
-		WHERE
-			".DB_PREFIX."_Events_Frags.weapon='$weapon'
-			AND ".DB_PREFIX."_Players.game='$game'
-	");
-
-	list($numitems, $totalkills) = $db->fetch_row($resultCount);
+$queryCount = mysql_query("
+	SELECT
+		COUNT(DISTINCT ".DB_PREFIX."_Events_Frags.killerId) AS wc,
+		SUM(".DB_PREFIX."_Events_Frags.weapon='$weapon') AS tc
+	FROM
+		".DB_PREFIX."_Events_Frags
+	LEFT JOIN ".DB_PREFIX."_Players ON
+		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.killerId
+	WHERE
+		".DB_PREFIX."_Events_Frags.weapon='$weapon'
+		AND ".DB_PREFIX."_Players.game='$game'
+");
+$result = mysql_fetch_assoc($queryCount);
+$numitems = $result['wc'];
+$totalkills = $result['tc'];
+mysql_free_result($queryCount);
 ?>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td colspan="2">
-		<img src="<?php echo $g_options["imgdir"]; ?>/weapons/<?php echo $game; ?>/big/<?php echo $weapon; ?>.png" border="0" />
+		<img src="<?php echo $g_options["imgdir"]; ?>/weapons/<?php echo $game; ?>/<?php echo $weapon; ?>.png" border="0" />
 	</td>
 </tr>
 <tr>
@@ -158,5 +145,5 @@
 </tr>
 
 </table><p>
-<?php $table->draw($result, $numitems, 70, "center");
+<?php $table->draw($query, $numitems, 70, "center");
 ?>

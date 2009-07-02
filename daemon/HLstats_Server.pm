@@ -1,11 +1,8 @@
 package HLstats_Server;
 #
-# $Id: HLstats_Server.pm 666 2009-02-27 12:50:38Z jumpin_banana $
-# $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/daemon/HLstats_Server.pm $
-#
 # Original development:
 # +
-# + HLstats - Real-time player and clan rankings and statistics for Half-Life
+# + HLStats - Real-time player and clan rankings and statistics for Half-Life
 # + http://sourceforge.net/projects/hlstats/
 # +
 # + Copyright (C) 2001  Simon Garner
@@ -13,7 +10,7 @@ package HLstats_Server;
 #
 # Additional development:
 # +
-# + UA HLstats Team
+# + UA HLStats Team
 # + http://www.unitedadmins.com
 # + 2004 - 2007
 # +
@@ -26,7 +23,7 @@ package HLstats_Server;
 # + 2007 - 2008
 # +
 #
-# HLstats - Real-time player and clan rankings and statistics for Half-Life
+# HLStats - Real-time player and clan rankings and statistics for Half-Life
 # http://sourceforge.net/projects/hlstats/
 #
 # Copyright (C) 2001  Simon Garner

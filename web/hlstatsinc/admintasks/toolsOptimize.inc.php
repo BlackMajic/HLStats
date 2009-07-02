@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: tools_optimize.inc.php 439 2008-04-09 12:29:18Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/admintasks/tools_optimize.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -54,12 +52,12 @@
 		}
 	}
 	if ($upgrade === true) {
-		$result = $db->query("SHOW TABLES");
+		$result = mysql_query("SHOW TABLES");
 
 		echo "Upgrading all tables to MyISAM format:<ul>\n";
-		while (list($table) = $db->fetch_row($result)) {
+		while (list($table) = mysql_fetch_array($result)) {
 			echo "<li>$table ... ";
-			$db->query("ALTER TABLE $table TYPE=MYISAM");
+			mysql_query("ALTER TABLE $table TYPE=MYISAM");
 			echo "OK\n";
 		}
 		echo "</ul>\n";
@@ -79,10 +77,10 @@ Optimizing tables...<?php echo $g_options["fontend_normal"]; ?></td>
 <?php
 		flush();
 
-		$result = $db->query("SHOW TABLES");
+		$result = mysql_query("SHOW TABLES");
 		$dbtables = '';
 
-		while (list($table) = $db->fetch_row($result))
+		while (list($table) = mysql_fetch_array($result))
 		{
 			if ($dbtables) $dbtables .= ", ";
 			$dbtables .= $table;
@@ -118,7 +116,7 @@ Optimizing tables...<?php echo $g_options["fontend_normal"]; ?></td>
 			9999
 		);
 
-		$result = $db->query("OPTIMIZE TABLE $dbtables");
+		$result = mysql_query("OPTIMIZE TABLE $dbtables");
 
 		$tableOptimize->draw($result, mysql_num_rows($result), 80);
 ?>
@@ -162,7 +160,7 @@ Optimizing tables...<?php echo $g_options["fontend_normal"]; ?></td>
 			9999
 		);
 
-		$result = $db->query("ANALYZE TABLE $dbtables");
+		$result = mysql_query("ANALYZE TABLE $dbtables");
 
 		$tableAnalyze->draw($result, mysql_num_rows($result), 80);
 ?>

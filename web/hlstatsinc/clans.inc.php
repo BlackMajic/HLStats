@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: clans.inc.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/clans.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -40,48 +38,32 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+$minmembers = 2;
+if (isset($_GET["minmembers"])) {
+	$check = validateInput($_GET['minmembers'],'digit');
+	if($check === true)
+		$minmembers = $_GET["minmembers"];
+}
 
-
-	// Clan Rankings
-
-	$game = sanitize($_GET['game']);
-
-	$db->query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='$game'");
-	if ($db->num_rows() < 1) error("No such game '$game'.");
-
-	list($gamename) = $db->fetch_row();
-	$db->free_result();
-
-	if (isset($_GET["minmembers"]))
-	{
-		$minmembers = intval($_GET["minmembers"]);
-	}
-	else
-	{
-		$minmembers = 2;
-	}
-
-	pageHeader(
-		array($gamename, "Clan Rankings"),
-		array($gamename=>"%s?game=$game", "Clan Rankings"=>"")
-	);
+pageHeader(
+	array($gamename, "Clan Rankings"),
+	array($gamename=>"%s?game=$game", "Clan Rankings"=>"")
+);
 ?>
-
+<p>
 <form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
-<input type="hidden" name="mode" value="search">
-<input type="hidden" name="game" value="<?php echo $game; ?>">
-<input type="hidden" name="st" value="clan">
+	<input type="hidden" name="mode" value="search">
+	<input type="hidden" name="game" value="<?php echo $game; ?>">
+	<input type="hidden" name="st" value="clan">
 
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
-
-<tr valign="bottom">
-	<td width="75%"><?php echo $g_options["font_normal"]; ?><b>&#149;</b> Find a clan: <input type="text" name="q" size=20 maxlength=64 class="textbox"> <input type="submit" value="Search" class="smallsubmit"><?php echo $g_options["fontend_normal"]; ?></td>
-	<td width="25%" align="right" nowrap><?php echo $g_options["font_normal"]; ?>Go to <a href="<?php echo $g_options["scripturl"] . "?mode=players&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="player.gif">Player Rankings</a><?php echo $g_options["fontend_normal"]; ?></td>
-</tr>
-
-</table><p>
+	<table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
+		<tr valign="bottom">
+			<td width="75%"><?php echo $g_options["font_normal"]; ?><b>&#149;</b> Find a clan: <input type="text" name="q" size=20 maxlength=64 class="textbox"> <input type="submit" value="Search" class="smallsubmit"><?php echo $g_options["fontend_normal"]; ?></td>
+			<td width="25%" align="right" nowrap><?php echo $g_options["font_normal"]; ?>Go to <a href="<?php echo $g_options["scripturl"] . "?mode=players&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="player.gif">Player Rankings</a><?php echo $g_options["fontend_normal"]; ?></td>
+		</tr>
+	</table>
 </form>
-
+</p>
 <?php
 	$table = new Table(
 		array(
@@ -127,7 +109,7 @@
 		true
 	);
 
-	$result = $db->query("
+	$queryClans = mysql_query("
 		SELECT
 			".DB_PREFIX."_Clans.clanId,
 			".DB_PREFIX."_Clans.name,
@@ -142,20 +124,20 @@
 		LEFT JOIN ".DB_PREFIX."_Players ON
 			".DB_PREFIX."_Players.clan=".DB_PREFIX."_Clans.clanId
 		WHERE
-			".DB_PREFIX."_Clans.game='$game'
+			".DB_PREFIX."_Clans.game='".mysql_escape_string($game)."'
 			AND ".DB_PREFIX."_Players.hideranking = 0
 		GROUP BY
 			".DB_PREFIX."_Clans.clanId
 		HAVING
-			nummembers >= $minmembers
+			nummembers >= ".mysql_escape_string($minmembers)."
 		ORDER BY
-			$table->sort $table->sortorder,
-			$table->sort2 $table->sortorder,
+			".$table->sort." ".$table->sortorder.",
+			".$table->sort2." ".$table->sortorder.",
 			name ASC
-		LIMIT $table->startitem,$table->numperpage
+		LIMIT ".$table->startitem.",".$table->numperpage."
 	");
 
-	$resultCount = $db->query("
+	$resultquery = mysql_query("
 		SELECT
 			".DB_PREFIX."_Clans.clanId
 		FROM
@@ -163,33 +145,28 @@
 		LEFT JOIN ".DB_PREFIX."_Players ON
 			".DB_PREFIX."_Players.clan=".DB_PREFIX."_Clans.clanId
 		WHERE
-			".DB_PREFIX."_Clans.game='$game'
+			".DB_PREFIX."_Clans.game='".mysql_escape_string($game)."'
 			AND ".DB_PREFIX."_Players.hideranking = 0
 		GROUP BY
 			".DB_PREFIX."_Clans.clanId
 		HAVING
-			COUNT(".DB_PREFIX."_Players.playerId) >= $minmembers
-	");
+			COUNT(".DB_PREFIX."_Players.playerId) >= ".mysql_escape_string($minmembers)."");
+	$result = mysql_fetch_assoc($resultquery);
+	$resultCount = $result['clanId'];
 
-	$table->draw($result, $db->num_rows($resultCount), 90);
-?><p>
-
+	$table->draw($queryClans, $resultCount, 90);
+?>
+<p>
 <form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
+<input type="hidden" name="game" value="<?php echo $game; ?>" />
+<input type="hidden" name="mode" value="clans" />
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
-
 <tr valign="bottom">
 	<td width="75%"><?php echo $g_options["font_normal"]; ?>
-<?php
-	foreach ($_GET as $k=>$v)
-	{
-		if ($k != "minmembers")
-		{
-			echo "<input type=\"hidden\" name=\"$k\" value=\"" . htmlspecialchars($v) . "\">\n";
-		}
-	}
-?>
-		<b>&#149;</b> Only show clans with <input type="text" name="minmembers" size=4 maxlength=2 value="<?php echo $minmembers; ?>" class="textbox"> or more members. <input type="submit" value="Apply" class="smallsubmit"><?php echo $g_options["fontend_normal"]; ?></td>
+		<b>&#149;</b> Only show clans with <input type="text" name="minmembers" size=4 maxlength=2 value="<?php echo $minmembers; ?>" class="textbox">
+		or more members. <input type="submit" value="Apply" class="smallsubmit"><?php echo $g_options["fontend_normal"]; ?>
+	</td>
 </tr>
-
 </table>
 </form>
+</p>

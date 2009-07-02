@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: claninfo.inc.php 657 2009-02-20 09:49:57Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/claninfo.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -41,87 +39,75 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
-	// Clan Details
-	$clan = '';
-	$game = '';
-
-	if(!empty($_GET["clan"])) {
-		if(validateInput($_GET["clan"],'digit') === true) {
-			$clan = $_GET["clan"];
-		}
-		else {
-			error("No clan ID specified.");
-		}
+$clan = '';
+if(!empty($_GET["clan"])) {
+	if(validateInput($_GET["clan"],'digit') === true) {
+		$clan = $_GET["clan"];
 	}
-
-	if(!empty($_GET['game'])) {
-		if(validateInput($_GET["clan"],'nospace') === true) {
-			$game = $_GET['game'];
-		}
-		else {
-			error("No clan ID specified.");
-		}
+	else {
+		error("No clan ID specified.");
 	}
+}
 
-	$db->query("
-		SELECT
-			".DB_PREFIX."_Clans.tag,
-			".DB_PREFIX."_Clans.name,
-			".DB_PREFIX."_Clans.homepage,
-			".DB_PREFIX."_Clans.game,
-			SUM(".DB_PREFIX."_Players.kills) AS kills,
-			SUM(".DB_PREFIX."_Players.deaths) AS deaths,
-			COUNT(".DB_PREFIX."_Players.playerId) AS nummembers,
-			ROUND(AVG(".DB_PREFIX."_Players.skill)) AS avgskill
-		FROM
-			".DB_PREFIX."_Clans
-		LEFT JOIN ".DB_PREFIX."_Players ON
-			".DB_PREFIX."_Players.clan = ".DB_PREFIX."_Clans.clanId
-		WHERE
-			".DB_PREFIX."_Clans.clanId=$clan
-			AND ".DB_PREFIX."_Players.hideranking = 0
-		GROUP BY
-			".DB_PREFIX."_Clans.clanId
-	");
-	if ($db->num_rows() != 1)
-		error("No such clan '$clan'.");
+$query = mysql_query("
+	SELECT
+		".DB_PREFIX."_Clans.tag,
+		".DB_PREFIX."_Clans.name,
+		".DB_PREFIX."_Clans.homepage,
+		".DB_PREFIX."_Clans.game,
+		SUM(".DB_PREFIX."_Players.kills) AS kills,
+		SUM(".DB_PREFIX."_Players.deaths) AS deaths,
+		COUNT(".DB_PREFIX."_Players.playerId) AS nummembers,
+		ROUND(AVG(".DB_PREFIX."_Players.skill)) AS avgskill
+	FROM
+		".DB_PREFIX."_Clans
+	LEFT JOIN ".DB_PREFIX."_Players ON
+		".DB_PREFIX."_Players.clan = ".DB_PREFIX."_Clans.clanId
+	WHERE
+		".DB_PREFIX."_Clans.clanId=".mysql_escape_string($clan)."
+		AND ".DB_PREFIX."_Players.hideranking = 0
+	GROUP BY
+		".DB_PREFIX."_Clans.clanId
+");
+if (mysql_num_rows($query) != 1)
+	error("No such clan '$clan'.");
 
-	$clandata = $db->fetch_array();
-	$db->free_result();
-
-
-	$cl_name = ereg_replace(" ", "&nbsp;", htmlspecialchars($clandata["name"]));
-	$cl_tag  = ereg_replace(" ", "&nbsp;", htmlspecialchars($clandata["tag"]));
-	$cl_full = $cl_tag . " " . $cl_name;
-
-	$game = $clandata["game"];
-	$db->query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='$game'");
-	if ($db->num_rows() != 1)
-		$gamename = ucfirst($game);
-	else
-		list($gamename) = $db->fetch_row();
+$clandata = mysql_fetch_assoc($query);
+mysql_free_result($query);
 
 
-	pageHeader(
-		array($gamename, "Clan Details", $cl_full),
-		array(
-			$gamename=>$g_options["scripturl"] . "?game=$game",
-			"Clan Rankings"=>$g_options["scripturl"] . "?mode=clans&amp;game=$game",
-			"Clan Details"=>""
-		),
-		$clandata["name"]
-	);
+$cl_name = ereg_replace(" ", "&nbsp;", htmlspecialchars($clandata["name"]));
+$cl_tag  = ereg_replace(" ", "&nbsp;", htmlspecialchars($clandata["tag"]));
+$cl_full = $cl_tag . " " . $cl_name;
+
+$game = $clandata["game"];
+$query = mysql_query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='".mysql_escape_string($game)."'");
+if (mysql_num_rows($query) != 1) {
+	$gamename = ucfirst($game);
+}
+else {
+	$result = mysql_fetch_assoc($query);
+	$gamename = $result['name'];
+}
+
+
+pageHeader(
+	array($gamename, "Clan Details", $cl_full),
+	array(
+		$gamename=>$g_options["scripturl"] . "?game=$game",
+		"Clan Rankings"=>$g_options["scripturl"] . "?mode=clans&amp;game=$game",
+		"Clan Details"=>""
+	),
+	$clandata["name"]
+);
 ?>
 
 
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-
 <tr>
 	<td width="100%" colspan=2><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Clan Profile and Statistics Summary</b><?php echo $g_options["fontend_normal"];?></td>
 </tr>
-
 <tr valign="top">
 	<td width="5%">&nbsp;</td>
 	<td width="95%">&nbsp;<br>
@@ -221,16 +207,14 @@
 						echo $g_options["fontend_normal"];
 					?></td>
 				</tr>
-
-
-				</table></td>
+				</table>
+			</td>
 		</tr>
-
-		</table></td>
+		</table>
+	</td>
 </tr>
-
-</table><p>
-
+</table>
+<p>
 <?php
 	if ($clandata['nummembers'] < 1) {
 ?>
@@ -301,7 +285,7 @@
 		"members"
 	);
 
-	$result = $db->query("
+	$query = mysql_query("
 		SELECT
 			playerId,
 			lastName,
@@ -309,57 +293,43 @@
 			kills,
 			deaths,
 			IFNULL(kills/deaths, '-') AS kpd,
-			(kills/" . $clandata["kills"] . ") * 100 AS percent
+			(kills/" . mysql_escape_string($clandata["kills"]) . ") * 100 AS percent
 		FROM
 			".DB_PREFIX."_Players
 		WHERE
-			clan=$clan
+			clan=".mysql_escape_string($clan)."
 			AND hideranking = 0
 		ORDER BY
-			$tblMembers->sort $tblMembers->sortorder,
-			$tblMembers->sort2 $tblMembers->sortorder,
+			".$tblMembers->sort." ".$tblMembers->sortorder.",
+			".$tblMembers->sort2." ".$tblMembers->sortorder.",
 			lastName ASC
-		LIMIT $tblMembers->startitem,$tblMembers->numperpage
+		LIMIT ".$tblMembers->startitem.",".$tblMembers->numperpage."
 	");
 
-	$resultCount = $db->query("
-		SELECT
-			COUNT(*)
-		FROM
-			".DB_PREFIX."_Players
-		WHERE
-			clan=$clan
-	");
-
-	list($numitems) = $db->fetch_row($resultCount);
+	$queryCount = mysql_query("SELECT COUNT(*) AS pc FROM ".DB_PREFIX."_Players WHERE clan=".mysql_escape_string($clan)."");
+	$result = mysql_fetch_assoc($queryCount);
+	$numitems = $result['pc'];
 ?>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-
 <tr>
 	<td width="100%" colspan="2"><a name="members"></a>
 <?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Members</b><?php echo $g_options["fontend_normal"];?></td>
 </tr>
-
 <tr>
 	<td width="5%">&nbsp;</td>
 	<td width="95%">&nbsp;<br>
 	<?php
-		$tblMembers->draw($result, $numitems, 100);
+		$tblMembers->draw($query, $numitems, 100);
 	?></td>
 </tr>
-
 </table><p>
-
 <br>
 <br>
-
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-
 <tr>
 	<td width="100%" align="right"><br><br>
 	<?php echo $g_options["font_small"]; ?><b>Admin Options:</b> <a href="<?php echo $g_options["scripturl"] . "?mode=admin&amp;task=toolsEditdetailsClan&amp;id=$clan"; ?>">Edit Clan Details</a><?php echo $g_options["fontend_small"]; ?></td>
 </tr>
-
 </table><p>
 <?php
 	}

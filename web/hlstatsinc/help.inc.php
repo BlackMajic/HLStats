@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: help.inc.php 525 2008-07-23 07:11:52Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/help.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -40,21 +38,14 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
-
-
-	// Help
-
-	pageHeader(array("Help"), array("Help"=>""));
+pageHeader(array("Help"), array("Help"=>""));
 ?>
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-
 <tr>
 	<td width="100%" colspan=2><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Questions</b><br>
 		&nbsp;<?php echo $g_options["fontend_normal"];?></td>
 </tr>
-
 <tr>
 	<td width="5%">&nbsp;</td>
 	<td width="95%"><?php echo $g_options["font_normal"]; ?>
@@ -215,7 +206,7 @@
 		"asc"
 	);
 
-	$result = $db->query("
+	$query = mysql_query("
 		SELECT
 			".DB_PREFIX."_Games.name AS gamename,
 			".DB_PREFIX."_Actions.description,
@@ -243,13 +234,12 @@
 			AND ".DB_PREFIX."_Teams.game = ".DB_PREFIX."_Actions.game
 		ORDER BY
 			".DB_PREFIX."_Actions.game ASC,
-			$tblActions->sort $tblActions->sortorder,
-			$tblActions->sort2 $tblActions->sortorder
+			".$tblActions->sort." ".$tblActions->sortorder.",
+			".$tblActions->sort2." ".$tblActions->sortorder."
 	");
+	$numitems = mysql_num_rows($query);
 
-	$numitems = $db->num_rows($result);
-
-	$tblActions->draw($result, $numitems, 100, "center");
+	$tblActions->draw($query, $numitems, 100, "center");
 ?><p>
 
 	<b>Note</b> The player who triggers an action may receive both the player reward and the team reward.<p>
@@ -297,7 +287,7 @@
 		"desc"
 	);
 
-	$result = $db->query("
+	$query = mysql_query("
 		SELECT
 			".DB_PREFIX."_Games.name AS gamename,
 			".DB_PREFIX."_Weapons.code,
@@ -309,13 +299,13 @@
 			".DB_PREFIX."_Games.code = ".DB_PREFIX."_Weapons.game
 		ORDER BY
 			game ASC,
-			$tblWeapons->sort $tblWeapons->sortorder,
-			$tblWeapons->sort2 $tblWeapons->sortorder
+			".$tblWeapons->sort." ".$tblWeapons->sortorder.",
+			".$tblWeapons->sort2." ".$tblWeapons->sortorder."
 	");
 
-	$numitems = $db->num_rows($result);
+	$numitems = mysql_num_rows($query);
 
-	$tblWeapons->draw($result, $numitems, 100, "center");
+	$tblWeapons->draw($query, $numitems, 100, "center");
 ?><p>
 
 <br>
@@ -359,10 +349,6 @@
 	Say <b>/hls_hideranking</b> while playing on a participating game server. This will toggle you between being visible on the Player Rankings and being invisible.<p>
 
 	<b>Note</b> You will still be tracked and you can still view your Player Details page. Use the <a href="<?php echo $g_options["scripturl"]; ?>?mode=search">Search</a> page to find yourself.<p>
-
-
-
 	<?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
-
 </table>

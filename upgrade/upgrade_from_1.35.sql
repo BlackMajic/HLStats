@@ -1,8 +1,8 @@
 #
-# HLstats Database Upgrade file
+# HLStats Database Upgrade file
 # -----------------------------
 #
-# To upgrade an existing HLstats 1.35 database to version 1.36, type:
+# To upgrade an existing HLStats 1.35 database to version 1.36, type:
 #
 #   mysql hlstats_db_name < upgrade_from_1.35.sql
 #

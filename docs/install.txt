@@ -1,0 +1,2 @@
+The Installation Documentation can be found here:
+http://half-life-statistics.org/Documentation/Setup.html

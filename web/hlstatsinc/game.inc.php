@@ -1,11 +1,9 @@
 <?php
 /**
- * $Id: game.inc.php 671 2009-03-03 07:36:22Z jumpin_banana $
- * $HeadURL: https://hlstats.svn.sourceforge.net/svnroot/hlstats/trunk/hlstats/web/hlstatsinc/game.inc.php $
  *
  * Original development:
  * +
- * + HLstats - Real-time player and clan rankings and statistics for Half-Life
+ * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
  * +
  * + Copyright (C) 2001  Simon Garner
@@ -13,7 +11,7 @@
  *
  * Additional development:
  * +
- * + UA HLstats Team
+ * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
  * +
@@ -23,7 +21,7 @@
  * +
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
- * + 2007 - 2008
+ * + 2007 - 2009
  * +
  *
  * This program is free software; you can redistribute it and/or
@@ -41,30 +39,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-	$db->query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='$game'");
-	if ($db->num_rows() < 1) error("No such game '$game'.");
+pageHeader(array($gamename), array($gamename=>""));
 
-	list($gamename) = $db->fetch_row();
-	$db->free_result();
-
-	pageHeader(array($gamename), array($gamename=>""));
-
-	// should we hide the news ?
-	if(!$g_options['hideNews']) {
-
-		$db->query("
-			SELECT *
-			FROM
-				".DB_PREFIX."_News
-			ORDER BY
-				date DESC
-		");
-
-		if($db->num_rows() > 0) {
-
-
+// should we hide the news ?
+if(!$g_options['hideNews']) {
+	$queryNews = mysql_query("SELECT * FROM ".DB_PREFIX."_News ORDER BY date DESC");
+	if(mysql_num_rows($queryNews) > 0) {
 ?>
-
 <script type="text/javascript" language="javascript">
 <!--
 function showNews(id) {
@@ -90,8 +71,7 @@ function showNews(id) {
 
 <?php
 	$i = 0;
-	while ($rowdata = $db->fetch_array())
-	{
+	while ($rowdata = mysql_fetch_array($queryNews)) {
 		if($i == 0) {
 ?>
 						<div class="newsBox" id="newsBox_<?php echo $i; ?>">
@@ -178,102 +158,72 @@ function showNews(id) {
 		</td>
 	</tr>
 </table>
-
 <?php
 		}
 	}
 ?>
-
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-
-<tr>
-	<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Sections</b><?php echo $g_options["fontend_normal"];?><p>
-
-		<table width="75%" align="center" border="0" cellspacing="0" cellpadding="0">
-
-		<tr valign="top">
-			<td nowrap><?php echo $g_options["font_normal"]; ?><a href="<?php echo $g_options["scripturl"] . "?mode=players&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="player.gif"><b>Player Rankings...</b></a><br>
-		<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt="spacer.gif"><br>
-		<a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="clan.gif"><b>Clan Rankings...</b></a><br>
-		<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt=spacer.gif><br>
-		<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=weapons&amp;game=$game"; ?>"><b>Weapon Statistics...</b></a><br>
-		<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt=spacer.gif><br>
-                <img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=actions&amp;game=$game"; ?>"><b>Action Statistics...</b></a><br>
-		<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt="spacer.gif"><br>
-		<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=maps&amp;game=$game"; ?>"><b>Map Statistics...</b></a><?php echo $g_options["fontend_normal"]; ?></td>
-<?php if (defined("SHOW_STATSDISCLAIMER")) { ?>
-			<td width="50%">
-				<table width="100%" border="0" cellspacing="0" cellpadding="5">
-
-				<tr>
-					<td bgcolor="<?php echo $g_options["table_border"]; ?>"><?php echo $g_options["font_normal"];
-?><b>NOTICE</b><br>
-<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0"><br>
-These rankings and statistics are intended to present only a very simplistic measure of player performance.<br>
-<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0"><br>
-These statistics should not be taken as a realistic measure of individual player skill.<br>
-
-<?php echo $g_options["fontend_normal"]; ?></td>
+	<tr>
+		<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Sections</b><?php echo $g_options["fontend_normal"];?>
+			<table width="75%" align="center" border="0" cellspacing="0" cellpadding="0">
+				<tr valign="top">
+					<td nowrap>
+						<?php echo $g_options["font_normal"]; ?><a href="<?php echo $g_options["scripturl"] . "?mode=players&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="player.gif"><b>Player Rankings...</b></a><br>
+						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt="spacer.gif"><br>
+						<a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="clan.gif"><b>Clan Rankings...</b></a><br>
+						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt=spacer.gif><br>
+						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=weapons&amp;game=$game"; ?>"><b>Weapon Statistics...</b></a><br>
+						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt=spacer.gif><br>
+				        <img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=actions&amp;game=$game"; ?>"><b>Action Statistics...</b></a><br>
+						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt="spacer.gif"><br>
+						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=maps&amp;game=$game"; ?>"><b>Map Statistics...</b></a><?php echo $g_options["fontend_normal"]; ?>
+					</td>
 				</tr>
-
-				</table></td>
-<?php } ?>
-		</tr>
-
-		</table></td>
-</tr>
-
-</table><p>
-<br>
-
+			</table>
+		</td>
+	</tr>
+</table>
+<p>
 <?php
 	if (!$g_options['hideAwards']) {
-		$resultAwards = $db->query("
-			SELECT
-				".DB_PREFIX."_Awards.awardType,
-				".DB_PREFIX."_Awards.code,
-				".DB_PREFIX."_Awards.name,
-				".DB_PREFIX."_Awards.verb,
-				".DB_PREFIX."_Awards.d_winner_id,
-				".DB_PREFIX."_Awards.d_winner_count,
-				".DB_PREFIX."_Players.lastName AS d_winner_name
-			FROM
-				".DB_PREFIX."_Awards
-			LEFT JOIN ".DB_PREFIX."_Players ON
-				".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Awards.d_winner_id
-			WHERE
-				".DB_PREFIX."_Awards.game='$game'
-			ORDER BY
-				".DB_PREFIX."_Awards.awardType DESC,
-				".DB_PREFIX."_Awards.name ASC
-		");
+		$queryAwards = mysql_query("SELECT
+									".DB_PREFIX."_Awards.awardType,
+									".DB_PREFIX."_Awards.code,
+									".DB_PREFIX."_Awards.name,
+									".DB_PREFIX."_Awards.verb,
+									".DB_PREFIX."_Awards.d_winner_id,
+									".DB_PREFIX."_Awards.d_winner_count,
+									".DB_PREFIX."_Players.lastName AS d_winner_name
+								FROM
+									".DB_PREFIX."_Awards
+								LEFT JOIN ".DB_PREFIX."_Players ON
+									".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Awards.d_winner_id
+								WHERE
+									".DB_PREFIX."_Awards.game='$game'
+								ORDER BY
+									".DB_PREFIX."_Awards.awardType DESC,
+									".DB_PREFIX."_Awards.name ASC");
 
-		$result = $db->query("
-			SELECT
-				IFNULL(value, 1)
-			FROM
-				".DB_PREFIX."_Options
-			WHERE
-				keyname='awards_numdays'
-		");
-
+		// this value comes from awards.pl
 		$awards_numdays = 1;
-		if ($db->num_rows($result) == 1) {
-			list($awards_numdays) = $db->fetch_row($result);
+		if(!empty($g_options['awards_numdays'])) {
+			$awards_numdays = (int)$g_options['awards_numdays'];
 		}
 
-		$result = $db->query("
-			SELECT
-				DATE_FORMAT(value, '%W %e %b'),
-				DATE_FORMAT( DATE_SUB( value, INTERVAL $awards_numdays DAY ) , '%W %e %b' )
-			FROM
-				".DB_PREFIX."_Options
-			WHERE
-				keyname='awards_d_date'
-		");
-		list($awards_d_date, $awards_s_date) = $db->fetch_row($result);
+		$awards_d_date = false;
+		if(!empty($g_options['awards_d_date'])) {
+			$tmptime = strtotime($g_options['awards_d_date']);
+			if($tmptime !== false) {
+				// eliminates false dates from db
+				$awards_d_date = date('l d m',$tmptime);
 
-		if ($db->num_rows($resultAwards) > 0 && $awards_d_date) {
+				// awards_d_date - the days configured in $awards_numdays
+				$tmptime -= $awards_numdays*86400;
+				$awards_s_date = $awards_d_date = date('l d m',$tmptime);
+			}
+		}
+
+		if (mysql_num_rows($queryAwards) > 0 && $awards_d_date) {
 ?>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
@@ -283,101 +233,96 @@ These statistics should not be taken as a realistic measure of individual player
 		<tr>
 			<td>
 				<table width="100%" border="0" cellspacing="1" cellpadding="4">
-
 <?php
 			$c = 0;
-			while ($awarddata = $db->fetch_array($resultAwards)) {
+			while ($awarddata = mysql_fetch_assoc($queryAwards)) {
 				$colour = ($c % 2) + 1;
 				$c++;
 ?>
+					<tr bgcolor="<?php echo $g_options["table_bgcolor$colour"]; ?>">
+						<td width="30%">
+						<?php
+							echo $g_options["font_normal"];
+							echo htmlspecialchars($awarddata["name"]);
+							echo $g_options["fontend_normal"];
+						?>
+						</td>
+						<td width="70%">
+						<?php
+							echo $g_options["font_normal"];
 
-<tr bgcolor="<?php echo $g_options["table_bgcolor$colour"]; ?>">
-	<td width="30%"><?php
-				echo $g_options["font_normal"];
-				echo htmlspecialchars($awarddata["name"]);
-				echo $g_options["fontend_normal"];
-		?></td>
-	<td width="70%"><?php
-				echo $g_options["font_normal"];
+							if ($awarddata["d_winner_id"]) {
+								echo "<a href=\"" . $g_options["scripturl"] . "?mode=playerinfo&amp;player="
+									. $awarddata["d_winner_id"] . "\"><img src=\""
+									. $g_options["imgdir"] . "/player.gif\" width=16 height=16 "
+									. "hspace='4' border='0' align=\"middle\" alt=\"player.gif\"><b>"
+									. htmlspecialchars($awarddata["d_winner_name"]) . "</b></a> ("
+									. $awarddata["d_winner_count"] . " " . htmlspecialchars($awarddata["verb"]) . ")";
+							}
+							else {
+								echo "&nbsp;&nbsp;(Nobody)";
+							}
 
-				if ($awarddata["d_winner_id"]) {
-					echo "<a href=\"" . $g_options["scripturl"] . "?mode=playerinfo&amp;player="
-						. $awarddata["d_winner_id"] . "\"><img src=\""
-						. $g_options["imgdir"] . "/player.gif\" width=16 height=16 "
-						. "hspace='4' border='0' align=\"middle\" alt=\"player.gif\"><b>"
-						. htmlspecialchars($awarddata["d_winner_name"]) . "</b></a> ("
-						. $awarddata["d_winner_count"] . " " . htmlspecialchars($awarddata["verb"]) . ")";
-				}
-				else {
-					echo "&nbsp;&nbsp;(Nobody)";
-				}
-
-				echo $g_options["fontend_normal"];
-		?></td>
-</tr>
+							echo $g_options["fontend_normal"];
+							?>
+						</td>
+					</tr>
 
 <?php
 			}
-?></table></td>
+?>				</table>
+			</td>
 		</tr>
-
-		</table></td>
+		</table>
+	</td>
 </tr>
-
-</table><p>
-<br>
-
+</table>
 <?php
 		}
 	}
 ?>
+</p>
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-
 <tr>
-	<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Participating Servers</b><?php echo $g_options["fontend_normal"];?><p>
-
+	<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Participating Servers</b><?php echo $g_options["fontend_normal"];?>
 		<table width="75%" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options["table_border"]; ?>">
-
-		<tr>
-			<td><table width="100%" border="0" cellspacing="1" cellpadding="4">
-
-				<tr valign="bottom" bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-					<td width="60%"><?php echo $g_options["font_small"]; ?><font color="<?php echo $g_options["table_head_text"]; ?>">&nbsp;Name</font><?php echo $g_options["fontend_small"]; ?></td>
-					<td width="40%"><?php echo $g_options["font_small"]; ?><font color="<?php echo $g_options["table_head_text"]; ?>">&nbsp;Address</font><?php echo $g_options["fontend_small"]; ?></td>
-					<td width="20%"><?php echo $g_options["font_small"]; ?><font color="<?php echo $g_options["table_head_text"]; ?>">&nbsp;Statistics</font><?php echo $g_options["fontend_small"]; ?></td>
-				</tr>
+			<tr>
+				<td>
+					<table width="100%" border="0" cellspacing="1" cellpadding="4">
+						<tr valign="bottom" bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
+							<td width="60%"><?php echo $g_options["font_small"]; ?><font color="<?php echo $g_options["table_head_text"]; ?>">&nbsp;Name</font><?php echo $g_options["fontend_small"]; ?></td>
+							<td width="40%"><?php echo $g_options["font_small"]; ?><font color="<?php echo $g_options["table_head_text"]; ?>">&nbsp;Address</font><?php echo $g_options["fontend_small"]; ?></td>
+							<td width="20%"><?php echo $g_options["font_small"]; ?><font color="<?php echo $g_options["table_head_text"]; ?>">&nbsp;Statistics</font><?php echo $g_options["fontend_small"]; ?></td>
+						</tr>
 
 <?php
-		$db->query("
-			SELECT
-				serverId,
-				name,
-				IF(publicaddress != '',
-					publicaddress,
-					concat(address, ':', port)
-				) AS addr,
-				statusurl
-			FROM
-				".DB_PREFIX."_Servers
-			WHERE
-				game='$game'
-			ORDER BY
-				name ASC,
-				addr ASC
-		");
+	$query = mysql_query("SELECT
+							serverId, name,
+							IF(publicaddress != '',
+								publicaddress,
+								concat(address, ':', port)
+							) AS addr,
+							statusurl
+						FROM
+							".DB_PREFIX."_Servers
+						WHERE
+							game = '".mysql_escape_string($game)."'
+						ORDER BY
+							name ASC,
+							addr ASC");
 
-		$i=0;
-		while ($rowdata = $db->fetch_array()) {
-			$c = ($i % 2) + 1;
+	$i=0;
+	while ($rowdata = mysql_fetch_array($query)) {
+		$c = ($i % 2) + 1;
 
-			if ($rowdata["statusurl"]) {
-				$addr = "<a href=\"" . $rowdata["statusurl"] . "\">"
-					. $rowdata["addr"] . "</a>";
-			}
-			else {
-				$addr = $rowdata["addr"];
-			}
+		if ($rowdata["statusurl"]) {
+			$addr = "<a href=\"" . $rowdata["statusurl"] . "\">"
+				. $rowdata["addr"] . "</a>";
+		}
+		else {
+			$addr = $rowdata["addr"];
+		}
 ?>
 
 				<tr valign="middle" bgcolor="<?php echo $g_options["table_bgcolor$c"]; ?>">
@@ -396,7 +341,7 @@ These statistics should not be taken as a realistic measure of individual player
 					?></td>
 				</tr>
 <?php			$i++;
-		}
+	}
 ?>
 
 				</table></td>
@@ -409,36 +354,36 @@ These statistics should not be taken as a realistic measure of individual player
 <br>
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-
 <tr>
 	<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo $gamename; ?> Statistics</b><?php echo $g_options["fontend_normal"];?><p>
 
 		<?php
-			$result = $db->query("SELECT COUNT(*) FROM ".DB_PREFIX."_Players WHERE game='$game'");
-			list($num_players) = $db->fetch_row($result);
-			$num_players = intval($num_players);
+			$query = mysql_query("SELECT COUNT(*) AS plc FROM ".DB_PREFIX."_Players WHERE game='".mysql_escape_string($game)."'");
+			$result = mysql_fetch_assoc($query);
+			$num_players = $result['plc'];
 
-			$result = $db->query("SELECT COUNT(*) FROM ".DB_PREFIX."_Clans WHERE game='$game'");
-			list($num_clans) = $db->fetch_row($result);
-			$num_clans = intval($num_clans);
+			$query = mysql_query("SELECT COUNT(*) AS cc FROM ".DB_PREFIX."_Clans WHERE game='".mysql_escape_string($game)."'");
+			$result = mysql_fetch_assoc($query);
+			$num_clans = $result['cc'];
 
-			$result = $db->query("SELECT COUNT(*) FROM ".DB_PREFIX."_Servers WHERE game='$game'");
-			list($num_servers) = $db->fetch_row($result);
-			$num_servers = intval($num_servers);
+			$query = mysql_query("SELECT COUNT(*) AS sc FROM ".DB_PREFIX."_Servers WHERE game='".mysql_escape_string($game)."'");
+			$result = mysql_fetch_assoc($query);
+			$num_servers = $result['sc'];
 
-			$result = $db->query("
+			$query = mysql_query("
 				SELECT
-					DATE_FORMAT(eventTime, '%r, %a. %e %b.')
+					DATE_FORMAT(eventTime, '%r, %a. %e %b.') as lastEvent
 				FROM
 					".DB_PREFIX."_Events_Frags
-				LEFT JOIN ".DB_PREFIX."_Players ON
-					".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.serverId
+				LEFT JOIN ".DB_PREFIX."_Servers ON
+					".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_Frags.serverId
 				WHERE
-					".DB_PREFIX."_Players.game='$game'
+					".DB_PREFIX."_Servers.game='$game'
 				ORDER BY eventTime DESC
 				LIMIT 1
 			");
-			list($lastevent) = $db->fetch_row($result);
+			$result = mysql_fetch_assoc($query);
+			$lastevent = $result['lastEvent'];
 ?>
 
 		<table width="75%" align="center" border="0" cellspacing="0" cellpadding="3">
