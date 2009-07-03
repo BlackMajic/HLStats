@@ -190,7 +190,7 @@ sub doConf
 
 sub rcon
 {
-	my ($command, $private) = @_;
+	my ($target, $command, $private) = @_;
 
 	return 0  unless ($g_rcon);
 
@@ -216,8 +216,7 @@ sub rcon
 
 	$server_type = "source" if ($source);
 
-	if ($password)
-	{
+	if ($password) {
 		&printNotice("Doing rcon: $server_ip:$server_port, \"$password\", \"$command\"");
 		my $rcon;
 		$rcon = new KKrcon(
@@ -229,13 +228,13 @@ sub rcon
 
 		if($private) {
 			if($g_rcon_say eq "admin_psay") {
-				$command = "admin_command admin_psay \"$command\"";
+				$command = "admin_command admin_psay ".$command;
 			}
 			elsif ($g_rcon_say eq "amx_psay") {
-				$command = "amx_psay \"$command\"";
+				$command = "amx_psay ".$command;
 			}
 			elsif ($g_rcon_say eq "sm_psay") {
-				$command = "sm_psay \"$command\"";
+				$command = "sm_psay ".$command;
 			}
 			else {
 				return ""; # if we have set to prive msg but have RconSay to "say" then do nothing
