@@ -15,6 +15,8 @@ HLStats ChangeLog
 *) Changed: removed the old db object and replaced it with basic mysql functions
 	from php.
 *) Changed: renamed the hlstats.conf.inc.php file to hlstats.conf.php
+*) Fixed: Missing check in doEvent_Chat function (thx to VladiBG)
+*) Fixed: rcon messages. Missing quotes (thx to freaker)
 
 1.50 (18-06-2009)
 *) New: EloRating system. Can be activated and used sperate it along with the existing (thx to HampusW)
