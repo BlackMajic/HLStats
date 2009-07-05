@@ -746,6 +746,11 @@ sub doEvent_Chat
 	my $player = $g_players{"$s_addr/$playerId"};
 	my $playerstr = &getPlayerInfoString($player, $playerId);
 
+
+	if (!$player) {
+		return "(IGNORED) NOPLAYERINFO: ";
+	}
+
 	# log all say messages
 	if($g_log_chat) {
 		if (like($type, "say")) {
