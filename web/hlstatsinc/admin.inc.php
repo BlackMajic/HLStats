@@ -568,7 +568,7 @@
 							if ($col_where) $col_where = "WHERE $col_where";
 							$col_result = mysql_query("SELECT $col_key, $col_col FROM $col_table $col_where ORDER BY $col_key");
 							$coldata = array();
-							while (list($k, $v) = mysql_fetch_assoc($col_result))
+							while (list($k, $v) = mysql_fetch_array($col_result))
 							{
 								$coldata[$k] = $v;
 							}

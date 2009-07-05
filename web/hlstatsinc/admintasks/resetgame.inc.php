@@ -75,7 +75,7 @@
 		foreach ($dbtables as $dbt) {
 			echo "<li>$dbt ... ";
 			if($dbt == '".DB_PREFIX."_Events_Frags' || $dbt == '".DB_PREFIX."_Events_Teamkills') {
-				if ($db->query("DELETE FROM ".$dbt."
+				if (mysql_query("DELETE FROM ".$dbt."
 									WHERE killerId IN (".$playerIdString.")
 										OR victimId IN (".$playerIdString.")", false)) {
 					echo "OK\n";
@@ -86,7 +86,7 @@
 
 			}
 			else {
-				if ($db->query("DELETE FROM ".$dbt."
+				if (mysql_query("DELETE FROM ".$dbt."
 									WHERE playerId IN (".$playerIdString.")", false)) {
 					echo "OK\n";
 				}
@@ -101,7 +101,7 @@
 
 		foreach ($dbtablesGamecode as $dbtGame) {
 			echo "<li>$dbtGame ... ";
-			if ($db->query("DELETE FROM ".$dbtGame."
+			if (mysql_query("DELETE FROM ".$dbtGame."
 								WHERE game = '".$gamecode."'", false)) {
 
 				echo "OK\n";
@@ -112,7 +112,7 @@
 		}
 
 		echo "<li>Clearing awards ... ";
-		$db->query("UPDATE ".DB_PREFIX."_Awards SET d_winner_id=NULL, d_winner_count=NULL
+		mysql_query("UPDATE ".DB_PREFIX."_Awards SET d_winner_id=NULL, d_winner_count=NULL
 					WHERE game = '".$gamecode."'");
 		echo "OK\n";
 

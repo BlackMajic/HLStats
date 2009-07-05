@@ -56,7 +56,7 @@
 			foreach ($inputStrArr as $line) {
 				$line = trim($line);
 				if(!preg_match("/^#/",$line) && $line != "") {
-					$query = $db->query($line);
+					$query =mysql_query($line);
 					if(!$query) {
 						echo("Query Failed: ".$line);
 						$i++;
@@ -78,22 +78,21 @@
 		if($_POST['gameToDelete'] != "") {
 
 			// we need first the playids for this game
-			$query = $db->query("SELECT playerId FROM ".DB_PREFIX."_Players WHERE game = '".$_POST['gameToDelete']."'");
-			while($result = $db->fetch_row($query)) {
-				$players[]= $result[0];
+			$query = mysql_query("SELECT playerId FROM ".DB_PREFIX."_Players WHERE game = '".$_POST['gameToDelete']."'");
+			while($result = mysql_fetch_assoc($query)) {
+				$players[]= $result['playerId'];
 			}
 			if(count($players) > 0) {
 				#die("Fatal error: No players found for this game.");
 				$playerIdString = implode(",",$players);
-				$query = "SHOW TABLES LIKE '".DB_PREFIX."_Events_%'";
-				$result = $db->query($query);
-				if ($db->num_rows() < 1) {
+				$query = mysql_query("SHOW TABLES LIKE '".DB_PREFIX."_Events_%'");
+				if (mysql_num_rows($query) < 1) {
 					die("Fatal error: No events tables found with query:<p><pre>$query</pre><p>
 						There may be something wrong with your hlstats database or your version of MySQL.");
 				}
 
 				$dbtables = array();
-				while (list($table) = $db->fetch_row($result)) {
+				while (list($table) = mysql_fetch_array($query)) {
 					$dbtables[] = $table;
 				}
 
@@ -101,7 +100,7 @@
 				foreach($dbtables as $table) {
 					echo "<li>";
 					if($table == DB_PREFIX.'_Events_Frags' || $table == DB_PREFIX.'_Events_Teamkills') {
-						if($db->query("DELETE FROM ".$table."
+						if(mysql_query("DELETE FROM ".$table."
 										WHERE killerId IN (".$playerIdString.")
 											OR victimId IN (".$playerIdString.")", false)) {
 							echo $table." ok.";
@@ -111,7 +110,7 @@
 						}
 					}
 					else {
-						if($db->query("DELETE FROM ".$table."
+						if(mysql_query("DELETE FROM ".$table."
 										WHERE playerId IN (".$playerIdString.")", false)) {
 							echo $table." ok.";
 						}
@@ -129,7 +128,7 @@
 									DB_PREFIX.'_Teams', DB_PREFIX.'_Weapons');
 			foreach($gameTables as $gt) {
 				echo "<li>";
-				if($db->query("DELETE FROM ".$gt." WHERE game = '".$_POST['gameToDelete']."'")) {
+				if(mysql_query("DELETE FROM ".$gt." WHERE game = '".$_POST['gameToDelete']."'")) {
 					echo $gt." ok";
 				}
 				else {
@@ -139,7 +138,7 @@
 			}
 
 			echo "<li>";
-			if($db->query("DELETE FROM ".DB_PREFIX."_Games WHERE code='".$_POST['gameToDelete']."'")) {
+			if(mysql_query("DELETE FROM ".DB_PREFIX."_Games WHERE code='".$_POST['gameToDelete']."'")) {
 				echo "".DB_PREFIX."_Games ok";
 			}
 			else {
@@ -149,7 +148,7 @@
 
 			// delete the players
 			echo "<li>";
-			if($db->query("DELETE FROM ".DB_PREFIX."_Players WHERE playerId IN (".$playerIdString.")")) {
+			if(mysql_query("DELETE FROM ".DB_PREFIX."_Players WHERE playerId IN (".$playerIdString.")")) {
 				echo "".DB_PREFIX."_Players ok";
 			}
 			else {
@@ -162,9 +161,9 @@
 	}
 	else {
 		// get the games from the db
-		$query = $db->query("SELECT code,name FROM ".DB_PREFIX."_Games ORDER BY name");
-		while ($result = $db->fetch_row($query)) {
-			$gamesArr[$result[0]] = $result[1];
+		$query = mysql_query("SELECT code,name FROM ".DB_PREFIX."_Games ORDER BY name");
+		while ($result = mysql_fetch_assoc($query)) {
+			$gamesArr[$result['code']] = $result['name'];
 		}
 
 		// get the available gamesupport files.

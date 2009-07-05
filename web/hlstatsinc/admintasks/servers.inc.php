@@ -85,7 +85,7 @@ The "Public Address" should be the address you want shown to users. If left blan
 <?php
 	}
 
-	$result = $db->query("
+	$result = mysql_query("
 		SELECT
 			serverId,
 			address,
@@ -98,7 +98,7 @@ The "Public Address" should be the address you want shown to users. If left blan
 		FROM
 			".DB_PREFIX."_Servers
 		WHERE
-			game='$gamecode'
+			game='".mysql_escape_string($gamecode)."'
 		ORDER BY
 			address ASC,
 			port ASC

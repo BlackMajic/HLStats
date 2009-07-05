@@ -59,7 +59,7 @@
 
 You can specify descriptive names for each game's role codes.<p>
 
-<?php $result = $db->query("
+<?php $result = mysql_query("
 		SELECT
 			roleId,
 			code,

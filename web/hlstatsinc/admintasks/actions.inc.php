@@ -68,7 +68,7 @@ You can make an action map-specific by prepending the map name and an underscore
 
 <?php
 
-	$result = $db->query("
+	$result = mysql_query("
 		SELECT
 			id,
 			code,
