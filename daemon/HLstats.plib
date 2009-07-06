@@ -961,4 +961,14 @@ sub like
 	}
 }
 
+## decied if we are STDIN or log file via udp socket
+sub getLine {
+	if ($g_stdin) {
+		return <STDIN>;
+	}
+	else {
+		return 1;
+	}
+}
+
 1;

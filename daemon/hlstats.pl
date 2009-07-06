@@ -232,12 +232,6 @@ if ($opt_version) {
 	exit(0);
 }
 
-## set the default Mode
-if ($g_mode ne "Normal" && $g_mode ne "LAN" && $g_mode ne "NameTrack") {
-	$g_mode = "Normal";
-}
-
-
 # Startup
 
 print "++ HLStats $g_version starting...\n\n";
@@ -351,23 +345,10 @@ if($g_rating_system eq "1" || $g_rating_system eq "2") {
 	$ratingsys = HLstats_RatingSystem->new();
 }
 
+#
 # Main data loop
-
+#
 $c = 0;
-
-## decied if we are STDIN or log file via udp socket
-sub getLine
-{
-	if ($g_stdin)
-	{
-		return <STDIN>;
-	}
-	else
-	{
-		return 1;
-	}
-}
-
 while ($loop = &getLine()) {
 
 	if ($g_stdin){
@@ -384,7 +365,7 @@ while ($loop = &getLine()) {
 	### BOT REMOVAL
 	if($g_ignore_bots) {
 		if($s_output =~ s/^BOT://g) {
-			&printEvent(999, "IGNORED: " . $s_output);
+			&printEvent(999, "IGNORED (BOT): " . $s_output);
 			next;
 		}
 	}
@@ -395,7 +376,7 @@ while ($loop = &getLine()) {
 	$s_output =~ s/\[No.C-D\]//g;	# remove [No C-D] tag
 	$s_output =~ s/\[OLD.C-D\]//g;	# remove [OLD C-D] tag
 	$s_output =~ s/\[NOCL\]//g;	# remove [NOCL] tag
-	$s_output =~ s/\([12]\)//g;	# strip (1) and (2) from player names
+	$s_output =~ s/\([0-9]\)//g;	# strip (1) and (2) from player names
 	## strip tags end
 
 	# Get the server info, if we know the server, otherwise ignore the data
