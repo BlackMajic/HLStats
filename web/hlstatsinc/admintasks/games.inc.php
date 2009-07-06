@@ -130,7 +130,7 @@
 				}
 
 				$dbtables = array();
-				while (list($table) = mysql_fetch_assoc($query)) {
+				while (list($table) = mysql_fetch_array($query)) {
 					$dbtables[] = $table;
 				}
 
@@ -140,7 +140,7 @@
 					if($table == '".DB_PREFIX."_Events_Frags' || $table == '".DB_PREFIX."_Events_Teamkills') {
 						if(mysql_query("DELETE FROM ".$table."
 										WHERE killerId IN (".$playerIdString.")
-											OR victimId IN (".$playerIdString.")", false)) {
+											OR victimId IN (".$playerIdString.")")) {
 							echo $table." ok.";
 						}
 						else {
@@ -149,7 +149,7 @@
 					}
 					else {
 						if(mysql_query("DELETE FROM ".$table."
-										WHERE playerId IN (".$playerIdString.")", false)) {
+										WHERE playerId IN (".$playerIdString.")")) {
 							echo $table." ok.";
 						}
 						else {

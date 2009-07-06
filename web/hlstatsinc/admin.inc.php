@@ -348,8 +348,7 @@
 					VALUES
 					(
 						$qvals
-					)",
-					false
+					)"
 				);
 				if (mysql_error()) {
 					$this->errors[] = "DB Error: " . mysql_error();
@@ -522,7 +521,11 @@
 					if(!empty($rowdata["new_$col->name"])) {
 						$rowdata[$col->name] = $rowdata["new_$col->name"];
 					}
-					if ($stripslashes) $rowdata[$col->name] = stripslashes($rowdata[$col->name]);
+					if ($stripslashes) {
+						if(isset($rowData[$col->name])) {
+							$rowdata[$col->name] = stripslashes($rowdata[$col->name]);
+						}
+					}
 				}
 				else {
 					$keyval = $rowdata[$this->keycol];

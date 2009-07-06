@@ -482,7 +482,7 @@ INSERT INTO `#DB_PREFIX#_Server_Addons` (`rule`, `addon`, `url`) VALUES
 ('amxmodx_version', 'AMXX %', 'http://www.amxmodx.org'),
 ('sbsrv_version', 'Steambans %', 'http://www.steambans.com'),
 ('sourcemod_version', 'SourceMod %', 'http://www.sourcemod.net'),
-('logmod_version', 'LogMod %', 'http://www.hlsw.org/index.php?page=logmod_info');
+('logmod_version', 'LogMod %', 'http://www.hlsw.org/other_projects/logmod/');
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Style`;
 CREATE TABLE `#DB_PREFIX#_Style` (
