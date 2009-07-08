@@ -170,13 +170,13 @@ function showNews(id) {
 					<td nowrap>
 						<?php echo $g_options["font_normal"]; ?><a href="<?php echo $g_options["scripturl"] . "?mode=players&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="player.gif"><b><?php echo l('Player Rankings...'); ?></b></a><br>
 						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt="spacer.gif"><br>
-						<a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="clan.gif"><b><?php echo l('Clan Rankings...'); ?></b></a><br>
+						<a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="clan.gif"><b><?php echo l('Clan Rankings'); ?>...</b></a><br>
 						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt=spacer.gif><br>
-						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=weapons&amp;game=$game"; ?>"><b><?php echo l('Weapon Statistics...'); ?></b></a><br>
+						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=weapons&amp;game=$game"; ?>"><b><?php echo l('Weapon Statistics'); ?>...</b></a><br>
 						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt=spacer.gif><br>
-				        <img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=actions&amp;game=$game"; ?>"><b><?php echo l('Action Statistics...'); ?></b></a><br>
+				        <img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=actions&amp;game=$game"; ?>"><b><?php echo l('Action Statistics'); ?>...</b></a><br>
 						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt="spacer.gif"><br>
-						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=maps&amp;game=$game"; ?>"><b><?php echo l('Map Statistics...'); ?></b></a><?php echo $g_options["fontend_normal"]; ?>
+						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=maps&amp;game=$game"; ?>"><b><?php echo l('Map Statistics'); ?>...</b></a><?php echo $g_options["fontend_normal"]; ?>
 					</td>
 				</tr>
 			</table>
@@ -336,26 +336,23 @@ function showNews(id) {
 					?></td>
 					<td align="center"><?php
 						echo $g_options["font_normal"];
-						echo "<a href=\"$g_options[scripturl]?mode=livestats&amp;server=$rowdata[serverId]\">View</a>";
+						echo "<a href=\"$g_options[scripturl]?mode=livestats&amp;server=$rowdata[serverId]\">",l('View'),"</a>";
 						echo $g_options["fontend_normal"];
 					?></td>
 				</tr>
 <?php			$i++;
 	}
 ?>
-
 				</table></td>
 		</tr>
-
 		</table></td>
 </tr>
 
 </table><p>
 <br>
-
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo $gamename; ?> Statistics</b><?php echo $g_options["fontend_normal"];?><p>
+	<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo $gamename; ?> <?php echo l('Statistics'); ?></b><?php echo $g_options["fontend_normal"];?><p>
 
 		<?php
 			$query = mysql_query("SELECT COUNT(*) AS plc FROM ".DB_PREFIX."_Players WHERE game='".mysql_escape_string($game)."'");
@@ -393,23 +390,21 @@ function showNews(id) {
 			<td width="100%"><?php
 				echo $g_options["font_normal"];
 
-				echo "<b>$num_players</b> players and <b>$num_clans</b> clans "
-					. "ranked on <b>$num_servers</b> servers.";
+				echo "<b>$num_players</b> ",l('players'),"  <b>$num_clans</b> ",l('and clans ranked on')," <b>$num_servers</b> ",l('servers'),".";
 
 				echo $g_options["fontend_normal"];
 			?></td>
 		</tr>
 
 <?php
-			if ($lastevent)
-			{
+			if ($lastevent) {
 ?>
 		<tr valign="top">
 			<td width=10><?php echo $g_options["font_normal"]; ?><b>&#149;&nbsp;</b><?php echo $g_options["fontend_normal"]; ?></td>
 			<td width="100%"><?php
 				echo $g_options["font_normal"];
 
-				echo "Last kill <b>$lastevent</b>";
+				echo l("Last kill")," <b>$lastevent</b>";
 
 				echo $g_options["fontend_normal"];
 			?></td>
@@ -423,7 +418,7 @@ function showNews(id) {
 			<td width="100%"><?php
 				echo $g_options["font_normal"];
 
-				echo "All statistics are generated in real-time. Event history data expires after <b>" . DELETEDAYS . "</b> days.";
+				echo l("All statistics are generated in real-time. Event history data expires after"), " <b>" . DELETEDAYS . "</b> ",l("days"),".";
 
 				echo $g_options["fontend_normal"];
 			?></td>
@@ -431,6 +426,5 @@ function showNews(id) {
 
 		</table></td>
 </tr>
-
 </table><p>
 <br>

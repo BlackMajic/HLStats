@@ -67,8 +67,8 @@ pageHeader(
 	<input type="hidden" name="st" value="player">
 	<table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
 	<tr valign="bottom">
-		<td width="75%"><?php echo $g_options["font_normal"]; ?><b>&#149;</b> Find a player: <input type="text" name="q" size=20 maxlength=64 class="textbox"> <input type="submit" value="Search" class="smallsubmit"><?php echo $g_options["fontend_normal"]; ?></td>
-		<td width="25%" align="right" nowrap><?php echo $g_options["font_normal"]; ?>Go to <a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="clan.gif">Clan Rankings</a><?php echo $g_options["fontend_normal"]; ?></td>
+		<td width="75%"><?php echo $g_options["font_normal"]; ?><b>&#149;</b> <?php echo l('Find a player'); ?>: <input type="text" name="q" size=20 maxlength=64 class="textbox"> <input type="submit" value="<?php echo l('Search'); ?>" class="smallsubmit"><?php echo $g_options["fontend_normal"]; ?></td>
+		<td width="25%" align="right" nowrap><?php echo $g_options["font_normal"]; ?><?php echo l('Go to'); ?> <a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="clan.gif"><?php echo l('Clan Rankings'); ?></a><?php echo $g_options["fontend_normal"]; ?></td>
 	</tr>
 	</table>
 </form>
@@ -151,7 +151,7 @@ pageHeader(
         <table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
             <tr>
                 <td bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-                   <?php echo $g_options["font_normal"]; ?><b>Player Activity</b><?php echo $g_options["fontend_normal"];?>
+                   <?php echo $g_options["font_normal"]; ?><b><?php echo l('Player Activity'); ?></b><?php echo $g_options["fontend_normal"];?>
                 </td>
             </tr>
             <tr valign="bottom">
@@ -159,8 +159,8 @@ pageHeader(
             		<div style="text-align: center; display: block;" id="flash_timeline">
 	                    <div id="playerTimeline">
 	        				<?php echo $g_options["font_normal"]; ?>
-	        				<b>You need to upgrade your flash player</b><br />
-	        				<a href="http://www.adobe.com/go/getflashplayer" target="_blank">Get Flashplayer</a>
+	        				<b><?php echo l('You need to upgrade your flash player'); ?></b><br />
+	        				<a href="http://www.adobe.com/go/getflashplayer" target="_blank"><?php echo l('Get Flashplayer'); ?></a>
 	        				<?php echo $g_options["fontend_normal"];?>
 	        			</div>
 	        			<script type="text/javascript">
@@ -277,8 +277,7 @@ pageHeader(
 	        ?>
 	        <table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
 	            <tr>
-	                <td bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-	                   <?php echo $g_options["font_normal"]; ?><b>Most time online</b> (hover over the bars to get more information and click to jump to the player details)<?php echo $g_options["fontend_normal"];?>
+	                   <?php echo $g_options["font_normal"]; ?><b><?php echo l('Most time online'); ?></b> (<?php echo l('hover over the bars to get more information and click to jump to the player details');?>)<?php echo $g_options["fontend_normal"];?>
 	                </td>
 	            </tr>
 	            <tr valign="bottom">
