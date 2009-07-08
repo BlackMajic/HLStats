@@ -4,15 +4,29 @@
 ; key = value;
 ;
 ; quotes are optional (?!)
+;
+; this is the german translation file for HLStats
+; @author = joahnnes 'Banana' Keßler
 
-News = News;
-from = from;
+News = Aktuelles;
+from = von;
 Author = Author;
-Subject = Subject;
-Player Rankings... = Player Rankings...;
-Sections = Sections;
-Clan Rankings... = Clan Rankings...;
-Weapon Statistics... = Weapon Statistics...;
-Action Statistics... = Action Statistics...;
-Map Statistics... = Map Statistics...;
+Subject = Betreff;
+Message = Nachricht
+Posted at = geschrieben am;
 
+Awards = Auszeichnungen;
+Daily = Tägliche
+Day = Tages
+
+Player Rankings... = Spieler Rankings...;
+Sections = Bereiche;
+Clan Rankings... = Clan Rankings...;
+Weapon Statistics... = Waffen Statistiken...;
+Action Statistics... = Aktion Statistiken...;
+Map Statistics... = Map Statistiken...;
+
+Participating Servers = Gelistete Server;
+Name = Name;
+Address = Adresse;
+Statistics = Statistik;

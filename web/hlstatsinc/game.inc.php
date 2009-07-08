@@ -124,7 +124,7 @@ function showNews(id) {
 							<tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
 								<td width="100" valign="top">
 									<?php echo $g_options["font_normal"]; ?>
-									<b>Message</b>
+									<b><?php echo l('Message'); ?></b>
 									<?php echo $g_options["fontend_normal"];?>
 								</td>
 								<td width="*">
@@ -136,7 +136,7 @@ function showNews(id) {
 							<tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
 								<td width="100">
 									<?php echo $g_options["font_normal"]; ?>
-									<b>Posted at</b>
+									<b><?php echo l('Posted at'); ?></b>
 									<?php echo $g_options["fontend_normal"];?>
 								</td>
 								<td width="*">
@@ -227,7 +227,7 @@ function showNews(id) {
 ?>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp; <?php if ($awards_numdays == 1) {echo "Daily";} else { echo "$awards_numdays Day";}; ?> Awards (<?php echo "$awards_s_date to $awards_d_date."; ?>)</b><?php echo $g_options["fontend_normal"];?><p>
+	<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp; <?php if ($awards_numdays == 1) {echo l('Daily') ;} else { echo $awards_numdays." ".l('Day');}; ?> <?php echo l('Awards'); ?> (<?php echo "$awards_s_date to $awards_d_date."; ?>)</b><?php echo $g_options["fontend_normal"];?><p>
 
 		<table width="75%" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options["table_border"]; ?>">
 		<tr>
@@ -285,15 +285,15 @@ function showNews(id) {
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Participating Servers</b><?php echo $g_options["fontend_normal"];?>
+	<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo l('Participating Servers'); ?></b><?php echo $g_options["fontend_normal"];?>
 		<table width="75%" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options["table_border"]; ?>">
 			<tr>
 				<td>
 					<table width="100%" border="0" cellspacing="1" cellpadding="4">
 						<tr valign="bottom" bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-							<td width="60%"><?php echo $g_options["font_small"]; ?><font color="<?php echo $g_options["table_head_text"]; ?>">&nbsp;Name</font><?php echo $g_options["fontend_small"]; ?></td>
-							<td width="40%"><?php echo $g_options["font_small"]; ?><font color="<?php echo $g_options["table_head_text"]; ?>">&nbsp;Address</font><?php echo $g_options["fontend_small"]; ?></td>
-							<td width="20%"><?php echo $g_options["font_small"]; ?><font color="<?php echo $g_options["table_head_text"]; ?>">&nbsp;Statistics</font><?php echo $g_options["fontend_small"]; ?></td>
+							<td width="60%"><?php echo $g_options["font_small"]; ?><font color="<?php echo $g_options["table_head_text"]; ?>">&nbsp;<?php echo l('Name'); ?></font><?php echo $g_options["fontend_small"]; ?></td>
+							<td width="40%"><?php echo $g_options["font_small"]; ?><font color="<?php echo $g_options["table_head_text"]; ?>">&nbsp;<?php echo l('Address'); ?></font><?php echo $g_options["fontend_small"]; ?></td>
+							<td width="20%"><?php echo $g_options["font_small"]; ?><font color="<?php echo $g_options["table_head_text"]; ?>">&nbsp;<?php echo l('Statistics'); ?></font><?php echo $g_options["fontend_small"]; ?></td>
 						</tr>
 
 <?php
