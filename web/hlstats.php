@@ -80,7 +80,7 @@ require(INCLUDE_PATH . "/classes.inc.php");
 /**
  * load the language
  */
-if(LANGUAGE !== 'en' || SHOW_DEBUG === true) { // only do something if we do not use the default lang
+if(LANGUAGE !== 'en') { // only do something if we do not use the default lang
 	$langFile = getcwd().'/lang/'.LANGUAGE.'.ini.php';
 	if(!file_exists($langFile)) {
 		die('Language file coul not be loaded. Please check your LANGUAGE setting in configuration file.');

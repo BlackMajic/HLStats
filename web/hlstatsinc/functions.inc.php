@@ -503,7 +503,7 @@ function check_email_address($email) {
 function l($string) {
 	global $lData;
 
-	if(LANGUAGE === "en" && SHOW_DEBUG === false) {
+	if(LANGUAGE === "en") {
 		return $string;
 	}
 
