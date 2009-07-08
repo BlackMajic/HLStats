@@ -489,4 +489,34 @@ function check_email_address($email) {
 	}
 	return true;
 }
+
+/**
+ * plain and simple language function
+ * check if given string is a key in $lData array
+ * if so return it, if not return string
+ *
+ * of default lang is uses, return string immediately
+ *
+ * @param string $string
+ * @return strin $ret
+ */
+function l($string) {
+	global $lData;
+
+	if(LANGUAGE === "en" && DEBUG === false) {
+		return $string;
+	}
+
+	$ret = $string;
+	if(!empty($string)) {
+		if(isset($lData[$string])) {
+			$ret = $lData[$string];
+		}
+		elseif(DEBUG === true) {
+			die($string.' is missing !');
+		}
+	}
+
+	return $ret;
+}
 ?>

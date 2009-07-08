@@ -77,6 +77,19 @@ require('hlstatsinc/hlstats.conf.php');
 require(INCLUDE_PATH . "/functions.inc.php");
 require(INCLUDE_PATH . "/classes.inc.php");
 
+/**
+ * load the language
+ */
+if(LANGUAGE !== 'en') { // only do something if we do not use the default lang
+	$langFile = getcwd().'/lang/'.LANGUAGE.'/.ini.php';
+	if(!file_exists($langFile)) {
+		die('Language file coul not be loaded. Please check your LANGUAGE setting in configuration file.');
+	}
+	$lData = parse_ini_file($langFile);
+	if(empty($lData)) {
+		die('Language file could not be loaded. Please check your LANGUAGE setting in configuration file.');
+	}
+}
 
 // set utf-8 header
 // we have to save all the stuff with utf-8 to make it work !!
