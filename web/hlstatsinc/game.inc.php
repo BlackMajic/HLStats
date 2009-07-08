@@ -64,7 +64,7 @@ function showNews(id) {
 	<tr>
 		<td>
 			<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif">
-			<b>&nbsp;News</b><?php echo $g_options["fontend_normal"];?>
+			<b>&nbsp;<?php echo l('News'); ?></b><?php echo $g_options["fontend_normal"];?>
 			<table width="75%" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options["table_border"]; ?>">
 				<tr valign="top">
 					<td>
@@ -87,7 +87,7 @@ function showNews(id) {
 								<td colspan="2">
 									<?php echo $g_options["font_normal"]; ?>
 									<a href="javascript:showNews('<?php echo $i; ?>');"><?php echo htmlentities($rowdata['subject'],ENT_QUOTES, "UTF-8"); ?></a>
-									from <?php echo $rowdata['date']; ?>
+									<?php echo l('from'); ?> <?php echo $rowdata['date']; ?>
 								</td>
 							</tr>
 						</table>
@@ -100,7 +100,7 @@ function showNews(id) {
 							<tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
 								<td width="100">
 									<?php echo $g_options["font_normal"]; ?>
-									<b>Author</b>
+									<b><?php echo l('Author'); ?></b>
 									<?php echo $g_options["fontend_normal"];?>
 								</td>
 								<td width="*">
@@ -112,7 +112,7 @@ function showNews(id) {
 							<tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
 								<td width="100">
 									<?php echo $g_options["font_normal"]; ?>
-									<b>Subject</b>
+									<b><?php echo l('Subject'); ?></b>
 									<?php echo $g_options["fontend_normal"];?>
 								</td>
 								<td width="*">
@@ -174,9 +174,9 @@ function showNews(id) {
 						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt=spacer.gif><br>
 						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=weapons&amp;game=$game"; ?>"><b><?php echo l('Weapon Statistics...'); ?></b></a><br>
 						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt=spacer.gif><br>
-				        <img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=actions&amp;game=$game"; ?>"><b>Action Statistics...</b></a><br>
+				        <img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=actions&amp;game=$game"; ?>"><b><?php echo l('Action Statistics...'); ?></b></a><br>
 						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt="spacer.gif"><br>
-						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=maps&amp;game=$game"; ?>"><b>Map Statistics...</b></a><?php echo $g_options["fontend_normal"]; ?>
+						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=maps&amp;game=$game"; ?>"><b><?php echo l('Map Statistics...'); ?></b></a><?php echo $g_options["fontend_normal"]; ?>
 					</td>
 				</tr>
 			</table>

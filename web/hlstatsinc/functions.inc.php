@@ -503,7 +503,7 @@ function check_email_address($email) {
 function l($string) {
 	global $lData;
 
-	if(LANGUAGE === "en" && DEBUG === false) {
+	if(LANGUAGE === "en" && SHOW_DEBUG === false) {
 		return $string;
 	}
 
@@ -512,8 +512,8 @@ function l($string) {
 		if(isset($lData[$string])) {
 			$ret = $lData[$string];
 		}
-		elseif(DEBUG === true) {
-			die($string.' is missing !');
+		elseif(SHOW_DEBUG === true) {
+			die($string.' -------is missing !-------');
 		}
 	}
 
