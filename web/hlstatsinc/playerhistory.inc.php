@@ -86,12 +86,12 @@ else {
 
 
 pageHeader(
-	array($gamename, "Event History", $pl_name),
+	array($gamename, l("Event History"), $pl_name),
 	array(
 		$gamename=>$g_options["scripturl"] . "?game=$game",
-		"Player Rankings"=>$g_options["scripturl"] . "?mode=players&amp;game=$game",
-		"Player Details"=>$g_options["scripturl"] . "?mode=playerinfo&amp;player=$player",
-		"Event History"=>""
+		l("Player Rankings")=>$g_options["scripturl"] . "?mode=players&amp;game=$game",
+		l("Player Details")=>$g_options["scripturl"] . "?mode=playerinfo&amp;player=$player",
+		l("Event History")=>""
 	),
 	$pl_name
 );
@@ -435,7 +435,7 @@ $numitems = $result['ec'];
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 	<tr>
 		<td width="100%">
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Player Event History</b> (Last <?php echo DELETEDAYS; ?> Days)<?php echo $g_options["fontend_normal"];?><p>
+		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Player Event History'); ?></b> (<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?><p>
 		<?php
 			$table->draw($query, $numitems, 100);
 		?>
