@@ -58,8 +58,8 @@ pageHeader(
 
 	<table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
 		<tr valign="bottom">
-			<td width="75%"><?php echo $g_options["font_normal"]; ?><b>&#149;</b> Find a clan: <input type="text" name="q" size=20 maxlength=64 class="textbox"> <input type="submit" value="Search" class="smallsubmit"><?php echo $g_options["fontend_normal"]; ?></td>
-			<td width="25%" align="right" nowrap><?php echo $g_options["font_normal"]; ?>Go to <a href="<?php echo $g_options["scripturl"] . "?mode=players&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="player.gif">Player Rankings</a><?php echo $g_options["fontend_normal"]; ?></td>
+			<td width="75%"><?php echo $g_options["font_normal"]; ?><b>&#149;</b> <?php echo l('Find a clan'); ?>: <input type="text" name="q" size=20 maxlength=64 class="textbox"> <input type="submit" value="<?php echo l('Search'); ?>" class="smallsubmit"><?php echo $g_options["fontend_normal"]; ?></td>
+			<td width="25%" align="right" nowrap><?php echo $g_options["font_normal"]; ?><?php echo l('Go to'); ?> <a href="<?php echo $g_options["scripturl"] . "?mode=players&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="player.gif"><?php echo l('Player Rankings'); ?></a><?php echo $g_options["fontend_normal"]; ?></td>
 		</tr>
 	</table>
 </form>
@@ -163,8 +163,8 @@ pageHeader(
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
 <tr valign="bottom">
 	<td width="75%"><?php echo $g_options["font_normal"]; ?>
-		<b>&#149;</b> Only show clans with <input type="text" name="minmembers" size=4 maxlength=2 value="<?php echo $minmembers; ?>" class="textbox">
-		or more members. <input type="submit" value="Apply" class="smallsubmit"><?php echo $g_options["fontend_normal"]; ?>
+		<b>&#149;</b> <?php echo l('Only show clans with'); ?> <input type="text" name="minmembers" size=4 maxlength=2 value="<?php echo $minmembers; ?>" class="textbox">
+		<?php echo l('or more members'); ?>. <input type="submit" value="<?php echo l('Apply'); ?>" class="smallsubmit"><?php echo $g_options["fontend_normal"]; ?>
 	</td>
 </tr>
 </table>

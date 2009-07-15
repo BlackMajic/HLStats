@@ -40,8 +40,8 @@
  */
 
 pageHeader(
-	array($gamename, "Action Statistics"),
-	array($gamename=>"%s?game=$game", "Action Statistics"=>"")
+	array($gamename, l("Action Statistics")),
+	array($gamename=>"%s?game=$game", l("Action Statistics")=>"")
 );
 
 $tblPlayerActions = new Table(
@@ -103,8 +103,8 @@ $queryActions = mysql_query("SELECT
 <p>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td width="50%"><?php echo $g_options["font_normal"]; ?>From a total of <b><?php echo $totalactions; ?></b> actions (Last <?php echo DELETEDAYS; ?> Days)<?php echo $g_options["fontend_normal"]; ?></td>
-	<td width="50%" align="right"><?php echo $g_options["font_normal"]; ?>Back to <a href="<?php echo $g_options["scripturl"] . "?game=$game"; ?>"><?php echo $gamename; ?></a><?php echo $g_options["fontend_normal"]; ?></td>
+	<td width="50%"><?php echo $g_options["font_normal"]; ?><?php echo l('From a total of'); ?> <b><?php echo $totalactions; ?></b> <?php echo l('actions'); ?> (<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"]; ?></td>
+	<td width="50%" align="right"><?php echo $g_options["font_normal"]; ?><?php echo l('Back to'); ?> <a href="<?php echo $g_options["scripturl"] . "?game=$game"; ?>"><?php echo $gamename; ?></a><?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
 </table>
 </p>

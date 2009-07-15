@@ -42,8 +42,8 @@
 require(INCLUDE_PATH . "/search-class.inc.php");
 
 pageHeader(
-	array("Search"),
-	array("Search"=>"")
+	array(l("Search")),
+	array(l("Search")=>"")
 );
 
 $sr_query = '';

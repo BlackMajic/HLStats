@@ -146,13 +146,11 @@ function getSortArrow ($sort, $sortorder, $name, $longname,
 {
 	global $g_options;
 
-	if ($sortorder == "asc")
-	{
+	if ($sortorder == "asc") {
 		$sortimg = "sort-ascending.gif";
 		$othersortorder = "desc";
 	}
-	else
-	{
+	else {
 		$sortimg = "sort-descending.gif";
 		$othersortorder = "asc";
 	}
@@ -161,27 +159,23 @@ function getSortArrow ($sort, $sortorder, $name, $longname,
 			. "<a href=\"" . $g_options["scripturl"] . "?"
 			. makeQueryString($var_sort, $name, array($var_sortorder));
 
-	if ($sort == $name)
-	{
+	if ($sort == $name) {
 		$arrowstring .= "&amp;$var_sortorder=$othersortorder";
 	}
-	else
-	{
+	else {
 		$arrowstring .= "&amp;$var_sortorder=$sortorder";
 	}
 
-	if ($sorthash)
-	{
+	if ($sorthash) {
 		$arrowstring .= "#$sorthash";
 	}
 
 	$arrowstring .= "\" style=\"color: " . $g_options["table_head_text"]
 		. "\" title=\"Change sorting order\">"
 		. "<font color=\"" . $g_options["table_head_text"] . "\">"
-		. "$longname</font></a>";
+		. l($longname)."</font></a>";
 
-	if ($sort == $name)
-	{
+	if ($sort == $name) {
 		$arrowstring .= "&nbsp;<img src=\"" . $g_options["imgdir"] . "/$sortimg\""
 			. "width='7' height='7' hspace='4' border='0' align=\"middle\" alt=\"$sortimg\">";
 	}

@@ -152,8 +152,7 @@
 	echo "<a href=\"" . $g_options["scripturl"] . "\" style=\"color: " . $g_options["location_link"] . "\">HLStats</a>";
 
 	$i=0;
-	foreach ($location as $l=>$url)
-	{
+	foreach ($location as $l=>$url) {
 		$url = ereg_replace("%s", $g_options["scripturl"], $url);
 		echo ": ";
 

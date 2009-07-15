@@ -56,8 +56,8 @@ if (isset($_GET["rdlimit"])) {
 $rd2limit = $rdlimit * $rdlimit;
 
 pageHeader(
-	array($gamename, "Player Rankings"),
-	array($gamename=>"%s?game=$game", "Player Rankings"=>"")
+	array($gamename, l('Player Rankings')),
+	array($gamename=>"%s?game=$game", l('Player Rankings')=>"")
 );
 ?>
 
@@ -541,7 +541,7 @@ pageHeader(
 			<?php if (defined('ELORATING') && (ELORATING === "1" || ELORATING === "2")) { ?>
 				Don't show players with an RD higher than <input type="text" name="rdlimit" size=4 maxlength=3 value="<?php echo $rdlimit; ?>" class="textbox"> of 350. <input type="submit" value="Apply" class="smallsubmit"> (lower RD = more accurate rating)
 			<?php } else { ?>
-				Only show players with <input type="text" name="minkills" size=4 maxlength=2 value="<?php echo $minkills; ?>" class="textbox"> or more kills. <input type="submit" value="Apply" class="smallsubmit">
+				<?php echo l('Only show players with'); ?> <input type="text" name="minkills" size=4 maxlength=2 value="<?php echo $minkills; ?>" class="textbox"> <?php echo l('or more kills'); ?>. <input type="submit" value="<?php echo l('Apply'); ?>" class="smallsubmit">
 			<?php }
 				echo $g_options["fontend_normal"];
 			?>

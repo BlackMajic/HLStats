@@ -62,11 +62,11 @@ else {
 mysql_free_result($query);
 
 pageHeader(
-	array($gamename, "Weapon Details", htmlspecialchars($wep_name)),
+	array($gamename, l("Weapon Details"), htmlspecialchars($wep_name)),
 	array(
 		$gamename=>$g_options["scripturl"] . "?game=$game",
-		"Weapon Statistics"=>$g_options["scripturl"] . "?mode=weapons&amp;game=$game",
-		"Weapon Details"=>""
+		l("Weapon Statistics")=>$g_options["scripturl"] . "?mode=weapons&amp;game=$game",
+		l("Weapon Details")=>""
 	),
 	$wep_name
 );
@@ -140,8 +140,8 @@ mysql_free_result($queryCount);
 	<td colspan="2" height="10px">&nbsp;</td>
 </tr>
 <tr>
-	<td width="50%"><?php echo $g_options["font_normal"]; ?>From a total of <b><?php echo intval($totalkills); ?></b> kills (Last <?php echo DELETEDAYS; ?> Days)<?php echo $g_options["fontend_normal"]; ?></td>
-	<td width="50%" align="right"><?php echo $g_options["font_normal"]; ?>Back to <a href="<?php echo $g_options["scripturl"] . "?mode=weapons&amp;game=$game"; ?>">Weapon Statistics</a><?php echo $g_options["fontend_normal"]; ?></td>
+	<td width="50%"><?php echo $g_options["font_normal"]; ?><?php echo l("From a total of"); ?> <b><?php echo intval($totalkills); ?></b> <?php echo l('kills'); ?> (<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"]; ?></td>
+	<td width="50%" align="right"><?php echo $g_options["font_normal"]; ?><?php echo l('Back to'); ?> <a href="<?php echo $g_options["scripturl"] . "?mode=weapons&amp;game=$game"; ?>"><?php echo l('Weapon Statistics'); ?></a><?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
 
 </table><p>
