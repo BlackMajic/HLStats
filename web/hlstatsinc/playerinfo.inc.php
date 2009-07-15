@@ -176,11 +176,11 @@ mysql_free_result($query);
 
 // show header
 pageHeader(
-	array($gamename, "Player Details", $pl_name),
+	array($gamename, l("Player Details"), $pl_name),
 	array(
 		$gamename=>$g_options["scripturl"] . "?game=$game",
-		"Player Rankings"=>$g_options["scripturl"] . "?mode=players&game=$game",
-		"Player Details"=>""
+		l("Player Rankings")=>$g_options["scripturl"] . "?mode=players&game=$game",
+		l("Player Details")=>""
 	),
 	$pl_name
 );
@@ -194,8 +194,8 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td width="60%" colspan="2"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Player Profile</b><?php echo $g_options["fontend_normal"];?></td>
-	<td width="40%" colspan="2"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Statistics Summary</b><?php echo $g_options["fontend_normal"];?></td>
+	<td width="60%" colspan="2"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo l('Player Profile'); ?></b><?php echo $g_options["fontend_normal"];?></td>
+	<td width="40%" colspan="2"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo l('Statistics Summary'); ?></b><?php echo $g_options["fontend_normal"];?></td>
 </tr>
 <tr valign="top">
 	<td width="5%">&nbsp;</td>
@@ -208,7 +208,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					<td>
         					   <?php
                                 echo $g_options["font_normal"];
-                                echo "Member of Clan:";
+                                echo l("Member of Clan:");
                                 echo $g_options["fontend_normal"];
         					   ?>
         					</td>
@@ -224,7 +224,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         								. htmlspecialchars($playerdata["clan_name"]) . "</a>";
         						}
         						else {
-        							echo "(None.)";
+        							echo l('None');
         						}
         						echo $g_options["fontend_normal"];
         					   ?>
@@ -234,7 +234,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						echo "Real Name:";
+        						echo l("Real Name:");
         						echo $g_options["fontend_normal"];
         					   ?>
         					</td>
@@ -245,7 +245,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         							echo "<b>" . htmlspecialchars($playerdata["fullName"]) . "</b>";
         						}
         						else {
-        							echo "(Unknown.)";
+        							echo l("Unknown");
         						}
         						echo $g_options["fontend_normal"];
         					   ?>
@@ -255,7 +255,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						echo "E-mail Address:";
+        						echo l("E-mail Address");
         						echo $g_options["fontend_normal"];
         					   ?>
         					</td>
@@ -267,7 +267,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         							echo $email;
         						}
         						else {
-        							echo "(Unknown.)";
+        							echo l("Unknown");
         						}
         						echo $g_options["fontend_normal"];
         					   ?>
@@ -277,7 +277,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						echo "Home Page:";
+        						echo l("Home Page");
         						echo $g_options["fontend_normal"];
         					   ?>
         					</td>
@@ -289,7 +289,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         							echo $url;
         						}
         						else {
-        							echo "(Not specified.)";
+        							echo l("Not specified");
         						}
         						echo $g_options["fontend_normal"];
         					   ?>
@@ -299,7 +299,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						echo "ICQ Number:";
+        						echo l("ICQ Number");
         						echo $g_options["fontend_normal"];
         					   ?>
         					</td>
@@ -312,7 +312,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         								. htmlspecialchars($playerdata["icq"]) . "</a>";
         						}
         						else {
-        							echo "(Not specified.)";
+        							echo l("Not specified");
         						}
         						echo $g_options["fontend_normal"];
         					   ?>
@@ -322,7 +322,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						echo "Player ID:";
+        						echo l("Player ID");
         						echo $g_options["fontend_normal"];
         					   ?>
         					</td>
@@ -339,10 +339,10 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					   <?php
         						echo $g_options["font_normal"];
         						if (MODE == "LAN") {
-        							echo "IP Addresses:";
+        							echo l("IP Addresses");
         						}
         						else {
-        							echo "Unique ID(s):";
+        							echo l("Unique ID(s)");
         						}
         						echo $g_options["fontend_normal"];
         					   ?>
@@ -351,7 +351,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					   <?php
         						echo $g_options["font_normal"];
         						if (MODE == "NameTrack") {
-        						    echo "(Unknown.)";
+        						    echo l("Unknown");
         						}
         						else {
         							$query = mysql_query("
@@ -376,7 +376,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						echo "Last Connect:*";
+        						echo l("Last Connect*");
         						echo $g_options["fontend_normal"];
         					   ?>
         					   </td>
@@ -399,7 +399,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         							echo $lastevent;
         						}
         						else {
-        							echo "(No info)";
+        							echo l("No info");
         						}
         				        echo $g_options["fontend_normal"];
         				        mysql_free_result($query);
@@ -410,7 +410,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						echo "Total Connection Time:*";
+        						echo l("Total Connection Time*");
         						echo $g_options["fontend_normal"];
         					   ?>
         					   </td>
@@ -432,7 +432,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         							echo $tTime;
         						}
         						else {
-        							echo "(No info)";
+        							echo l("No info");
         						}
         				        echo $g_options["fontend_normal"];
         				        mysql_free_result($query);
@@ -444,7 +444,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						echo "Average Ping:*";
+        						echo l("Average Ping:");
         						echo $g_options["fontend_normal"];
         					   ?>
         					</td>
@@ -466,7 +466,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         							echo $av_ping;
         						}
         						else {
-        							echo "(No info)";
+        							echo l("No info");
         						}
         				        echo $g_options["fontend_normal"];
         				        mysql_free_result($query);
@@ -489,7 +489,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 					<td width="45%">
 					   <?php
 						echo $g_options["font_normal"];
-						echo "Points:";
+						echo l("Points");
 						echo $g_options["fontend_normal"];
 					   ?>
 					</td>
@@ -524,7 +524,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 					<td width="45%">
 					   <?php
 						echo $g_options["font_normal"];
-						echo "Rank:";
+						echo l("Rank");
 						echo $g_options["fontend_normal"];
 					   ?>
 					</td>
@@ -545,7 +545,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 							$ranKnum++;
 						}
 						mysql_free_result($query);
-						echo "<b>" . $statsArr[$player] . "</b> (ordered by Points)";
+						echo "<b>" . $statsArr[$player] . "</b> (".l('ordered by Points').")";
 						echo $g_options["fontend_normal"];
 					   ?>
 					</td>
@@ -555,7 +555,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 					<td width="45%">
 					   <?php
 						echo $g_options["font_normal"];
-						echo "Rating (RD):";
+						echo l("Rating (RD)");
 						echo $g_options["fontend_normal"];
 					   ?>
 					</td>
@@ -573,7 +573,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 					<td width="45%">
 					   <?php
 						echo $g_options["font_normal"];
-						echo "Kills:";
+						echo l("Kills");
 						echo $g_options["fontend_normal"];
 					   ?>
 					</td>
@@ -601,7 +601,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 					<td width="45%">
 					   <?php
 						echo $g_options["font_normal"];
-						echo "Deaths:";
+						echo l("Deaths");
 						echo $g_options["fontend_normal"];
 					   ?>
 					</td>
@@ -618,7 +618,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 					<td width="45%">
 					   <?php
 						echo $g_options["font_normal"];
-						echo "Suicides:";
+						echo l("Suicides");
 						echo $g_options["fontend_normal"];
 					   ?>
 					</td>
@@ -635,7 +635,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 					<td width="45%">
 					   <?php
 						echo $g_options["font_normal"];
-						echo "Kills per Death:";
+						echo l("Kills per Death");
 						echo $g_options["fontend_normal"];
 					   ?>
 					</td>
@@ -652,7 +652,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 					<td width="45%">
 					   <?php
 						echo $g_options["font_normal"];
-						echo "Teammate Kills:*";
+						echo l("Teammate Kills*");
 						echo $g_options["fontend_normal"];
 					   ?>
 					</td>
@@ -682,7 +682,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 					<td width="45%">
 					   <?php
 						echo $g_options["font_normal"];
-						echo "Weapon Accuracy:";
+						echo l("Weapon Accuracy");
 						echo $g_options["fontend_normal"];
 					   ?>
 					</td>
@@ -706,7 +706,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 						$playerdata["accuracy"] = $result['accuracy'];
 
 						if (empty($playerdata["accuracy"])){
-							echo "(Unknown.)";
+							echo l("Unknown");
 						}
 						else {
 							echo $playerdata["accuracy"] . "%";
@@ -721,9 +721,9 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 		</tr>
 		</table><br>
 		<?php echo  $g_options["font_normal"]; ?>
-		&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=playerhistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo htmlspecialchars($playerdata["lastName"]); ?>'s Event&nbsp;History</a><br />
-		&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=playerchathistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo htmlspecialchars($playerdata["lastName"]); ?>'s Chat&nbsp;History</a><br />
-		&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=search&st=player&q=<?php echo $pl_urlname; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/search.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="search.gif">Find other players with the same name</a><?php echo $g_options["fontend_normal"]; ?></td>
+		&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=playerhistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo('Event History'); ?></a><br />
+		&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=playerchathistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo l('Chat History'); ?></a><br />
+		&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=search&st=player&q=<?php echo $pl_urlname; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/search.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="search.gif"><?php echo l('Find other players with the same name'); ?></a><?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
 </table>
 <p>&nbsp;</p>
@@ -800,10 +800,10 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 <tr>
 	<td width="50%" align="left">
 		<a name="aliases"></a>
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Playtime per day</b> (hover over the bars to get more information)<?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b> <?php echo l('Playtime per day'); ?></b> (<?php echo l('hover over the bars to get more information'); ?>)<?php echo $g_options["fontend_normal"];?>
 	</td>
 	<td width="50%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(Last <?php echo DELETEDAYS; ?> Days)<?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
 	</td>
 </tr>
 <tr>
@@ -812,8 +812,8 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 		<div style="text-align: center; display: block;" id="flash_timeline">
 	        <div id="playerTimeline">
 				<?php echo $g_options["font_normal"]; ?>
-				<b>You need to upgrade your flash player</b><br />
-				<a href="http://www.adobe.com/go/getflashplayer" target="_blank">Get Flashplayer</a>
+				<b><?php echo l('You need to upgrade your flash player'); ?></b><br />
+				<a href="http://www.adobe.com/go/getflashplayer" target="_blank"><?php echo l('Get Flashplayer'); ?></a>
 				<?php echo $g_options["fontend_normal"];?>
 			</div>
 			<script type="text/javascript">
@@ -917,7 +917,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td width="100%"><a name="aliases"></a>
-<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Aliases</b><?php echo $g_options["fontend_normal"];?></td>
+<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b><?php echo l('Aliases'); ?></b><?php echo $g_options["fontend_normal"];?></td>
 </tr>
 <tr>
 	<td>
@@ -991,8 +991,8 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 <tr>
 	<td width="50%">
 		<a name="playeractions"></a>
-	<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Player Actions</b><?php echo $g_options["fontend_normal"];?>
-	<td width="50%" align="right"><?php echo $g_options["font_normal"]; ?>(Last <?php echo DELETEDAYS; ?> Days)<?php echo $g_options["fontend_normal"];?></td>
+	<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Player Actions'); ?></b><?php echo $g_options["fontend_normal"];?>
+	<td width="50%" align="right"><?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?></td>
 </tr>
 <tr>
 	<td colspan="2">
@@ -1065,10 +1065,10 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 <tr>
 	<td width="50%">
 		<a name="playerplayeractions"></a>
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Player-Player Actions</b><?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Player-Player Actions'); ?></b><?php echo $g_options["fontend_normal"];?>
 	</td>
 	<td width="50%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(Last <?php echo DELETEDAYS; ?> Days)<?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
 	</td>
 </tr>
 <tr>
@@ -1154,10 +1154,10 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 <tr>
 	<td width="50%">
 		<a name="teams"></a>
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Team Selection</b><?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Team Selection'); ?></b><?php echo $g_options["fontend_normal"];?>
 	</td>
 	<td width="50%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(Last <?php echo DELETEDAYS; ?> Days)<?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
 	</td>
 </tr>
 <tr>
@@ -1242,10 +1242,10 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 <tr>
 	<td width="50%">
 		<a name="roles"></a>
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Role Selection</b><?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Role Selection'); ?></b><?php echo $g_options["fontend_normal"];?>
 	</td>
 	<td width="50%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(Last <?php echo DELETEDAYS; ?> Days)<?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
 	</td>
 </tr>
 <tr>
@@ -1326,10 +1326,10 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 <tr>
 	<td width="50%">
 		<a name="weapons"></a>
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Weapon Usage</b><?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Weapon Usage'); ?></b><?php echo $g_options["fontend_normal"];?>
 	</td>
 	<td width="50%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(Last <?php echo DELETEDAYS; ?> Days)<?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
 	</td>
 </tr>
 <tr>
@@ -1446,10 +1446,10 @@ if (mysql_num_rows($query) != 0) {
 <tr>
 	<td width="50%">
 		<a name="weaponstats"></a>
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Weapon Stats</b><?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Weapon Stats'); ?></b><?php echo $g_options["fontend_normal"];?>
 	</td>
 	<td width="50%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(Last <?php echo DELETEDAYS; ?> Days)<?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
 	</td>
 </tr>
 <tr>
@@ -1566,10 +1566,10 @@ if (mysql_num_rows($query) != 0) {
 <tr>
 	<td width="50%">
 		<a name="weaponstats2"></a>
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Weapon Target</b><?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Weapon Target'); ?></b><?php echo $g_options["fontend_normal"];?>
 	</td>
 	<td width="50%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(Last <?php echo DELETEDAYS; ?> Days)<?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
 	</td>
 </tr>
 <tr>
@@ -1654,10 +1654,10 @@ if (mysql_num_rows($query) != 0) {
 <tr>
 	<td width="50%">
 		<a name="maps"></a>
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Map Performance</b><?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Map Performance'); ?></b><?php echo $g_options["fontend_normal"];?>
 	</td>
 	<td width="50%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(Last <?php echo DELETEDAYS; ?> Days)<?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last') ;?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
 	</td>
 </tr>
 <tr>
@@ -1786,10 +1786,10 @@ if (mysql_num_rows($query) != 0) {
 <tr>
   <td width="50%">
   	<a name="playerkills"></a>
-	<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Player Kill Statistics (<?php echo $killLimit ?> or more kills)</b><?php echo $g_options["fontend_normal"];?>
+	<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Player Kill Statistics'); ?> (<?php echo $killLimit ?> <?php echo l('or more kills'); ?>)</b><?php echo $g_options["fontend_normal"];?>
  </td>
 	<td width="50%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(Last <?php echo DELETEDAYS; ?> Days)<?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
 	</td>
 </tr>
 <tr>
@@ -1800,7 +1800,7 @@ if (mysql_num_rows($query) != 0) {
     	$tblPlayerKillStats->draw($query, $numitems, 100);
   	}
   	else {
-  		echo $g_options["font_normal"]."Data out of selected range".$g_options["fontend_normal"];
+  		echo $g_options["font_normal"].l("Data out of selected range").$g_options["fontend_normal"];
   	}
   	?>
   	</div>
@@ -1811,7 +1811,7 @@ if (mysql_num_rows($query) != 0) {
 	<td colspan="2">
 	<form method="GET" action="">
 	<?php echo $g_options["font_normal"]; ?>
-	Show people this person has killed
+	<?php echo l('Show people this person has killed'); ?>
 	<SELECT name="killLimit" onchange='changeLimit(this.options[this.selectedIndex].value)'>
 <?php
   for($j = 1; $j < 16; $j++) {
@@ -1821,7 +1821,7 @@ if (mysql_num_rows($query) != 0) {
 	}
 ?>
 	</select>
-	or more times in the last <?php echo DELETEDAYS; ?> days<?php echo $g_options["fontend_normal"];?>
+	<?php echo l('or more times in the last'); ?> <?php echo DELETEDAYS; ?> days<?php echo $g_options["fontend_normal"];?>
 	<script type="text/javascript" language="javascript">
 	<!--
 	function changeLimit(num) {
@@ -1883,10 +1883,10 @@ if (mysql_num_rows($query) != 0) {
 <tr>
   <td width="70%">
   	<a name="playerkillsperday"></a>
-	<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Player Kill Statistics per Day</b> (hover over the bars to get more information)<?php echo $g_options["fontend_normal"];?>
+	<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Player Kill Statistics per Day'); ?></b> (<?php echo l('hover over the bars to get more information'); ?>)<?php echo $g_options["fontend_normal"];?>
  </td>
 	<td width="30%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(Last <?php echo DELETEDAYS; ?> Days)<?php echo $g_options["fontend_normal"];?>
+		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
 	</td>
 </tr>
 <tr>
@@ -1895,8 +1895,8 @@ if (mysql_num_rows($query) != 0) {
 		<div style="text-align: center; display: block;" id="flash_timeline_kills">
 	        <div id="playerKills">
 				<?php echo $g_options["font_normal"]; ?>
-				<b>You need to upgrade your flash player</b><br />
-				<a href="http://www.adobe.com/go/getflashplayer" target="_blank">Get Flashplayer</a>
+				<b><?php echo l('You need to upgrade your flash player'); ?></b><br />
+				<a href="http://www.adobe.com/go/getflashplayer" target="_blank"><?php echo l('Get Flashplayer'); ?></a>
 				<?php echo $g_options["fontend_normal"];?>
 			</div>
 			<script type="text/javascript">
@@ -1922,10 +1922,10 @@ if (mysql_num_rows($query) != 0) {
 <p>&nbsp;</p>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
     <tr>
-    	<td width="100%"><?php echo $g_options["font_normal"]; ?><b>Note</b> Player event histories cover only the last <?php echo DELETEDAYS; ?> days. Items marked "Last <?php echo DELETEDAYS; ?> Days" or "*" above are generated from the player's Event History. Player kill, death and suicide totals and points ratings cover the entire recorded period.<?php echo $g_options["fontend_normal"];?></td>
+    	<td width="100%"><?php echo $g_options["font_normal"]; ?><b><?php echo l('Note'); ?></b> <?php echo l('Player event histories cover only the last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('days'); ?>. <?php echo l('Items marked "Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days" or "*" above are generated from the player\'s Event History. Player kill, death and suicide totals and points ratings cover the entire recorded period'); ?>.<?php echo $g_options["fontend_normal"];?></td>
     </tr>
     <tr>
     	<td width="100%" align="right"><br><br>
-    	<?php echo $g_options["font_small"]; ?><b>Admin Options:</b> <a href="<?php echo $g_options["scripturl"] . "?mode=admin&task=toolsEditdetailsPlayer&id=$player"; ?>">Edit Player Details</a><?php echo $g_options["fontend_small"]; ?></td>
+    	<?php echo $g_options["font_small"]; ?><b><?php echo l('Admin Options'); ?>:</b> <a href="<?php echo $g_options["scripturl"] . "?mode=admin&task=toolsEditdetailsPlayer&id=$player"; ?>"><?php echo l('Edit Player Details'); ?></a><?php echo $g_options["fontend_small"]; ?></td>
     </tr>
 </table>
