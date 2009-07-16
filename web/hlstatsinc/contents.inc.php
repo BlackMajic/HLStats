@@ -43,7 +43,9 @@ $queryAllGames = mysql_query("SELECT code,name FROM ".DB_PREFIX."_Games WHERE hi
 $num_games = mysql_num_rows($queryAllGames);
 if(!empty($_GET['game'])) {
 	if(validateInput($_GET['game'],'nospace')) {
-		$query = mysql_query("SELECT code,name FROM ".DB_PREFIX."_Games WHERE hidden='0'");
+		$query = mysql_query("SELECT code,name FROM ".DB_PREFIX."_Games
+								WHERE hidden='0'
+									AND `code` = '".$_GET['game']."'");
 		$result = mysql_fetch_assoc($query);
 		if(!empty($result)) {
 			$game = $result['code'];
