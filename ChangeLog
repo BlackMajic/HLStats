@@ -2,6 +2,7 @@ HLStats ChangeLog
 ==============
 
 1.51 (TBA)
+*) New: Rloes pictures in player info page if available.
 *) Updated: TF2 Weapon pics
 *) Changed: import-tools.sh removed (can be found in the docs now)
 *) Changed: HLstats is now HLStats

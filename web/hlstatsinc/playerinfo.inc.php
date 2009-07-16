@@ -1178,7 +1178,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 			new TableColumn(
 				"name",
 				"Role",
-				"width=35"
+				"width=35&type=roleimg"
 			),
 			new TableColumn(
 				"rolecount",
@@ -1216,7 +1216,8 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 		SELECT
 			IFNULL(".DB_PREFIX."_Roles.name, ".DB_PREFIX."_Events_ChangeRole.role) AS name,
 			COUNT(".DB_PREFIX."_Events_ChangeRole.id) AS rolecount,
-			COUNT(".DB_PREFIX."_Events_ChangeRole.id) / $numrolejoins * 100 AS percent
+			COUNT(".DB_PREFIX."_Events_ChangeRole.id) / $numrolejoins * 100 AS percent,
+			".DB_PREFIX."_Roles.code AS rolecode
 		FROM
 			".DB_PREFIX."_Events_ChangeRole
 		LEFT JOIN ".DB_PREFIX."_Roles ON

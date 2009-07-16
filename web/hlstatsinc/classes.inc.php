@@ -209,11 +209,13 @@ class Table
 
 
 
-				if ($col->icon)
-				{
+				if ($col->icon) {
 					$cellbody = "&nbsp;";
 				}
 
+				// this needs to be changed.
+				// remove table class and do it for every table manually
+				// this way to do not have those if masages
 				if($col->name == "skill") {
 					// check if we have a top or flop
 					if(empty($rowdata['oldSkill'])) {
@@ -248,7 +250,6 @@ class Table
 						. "/$col->icon.gif\" width='16' height='16' hspace='4' "
 						. "border='0' align=\"middle\" alt=\"$col->icon.gif\">";
 				}
-
 				switch ($col->type)
 				{
 					case "weaponimg":
@@ -301,7 +302,15 @@ class Table
 
 						$cellbody .= "\" height=10 border='0' alt=\"$colval%\">";
 
-						break;
+					break;
+
+					case 'roleimg':
+						$cellbody .= $colval;
+						if(file_exists($g_options["imgdir"].'/roles/'.$game.'/'.$rowdata['rolecode'].'.png')) {
+							$cellbody .= '<img src="'.$g_options["imgdir"].'/roles/'.$game.'/'.$rowdata['rolecode'].'.png"
+										hspace="10" border="0" align="middle" alt="'.$rowdata['rolecode'].'">';
+						}
+					break;
 
 					default:
 						if ($this->showranking && $rank == 1 && $i == 1)
