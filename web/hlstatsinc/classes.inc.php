@@ -306,6 +306,7 @@ class Table
 
 					case 'roleimg':
 						$cellbody .= $colval;
+						$rowdata['rolecode'] = str_replace('#','',$rowdata['rolecode']);
 						if(file_exists($g_options["imgdir"].'/roles/'.$game.'/'.$rowdata['rolecode'].'.png')) {
 							$cellbody .= '<img src="'.$g_options["imgdir"].'/roles/'.$game.'/'.$rowdata['rolecode'].'.png"
 										hspace="10" border="0" align="middle" alt="'.$rowdata['rolecode'].'">';

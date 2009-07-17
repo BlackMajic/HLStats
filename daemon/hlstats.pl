@@ -1284,20 +1284,16 @@ EOT
 
 	# Delete events over $g_deletedays days old, at every 500th iteration of the main loop
 
-	if ($c % 500 == 0 && $g_deletedays != 0)
-	{
-		if ($g_debug > 0)
-		{
+	if ($c % 5000 == 0 && $g_deletedays != 0) {
+		if ($g_debug > 0) {
 			print "\n-- Cleaning up database: deleting events older than $g_deletedays days ...\n";
 		}
 
 		my $deleteType = "";
 		$deleteType = " LOW_PRIORITY" if ($db_lowpriority);
 
-		foreach $eventTable (keys(%g_eventTables))
-		{
-			if ($g_debug > 0)
-			{
+		foreach $eventTable (keys(%g_eventTables)) {
+			if ($g_debug > 0) {
 				print "-> ${db_prefix}_Events_$eventTable ... "
 			}
 
@@ -1308,14 +1304,12 @@ EOT
 					eventTime < DATE_SUB(CURRENT_TIMESTAMP(), INTERVAL $g_deletedays DAY)
 			");
 
-			if ($g_debug > 0)
-			{
+			if ($g_debug > 0) {
 				print "OK\n";
 			}
 		}
 
-		if ($g_debug > 0)
-		{
+		if ($g_debug > 0) {
 			print "-- Database cleanup complete.\n\n";
 		}
 	}

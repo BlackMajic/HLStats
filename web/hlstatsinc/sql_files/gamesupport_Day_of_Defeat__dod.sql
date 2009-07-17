@@ -70,22 +70,23 @@ INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_brit_light','B
 INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_brit_medium','British Sergeant Major','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_brit_sniper','British Marksman','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_brit_heavy','British Gunner','0');
+INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_allied_bazooka','American Bazooka','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axis_kar98','Axis Grenadier','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axis_k43','Axis Stosstruppe','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axis_mp40','Axis Unteroffizier','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axis_mp44','Axis Sturmtruppe','0');
-INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axis_sniper','Axis Scharfsch�tze','0');
-INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axis_mg34','Axis MG34-Sch�tze','0');
-INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axis_mg42','Axis MG42-Sch�tze','0');
+INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axis_sniper','Axis Scharfschütze','0');
+INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axis_mg34','Axis MG34-Schütze','0');
+INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axis_mg42','Axis MG42-Schütze','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axispara_kar98','Axis Para Grenadier','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axispara_k43','Axis Para Stosstruppe','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axispara_mp40','Axis Para Unteroffizier','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axispara_mp44','Axis Para Sturmtruppe','0');
-INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axispara_scopedkar','Axis Para Scharfsch�tze','0');
+INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axispara_scopedkar','Axis Para Scharfschütze','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axispara_fg42bipod','Axis Para Fg42-Zweinbein','0');
 INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axispara_fg42scope','Axis Para Fg42-Zielfernrohr','0');
-INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axispara_mg34','Axis Para MG34-Sch�tze','0');
-INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axispara_mg42','Axis Para MG42-Sch�tze','0');
+INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axispara_mg34','Axis Para MG34-Schütze','0');
+INSERT IGNORE INTO ++DB_PREFIX++_Roles VALUES (NULL,'dod','#class_axispara_mg42','Axis Para MG42-Schütze','0');
 
 
 #

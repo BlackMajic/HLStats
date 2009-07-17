@@ -4,6 +4,7 @@ HLStats ChangeLog
 1.51 (TBA)
 *) New: Rloes pictures in player info page if available.
 *) Updated: TF2 Weapon pics
+*) Changed: Period for event deletion in hlstats.pl increased.
 *) Changed: import-tools.sh removed (can be found in the docs now)
 *) Changed: HLstats is now HLStats
 *) Chnaged: Moved functions from hlstats.pl to HLstats.plib

@@ -917,24 +917,19 @@ sub doEvent_TeamScoreReport
 # 017. Server Cvars
 #
 
-sub doEvent_ServerCvar
-{
+sub doEvent_ServerCvar {
 	my ($type, $var, $value) = @_;
 
-	if ($type eq "start")
-	{
+	if ($type eq "start") {
 		return "Server cvars start";
 	}
-	elsif ($type eq "end")
-	{
+	elsif ($type eq "end") {
 		return "Server cvars end";
 	}
-	elsif ($type eq "var")
-	{
+	elsif ($type eq "var") {
 		return "Server cvar \"$var\" = \"$value\"";
 	}
-	else
-	{
+	else {
 		return "Server cvars: $type";
 	}
 }
@@ -944,20 +939,16 @@ sub doEvent_ServerCvar
 # 018. Log File
 #
 
-sub doEvent_LogFile
-{
+sub doEvent_LogFile {
 	my ($type) = @_;
 
-	if ($type eq "start")
-	{
+	if ($type eq "start") {
 		return "Log file started";
 	}
-	elsif ($type eq "end")
-	{
+	elsif ($type eq "end") {
 		return "Log file closed";
 	}
-	else
-	{
+	else {
 		return "Log file: $type";
 	}
 }

@@ -886,7 +886,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 		"aliases"
 	);
 
-	$result = mysql_query("
+	$queryAlias = mysql_query("
 		SELECT
 			name,
 			lastuse,
@@ -923,7 +923,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 	<td>
 	<div style="margin-top: 10px; margin-left: 40px;">
 	<?php
-		$tblAliases->draw($result, $numitems, 100);
+		$tblAliases->draw($queryAlias, $numitems, 100);
 	?>
 	</div>
 	</td>
