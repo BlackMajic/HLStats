@@ -1197,7 +1197,7 @@ while ($loop = &getLine()) {
 		}
 
 		#
-		# l4d support ffor the kills
+		# l4d support for the kills
 		# this has a non standart log format
 		#
 

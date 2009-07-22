@@ -12,6 +12,15 @@
 INSERT IGNORE INTO ++DB_PREFIX++_Games VALUES ('l4d','Left 4 dead','1','0');
 
 #
+# Awards
+#
+INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','autoshotgun','Auto Shotgut','Kills with autoshotgut',NULL,NULL);
+INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','boomer_claw','Boom!','kills with Boomer\'s Claws',NULL,NULL);
+INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','hunter_claw','Open Season','kills with Hunter\'s Claws',NULL,NULL);
+INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','smoker_claw','Chain Smoker','kills with Smoker\'s Claws',NULL,NULL);
+INSERT IGNORE INTO ++DB_PREFIX++_Awards VALUES (NULL,'W','tf2','tank_claw','Burger Tank','kills with Taker\'s Claws',NULL,NULL);
+
+#
 # Actions
 #
 #INSERT INTO ++DB_PREFIX++_Actions VALUES(116, 'l4d', 'builtobject_OBJ_ATTACHMENT_SAPPER', 1, 0, '', 'Built Object - Attachment Sapper', '1', '0', '0', '0');
