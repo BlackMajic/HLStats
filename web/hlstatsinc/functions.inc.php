@@ -513,4 +513,40 @@ function l($string) {
 
 	return $ret;
 }
+
+/**
+ * Format an interval value with the requested granularity.
+ *
+ * @param integer $timestamp The length of the interval in seconds.
+ * @param integer $granularity How many different units to display in the string.
+ * @return string A string representation of the interval.
+ */
+function getInterval($timestamp, $granularity = 2) {
+    $seconds = time() - $timestamp;
+    $units = array(
+        '1 '.l('year').'|:count '.l('years') => 31536000,
+        '1 '.l('week').'|:count '.l('weeks') => 604800,
+        '1 '.l('day').'|:count '.l('days') => 86400,
+        '1 '.l('hour').'|:count '.l('hours') => 3600,
+        '1 '.l('min').'|:count '.l('mins') => 60,
+        '1 '.l('sec').'|:count '.l('secs') => 1);
+    $output = '';
+    foreach ($units as $key => $value) {
+        $key = explode('|', $key);
+        if ($seconds >= $value) {
+            $count = floor($seconds / $value);
+            $output .= ($output ? ' ' : '');
+            $output .= ($count == 1) ? $key[0] : str_replace(':count', $count, $key[1]);
+            $seconds %= $value;
+            $granularity--;
+        }
+        if ($granularity == 0) {
+            break;
+        }
+    }
+
+    return $output ? $output : '0 sec';
+}
+
+
 ?>

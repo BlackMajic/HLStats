@@ -15,9 +15,37 @@ Subject = Betreff;
 Message = Nachricht
 Posted at = geschrieben am;
 
+Contents = Übersicht;
+Games = Spiele;
+Game = Spiel;
+Top Player = Top Spieler;
+Top Clan = Top Clan;
+Players = Spieler;
+Clans = Clans;
+General Statistics = Statistic Übersicht;
+players and = Spieler und;
+ranked in = in;
+games on = Spielen auf;
+Servers = Servern;
+ago = her;
+
+year = Jahr;
+week = Woche;
+day = Tag;
+hour = Stunde;
+min = Minute;
+sec = Sekunde;
+
+years = Jahre;
+weeks = Wochen;
+days = Tage;
+hours = Stunden;
+mins = Minuten;
+secs = Sekunden;
+
 Awards = Auszeichnungen;
 Daily = Tägliche;
-Day = Tages;
+Day = Tag;
 
 Apply = Anwenden;
 ID = ID;
@@ -30,8 +58,6 @@ Kills per Death = Frags/Todesfall;
 Tag = Hundemarke;
 Members = Mitglieder;
 Last = Letzte;
-Days = "Tage(n)";
-days = "Tage(n)";
 Back to = Zurück zu;
 Find a player = Finde Spieler;
 Search = Suchen;
