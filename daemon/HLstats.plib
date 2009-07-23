@@ -372,6 +372,22 @@ sub recordEvent {
 	$result->finish;
 }
 
+#
+# check if the event is availabe in the DB
+#
+sub checkEvent {
+	my ($eventCode,$event) = @_;
+
+	my %switch = ("frag" => "Weapons");
+	if($switch{$eventCode}) {
+		print $switch{$eventCode};
+		exit 0;
+	}
+	else {
+		return 0;
+	}
+}
+
 
 #
 # array calcSkill (int killerSkill, int victimSkill, string weapon)
@@ -868,8 +884,8 @@ sub getPlayerInfo
 	}
 	else
 	{
-		if ($g_mode ne "LAN" || $forced_uniqueid)
-		{
+		if ($g_mode ne "LAN" || $forced_uniqueid) {
+
 			# Add the player to our hash of player objects
 
 			$g_players{"$s_addr/$userid"} = new HLstats_Player(

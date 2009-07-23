@@ -298,13 +298,14 @@ sub doEvent_ChangeName
 
 sub doEvent_Frag
 {
-	my ($killerId, $victimId, $weapon) = @_;
+	my ($killerId, $victimId, $weaponCode) = @_;
 
 	my $desc;
 	my $killer = $g_players{"$s_addr/$killerId"};
 	my $victim = $g_players{"$s_addr/$victimId"};
 	my $killerstr = &getPlayerInfoString($killer, $killerId);
 	my $victimstr = &getPlayerInfoString($victim, $victimId);
+	my $weapon = &checkEvent($weaponCode,"Frags");
 
 	my $killerdiff;
 	my $victimdiff;

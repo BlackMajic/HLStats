@@ -45,14 +45,26 @@
 	if (isset($_POST['submitReset'])) {
 
 		// we need first the playids for this game
+		$players = array();
 		$query = mysql_query("SELECT playerId FROM ".DB_PREFIX."_Players WHERE game = '".$gamecode."'");
 		while($result = mysql_fetch_assoc($query)) {
 			$players[]= $result['playerId'];
 		}
-		if(count($players) < 1) {
+		if(empty($players)) {
 			die("Fatal error: No players found for this game.");
 		}
 		$playerIdString = implode(",",$players);
+
+		// get the servers for this game
+		$serversArr = array();
+		$query = mysql_query("SELECT serverId FROM ".DB_PREFIX."_Servers WHERE game = '".$gamecode."'");
+		while($result = mysql_fetch_assoc($query)) {
+			$serversArr[]= $result['serverId'];
+		}
+		if(empty($serversArr)) {
+			die("Fatal error: No players found for this game.");
+		}
+		$serversArrString = implode(",",$serversArr);
 
 
 		$query = mysql_query("SHOW TABLES LIKE '".DB_PREFIX."_Events_%'");
@@ -61,7 +73,7 @@
 				There may be something wrong with your hlstats database or your version of MySQL.");
 		}
 
-		while (list($table) = mysql_fetch_array($result)) {
+		while (list($table) = mysql_fetch_array($query)) {
 			$dbtables[] = $table;
 		}
 
@@ -74,10 +86,10 @@
 		echo "<ul>\n";
 		foreach ($dbtables as $dbt) {
 			echo "<li>$dbt ... ";
-			if($dbt == '".DB_PREFIX."_Events_Frags' || $dbt == '".DB_PREFIX."_Events_Teamkills') {
+			if($dbt == DB_PREFIX.'_Events_Frags' || $dbt == DB_PREFIX.'_Events_Teamkills') {
 				if (mysql_query("DELETE FROM ".$dbt."
 									WHERE killerId IN (".$playerIdString.")
-										OR victimId IN (".$playerIdString.")", false)) {
+										OR victimId IN (".$playerIdString.")")) {
 					echo "OK\n";
 				}
 				else {
@@ -85,9 +97,18 @@
 				}
 
 			}
+			elseif($dbt == DB_PREFIX.'_Events_Admin' || $dbt == DB_PREFIX.'_Events_Rcon') {
+				if (mysql_query("DELETE FROM ".$dbt."
+									WHERE serverId IN (".$serversArrString.")")) {
+					echo "OK\n";
+				}
+				else {
+					echo "Error for Table:".$dbt."\n";
+				}
+			}
 			else {
 				if (mysql_query("DELETE FROM ".$dbt."
-									WHERE playerId IN (".$playerIdString.")", false)) {
+									WHERE playerId IN (".$playerIdString.")")) {
 					echo "OK\n";
 				}
 				else {
@@ -102,7 +123,7 @@
 		foreach ($dbtablesGamecode as $dbtGame) {
 			echo "<li>$dbtGame ... ";
 			if (mysql_query("DELETE FROM ".$dbtGame."
-								WHERE game = '".$gamecode."'", false)) {
+								WHERE game = '".$gamecode."'")) {
 
 				echo "OK\n";
 			}

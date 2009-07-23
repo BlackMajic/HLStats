@@ -87,10 +87,8 @@ sub new
 	$self->setUniqueId($params{uniqueid});
 	$self->setName($params{name});
 
-	while (my($key, $value) = each(%params))
-	{
-		if ($key ne "name" && $key ne "uniqueid")
-		{
+	while (my($key, $value) = each(%params)) {
+		if ($key ne "name" && $key ne "uniqueid") {
 			$self->set($key, $value);
 		}
 	}
@@ -194,8 +192,7 @@ sub setUniqueId
 
 	my $playerid = &::getPlayerId($uniqueid);
 
-	if ($playerid)
-	{
+	if ($playerid){
 		# An existing player. Get their skill rating.
 
 		my $query = "
@@ -210,8 +207,7 @@ sub setUniqueId
 		($self->{skill}, $self->{rating}, $self->{rd2}, $self->{rating_last}) = $result->fetchrow_array;
 		$result->finish;
 	}
-	else
-	{
+	else {
 		# This is a new player. Create a new record for them in the Players
 		# table.
 
