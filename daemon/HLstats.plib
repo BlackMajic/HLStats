@@ -378,10 +378,19 @@ sub recordEvent {
 sub checkEvent {
 	my ($eventCode,$event) = @_;
 
-	my %switch = ("frag" => "Weapons");
-	if($switch{$eventCode}) {
-		print $switch{$eventCode};
-		exit 0;
+	my %switch = ( "Frags" => "Weapons");
+	if($switch{$event}) {
+		my $query = &doQuery("SELECT code
+					FROM ${db_prefix}_$switch{$event}
+					WHERE code = '$eventCode'");
+		my $wc = $query->fetchrow_array();
+		$query->finish;
+		if($wc) {
+			return $wc;
+		}
+		else {
+			return 0;
+		}
 	}
 	else {
 		return 0;

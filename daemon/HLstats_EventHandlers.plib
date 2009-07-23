@@ -307,6 +307,11 @@ sub doEvent_Frag
 	my $victimstr = &getPlayerInfoString($victim, $victimId);
 	my $weapon = &checkEvent($weaponCode,"Frags");
 
+	if(!$weapon) {
+		print "----code not there ".$weaponCode."\n";
+		exit;
+	}
+
 	my $killerdiff;
 	my $victimdiff;
 	my $kskill;
@@ -316,7 +321,7 @@ sub doEvent_Frag
 	{
 		$desc = "(IGNORED) NOTMINPLAYERS: ";
 	}
-	elsif ($killer && $victim)
+	elsif ($killer && $victim && $weapon)
 	{
 		if (!&sameTeam($killer->{team}, $victim->{team}))
 		{
