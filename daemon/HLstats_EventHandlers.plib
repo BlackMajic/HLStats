@@ -296,8 +296,7 @@ sub doEvent_ChangeName
 # 008. Frag
 #
 
-sub doEvent_Frag
-{
+sub doEvent_Frag {
 	my ($killerId, $victimId, $weaponCode) = @_;
 
 	my $desc;
@@ -306,11 +305,6 @@ sub doEvent_Frag
 	my $killerstr = &getPlayerInfoString($killer, $killerId);
 	my $victimstr = &getPlayerInfoString($victim, $victimId);
 	my $weapon = &checkEvent($weaponCode,"Frags");
-
-	if(!$weapon) {
-		print "----code not there ".$weaponCode."\n";
-		exit;
-	}
 
 	my $killerdiff;
 	my $victimdiff;
@@ -389,9 +383,8 @@ sub doEvent_Frag
 			}
 		}
 	}
-	else
-	{
-		$desc = "(IGNORED) NOPLAYERINFO: ";
+	else {
+		$desc = "(IGNORED) NOPLAYERINFO/NOWEAPONINFO: ";
 	}
 
 	return $desc . $killerstr . " killed " . $victimstr . " with \"$weapon\"";
@@ -497,12 +490,10 @@ sub doEvent_PlayerAction
 
 	$action =~ s/ /_/g;
 
-	if ($g_servers{$s_addr}->{numplayers} < $g_minplayers)
-	{
+	if ($g_servers{$s_addr}->{numplayers} < $g_minplayers) {
 		$desc = "(IGNORED) NOTMINPLAYERS: ";
 	}
-	elsif ($player)
-	{
+	elsif ($player) {
 		# we know with NS that we'll have (type: "something") if %type is not false
 		if ($type{type}) {
 			$action .= '_' . $type{type};
@@ -541,8 +532,7 @@ sub doEvent_PlayerAction
 		";
 		my $result = &doQuery($query);
 
-		if ($result->rows == 1)
-		{
+		if ($result->rows == 1) {
 			my ($actionid, $reward_player, $reward_team, $team) = $result->fetchrow_array;
 			$result->finish;
 
@@ -566,8 +556,7 @@ sub doEvent_PlayerAction
                 }
             }
 		}
-		else
-		{
+		else {
 			$desc = "(IGNORED) ";
 		}
 	}

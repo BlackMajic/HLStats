@@ -813,8 +813,8 @@ sub getPlayerInfo
 
 		# the zombies do not have a uniqueid
 		if(!$uniqueid) {
-			$uniqueid = "zombie_".$userid;
-			$name .= "_".$userid;
+			$uniqueid = "zombie:".$userid;
+			$name .= ":".$userid;
 		}
 	}
 	elsif ($player =~ /^(.+)<(\d+)><([^<>]+)><([^<>]*)>$/) {
@@ -835,18 +835,14 @@ sub getPlayerInfo
 	return 0 if ($uniqueid eq "HLTV");
 
 
-	if ($forced_uniqueid)
-	{
+	if ($forced_uniqueid) {
 		$uniqueid = $forced_uniqueid;
 	}
-	elsif ($g_mode eq "NameTrack")
-	{
+	elsif ($g_mode eq "NameTrack") {
 		$uniqueid = $name;
 	}
-	else
-	{
-		if (($uniqueid =~ /PENDING/) || ($uniqueid =~ /VALVE_ID_LAN/))
-		{
+	else {
+		if (($uniqueid =~ /PENDING/) || ($uniqueid =~ /VALVE_ID_LAN/)) {
 			return {
 				name     => $name,
 				userid   => $userid,
@@ -855,10 +851,8 @@ sub getPlayerInfo
 			};
 		}
 
-		foreach $botid (split(/:/, $g_bot_ids))
-		{
-			if ($botid eq $uniqueid)
-			{
+		foreach $botid (split(/:/, $g_bot_ids)) {
+			if ($botid eq $uniqueid) {
 				$md5 = Digest::MD5->new;
 				$md5->add($name);
 				$md5->add($s_addr);
