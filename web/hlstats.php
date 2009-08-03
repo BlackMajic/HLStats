@@ -42,11 +42,11 @@
 if (version_compare(phpversion(), "5.0.0", "<")) {
 	die("HLStats requires PHP version 5.0.0 or newer (you are running PHP version " . phpversion() . ").");
 }
-
+/*
 if (!get_magic_quotes_gpc()) {
 	die("HLStats requires <b>magic_quotes_gpc</b> to be <i>enabled</i>. Check your php.ini or refer to the PHP manual for more information.");
 }
-
+*/
 if (get_magic_quotes_runtime()) {
 	die("HLStats requires <b>magic_quotes_runtime</b> to be <i>disabled</i>. Check your php.ini or refer to the PHP manual for more information.");
 }
