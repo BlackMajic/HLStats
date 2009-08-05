@@ -126,13 +126,13 @@ $g_ignore_bots = $Config->{Options}->{IgnoreBots};
 $g_ingame_points = $Config->{Options}->{IngamePoints};
 $g_rating_system = $Config->{Options}->{EloRating};
 $g_rating_system_verbose = $Config->{Options}->{EloRatingVerbose};
+$g_option_strip_tags = $Config->{Options}->{StripTags};
 
 # Options
 # default values
 
 $opt_help = 0;
 $opt_version = 0;
-$g_bot_ids = "BOT:0";
 $g_lan_hack = 1;
 
 
@@ -362,22 +362,15 @@ while ($loop = &getLine()) {
 
 	$s_addr = "$s_peerhost:$s_peerport";
 
-	### BOT REMOVAL
-	if($g_ignore_bots) {
-		if($s_output =~ s/^BOT://g) {
-			&printEvent(999, "IGNORED (BOT): " . $s_output);
-			next;
-		}
-	}
-	### BOT REMOVAL
-
-	## strip tags
+	## unwanted chars
 	$s_output =~ s/[\r\n\0]//g;	# remove naughty characters
-	$s_output =~ s/\[No.C-D\]//g;	# remove [No C-D] tag
-	$s_output =~ s/\[OLD.C-D\]//g;	# remove [OLD C-D] tag
-	$s_output =~ s/\[NOCL\]//g;	# remove [NOCL] tag
-	$s_output =~ s/\([0-9]\)//g;	# strip (1) and (2) from player names
-	## strip tags end
+
+	if($g_option_strip_tags) {
+		$s_output =~ s/\[No.C-D\]//g;	# remove [No C-D] tag
+		$s_output =~ s/\[OLD.C-D\]//g;	# remove [OLD C-D] tag
+		$s_output =~ s/\[NOCL\]//g;	# remove [NOCL] tag
+		$s_output =~ s/\([0-9]\)//g;	# strip (1) and (2) from player names
+	}
 
 	# Get the server info, if we know the server, otherwise ignore the data
 	if (!$g_servers{$s_addr}) {
@@ -1225,6 +1218,11 @@ while ($loop = &getLine()) {
 
 
 	if ($ev_type) {
+		# Update the rating system.
+		if($g_rating_system eq "1" || $g_rating_system eq "2") {
+			$ratingsys->update();
+		}
+
 		if ($g_debug > 2) {
 			print <<EOT
 type   = "$ev_type"
@@ -1258,10 +1256,7 @@ EOT
 		&printEvent(999, "UNRECOGNISED: " . $s_output);
 	}
 
-	# Update the rating system.
-	if($g_rating_system eq "1" || $g_rating_system eq "2") {
-    	$ratingsys->update();
-    }
+
 
 	# Clean up
 	while ( my($pl, $player) = each(%g_players) ) {

@@ -830,9 +830,15 @@ sub getPlayerInfo
 		return 0;
 	}
 
-	# Don't connect Mr. Console or HLTV, they should not be recorded as players!
+	# Don't connect Mr. Console or HLTV or BOT, they should not be recorded as players!
 	return 0 if ($uniqueid eq "Console");
 	return 0 if ($uniqueid eq "HLTV");
+	if($g_ignore_bots) {
+		return 0 if ($uniqueid eq "BOT");
+		print "bot ?\n";
+		print $player."\n";
+		exit;
+	}
 
 
 	if ($forced_uniqueid) {
@@ -850,19 +856,13 @@ sub getPlayerInfo
 				team     => $team
 			};
 		}
+		elsif($uniqueid =~ /BODT/) {
+			$md5 = Digest::MD5->new;
+			$md5->add($name);
+			$md5->add($s_addr);
 
-		foreach $botid (split(/:/, $g_bot_ids)) {
-			if ($botid eq $uniqueid) {
-				$md5 = Digest::MD5->new;
-				$md5->add($name);
-				$md5->add($s_addr);
-
-				$uniqueid = "BOT:" . $md5->hexdigest;
-
-				$forced_uniqueid = $uniqueid if ($g_mode eq "LAN");
-
-				last;
-			}
+			$uniqueid = "BOT:" . $md5->hexdigest;
+			$forced_uniqueid = $uniqueid if ($g_mode eq "LAN");
 		}
 	}
 
