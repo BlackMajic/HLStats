@@ -417,11 +417,11 @@ pageHeader(
 		}
 		$result = mysql_query($query);
 
-		$query = "SELECT COUNT(*) AS pc
+		$query = mysql_query("SELECT COUNT(*) AS pc
 					FROM `".DB_PREFIX."_Players`
 					WHERE game='".$game."'
 						AND hideranking=0
-						AND rd2 <= $rd2limit";
+						AND rd2 <= $rd2limit");
 		$resultCount = mysql_fetch_assoc($query);
 
 		$numitems = $resultCount['pc'];
@@ -471,7 +471,7 @@ pageHeader(
 		);
 
 		if(defined('HIDE_BOTS') && HIDE_BOTS == "1") {
-	    	$query = "SELECT
+	    	$query = mysql_query("SELECT
 	    			t1.playerId,
 	    			lastName,
 	    			oldSkill,
@@ -481,8 +481,7 @@ pageHeader(
 	    			IFNULL(kills/deaths, '-') AS kpd
 	    		FROM
 	    			".DB_PREFIX."_Players as t1
-	    			INNER JOIN ".DB_PREFIX."_PlayerUniqueIds as t2 ON t1.playerId = t2.playerId";
-	    	$query .="
+	    			INNER JOIN ".DB_PREFIX."_PlayerUniqueIds as t2 ON t1.playerId = t2.playerId
 	    		WHERE
 	    			t1.game='$game'
 	    			AND t1.hideranking=0
@@ -492,8 +491,7 @@ pageHeader(
 	    			$table->sort $table->sortorder,
 	    			$table->sort2 $table->sortorder,
 	    			lastName ASC
-	    		LIMIT $table->startitem,$table->numperpage
-	    	";
+	    		LIMIT $table->startitem,$table->numperpage");
 
 		}
 		else {
