@@ -363,7 +363,7 @@ pageHeader(
 		);
 
 		if(defined('HIDE_BOTS') && HIDE_BOTS == "1") {
-	    	$query = "SELECT
+	    	$queryPlayers = mysql_query("SELECT
 	    			t1.playerId,
 	    			lastName,
 	    			oldSkill,
@@ -385,12 +385,11 @@ pageHeader(
 	    			$table->sort $table->sortorder,
 	    			$table->sort2 $table->sortorder,
 	    			lastName ASC
-	    		LIMIT $table->startitem,$table->numperpage
-	    	";
+	    		LIMIT $table->startitem,$table->numperpage");
 
 		}
 		else {
-			$query = "SELECT
+			$queryPlayers = mysql_query("SELECT
 					t1.playerId,
 					t1.lastName,
 					t1.skill,
@@ -411,8 +410,7 @@ pageHeader(
 					$table->sort $table->sortorder,
 					$table->sort2 $table->sortorder,
 					lastName ASC
-				LIMIT $table->startitem,$table->numperpage
-			";
+				LIMIT $table->startitem,$table->numperpage");
 
 		}
 		$result = mysql_query($query);
