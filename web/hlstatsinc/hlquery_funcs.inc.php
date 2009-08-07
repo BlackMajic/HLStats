@@ -262,7 +262,7 @@ function Source_A2S_Info ($ip, $port)
 		return Decode_HL1_Info_Packet($serverdata);
 }
 
-function Source_A2S_Player ($ip, $port, $challenge) {
+function Source_A2S_Player ($ip, $port, &$challenge) {
 	$cmd = "\xFF\xFF\xFF\xFF\x55".pack('l', $challenge);
 	if(!$serverdata = GetServerData($cmd, $ip, $port))
 		return array();
@@ -277,7 +277,7 @@ function Source_A2S_Player ($ip, $port, $challenge) {
 	return Decode_Player_Packet($serverdata);
 }
 
-function Source_A2S_Rules($ip, $port, $challenge)
+function Source_A2S_Rules($ip, $port, &$challenge)
 {
 	$cmd = "\xFF\xFF\xFF\xFF\x56".pack('l', $challenge);
 	if(!$serverdata = GetServerData($cmd, $ip, $port))
