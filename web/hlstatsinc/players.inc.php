@@ -471,7 +471,7 @@ pageHeader(
 		);
 
 		if(defined('HIDE_BOTS') && HIDE_BOTS == "1") {
-	    	$query = mysql_query("SELECT
+	    	$queryPlayers = mysql_query("SELECT
 	    			t1.playerId,
 	    			lastName,
 	    			oldSkill,
