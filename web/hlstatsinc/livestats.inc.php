@@ -137,8 +137,8 @@ $query_challenge = Source_A2S_GetChallenge($server_ip, $server_port);
 # Get packets with challenge number
 # strange as of 29.10.2008 only the Source_A2S_Rules returns a challenge which
 # is used and needed in Source_A2S_Player (banana)
-$server_rules = Source_A2S_Rules($server_ip, $server_port, &$query_challenge);
-$server_players = Source_A2S_Player($server_ip, $server_port, &$query_challenge);
+$server_rules = Source_A2S_Rules($server_ip, $server_port, $query_challenge);
+$server_players = Source_A2S_Player($server_ip, $server_port, $query_challenge);
 
 $server_details = Format_Info_Array($server_details);
 # If HLStats currently stores the rcon, might as well try to get more data from a HL status
@@ -152,7 +152,7 @@ if ($server_rcon) {
 		$server_status = Source_Rcon($server_ip, $server_port, $server_rcon, 'status');
 	}
 	else {
-		$server_status = HalfLife_Rcon($server_ip, $server_port, $server_rcon, 'status', &$query_challenge);
+		$server_status = HalfLife_Rcon($server_ip, $server_port, $server_rcon, 'status', $query_challenge);
 	}
 
 	if ($server_status) {
@@ -520,4 +520,3 @@ echo '<b>'.round(($time - $start), 6).'</b><br>';
 		</td>
 	</tr>
 </table>
-
