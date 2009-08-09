@@ -108,9 +108,13 @@ IngamePoints = 0
 # the Elo rating system
 # developed by HampusW
 # IMPORTANT: Must match the value of EloRating in hlstatsinc/hlstats.conf.inc.php
+#
+# ATTENTION:
+# If you change the setting here, you have to reset your stats !
+#
 # "0"      - Off. Do not use the rating system at all (only the current one).
 # "1"      - Use the system and display it with the ordinary system
-# "2"      - Only use the EloRating and show only the new one.
+# "2"      - Only use the EloRating and show only the new one. !! not working yet !!
 EloRating = 0
 
 # how verbose this system will be

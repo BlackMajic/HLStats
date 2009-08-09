@@ -114,7 +114,7 @@ if(defined('ELORATING') && ELORATING === "1") {
 		WHERE
 			playerId='$player'
 	");
-	if (mysql_num_rows($query) != 1)
+	if (mysql_num_rows($queryPlayer) != 1)
 		error("No such player '$player'.");
 }
 elseif(defined('ELORATING') && ELORATING === "2") {

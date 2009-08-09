@@ -118,8 +118,12 @@ define("HIDE_BOTS", "0");
 // 			here you can decide if you want to use this system
 //			IMPORTANT: Must match the value of EloRating in hlstats.conf !!
 //			Possible values are
+//
+//			ATTENTION:
+//			If you change the setting here you have to reset your stats !!
+//
 //			1) "0"		- Off. Do not use the rating system at all.
 //			2) "1"		- Use the system and display it with the ordinary system
-//			3) "2"		- Only use the EloRating and show only the new one.
+//			3) "2"		- Only use the EloRating and show only the new one. !! not working yet !!
 define('ELORATING','0');
 ?>
