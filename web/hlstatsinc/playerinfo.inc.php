@@ -89,7 +89,7 @@ elseif (!$player && !$uniqueid) {
 }
 
 if(defined('ELORATING') && ELORATING === "1") {
-	$query = mysql_query("
+	$queryPlayer = mysql_query("
 		SELECT
 			".DB_PREFIX."_Players.lastName,
 			".DB_PREFIX."_Players.clan,
