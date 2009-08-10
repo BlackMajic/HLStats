@@ -215,11 +215,11 @@ function showNews(id) {
 			$tmptime = strtotime($g_options['awards_d_date']);
 			if($tmptime !== false) {
 				// eliminates false dates from db
-				$awards_d_date = date('l d m',$tmptime);
+				$awards_d_date = date('l d.m',$tmptime);
 
 				// awards_d_date - the days configured in $awards_numdays
 				$tmptime -= $awards_numdays*86400;
-				$awards_s_date = $awards_d_date = date('l d m',$tmptime);
+				$awards_s_date = $awards_d_date = date('l d.m',$tmptime);
 			}
 		}
 
@@ -227,7 +227,20 @@ function showNews(id) {
 ?>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp; <?php if ($awards_numdays == 1) {echo "Daily";} else { echo "$awards_numdays Day";}; ?> Awards (<?php echo "$awards_s_date to $awards_d_date."; ?>)</b><?php echo $g_options["fontend_normal"];?><p>
+	<td><?php echo $g_options["font_normal"]; ?>
+		&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif">&nbsp;
+		<b>
+		<?php 
+		if ($awards_numdays == 1) {
+			echo "Daily Awards for ($awards_s_date)";
+		} 
+		else { 
+			echo "$awards_numdays Day Awards ($awards_s_date to $awards_d_date)";
+		}
+		?> 
+		</b>
+		<?php echo $g_options["fontend_normal"];?>
+		<p>
 
 		<table width="75%" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options["table_border"]; ?>">
 		<tr>
@@ -281,8 +294,7 @@ function showNews(id) {
 		}
 	}
 ?>
-</p>
-
+</p><br/>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Participating Servers</b><?php echo $g_options["fontend_normal"];?>
