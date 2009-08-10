@@ -107,7 +107,7 @@
 				<td align="right">
 					<table border="0" cellspacing="0" cellpadding="10">
 					<tr>
-						<td><input type="submit" value="Next &gt;&gt;" id="authsubmit" class="submit"></td>
+						<td><input type="submit" value="<?php echo l('Next'); ?> &gt;&gt;" id="authsubmit" class="submit"></td>
 					</tr>
 					</table></td>
 			</tr>

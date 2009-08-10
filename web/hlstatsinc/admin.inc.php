@@ -859,7 +859,7 @@
 
 	$auth = new Auth;
 
-	pageHeader(array("Admin"), array("Admin"=>""));
+	pageHeader(array(l("Admin")), array(l("Admin")=>""));
 
 	$selTask = '';
 	$selGame = '';
@@ -880,27 +880,26 @@
 ?>
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-
 <tr valign="top">
 	<td><?php
 	echo $g_options["font_normal"];
 
 	// General Settings
-	$admintasks["options"]			= new AdminTask("HLStats Options", 100);
-	$admintasks["adminusers"]		= new AdminTask("Admin Users", 100);
-	$admintasks["games"]			= new AdminTask("Games", 100);
-	$admintasks["clantags"]			= new AdminTask("Clan Tag Patterns", 80);
-	$admintasks["plugins"]			= new AdminTask("Server Plugins", 80);
+	$admintasks["options"]			= new AdminTask(l("HLStats Options"), 100);
+	$admintasks["adminusers"]		= new AdminTask(l("Admin Users"), 100);
+	$admintasks["games"]			= new AdminTask(l("Games"), 100);
+	$admintasks["clantags"]			= new AdminTask(l("Clan Tag Patterns"), 80);
+	$admintasks["plugins"]			= new AdminTask(l("Server Plugins"), 80);
 
 	// Game Settings
-	$admintasks["servers"]			= new AdminTask("Servers", 100, "game");
-	$admintasks["resetgame"]		= new AdminTask("Reset", 100, "game");
-	$admintasks["actions"]			= new AdminTask("Actions", 80, "game");
-	$admintasks["teams"]			= new AdminTask("Teams", 80, "game");
-	$admintasks["roles"]			= new AdminTask("Roles", 80, "game");
-	$admintasks["weapons"]			= new AdminTask("Weapons", 80, "game");
-	$admintasks["awardsWeapons"]	= new AdminTask("Weapon Awards", 80, "game");
-	$admintasks["awardsActions"]	= new AdminTask("Action Awards", 80, "game");
+	$admintasks["servers"]			= new AdminTask(l("Servers"), 100, "game");
+	$admintasks["resetgame"]		= new AdminTask(l("Reset"), 100, "game");
+	$admintasks["actions"]			= new AdminTask(l("Actions"), 80, "game");
+	$admintasks["teams"]			= new AdminTask(l("Teams"), 80, "game");
+	$admintasks["roles"]			= new AdminTask(l("Roles"), 80, "game");
+	$admintasks["weapons"]			= new AdminTask(l("Weapons"), 80, "game");
+	$admintasks["awardsWeapons"]	= new AdminTask(l("Weapon Awards"), 80, "game");
+	$admintasks["awardsActions"]	= new AdminTask(l("Action Awards"), 80, "game");
 
 	// Tools
 	$admintasks["toolsEditdetails"] = new AdminTask("Edit Player or Clan Details", 80, "tool",
