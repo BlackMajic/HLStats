@@ -62,14 +62,14 @@ $opt_configfile_name = "hlstats.conf";
 
 use Getopt::Long;
 use DBI;
+use Config::Tiny; ## new config syntax
 
 use File::Basename;
 
 $opt_libdir = dirname(__FILE__);
 $opt_configfile = "$opt_libdir/$opt_configfile_name";
 
-require "$opt_libdir/ConfigReaderSimple.pm";
-do "$opt_libdir/HLstats.plib";
+require "$opt_libdir/HLstats.plib";
 
 $|=1;
 Getopt::Long::Configure ("bundling");
@@ -80,17 +80,24 @@ Getopt::Long::Configure ("bundling");
 ## MAIN
 ##
 
-# Options
+## load config with config-tiny module
+$Config = Config::Tiny->read("$opt_libdir/hlstats.conf.ini");
+if($Config::Tiny::errstr ne '') {
+	print "Config file not found !\n";
+	print $Config::Tiny::errstr;
+	print "\n";
+	exit(0)
+}
 
 $opt_help = 0;
 $opt_version = 0;
 $opt_numdays = 1;
 
-$db_host = "localhost";
-$db_user = "";
-$db_pass = "";
-$db_name = "hlstats";
-$db_prefix = "hlstats";
+$db_name = $Config->{Database}->{DBName};
+$db_host = $Config->{Database}->{DBHost};
+$db_user = $Config->{Database}->{DBUsername};
+$db_pass = $Config->{Database}->{DBPassword};
+$db_prefix = $Config->{Database}->{DBPrefix};
 
 # Usage message
 
@@ -118,28 +125,6 @@ configuration file.
 HLStats: http://www.hlstats-community.org
 EOT
 ;
-
-# Read Config File
-
-if (-r $opt_configfile)
-{
-	$conf = ConfigReaderSimple->new($opt_configfile);
-	$conf->parse();
-
-	%directives = (
-		"DBHost",			"db_host",
-		"DBUsername",		"db_user",
-		"DBPassword",		"db_pass",
-		"DBName",			"db_name",
-		"DBPrefix",			"db_prefix"
-	);
-
-	&doConf($conf, %directives);
-}
-else
-{
-	print "-- Warning: unable to open configuration file $opt_configfile\n";
-}
 
 # Read Command Line Arguments
 
@@ -180,9 +165,14 @@ print "-- Connecting to MySQL database '$db_name' on '$db_host' as user '$db_use
 
 $db_conn = DBI->connect(
 	"DBI:mysql:$db_name:$db_host",
-	$db_user, $db_pass
+	$db_user, $db_pass, {RaiseError => 1,'mysql_enable_utf8' => 1, 'mysql_auto_reconnect' => 1
+				'ShowErrorStatement' => 1 }
 ) or die ("Can't connect to MySQL database '$db_name' on '$db_host'\n" .
 	"$DBI::errstr\n");
+
+&doQuery("SET character set utf8");
+&doQuery("SET NAMES utf8");
+
 
 print "connected OK\n";
 
