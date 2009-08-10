@@ -232,10 +232,10 @@ function showNews(id) {
 		<b>
 		<?php 
 		if ($awards_numdays == 1) {
-			echo "Daily Awards for ($awards_s_date)";
+			echo "Daily Awards $awards_s_date";
 		} 
 		else { 
-			echo "$awards_numdays Day Awards ($awards_s_date to $awards_d_date)";
+			echo "$awards_numdays Day Awards: $awards_s_date to $awards_d_date";
 		}
 		?> 
 		</b>
