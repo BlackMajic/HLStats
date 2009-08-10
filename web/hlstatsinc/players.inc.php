@@ -536,7 +536,7 @@ pageHeader(
 		<td width="75%"><?php echo $g_options["font_normal"]; ?>
 			<b>&#149;</b>
 			<?php if (defined('ELORATING') && (ELORATING === "1" || ELORATING === "2")) { ?>
-				Don't show players with an RD higher than <input type="text" name="rdlimit" size="4"  value="<?php echo $rdlimit; ?>" class="textbox"> <input type="submit" value="Apply" class="smallsubmit"> (lower RD = more accurate rating)
+				Don't show players with an RD higher than <input type="text" name="rdlimit" size="4"  value="<?php echo $rdlimit; ?>" class="textbox"> of 350 <input type="submit" value="Apply" class="smallsubmit"> (lower RD = more accurate rating)
 			<?php } else { ?>
 				Only show players with <input type="text" name="minkills" size="4" value="<?php echo $minkills; ?>" class="textbox"> or more kills. <input type="submit" value="Apply" class="smallsubmit">
 			<?php }
