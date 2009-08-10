@@ -92,11 +92,11 @@ else {
 
 
 pageHeader(
-	array($gamename, "Clan Details", $cl_full),
+	array($gamename, l("Clan Details"), $cl_full),
 	array(
 		$gamename=>$g_options["scripturl"] . "?game=$game",
-		"Clan Rankings"=>$g_options["scripturl"] . "?mode=clans&amp;game=$game",
-		"Clan Details"=>""
+		l("Clan Rankings")=>$g_options["scripturl"] . "?mode=clans&amp;game=$game",
+		l("Clan Details")=>""
 	),
 	$clandata["name"]
 );
@@ -106,7 +106,7 @@ pageHeader(
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td width="100%" colspan=2><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Clan Profile and Statistics Summary</b><?php echo $g_options["fontend_normal"];?></td>
+	<td width="100%" colspan=2><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b><?php echo l('Clan Profile and Statistics Summary'); ?></b><?php echo $g_options["fontend_normal"];?></td>
 </tr>
 <tr valign="top">
 	<td width="5%">&nbsp;</td>
@@ -119,7 +119,7 @@ pageHeader(
 				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
 					<td><?php
 						echo $g_options["font_normal"];
-						echo "Home Page:";
+						echo l("Home Page:");
 						echo $g_options["fontend_normal"];
 					?></td>
 					<td><?php
@@ -130,7 +130,7 @@ pageHeader(
 						}
 						else
 						{
-							echo "(Not specified.)";
+							echo '(',l("Not specified."),")";
 						}
 						echo $g_options["fontend_normal"];
 					?></td>
@@ -139,7 +139,7 @@ pageHeader(
 				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
 					<td><?php
 						echo $g_options["font_normal"];
-						echo "Number of Members:";
+						echo l("Number of Members:");
 						echo $g_options["fontend_normal"];
 					?></td>
 					<td><?php
@@ -152,7 +152,7 @@ pageHeader(
 				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
 					<td><?php
 						echo $g_options["font_normal"];
-						echo "Avg. Member Points:";
+						echo l("Avg. Member Points:");
 						echo $g_options["fontend_normal"];
 					?></td>
 					<td><?php
@@ -165,7 +165,7 @@ pageHeader(
 				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
 					<td><?php
 						echo $g_options["font_normal"];
-						echo "Total Kills:";
+						echo l("Total Kills:");
 						echo $g_options["fontend_normal"];
 					?></td>
 					<td><?php
@@ -178,7 +178,7 @@ pageHeader(
 				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
 					<td><?php
 						echo $g_options["font_normal"];
-						echo "Total Deaths:";
+						echo l("Total Deaths:");
 						echo $g_options["fontend_normal"];
 					?></td>
 					<td><?php
@@ -191,7 +191,7 @@ pageHeader(
 				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
 					<td><?php
 						echo $g_options["font_normal"];
-						echo "Kills per Death:";
+						echo l("Kills per Death:");
 						echo $g_options["fontend_normal"];
 					?></td>
 					<td><?php
@@ -223,7 +223,7 @@ pageHeader(
 				<td width="100%"><a name="members"></a>
 				<?php echo $g_options["font_normal"]; ?>&nbsp;
 				<img src="<?php echo $g_options["imgdir"]; ?>/rightarrow.gif" width="6" height="9" border="0" align="middle" alt="downarrow.gif">
-				<b>&nbsp;Clan has no active members to display.</b>
+				<b><?php echo l('Clan has no active members to display.'); ?></b>
 				<?php echo $g_options["fontend_normal"];?></td>
 			</tr>
 		</table><p>
@@ -313,7 +313,7 @@ pageHeader(
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td width="100%" colspan="2"><a name="members"></a>
-<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Members</b><?php echo $g_options["fontend_normal"];?></td>
+<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Members'); ?></b><?php echo $g_options["fontend_normal"];?></td>
 </tr>
 <tr>
 	<td width="5%">&nbsp;</td>
@@ -328,7 +328,7 @@ pageHeader(
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td width="100%" align="right"><br><br>
-	<?php echo $g_options["font_small"]; ?><b>Admin Options:</b> <a href="<?php echo $g_options["scripturl"] . "?mode=admin&amp;task=toolsEditdetailsClan&amp;id=$clan"; ?>">Edit Clan Details</a><?php echo $g_options["fontend_small"]; ?></td>
+	<?php echo $g_options["font_small"]; ?><b><?php echo l('Admin Options:'); ?></b> <a href="<?php echo $g_options["scripturl"] . "?mode=admin&amp;task=toolsEditdetailsClan&amp;id=$clan"; ?>"><?php echo l('Edit Clan Details'); ?></a><?php echo $g_options["fontend_small"]; ?></td>
 </tr>
 </table><p>
 <?php
