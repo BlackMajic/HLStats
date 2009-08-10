@@ -39,12 +39,12 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-	pageHeader(array("Admin"), array("Admin"=>""));
+	pageHeader(array(l("Admin")), array(l("Admin")=>""));
 ?>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 
 <tr>
-	<td width="100%"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Authorisation Required</b><p>
+	<td width="100%"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Authorisation Required'); ?></b><p>
 
 	<form method="POST" action="<?php echo $_SERVER["REQUEST_URI"]; ?>" name="auth">
 
@@ -81,12 +81,12 @@
 					<table width="100%" border="0" cellspacing="1" cellpadding="4">
 
 					<tr valign="middle">
-						<td width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?>Username:<?php echo $g_options["fontend_normal"]; ?></td>
+						<td width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?><?php echo l('Username'); ?>:<?php echo $g_options["fontend_normal"]; ?></td>
 						<td width="55%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><input type="text" name="authusername" size=20 maxlength=16 value="<?php echo $this->username; ?>" class="textbox"></td>
 					</tr>
 
 					<tr valign="middle">
-						<td width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?>Password:<?php echo $g_options["fontend_normal"]; ?></td>
+						<td width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?><?php echo l('Password'); ?>:<?php echo $g_options["fontend_normal"]; ?></td>
 						<td width="55%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><input type="password" name="authpassword" size=20 maxlength=16 value="<?php echo $this->password; ?>" class="textbox"></td>
 					</tr>
 
@@ -97,7 +97,7 @@
 
 							<tr valign="middle">
 								<td><input type="checkbox" name="authsavepass" value="1" id="savepassyes"<?php if ($this->savepass) echo " checked"; ?> class="checkbox"></td>
-								<td nowrap><?php echo $g_options["font_normal"]; ?><label for="savepassyes">Save my password</label><?php echo $g_options["fontend_normal"]; ?></td>
+								<td nowrap><?php echo $g_options["font_normal"]; ?><label for="savepassyes"><?php echo l('Save my password'); ?></label><?php echo $g_options["fontend_normal"]; ?></td>
 							</tr>
 
 							</table></td>
@@ -115,8 +115,8 @@
 			</table><br>
 
 
-			<?php echo $g_options["font_normal"]; ?>Please ensure cookies are enabled in your browser security options.<br>
-			<b>Note</b> Do not select "Save my password" if other people will use this computer.<?php echo $g_options["fontend_normal"]; ?></td>
+			<?php echo $g_options["font_normal"]; ?><?php echo l('Please ensure cookies are enabled in your browser security options'); ?>.<br>
+			<b><?php echo l('Note'); ?>:</b> <?php echo l('Do not select Save my password if other people will use this computer'); ?>.<?php echo $g_options["fontend_normal"]; ?></td>
 	</tr>
 
 	</table><br><br>
@@ -125,16 +125,13 @@
 	<script language="JavaScript">
 	<!--
 		<?php
-			if ($this->savepass)
-			{
+			if ($this->savepass) {
 				echo "document.forms.auth.authsubmit.focus();";
 			}
-			elseif ($this->username)
-			{
+			elseif ($this->username) {
 				echo "document.forms.auth.authpassword.focus();";
 			}
-			else
-			{
+			else {
 				echo "document.forms.auth.authusername.focus();";
 			}
 		?>

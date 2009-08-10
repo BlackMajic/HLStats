@@ -106,3 +106,12 @@ or more members = oder mehr Mitglieder;
 From a total of = Von gesamt;
 
 Map Name = Map Name;
+
+Admin = Administration;
+Authorisation Required = Anmeldung benötigt;
+Username = Benutzername;
+Password = Passwort;
+Save my password = Passwort speichern;
+Please ensure cookies are enabled in your browser security options = Bitte erlauben Sie cookies für diese Domain;
+Note = Hinweis;
+Do not select Save my password if other people will use this computer = Wählen Sie diese Option nicht wenn andere Personen diesen Computer verwenden;
