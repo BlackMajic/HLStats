@@ -42,29 +42,33 @@
 	if ($auth->userdata["acclevel"] < 100) die ("Access denied!");
 
 	$edlist = new EditList("username", DB_PREFIX."_Users", "user", false);
-	$edlist->columns[] = new EditListColumn("username", "Username", 15, true, "text", "", 16);
-	$edlist->columns[] = new EditListColumn("password", "Password", 15, true, "password", "", 16);
-	$edlist->columns[] = new EditListColumn("acclevel", "Access Level", 25, true, "select", "0/No Access;80/Restricted;100/Administrator");
+	$edlist->columns[] = new EditListColumn("username", l("Username"), 15, true, "text", "", 16);
+	$edlist->columns[] = new EditListColumn("password", l("Password"), 15, true, "password", "", 16);
+	$edlist->columns[] = new EditListColumn("acclevel", l("Access Level"), 25, true, "select", "0/No Access;80/Restricted;100/Administrator");
 
 
 	if ($_POST)
 	{
 		if ($edlist->update())
-			message("success", "Operation successful.");
+			message("success", l("Operation successful"));
 		else
 			message("warning", $edlist->error());
 	}
 
 ?>
+<p>
+<?php echo ('Usernames and passwords can be set up for access to this HLStats Admin area. For most sites you will only want one admin user - yourself. Some sites may however need to give administration access to several people'); ?>
+</p>
+<p>
+	<b><?php echo l('Note'); ?></b>
+	<?php echo l("Passwords are encrypted in the database and so cannot be viewed. However, you can change a user's password by entering a new plain text value in the Password field"); ?>.
+</p>
+<p>
+	<b><?php echo l('Access Levels'); ?></b><br>
 
-Usernames and passwords can be set up for access to this HLStats Admin area. For most sites you will only want one admin user - yourself. Some sites may however need to give administration access to several people.<p>
-
-<b>Note</b> Passwords are encrypted in the database and so cannot be viewed. However, you can change a user's password by entering a new plain text value in the Password field.<p>
-
-<b>Access Levels</b><br>
-
-&#149; <i>Restricted</i> users only have access to the Host Groups, Clan Tag Patterns, Weapons, Teams, Awards and Actions configuration areas. This means these users cannot set Options or add new Games, Servers or Admin Users to HLStats, or use any of the admin Tools.<br>
-&#149; <i>Administrator</i> users have full, unrestricted access.<p>
+&#149; <i><?php echo l('Restricted'); ?></i> <?php echo l('users only have access to the Host Groups, Clan Tag Patterns, Weapons, Teams, Awards and Actions configuration areas. This means these users cannot set Options or add new Games, Servers or Admin Users to HLStats, or use any of the admin Tools'); ?>.<br>
+&#149; <i><?php echo l('Administrator'); ?></i> <?php echo l('users have full, unrestricted access'); ?>.
+</p>
 
 <?php
 
@@ -84,7 +88,6 @@ Usernames and passwords can be set up for access to this HLStats Admin area. For
 
 <table width="75%" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td align="center"><input type="submit" value="  Apply  " class="submit"></td>
+	<td align="center"><input type="submit" value="  <?php echo l('Apply'); ?>  " class="submit"></td>
 </tr>
 </table>
-

@@ -60,10 +60,10 @@
 						}
 					}
 					if($i>0) {
-						echo "ERROR while importing this game!";
+						echo l("ERROR while importing this game"),' !';
 					}
 					else {
-						echo "import done !";
+						echo l("Import done"),' !';
 					}
 				break;
 
@@ -95,20 +95,20 @@
 						}
 
 						if($i>0) {
-							echo "ERROR while importing this game!";
+							echo l("ERROR while importing this game"),' !';
 						}
 						else {
-							echo "import done !";
+							echo l("Import done"),' !';
 						}
 					}
 					else {
-						echo "File does not exists ??";
+						echo l("File does not exists"),' ??';
 					}
 				break;
 			}
 		}
 		else {
-			echo "No data given !";
+			echo l("No data given"),' !';
 		}
 	}
 	elseif(isset($_POST['submitDelete'])) {
@@ -141,19 +141,19 @@
 						if(mysql_query("DELETE FROM ".$table."
 										WHERE killerId IN (".$playerIdString.")
 											OR victimId IN (".$playerIdString.")")) {
-							echo $table." ok.";
+							echo $table,' ',l("OK");
 						}
 						else {
-							echo $table." ERROR";
+							echo $table,' ',l("ERROR");
 						}
 					}
 					else {
 						if(mysql_query("DELETE FROM ".$table."
 										WHERE playerId IN (".$playerIdString.")")) {
-							echo $table." ok.";
+							echo $table,' ',l("OK");
 						}
 						else {
-							echo $table." ERROR";
+							echo $table,' ',l("ERROR");
 						}
 					}
 					echo '</li>';
@@ -167,20 +167,20 @@
 			foreach($gameTables as $gt) {
 				echo "<li>";
 				if(mysql_query("DELETE FROM ".$gt." WHERE game = '".$_POST['gameToDelete']."'")) {
-					echo $gt." ok";
+					echo $gt,' ',l("OK");
 				}
 				else {
-					echo $gt." ERROR";
+					echo $gt,' ',l("ERROR");
 				}
 				echo "</li>";
 			}
 
 			echo "<li>";
 			if(mysql_query("DELETE FROM ".DB_PREFIX."_Games WHERE code='".$_POST['gameToDelete']."'")) {
-				echo "".DB_PREFIX."_Games ok";
+				echo "".DB_PREFIX."_Games ",l('OK');
 			}
 			else {
-				echo "hlstast_Games ERROR";
+				echo "hlstast_Games ",l('ERROR');
 			}
 			echo "</li>";
 
@@ -188,15 +188,15 @@
 			if(!empty($players)) {
 				echo "<li>";
 				if(mysql_query("DELETE FROM ".DB_PREFIX."_Players WHERE playerId IN (".$playerIdString.")")) {
-					echo "".DB_PREFIX."_Players ok";
+					echo "".DB_PREFIX."_Players ",l('OK');
 				}
 				else {
-					echo "".DB_PREFIX."_Players ERROR";
+					echo "".DB_PREFIX."_Players ",l("ERROR");
 				}
 				echo "</li>";
 			}
 			echo "</ul>";
-			echo "done";
+			echo l("Done");
 		}
 	}
 	else {
@@ -243,9 +243,9 @@
 			$addMode = "upload";
 		}
 ?>
-Here you can either add support for a game with a gamesupport_*.sql file or
-remove support for an existing game.<br />
-<b>IF you remove support for a game, all data associated with this game will be deleted !</b><br />
+<?php echo l('Here you can either add support for a game with a gamesupport_*.sql file or remove support for an existing game'); ?>.
+<br />
+<b><?php echo l('IF you remove support for a game, all data associated with this game will be deleted'); ?> !</b><br />
 <br />
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
@@ -254,8 +254,8 @@ remove support for an existing game.<br />
 			<table width="100%" border="0" cellspacing="1" cellpadding="10">
 				<tr>
 					<td><?php echo $g_options["font_normal"]; ?>
-						<b>Add support for a game.</b><br />
-						After creating a game, you will be able to configure servers, awards, etc. for that game under Game Settings.
+						<b><?php echo l('Add support for a game'); ?>.</b><br />
+						<?php echo l('After creating a game, you will be able to configure servers, awards, etc. for that game under Game Settings'); ?>,
 						<?php echo $g_options["fontend_normal"]; ?>
 					</td>
 				</tr>
@@ -267,16 +267,16 @@ remove support for an existing game.<br />
 							switch ($addMode) {
 								case 'upload':
 								?>
-								<input type="hidden" name="addMode" value="upload" />
-								Choose a gamesupport_*.sql file, open it and paste the whole content into the following input field.<br />
-								<b>Make sure you know what you are doing, anything wrong can damage your database !</b><br />
-								<br />
-								<b>Each line of this file should contain a complete SQL statement. No multiple SQL statements are allowed.</b><br />
-								<br />
-								<textarea name="newGame" style="width: 100%; height: 200px;"></textarea><br />
-								<br />
-								<p style="text-align: center;"><input type="submit" name="submitAdd" value="  UPLOAD AND ADD NEW GAME  "></p><br />
-								<br />
+									<input type="hidden" name="addMode" value="upload" />
+									<?php echo l('Choose a gamesupport_*.sql file, open it and paste the whole content into the following input field'); ?>.<br />
+									<b><?php echo l('Make sure you know what you are doing, anything wrong can damage your database'); ?> !</b><br />
+									<br />
+									<b><?php echo l('Each line of this file should contain a complete SQL statement. No multiple SQL statements are allowed'); ?>.</b><br />
+									<br />
+									<textarea name="newGame" style="width: 100%; height: 200px;"></textarea><br />
+									<br />
+									<p style="text-align: center;"><input type="submit" name="submitAdd" value="  <?php echo l('UPLOAD AND ADD NEW GAME'); ?>  "></p><br />
+									<br />
 								<?php
 								break;
 

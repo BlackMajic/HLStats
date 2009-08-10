@@ -42,17 +42,17 @@
 	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
 
 	$edlist = new EditList("awardId", DB_PREFIX."_Awards", "award");
-	$edlist->columns[] = new EditListColumn("game", "Game", 0, true, "hidden", $gamecode);
-	$edlist->columns[] = new EditListColumn("awardType", "Type", 0, true, "hidden", "O");
-	$edlist->columns[] = new EditListColumn("code", "Action", 0, true, "select", "".DB_PREFIX."_Actions.code/code/game='$gamecode' AND for_PlayerActions='1'");
-	$edlist->columns[] = new EditListColumn("name", "Award Name", 20, true, "text", "", 128);
-	$edlist->columns[] = new EditListColumn("verb", "Verb Plural", 20, true, "text", "", 64);
+	$edlist->columns[] = new EditListColumn("game", l("Game"), 0, true, "hidden", $gamecode);
+	$edlist->columns[] = new EditListColumn("awardType", l("Type"), 0, true, "hidden", "O");
+	$edlist->columns[] = new EditListColumn("code", l("Action"), 0, true, "select", "".DB_PREFIX."_Actions.code/code/game='$gamecode' AND for_PlayerActions='1'");
+	$edlist->columns[] = new EditListColumn("name", l("Award Name"), 20, true, "text", "", 128);
+	$edlist->columns[] = new EditListColumn("verb", l("Verb Plural"), 20, true, "text", "", 64);
 
 
 	if ($_POST)
 	{
 		if ($edlist->update())
-			message("success", "Operation successful.");
+			message("success", l("Operation successful"));
 		else
 			message("warning", $edlist->error());
 	}
@@ -81,4 +81,3 @@
 	<td align="center"><input type="submit" value="  Apply  " class="submit"></td>
 </tr>
 </table>
-
