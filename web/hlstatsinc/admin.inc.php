@@ -902,25 +902,24 @@
 	$admintasks["awardsActions"]	= new AdminTask(l("Action Awards"), 80, "game");
 
 	// Tools
-	$admintasks["toolsEditdetails"] = new AdminTask("Edit Player or Clan Details", 80, "tool",
-		"Edit a player or clan's profile information.");
-	$admintasks["toolsAdminevents"] = new AdminTask("Admin-Event History", 80, "tool",
-		"View event history of logged Rcon commands and Admin Mod messages.");
-	$admintasks["toolsIpstats"]	= new AdminTask("Host Statistics", 80, "tool",
-		"See which ISPs your players are using.");
-	$admintasks["toolsOptimize"]	= new AdminTask("Optimize Database", 100, "tool",
-		"This operation tells the MySQL server to clean up the database tables,
-			optimizing them for better performance. It is recommended that you run this at least once a month.");
-	$admintasks["toolsReset"]		= new AdminTask("Reset Statistics", 100, "tool",
-				"Delete all players, clans and events from the database.");
-	$admintasks["toolsNews"]		= new AdminTask("News at Front page", 80, "tool",
-				"Write news to the front page.");
+	$admintasks["toolsEditdetails"] = new AdminTask(l("Edit Player or Clan Details"), 80, "tool",
+		l("Edit a player or clan's profile information."));
+	$admintasks["toolsAdminevents"] = new AdminTask(l("Admin-Event History"), 80, "tool",
+		l("View event history of logged Rcon commands and Admin Mod messages."));
+	$admintasks["toolsIpstats"]	= new AdminTask(l("Host Statistics"), 80, "tool",
+		l("See which ISPs your players are using."));
+	$admintasks["toolsOptimize"]	= new AdminTask(l("Optimize Database"), 100, "tool",
+		l("This operation tells the MySQL server to clean up the database tables, optimizing them for better performance. It is recommended that you run this at least once a month."));
+	$admintasks["toolsReset"]		= new AdminTask(l("Reset Statistics"), 100, "tool",
+				l("Delete all players, clans and events from the database."));
+	$admintasks["toolsNews"]		= new AdminTask(l("News at Front page"), 80, "tool",
+				l("Write news to the front page."));
 
 	// Sub-Tools
-	$admintasks["toolsEditdetailsPlayer"] = new AdminTask("Edit Player Details", 80, "subtool",
-			"Edit a player's profile information.");
-	$admintasks["toolsEditdetailsClan"]   = new AdminTask("Edit Clan Details", 80, "subtool",
-			"Edit a clan's profile information.");
+	$admintasks["toolsEditdetailsPlayer"] = new AdminTask(l("Edit Player Details"), 80, "subtool",
+			l("Edit a player's profile information."));
+	$admintasks["toolsEditdetailsClan"]   = new AdminTask(l("Edit Clan Details"), 80, "subtool",
+			l("Edit a clan's profile information."));
 
 	// Show Tool
 	$check = false;
@@ -935,7 +934,7 @@
 		$task = $admintasks[$selTask];
 		$code = $selTask;
 ?>
-&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin">Tools</a></b><br>
+&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin"><?php echo l('Tools'); ?></a></b><br>
 <img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="8" border="0"><br>
 
 <?php
@@ -946,7 +945,7 @@
 	{
 		// General Settings
 ?>
-&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;General Settings</b><p>
+&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('General Settings'); ?></b><p>
 <?php
 		foreach ($admintasks as $code=>$task)
 		{
@@ -988,7 +987,7 @@ alt="rightarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mo
 
 		// Game Settings
 ?>
-&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Game Settings</b><p>
+&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Game Settings'); ?></b><p>
 <?php
 		$gamesresult = mysql_query("
 			SELECT
@@ -1055,7 +1054,7 @@ alt="rightarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mo
 		echo "<td width=\"50%\">";
 		echo $g_options["font_normal"];
 ?>
-&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Tools</b>
+&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Tools'); ?></b>
 
 <ul>
 <?php
