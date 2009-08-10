@@ -48,12 +48,12 @@ if (isset($_GET["minkills"])) {
 }
 
 // the rating system
-$rdlimit = 1000;
+$rdlimit = 300;
 if (isset($_GET["rdlimit"])) {
 	$check = validateInput($_GET['rdlimit'],'digit');
 	$rdlimit = $_GET["rdlimit"];
 }
-$rd2limit = $rdlimit * $rdlimit;
+//$rd2limit = $rdlimit * $rdlimit;
 
 pageHeader(
 	array($gamename, "Player Rankings"),
@@ -379,7 +379,7 @@ pageHeader(
 	    		WHERE
 	    			t1.game='$game'
 	    			AND t1.hideranking=0
-	    			AND t1.rd2 <= $rd2limit
+	    			AND t1.rd2 <= $rdlimit
 	    			AND t2.uniqueID not like 'BOT:%'
 	    		ORDER BY
 	    			$table->sort $table->sortorder,
@@ -404,7 +404,7 @@ pageHeader(
 				WHERE
 					t1.game='$game'
 					AND t1.hideranking=0
-					AND rd2 <= $rd2limit
+					AND rd2 <= $rdlimit
 				GROUP BY t1.playerId
 				ORDER BY
 					$table->sort $table->sortorder,
@@ -419,7 +419,7 @@ pageHeader(
 					FROM `".DB_PREFIX."_Players`
 					WHERE game='".$game."'
 						AND hideranking=0
-						AND rd2 <= $rd2limit");
+						AND rd2 <= $rdlimit");
 		$resultCount = mysql_fetch_assoc($query);
 
 		$numitems = $resultCount['pc'];
