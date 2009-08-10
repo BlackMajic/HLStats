@@ -88,7 +88,7 @@ else {
 
 
 pageHeader(
-	array($gamename, "Event Chat History", $pl_name),
+	array($gamename, l("Event Chat History"), $pl_name),
 	array(
 		$gamename=>$g_options["scripturl"] . "?game=$game",
 		l("Player Rankings")=>$g_options["scripturl"] . "?mode=players&amp;game=$game",

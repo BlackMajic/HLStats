@@ -46,19 +46,16 @@
  * This file can contain PHP code.
  */
 ?>
-
 <br>
-
 <center>
 <?php echo $g_options["font_small"]; ?>
-	Generated in real-time by <a href="http://www.hlstats-community.org">HLStats</a> <?php echo VERSION; ?> &nbsp;&nbsp;&nbsp; [<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin">Admin</a>]
+	<?php echo l('Generated in real-time by'); ?> <a href="http://www.hlstats-community.org">HLStats</a> <?php echo VERSION; ?> &nbsp;&nbsp;&nbsp; [<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin">Admin</a>]
 <?php
 	if(isset($_COOKIE["authusername"]) && $_COOKIE['authusername'] != "") {
-		echo '&nbsp;[<a href="hlstats.php?logout=1">Logout</a>]';
+		echo '&nbsp;[<a href="hlstats.php?logout=1">',l('Logout'),'</a>]';
 	}
 ?>
 <?php echo $g_options["fontend_small"]; ?><br><br>
 </center>
-
 </body>
 </html>

@@ -14,6 +14,8 @@ Author = Author;
 Subject = Betreff;
 Message = Nachricht
 Posted at = geschrieben am;
+Generated in real-time by = Erstellt in Echtzeit von;
+Logout = Abmelden;
 
 Contents = Übersicht;
 Games = Spiele;

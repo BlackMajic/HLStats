@@ -38,12 +38,12 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-pageHeader(array("Help"), array("Help"=>""));
+pageHeader(array(l("Help")), array(l("Help")=>""));
 ?>
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td width="100%" colspan=2><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Questions</b><br>
+	<td width="100%" colspan=2><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Questions'); ?></b><br>
 		&nbsp;<?php echo $g_options["fontend_normal"];?></td>
 </tr>
 <tr>
