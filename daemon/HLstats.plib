@@ -835,9 +835,6 @@ sub getPlayerInfo
 	return 0 if ($uniqueid eq "HLTV");
 	if($g_ignore_bots) {
 		return 0 if ($uniqueid eq "BOT");
-		print "bot ?\n";
-		print $player."\n";
-		exit;
 	}
 
 
