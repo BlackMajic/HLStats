@@ -21,6 +21,7 @@ HLStats ChangeLog
 *) Changed: removed the old db object and replaced it with basic mysql functions
 	from php.
 *) Changed: renamed the hlstats.conf.inc.php file to hlstats.conf.php
+*) Fixed: Special chars problem in players overview page (thx to freaker)
 *) Fixed: Missing check in doEvent_Chat function (thx to VladiBG)
 *) Fixed: rcon messages. Missing quotes (thx to freaker)
 
