@@ -215,11 +215,11 @@ function showNews(id) {
 			$tmptime = strtotime($g_options['awards_d_date']);
 			if($tmptime !== false) {
 				// eliminates false dates from db
-				$awards_d_date = date('l d.m',$tmptime);
+				$awards_d_date = date('l d.m.',$tmptime);
 
 				// awards_d_date - the days configured in $awards_numdays
 				$tmptime -= $awards_numdays*86400;
-				$awards_s_date = $awards_d_date = date('l d.m',$tmptime);
+				$awards_s_date = $awards_d_date = date('l d.m.',$tmptime);
 			}
 		}
 
