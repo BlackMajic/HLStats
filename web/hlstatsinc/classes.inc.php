@@ -317,7 +317,8 @@ class Table
 						if ($this->showranking && $rank == 1 && $i == 1)
 							$cellbody .= "<b>";
 
-						$colval = nl2br(htmlentities($colval, ENT_COMPAT, "UTF-8"));
+						#$colval = nl2br(htmlentities($colval, ENT_COMPAT, "UTF-8"));
+						$colval = nl2br(ereg_replace(" ", "&nbsp;", htmlspecialchars($colval)));
 
 						if ($col->embedlink == "yes")
 						{
