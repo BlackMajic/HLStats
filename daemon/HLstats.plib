@@ -510,6 +510,9 @@ sub rewardTeam
 
 			$player->increment("skill", $reward, 1);
 			$player->updateDB();
+			if($g_rating_system eq "1" || $g_rating_system eq "2") {
+               	$ratingsys->player_scored($player, $reward);
+            }
 		}
 	}
 }
