@@ -821,7 +821,7 @@ sub doEvent_Chat
 				playerId='" . $player->get("playerid") . "'
 		");
 
-		&rcon("'$playerName' is now $hidedesc the rankings.");
+		#&rcon("'$playerName' is now $hidedesc the rankings.");
 	}
 	elsif (($message =~ /^\/skill$/i))	{
 		my $result = &doQuery("
@@ -849,7 +849,7 @@ sub doEvent_Chat
 		my $result = &doQuery("SELECT COUNT(skill) FROM ${db_prefix}_Players");
 		my ($totalplayers) = $result->fetchrow_array;
 
-		&rcon("$playerName Rank: $ranknumber of $totalplayers; Points: $skill; KpD: $kpd!");
+		&rcon("$playerName \"Rank: $ranknumber of $totalplayers; Points: $skill; KpD: $kpd!\"");
 	}
 	elsif (($message =~ /^\/pskill$/i))	{
 		my $result = &doQuery("

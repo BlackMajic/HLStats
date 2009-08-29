@@ -190,7 +190,7 @@ sub doConf
 
 sub rcon
 {
-	my ($target, $command, $private) = @_;
+	my ($command, $private) = @_;
 
 	return 0  unless ($g_rcon);
 
