@@ -548,5 +548,28 @@ function getInterval($timestamp, $granularity = 2) {
     return $output ? $output : '0 sec';
 }
 
+/**
+ * parse the lagunage file
+ * the parse ini file is too limited...
+ *
+ * @param string The file to parse
+ * @return array The parsed language
+ */
+function parse_custom_lang_file($file) {
+	$ret = array();
 
+	$lines = file($file, FILE_SKIP_EMPTY_LINES | FILE_TEXT);
+	foreach($lines as $line) {
+		$line = trim($line);
+		if(!empty($line)) {
+			$ld = explode(" = ",$line);
+			if(count($ld) != 2) {
+				die('Lang file is corrupt. Please check: '.$file.', '.$line);
+			}
+			$ret[$ld[0]] = $ld[1];
+		}
+	}
+
+	return $ret;
+}
 ?>

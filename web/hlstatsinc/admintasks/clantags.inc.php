@@ -49,42 +49,44 @@
 	if ($_POST)
 	{
 		if ($edlist->update())
-			message("success", "Operation successful.");
+			message("success", l("Operation successful"));
 		else
 			message("warning", $edlist->error());
 	}
 
 ?>
 
-Here you can define the patterns used to determine what clan a player is in. These patterns are applied to players' names when they connect or change name.<p>
+<p>
+<?php echo l("Here you can define the patterns used to determine what clan a player is in. These patterns are applied to players' names when they connect or change name"); ?>.
+</p>
 
-Special characters in the pattern:<p>
+<?php echo l("Special characters in the pattern"); ?>:<p>
 
 <table border="0" cellspacing="0" cellpadding="4">
 
 <tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-	<td><?php echo $g_options["font_small"]; ?>Character<?php echo $g_options["fontend_small"]; ?></td>
-	<td><?php echo $g_options["font_small"]; ?>Description<?php echo $g_options["fontend_small"]; ?></td>
+	<td><?php echo $g_options["font_small"],l('Character'),$g_options["fontend_small"]; ?></td>
+	<td><?php echo $g_options["font_small"],l('Description'),$g_options["fontend_small"]; ?></td>
 </tr>
 
 <tr>
-	<td><?php echo $g_options["font_normal"]; ?><tt>A</tt><?php echo $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"]; ?>Matches one character  (i.e. a character is required)<?php echo $g_options["fontend_normal"]; ?></td>
+	<td><?php echo $g_options["font_normal"],'<tt>A</tt>', $g_options["fontend_normal"]; ?></td>
+	<td><?php echo $g_options["font_normal"],l('Matches one character. Character is required'), $g_options["fontend_normal"]; ?></td>
 </tr>
 
 <tr>
 	<td><?php echo $g_options["font_normal"]; ?><tt>X</tt><?php echo $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"]; ?>Matches zero or one characters  (i.e. a character is optional)<?php echo $g_options["fontend_normal"]; ?></td>
+	<td><?php echo $g_options["font_normal"], l('Matches zero or one characters. Character is optional'), $g_options["fontend_normal"]; ?></td>
 </tr>
 
 <tr>
 	<td><?php echo $g_options["font_normal"]; ?><tt>a</tt><?php echo $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"]; ?>Matches literal A or a<?php echo $g_options["fontend_normal"]; ?></td>
+	<td><?php echo $g_options["font_normal"], l('Matches literal A or a'), $g_options["fontend_normal"]; ?></td>
 </tr>
 
 <tr>
 	<td><?php echo $g_options["font_normal"]; ?><tt>x</tt><?php echo $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"]; ?>Matches literal X or x<?php echo $g_options["fontend_normal"]; ?></td>
+	<td><?php echo $g_options["font_normal"], l('Matches literal X or x'), $g_options["fontend_normal"]; ?></td>
 </tr>
 
 </table><p>
@@ -94,32 +96,33 @@ Example patterns:<p>
 <table border="0" cellspacing="0" cellpadding="4">
 
 <tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-	<td><?php echo $g_options["font_small"]; ?>Pattern<?php echo $g_options["fontend_small"]; ?></td>
-	<td><?php echo $g_options["font_small"]; ?>Description<?php echo $g_options["fontend_small"]; ?></td>
-	<td><?php echo $g_options["font_small"]; ?>Example<?php echo $g_options["fontend_small"]; ?></td>
+	<td><?php echo $g_options["font_small"],l('Pattern'), $g_options["fontend_small"]; ?></td>
+	<td><?php echo $g_options["font_small"],l('Description'), $g_options["fontend_small"]; ?></td>
+	<td><?php echo $g_options["font_small"],l('Example'), $g_options["fontend_small"]; ?></td>
 </tr>
 
 <tr>
 	<td><?php echo $g_options["font_normal"]; ?><tt>[AXXXXX]</tt><?php echo $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"]; ?>Matches 1 to 6 characters inside square braces<?php echo $g_options["fontend_normal"]; ?></td>
+	<td><?php echo $g_options["font_normal"],l('Matches 1 to 6 characters inside square braces'), $g_options["fontend_normal"]; ?></td>
 	<td><?php echo $g_options["font_normal"]; ?><tt>[ZOOM]Player</tt><?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
 
 <tr>
 	<td><?php echo $g_options["font_normal"]; ?><tt>{AAXX}</tt><?php echo $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"]; ?>Matches 2 to 4 characters inside curly braces<?php echo $g_options["fontend_normal"]; ?></td>
+	<td><?php echo $g_options["font_normal"], l('Matches 2 to 4 characters inside curly braces'), $g_options["fontend_normal"]; ?></td>
 	<td><?php echo $g_options["font_normal"]; ?><tt>{S3G}Player</tt><?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
 
 <tr>
 	<td><?php echo $g_options["font_normal"]; ?><tt>rex>></tt><?php echo $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"]; ?>Matches the string "rex>>", "REX>>", etc.<?php echo $g_options["fontend_normal"]; ?></td>
+	<td><?php echo $g_options["font_normal"],l('Matches the string rex>>, REX>>, etc.'), $g_options["fontend_normal"]; ?></td>
 	<td><?php echo $g_options["font_normal"]; ?><tt>REX>>Tyranno</tt><?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
 
 </table><p>
 
-Avoid adding patterns to the database that are too generic. Always ensure you have at least one literal (non-special) character in the pattern -- for example if you were to add the pattern "AXXA", it would match any player with 2 or more letters in their name!<p>
+<?php echo l('Avoid adding patterns to the database that are too generic. Always ensure you have at least one literal (non-special) character in the pattern -- for example if you were to add the pattern "AXXA", it would match any player with 2 or more letters in their name'); ?>!
+<p>
 
 The Match Position field sets which end of the player's name the clan tag is allowed to appear.<p>
 
@@ -146,4 +149,3 @@ The Match Position field sets which end of the player's name the clan tag is all
 	<td align="center"><input type="submit" value="  Apply  " class="submit"></td>
 </tr>
 </table>
-

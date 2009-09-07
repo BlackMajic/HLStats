@@ -77,7 +77,7 @@ if(LANGUAGE !== 'en') { // only do something if we do not use the default lang
 	if(!file_exists($langFile)) {
 		die('Language file coul not be loaded. Please check your LANGUAGE setting in configuration file.');
 	}
-	$lData = parse_ini_file($langFile);
+	$lData = parse_custom_lang_file($langFile);
 	if(empty($lData)) {
 		die('Language file could not be parsed. Please check your LANGUAGE setting in configuration file.');
 	}

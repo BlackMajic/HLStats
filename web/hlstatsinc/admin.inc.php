@@ -450,12 +450,12 @@
 				if ($col->type == "hidden") continue;
 				echo "<td bgcolor=\"" . $g_options["table_head_bgcolor"] . "\">"
 					. $g_options["font_small"] . "<font color=\""
-					. $g_options["table_head_text"] . "\">" . $col->title
+					. $g_options["table_head_text"] . "\">" . l($col->title)
 					. "</font>" . $g_options["fontend_small"] . "</td>\n";
 			}
 ?>
 			<td align="center" bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>"><?php echo $g_options["font_small"];
-				echo "Delete";
+				echo l("Delete");
 				echo $g_options["fontend_small"];
 ?></td>
 		</tr>
@@ -598,12 +598,12 @@
 								}
 							}
 
-							echo "<option value=\"$k\"$selected>$v\n";
+							echo "<option value=\"$k\"$selected>",l($v),"\n";
 						}
 
 						if (!$gotcval) {
 							if(!empty($rowdata[$col->name])) {
-								echo "<option value=\"",$rowdata[$col->name],"\" selected>",$rowdata[$col->name],"\n";
+								echo "<option value=\"",$rowdata[$col->name],"\" selected>",l($rowdata[$col->name]),"\n";
 							}
 
 						}
