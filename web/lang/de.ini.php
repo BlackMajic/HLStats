@@ -229,3 +229,15 @@ Matches 2 to 4 characters inside curly braces = Genau 2 bis max. 4 Zeichen in ge
 Matches the string rex>>, REX>>, etc. = Genau rexx>>, REX>>, etc.
 Avoid adding patterns to the database that are too generic. Always ensure you have at least one literal (non-special) character in the pattern -- for example if you were to add the pattern "AXXA", it would match any player with 2 or more letters in their name = Vermeiden Sie zu allgemeine Muster. Am besten sollte man ein normales Zeichen in dem Muster haben -- zb. würde das Muster "AXXA" alle Spieler mit 2 oder mehr Zeichen in Ihrem Namen erkennen
 The Match Position field sets which end of the player's name the clan tag is allowed to appear = Die Position bestimmt an welcher Stelle das Muster passen soll
+
+Rule = Regel
+Addon = Addon
+URL = URL
+Value = Wert
+Version = Version
+Here you can define a list of addons (plugins) the HLStats live statistics page will detect = Hier werden die Addons verwaltet die der Live-View anzeigen soll
+When HLStats queries a server for the rules the server will return something like this = HLStats frägt den Server ab und es wird so was ähnliches als Antwort kommen
+Addons usually create a cvar that is publicly available in the rules list. In most cases the cvar that shows the addons existance just shows the version of the addon. You can configure HLStats on this page to then show the proper name of the plugin and it's version on the live statistics page. For example = Addons erstellen eine CVAR die öffentlich erreichbar in der Regeliste ist. In den meisten Fällen zeigt die Cvar an das das Addon da ist und liefert die Version mit. Hier kan man HLStats einstellen den richtigen Namen und Version auf der Live-View Seite anzuzeigen zB.
+The value in the table above shows the addon version. To include the version in your proper name of the addon you can use a = Der Wert in der Tabelle oben zeigt die Addon Version an. Um diese Version anzeigen zu lassen, verwenden Sie das Zeichen
+If the addon happens to have a home page where more information can be found on the addon, you can put it in as the URL which will be linked to = Wenn das Addon eine Homepage hat auf der Informationen zu Finden sind, kann man diese in das URL Feld eintragen
+These default addons should help make understanding this feature easier = Diese bereits eingetragenen Addons sollen helfen das Ganze zu verstehen
