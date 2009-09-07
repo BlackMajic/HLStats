@@ -239,7 +239,7 @@
 		}
 		else {
 			// no game support files found
-			// privode upload field
+			// provide upload field
 			$addMode = "upload";
 		}
 ?>
@@ -283,8 +283,8 @@
 								case 'select':
 								?>
 								<input type="hidden" name="addMode" value="select" />
-								Choose a gamesupport file from the install directory to install.<br />
-								The list contains only games which are not installed yet.<br />
+								<?php echo l('Choose a gamesupport file from the install directory to install'); ?>.<br />
+								<?php echo l('The list contains only games which are not installed yet'); ?>.<br />
 								<br />
 								<select name="newGame">
 									<?php
@@ -294,11 +294,11 @@
 											}
 										}
 										else {
-											echo "<option value=''>No files available</option>";
+											echo "<option value=''>",l('No files available'),"</option>";
 										}
 									?>
 								</select>
-								<p style="text-align: center;"><input type="submit" name="submitAdd" value=" ADD NEW GAME  "></p><br />
+								<p style="text-align: center;"><input type="submit" name="submitAdd" value=" <?php echo l('ADD NEW GAME'); ?>  "></p><br />
 								<?php
 								break;
 
@@ -312,26 +312,26 @@
 				</tr>
 				<tr>
 					<td><?php echo $g_options["font_normal"]; ?>
-						<b>Delete support for a game.</b>
+						<b><?php echo l('Delete support for a game'); ?>.</b>
 						<?php echo $g_options["fontend_normal"]; ?>
 					</td>
 				</tr>
 				<tr>
 					<td bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
 						<?php echo $g_options["font_normal"]; ?>
-						<b>IMPORTANT:</b><br />
-						IF you remove support for a game, all data associated with this game will be deleted !<br />
+						<b><?php echo l('IMPORTANT'); ?>:</b><br />
+						<?php echo l('IF you remove support for a game, all data associated with this game will be deleted'); ?> !<br />
 						<br />
 						<form  method="post" action="">
 							<select name="gameToDelete">
-								<option value="">Please select</option>
+								<option value=""><?php echo l('Please select'); ?></option>
 								<?php
 								foreach($gamesArr as $key=>$value) {
 									echo '<option value="'.$key.'">'.$value.'</option>';
 								}
 								?>
 							</select>
-							<center><input type="submit" name="submitDelete" value="  DELETE GAME  "></center><br />
+							<center><input type="submit" name="submitDelete" value=" <?php echo l('DELETE GAME'); ?> "></center><br />
 							<br />
 						</form>
 						<?php echo $g_options["fontend_normal"]; ?>
