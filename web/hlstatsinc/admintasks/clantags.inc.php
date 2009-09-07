@@ -124,7 +124,7 @@ Example patterns:<p>
 <?php echo l('Avoid adding patterns to the database that are too generic. Always ensure you have at least one literal (non-special) character in the pattern -- for example if you were to add the pattern "AXXA", it would match any player with 2 or more letters in their name'); ?>!
 <p>
 
-The Match Position field sets which end of the player's name the clan tag is allowed to appear.<p>
+<?php echo l("The Match Position field sets which end of the player's name the clan tag is allowed to appear"); ?>.<p>
 
 <?php
 
@@ -146,6 +146,6 @@ The Match Position field sets which end of the player's name the clan tag is all
 
 <table width="75%" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td align="center"><input type="submit" value="  Apply  " class="submit"></td>
+	<td align="center"><input type="submit" value="  <?php echo l('Apply'); ?>  " class="submit"></td>
 </tr>
 </table>

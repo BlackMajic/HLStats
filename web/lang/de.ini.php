@@ -228,3 +228,4 @@ Matches 1 to 6 characters inside square braces = Genau 1 bix max. 6 Zeichen in e
 Matches 2 to 4 characters inside curly braces = Genau 2 bis max. 4 Zeichen in geschweiften Klammern
 Matches the string rex>>, REX>>, etc. = Genau rexx>>, REX>>, etc.
 Avoid adding patterns to the database that are too generic. Always ensure you have at least one literal (non-special) character in the pattern -- for example if you were to add the pattern "AXXA", it would match any player with 2 or more letters in their name = Vermeiden Sie zu allgemeine Muster. Am besten sollte man ein normales Zeichen in dem Muster haben -- zb. würde das Muster "AXXA" alle Spieler mit 2 oder mehr Zeichen in Ihrem Namen erkennen
+The Match Position field sets which end of the player's name the clan tag is allowed to appear = Die Position bestimmt an welcher Stelle das Muster passen soll
