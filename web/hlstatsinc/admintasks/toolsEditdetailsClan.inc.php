@@ -61,7 +61,7 @@
 
 	if ($_POST) {
 		$proppage->update();
-		message("success", "Profile updated successfully.");
+		message("success", l("Profile updated successfully"));
 	}
 
 
@@ -93,4 +93,3 @@
 </tr>
 </table>
 </form>
-

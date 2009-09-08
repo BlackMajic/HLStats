@@ -208,7 +208,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					<td>
         					   <?php
                                 echo $g_options["font_normal"];
-                                echo l("Member of Clan:");
+                                echo l("Member of Clan");
                                 echo $g_options["fontend_normal"];
         					   ?>
         					</td>
@@ -234,7 +234,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						echo l("Real Name:");
+        						echo l("Real Name");
         						echo $g_options["fontend_normal"];
         					   ?>
         					</td>
@@ -376,7 +376,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						echo l("Last Connect*");
+        						echo l("Last Connect"),"*";
         						echo $g_options["fontend_normal"];
         					   ?>
         					   </td>
@@ -410,7 +410,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						echo l("Total Connection Time*");
+        						echo l("Total Connection Time"),"*";
         						echo $g_options["fontend_normal"];
         					   ?>
         					   </td>
@@ -444,7 +444,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					<td>
         					   <?php
         						echo $g_options["font_normal"];
-        						echo l("Average Ping:");
+        						echo l("Average Ping");
         						echo $g_options["fontend_normal"];
         					   ?>
         					</td>
@@ -652,7 +652,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 					<td width="45%">
 					   <?php
 						echo $g_options["font_normal"];
-						echo l("Teammate Kills*");
+						echo l("Teammate Kills"),"*";
 						echo $g_options["fontend_normal"];
 					   ?>
 					</td>
@@ -1821,7 +1821,7 @@ if (mysql_num_rows($query) != 0) {
 	}
 ?>
 	</select>
-	<?php echo l('or more times in the last'); ?> <?php echo DELETEDAYS; ?> days<?php echo $g_options["fontend_normal"];?>
+	<?php echo l('or more times in the last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('days'); ?><?php echo $g_options["fontend_normal"];?>
 	<script type="text/javascript" language="javascript">
 	<!--
 	function changeLimit(num) {
