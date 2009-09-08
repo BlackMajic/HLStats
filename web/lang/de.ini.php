@@ -274,3 +274,10 @@ Player Points Reward = Spieler Punkte
 Team Points Reward = Team Punkte
 Team = Team
 Action Description = Aktions Beschreibung
+
+You can make an action map-specific by prepending the map name and an underscore to the Action Code = Man kann die Aktion auch Map spezifisch anlegen in dem man den Map Namen mit einem Unterstrich getrennt vor den Aktions-Code schreibt
+For example, if the map = Wenn z.B. die Map
+has an action = eine Aktion namens
+then you can either make the action code just = hat, dann kann man die Aktion Code entweder
+(in which case it will match all maps) or you can make it = (In diesem fall wäre das für alle Maps) oder Sie machen
+to match only on the "rock2" map = um nur die "rock" Map zu bewerten

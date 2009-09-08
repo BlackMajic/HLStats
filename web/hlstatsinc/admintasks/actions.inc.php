@@ -64,7 +64,10 @@
 
 ?>
 
-You can make an action map-specific by prepending the map name and an underscore to the Action Code. For example, if the map "<b>rock2</b>" has an action "<b>goalitem</b>" then you can either make the action code just "<b>goalitem</b>" (in which case it will match all maps) or you can make it "<b>rock2_goalitem</b>" to match only on the "rock2" map.<p>
+<?php echo l('You can make an action map-specific by prepending the map name and an underscore to the Action Code'); ?>.
+<?php echo l('For example, if the map'), " <b>rock2</b> ", l('has an action'), " <b>goalitem</b> ", l('then you can either make the action code just'); ?>
+<?php echo " <b>goalitem</b> ", l('(in which case it will match all maps) or you can make it'); ?>
+<?php echo " <b>rock2_goalitem</b> ", l('to match only on the "rock2" map'); ?>,'.<p>';
 
 <?php
 
