@@ -43,10 +43,10 @@
 
 	if(isset($_POST['saveNews'])) {
 		if ($_POST["subject"] == "") {
-			echo "<b>Error: Please provide a subject.</b><br><br>";
+			echo "<b>",l('Error: Please provide a subject'),".</b><br><br>";
 		}
 		elseif ($_POST["message"] == "") {
-			echo "<b>Error: Please provide a Message.</b><br><br>";
+			echo "<b>".l('Error: Please provide a Message'),".</b><br><br>";
 		}
 		else {
 			$newsdate = date("Y-m-d H:i:s");
@@ -58,7 +58,7 @@
 										'".$_POST["subject"]."',
 										'".$_POST["message"]."')
 								");
-			echo "<b>News has been saved.</b><br><br>";
+			echo "<b>".l('News has been saved'),".</b><br><br>";
 		}
 	}
 
@@ -67,14 +67,14 @@
 			$result = mysql_query("DELETE FROM ".DB_PREFIX."_News
 										WHERE id = '".$_GET['saveEdit']."'
 									");
-			echo "<b>News has been deleted.</b><br><br>";
+			echo "<b>".l('News has been deleted'),".</b><br><br>";
 		}
 		else {
 			if ($_POST["subject"] == "") {
-				echo "<b>Error: Please provide a subject.</b><br><br>";
+				echo "<b>",l('Error: Please provide a subject'),".</b><br><br>";
 			}
 			elseif ($_POST["message"] == "") {
-				echo "<b>Error: Please provide a Message.</b><br><br>";
+				echo "<b>".l('Error: Please provide a Message'),".</b><br><br>";
 			}
 			else {
 				$newsdate = date("Y-m-d H:i:s");
@@ -86,7 +86,7 @@
 											message = '".$_POST["message"]."'
 										WHERE id = '".$_GET['saveEdit']."'
 									");
-				echo "<b>News has been saved.</b><br><br>";
+				echo "<b>".l('News has been saved'),".</b><br><br>";
 			}
 		}
 	}
@@ -95,7 +95,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif">
 	<b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=toolsNews"><?php echo $task->title; ?></a></b>
 
-<p>Here you can write and edit the news which are displayed at the front page</p>
+<p><?php echo l('Here you can write and edit the news which are displayed at the front page'); ?></p>
 
 <?php
 if(!empty($_GET['editpost'])) {
@@ -115,27 +115,27 @@ if(!empty($_GET['editpost'])) {
 			<form method="post" action="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=toolsNews">
 				<table border="0" cellpadding="2" cellspacing="0">
 					<tr>
-						<td width="100px"><?php echo $g_options["font_normal"]; ?><b>Author:</b><?php echo $g_options["fontend_normal"]; ?></td>
+						<td width="100px"><?php echo $g_options["font_normal"]; ?><b><?php echo l('Author'); ?>:</b><?php echo $g_options["fontend_normal"]; ?></td>
 						<td><input type="text" disabled="disabled" name="author" value="<?php echo $post['user'];?>" /></td>
 					</tr>
 					<tr>
-						<td width="100px"><?php echo $g_options["font_normal"]; ?><b>E-Mail:</b><?php echo $g_options["fontend_normal"]; ?></td>
+						<td width="100px"><?php echo $g_options["font_normal"]; ?><b><?php echo l('E-Mail'); ?>:</b><?php echo $g_options["fontend_normal"]; ?></td>
 						<td><input type="text" name="email" value="<?php echo $post['email'];?>" /></td>
 					</tr>
 					<tr>
-						<td width="100px"><?php echo $g_options["font_normal"]; ?><b>Subject:</b><?php echo $g_options["fontend_normal"]; ?></td>
+						<td width="100px"><?php echo $g_options["font_normal"]; ?><b><?php echo l('Subject'); ?>:</b><?php echo $g_options["fontend_normal"]; ?></td>
 						<td><input type="text" name="subject" value="<?php echo $post['subject'];?>" /></td>
 					</tr>
 					<tr>
-						<td width="100px" valign="top"><?php echo $g_options["font_normal"]; ?><b>Message:</b><?php echo $g_options["fontend_normal"]; ?></td>
+						<td width="100px" valign="top"><?php echo $g_options["font_normal"]; ?><b><?php echo l('Message'); ?>:</b><?php echo $g_options["fontend_normal"]; ?></td>
 						<td><textarea name="message" cols="70" rows="6" /><?php echo $post['message'];?></textarea></td>
 					</tr>
 					<tr>
 						<td width="100px">&nbsp;</td>
 						<td>
 							<?php echo $g_options["font_normal"]; ?>
-								<input type="submit" name="editNews" value="  Edit  " />&nbsp;
-								<input type="checkbox" name="newsDelete" value="1" />&nbsp;<b>DELETE NEWS</b>
+								<input type="submit" name="editNews" value=" <?php echo l('Edit'); ?>  " />&nbsp;
+								<input type="checkbox" name="newsDelete" value="1" />&nbsp;<b><?php echo l('DELETE NEWS'); ?></b>
 							<?php echo $g_options["fontend_normal"]; ?>
 						</td>
 					</tr>
@@ -158,24 +158,24 @@ else {
 			<form method="post" action="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=toolsNews">
 				<table border="0" cellpadding="2" cellspacing="0">
 					<tr>
-						<td width="100px"><?php echo $g_options["font_normal"]; ?><b>Author:</b><?php echo $g_options["fontend_normal"]; ?></td>
+						<td width="100px"><?php echo $g_options["font_normal"]; ?><b><?php echo l('Author'); ?>:</b><?php echo $g_options["fontend_normal"]; ?></td>
 						<td><input type="text" disabled="disabled" name="author" value="<?php echo $auth->userdata["username"];?>" /></td>
 					</tr>
 					<tr>
-						<td width="100px"><?php echo $g_options["font_normal"]; ?><b>E-Mail:</b><?php echo $g_options["fontend_normal"]; ?></td>
+						<td width="100px"><?php echo $g_options["font_normal"]; ?><b><?php echo l('E-Mail'); ?>:</b><?php echo $g_options["fontend_normal"]; ?></td>
 						<td><input type="text" name="email" /></td>
 					</tr>
 					<tr>
-						<td width="100px"><?php echo $g_options["font_normal"]; ?><b>Subject:</b><?php echo $g_options["fontend_normal"]; ?></td>
+						<td width="100px"><?php echo $g_options["font_normal"]; ?><b><?php echo l('Subject'); ?>:</b><?php echo $g_options["fontend_normal"]; ?></td>
 						<td><input type="text" name="subject" /></td>
 					</tr>
 					<tr>
-						<td width="100px" valign="top"><?php echo $g_options["font_normal"]; ?><b>Message:</b><?php echo $g_options["fontend_normal"]; ?></td>
+						<td width="100px" valign="top"><?php echo $g_options["font_normal"]; ?><b><?php echo l('Message'); ?>:</b><?php echo $g_options["fontend_normal"]; ?></td>
 						<td><textarea name="message" cols="70" rows="6" /></textarea></td>
 					</tr>
 					<tr>
 						<td width="100px">&nbsp;</td>
-						<td><input type="submit" name="saveNews" value="  Save  " /></td>
+						<td><input type="submit" name="saveNews" value=" <?php echo l('Save'); ?> " /></td>
 					</tr>
 				</table>
 			</form>

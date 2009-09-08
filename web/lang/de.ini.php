@@ -318,3 +318,11 @@ Verb Plural = Text
 Are you sure you want to reset all statistics? All players, clans and events will be deleted from the database = Sind Sie sicher, dass sie alle Statistiken zurücksetzten wollen ?  Alle Spieler, Clans und Events werden gelöscht#
 Reset Stats = Statistiken zurücksetzten
 The last reset was = Der letzte Reset war
+
+Error: Please provide a subject = Fehler: Bitte geben Sie ein Betreff ein
+Error: Please provide a Message = Fehler: Bitte geben Sie eine Nachricht ein
+News has been saved = Nachricht wurde gespeichert
+News has been deleted = Nachricht wurde gelöscht
+Here you can write and edit the news which are displayed at the front page = Hier kann man die News auf der Startseite erstellen und bearbeiten
+E-Mail = E-Mail
+Save = Speichern
