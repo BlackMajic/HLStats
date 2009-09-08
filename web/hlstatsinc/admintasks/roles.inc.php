@@ -45,19 +45,19 @@
 	$edlist->columns[] = new EditListColumn("game", "Game", 0, true, "hidden", $gamecode);
 	$edlist->columns[] = new EditListColumn("code", "Role Code", 20, true, "text", "", 32);
 	$edlist->columns[] = new EditListColumn("name", "Role Name", 20, true, "text", "", 64);
-	$edlist->columns[] = new EditListColumn("hidden", "<center>Hide Role</center>", 0, false, "checkbox");
+	$edlist->columns[] = new EditListColumn("hidden", "Hide Role", 0, false, "checkbox");
 
 
 	if ($_POST)
 	{
 		if ($edlist->update())
-			message("success", "Operation successful.");
+			message("success", l("Operation successful"));
 		else
 			message("warning", $edlist->error());
 	}
 ?>
 
-You can specify descriptive names for each game's role codes.<p>
+<?php echo l("You can specify descriptive names for each game's role codes"); ?>.<p>
 
 <?php $result = mysql_query("
 		SELECT
@@ -81,4 +81,3 @@ You can specify descriptive names for each game's role codes.<p>
 	<td align="center"><input type="submit" value="  Apply  " class="submit"></td>
 </tr>
 </table>
-

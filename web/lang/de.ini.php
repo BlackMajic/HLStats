@@ -286,3 +286,8 @@ Team Code = Team Code
 Team Name = Teamname
 Hide Team = Team ausblenden
 You can specify descriptive names for each game's team codes = Sie können für jeden Team Code einen Namen vergeben
+
+Role Code = Rollen Code
+Role Name = Rollenname
+Hide Role = Rolle ausblenden
+You can specify descriptive names for each game's role codes = Sie können für jede Rolle einen Namen vergeben
