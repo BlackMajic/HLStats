@@ -9,6 +9,7 @@ Logout = Abmelden
 No files available = Keine Dateien verfügrbar
 Please select = Bitte wählen
 Delete = Löschen
+Help = Hilfe
 
 Contents = Übersicht
 Games = Spiele
@@ -291,3 +292,9 @@ Role Code = Rollen Code
 Role Name = Rollenname
 Hide Role = Rolle ausblenden
 You can specify descriptive names for each game's role codes = Sie können für jede Rolle einen Namen vergeben
+
+Weapon Code = Waffen Code
+Weapon Name = Waffenname
+You can give each weapon a "points modifier", amultiplier which determines how many points will be gained or lost for killing with or being killed by that weapon = Man kann jeder Waffe einen Punkte Multiplikator hinterlegen, dieser bestimmt wie viele Punkte man gewinnt oder verliert
+(Refer to = (Beziehen Sie sich
+for a full description of how points ratings are calculated.) The baseline points modifier for weapons is 1.00. A points modifier of 0.00 will cause kills with that weapon to have no effect on players' points = für eine ausführliche Beschreibung wie die Punkte berechnet werden). Der Grundwert des Modifikators ist 1.00. Ein modifikator von 0.00 bewirkt, dass keine Punkte für diese Waffe gewonnen werden können

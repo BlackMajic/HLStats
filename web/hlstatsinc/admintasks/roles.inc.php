@@ -78,6 +78,6 @@
 
 <table width="75%" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td align="center"><input type="submit" value="  Apply  " class="submit"></td>
+	<td align="center"><input type="submit" value=" <?php echo l('Apply'); ?> " class="submit"></td>
 </tr>
 </table>
