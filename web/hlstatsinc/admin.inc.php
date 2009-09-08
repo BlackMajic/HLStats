@@ -792,7 +792,7 @@
 	<td width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
 		<?php
 		echo $g_options["font_normal"];
-		echo $this->title . ":";
+		echo l($this->title) . ":";
 		echo $g_options["fontend_normal"];
 		?>
 	</td>
@@ -828,7 +828,7 @@
 
 				default:
 					echo "<input type=\"text\" name=\"$this->name\" size=35 value=\""
-						. htmlspecialchars($value)
+						. htmlspecialchars(l($value))
 						. "\" class=\"textbox\">";
 					break;
 			}

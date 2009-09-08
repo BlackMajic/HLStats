@@ -212,12 +212,12 @@ function getSelect ($name, $values, $currentvalue="")
 			$gotcval = true;
 		}
 
-		$select .= ">$v\n";
+		$select .= ">".l($v)."\n";
 	}
 
 	if ($currentvalue && !$gotcval)
 	{
-		$select .= "\t<option value=\"$currentvalue\" selected>$currentvalue\n";
+		$select .= "\t<option value=\"$currentvalue\" selected>l($currentvalue)\n";
 	}
 
 	$select .= "</select>";

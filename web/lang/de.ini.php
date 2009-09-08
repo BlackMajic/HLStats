@@ -10,6 +10,8 @@ No files available = Keine Dateien verfügrbar
 Please select = Bitte wählen
 Delete = Löschen
 Help = Hilfe
+No = Nein
+Yes = Ja
 
 Contents = Übersicht
 Games = Spiele
@@ -400,3 +402,22 @@ Player event histories cover only the last = Spieler Event Historie beinhaltet n
 Items marked "Last = Einträge markiert mit "Letzte
 Days" or "*" above are generated from the player's Event History. Player kill, death and suicide totals and points ratings cover the entire recorded period = Tage" oder "*" sind aus der Speilerhsitorie erstellt. Frags,Kills oder Selsbmorde sind auf die gesammte Aufzeichnungsperiode bezogen
 Admin Options = Admin Optionen
+
+Edit Player = Spieler bearbeiten
+(View Player Details) = Spieler Details
+Homepage URL = Homepage URL
+Hide Ranking = Statistik ausblenden
+Delete From Clan = Aus Clan löschen
+Reset player stats = Spieler Statistiken zurücksetzten
+
+Event History = Event Historie
+Player Event History = Player Event Historie
+My team received a points bonus of = Mein Team bekam Bonus Punkte
+for triggering = für des Erreichen
+Team Bonus = Team Bonus
+Connect = Betreten
+I connected to the server = Ich betrat den Server
+Kill = Frag
+Death = Tot
+killed me with = tötete mich mit
+with = mit
