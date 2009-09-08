@@ -264,3 +264,13 @@ All players, clans and events will be deleted from the database = Alle Spieler,C
 (All other admin settings will be retained) = Alle anderen Einstellungen bleiben erhalten
 You should kill = Beenden Sie
 before resetting the stats. You can restart it after they are reset = bevor Sie die Stats zurücksetzten.
+
+Action Code = Aktions Code
+Player Action = Spieler Aktion
+PlyrPlyr Action = SpielerSpieler Aktion
+Team Action = Team Aktion
+World Action = World Aktion
+Player Points Reward = Spieler Punkte
+Team Points Reward = Team Punkte
+Team = Team
+Action Description = Aktions Beschreibung

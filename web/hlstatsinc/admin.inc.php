@@ -598,7 +598,8 @@
 								}
 							}
 
-							echo "<option value=\"$k\"$selected>",l($v),"\n";
+							if($col->trans) $v = l($v);
+							echo "<option value=\"$k\"$selected>",$v,"\n";
 						}
 
 						if (!$gotcval) {
@@ -679,8 +680,9 @@
 		var $type;
 		var $datasource;
 		var $maxlength;
+		var $trans;
 
-		function EditListColumn ($name, $title, $width=20, $required=false, $type="text", $datasource="", $maxlength=0)
+		function EditListColumn ($name, $title, $width=20, $required=false, $type="text", $datasource="", $maxlength=0,$trans=true)
 		{
 			$this->name = $name;
 			$this->title = $title;
@@ -689,6 +691,7 @@
 			$this->type = $type;
 			$this->datasource = $datasource;
 			$this->maxlength = intval($maxlength);
+			$this->trans = $trans;
 		}
 	}
 

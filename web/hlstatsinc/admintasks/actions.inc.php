@@ -50,7 +50,7 @@
 	$edlist->columns[] = new EditListColumn("for_WorldActions", "World Action", 0, false, "checkbox");
 	$edlist->columns[] = new EditListColumn("reward_player", "Player Points Reward", 4, false, "text", "0");
 	$edlist->columns[] = new EditListColumn("reward_team", "Team Points Reward", 4, false, "text", "0");
-	$edlist->columns[] = new EditListColumn("team", "Team", 0, false, "select", "".DB_PREFIX."_Teams.name/code/game='$gamecode'");
+	$edlist->columns[] = new EditListColumn("team", "Team", 0, false, "select", DB_PREFIX."_Teams.name/code/game='$gamecode'",0,false);
 	$edlist->columns[] = new EditListColumn("description", "Action Description", 23, true, "text", "", 128);
 
 
@@ -96,4 +96,3 @@ You can make an action map-specific by prepending the map name and an underscore
 	<td align="center"><input type="submit" value="  Apply  " class="submit"></td>
 </tr>
 </table>
-
