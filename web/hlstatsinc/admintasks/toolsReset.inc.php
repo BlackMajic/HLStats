@@ -81,7 +81,7 @@
 
 		echo "</ul>\n";
 
-		echo "Done.<p>";
+		echo l("Done"),"<p>";
 
 		// add a last reset row into hlstats_options
 		mysql_query("UPDATE ".DB_PREFIX."_Options SET value = '".time()."'
@@ -105,19 +105,20 @@
 
 			<tr>
 				<td bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?>
-					Are you sure you want to reset all statistics? All players, clans and events will be deleted from the database.
-					(All other admin settings will be retained.)<br />
+					<?php echo l('Are you sure you want to reset all statistics? All players, clans and events will be deleted from the database'); ?>.
+					<?php echo l('(All other admin settings will be retained)'); ?><br />
 					<br />
-					<b>Note</b> You should kill <b>hlstats.pl</b>
-					before resetting the stats. You can restart it after they are reset.
+					<b><?php echo l('Note'); ?>:</b> <?php echo l('You should kill'); ?> <b>hlstats.pl</b>
+					<?php echo l('before resetting the stats. You can restart it after they are reset'); ?>.<br />
+					<br />
 					<input type="hidden" name="confirm" value="1">
-					<center><input type="submit" value="  Reset Stats  "></center>
+					<center><input type="submit" value=" <?php echo l('Reset Stats'); ?> "></center>
 					<?php echo $g_options["fontend_normal"]; ?>
 				</td>
 			</tr>
 			<tr>
 				<td bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?>
-					The last reset was: <b><?php echo $g_options['reset_date']; ?></b>
+					<?php echo l('The last reset was'); ?>: <b><?php echo $g_options['reset_date']; ?></b>
 				</td>
 			</tr>
 			</table>

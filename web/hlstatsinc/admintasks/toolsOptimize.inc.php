@@ -168,11 +168,10 @@ Optimizing tables...<?php echo $g_options["fontend_normal"]; ?></td>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
 
 <tr>
-	<td><?php echo $g_options["font_normal"]; ?><a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=toolsOptimize&upgrade=yes&<?php echo strip_tags(SID)?>">Click here</a> if you get "table handler does not support check/repair" above.<?php echo $g_options["fontend_normal"]; ?></td>
+	<td><?php echo $g_options["font_normal"]; ?><a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=toolsOptimize&upgrade=yes&<?php echo strip_tags(SID)?>"><?php echo l('Click here'); ?></a> <?php echo l('if you get "table handler does not support check/repair" above'); ?>".<?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
 
 </table>
 <?php
 	}
 ?>
-

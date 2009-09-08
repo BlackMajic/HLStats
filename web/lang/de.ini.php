@@ -23,7 +23,19 @@ players and = Spieler und
 ranked in = in
 games on = Spielen auf
 Servers = Server
+Server = Server
+Map = Map
 ago = her
+Type = Typ
+
+Host = Host
+Connects = Verbindungen
+Percentage of Connects = Prozent von allen Verbindungen
+Table = Tabelle
+Operation = Tätigkeit
+Msg. Type = Nach. Typ
+Click here = Klicke hier
+if you get "table handler does not support check/repair" above = wenn die Meldung "table handler does not support check/repair" kommt
 
 year = Jahr
 week = Woche
@@ -31,6 +43,7 @@ day = Tag
 hour = Stunde
 min = Minute
 sec = Sekunde
+Date = Datum
 
 years = Jahre
 weeks = Wochen
@@ -302,3 +315,6 @@ for a full description of how points ratings are calculated.) The baseline point
 Award Name = Auszeichnungsname
 Verb Plural = Text
 
+Are you sure you want to reset all statistics? All players, clans and events will be deleted from the database = Sind Sie sicher, dass sie alle Statistiken zurücksetzten wollen ?  Alle Spieler, Clans und Events werden gelöscht#
+Reset Stats = Statistiken zurücksetzten
+The last reset was = Der letzte Reset war
