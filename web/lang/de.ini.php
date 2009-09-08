@@ -21,7 +21,7 @@ General Statistics = Statistic Übersicht
 players and = Spieler und
 ranked in = in
 games on = Spielen auf
-Servers = Servern
+Servers = Server
 ago = her
 
 year = Jahr
@@ -241,3 +241,16 @@ Addons usually create a cvar that is publicly available in the rules list. In mo
 The value in the table above shows the addon version. To include the version in your proper name of the addon you can use a = Der Wert in der Tabelle oben zeigt die Addon Version an. Um diese Version anzeigen zu lassen, verwenden Sie das Zeichen
 If the addon happens to have a home page where more information can be found on the addon, you can put it in as the URL which will be linked to = Wenn das Addon eine Homepage hat auf der Informationen zu Finden sind, kann man diese in das URL Feld eintragen
 These default addons should help make understanding this feature easier = Diese bereits eingetragenen Addons sollen helfen das Ganze zu verstehen
+
+IP Address = IP Adresse
+Port = Port
+Server Name = Servername
+Rcon Password = Rcon Passwort
+Default Server Map = Standart Server Map
+Public Address = Öffentliche Adresse
+Status URL = Status URL
+Enter the addresses of all servers that you want to accept data from = Geben Sie alle Adressen der Server an von denen Sie daten akzeptieren wollen
+HLStats can use Rcon to give feedback to users when they = HLStats kann das Rcon Passwort verwenden wenn die Spieler
+update their profile = Ihr Profil akutalisieren
+if you enable Rcon support in hlstats.conf and specify an Rcon Password for each server = wenn Sie die Rcon Unterstützung akitvieren und das Rcon Passwort für den Server angeben
+The Default map is used to sepecify the map if HLStats is unable to determine the map = Die Standart Map dient HLStats dazu eine Map anzuzeigen wenn es nicht möglich ist die Map auszulesen

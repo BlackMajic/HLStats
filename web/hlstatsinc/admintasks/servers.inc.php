@@ -61,15 +61,15 @@
 
 	if (isset($_POST['submitServer'])) {
 		if ($edlist->update())
-			message("success", "Operation successful.");
+			message("success", l("Operation successful"));
 		else
 			message("warning", $edlist->error());
 	}
 
 ?>
-<p>Enter the addresses of all servers that you want to accept data from here.</p>
-<p>HLStats can use Rcon to give feedback to users when they <a href="<?php echo $g_options["scripturl"]; ?>?mode=help#set">update their profile</a> if you enable Rcon support in hlstats.conf and specify an Rcon Password for each server.</p>
-<p>The Default map is used to sepecify the map if HLStats is unable to determine the map.</p>
+<p><?php echo l('Enter the addresses of all servers that you want to accept data from'); ?></p>
+<p><?php echo l('HLStats can use Rcon to give feedback to users when they'); ?> <a href="<?php echo $g_options["scripturl"]; ?>?mode=help#set"><?php echo l('update their profile'); ?></a> <?php echo l('if you enable Rcon support in hlstats.conf and specify an Rcon Password for each server'); ?>.</p>
+<p><?php echo l('The Default map is used to sepecify the map if HLStats is unable to determine the map'); ?>.</p>
 
 <?php
 	if ($advanced === true) {
