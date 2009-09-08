@@ -44,7 +44,7 @@
 	$edlist = new EditList("awardId", DB_PREFIX."_Awards", "award");
 	$edlist->columns[] = new EditListColumn("game", "Game", 0, true, "hidden", $gamecode);
 	$edlist->columns[] = new EditListColumn("awardType", "Type", 0, true, "hidden", "W");
-	$edlist->columns[] = new EditListColumn("code", "Weapon", 0, true, "select", "".DB_PREFIX."_Weapons.code/code/game='$gamecode'");
+	$edlist->columns[] = new EditListColumn("code", "Weapon", 0, true, "select", DB_PREFIX."_Weapons.code/code/game='$gamecode'",0,false);
 	$edlist->columns[] = new EditListColumn("name", "Award Name", 20, true, "text", "", 128);
 	$edlist->columns[] = new EditListColumn("verb", "Verb Plural", 20, true, "text", "", 64);
 
@@ -52,7 +52,7 @@
 	if ($_POST)
 	{
 		if ($edlist->update())
-			message("success", "Operation successful.");
+			message("success", l("Operation successful"));
 		else
 			message("warning", $edlist->error());
 	}
@@ -78,7 +78,6 @@
 
 <table width="75%" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td align="center"><input type="submit" value="  Apply  " class="submit"></td>
+	<td align="center"><input type="submit" value=" <?php echo l('Apply'); ?> " class="submit"></td>
 </tr>
 </table>
-
