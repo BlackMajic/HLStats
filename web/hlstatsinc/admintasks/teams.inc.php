@@ -45,7 +45,7 @@
 	$edlist->columns[] = new EditListColumn("game", "Game", 0, true, "hidden", $gamecode);
 	$edlist->columns[] = new EditListColumn("code", "Team Code", 20, true, "text", "", 32);
 	$edlist->columns[] = new EditListColumn("name", "Team Name", 20, true, "text", "", 64);
-	$edlist->columns[] = new EditListColumn("hidden", "<center>Hide Team</center>", 0, false, "checkbox");
+	$edlist->columns[] = new EditListColumn("hidden", "Hide Team", 0, false, "checkbox");
 
 
 	if ($_POST)
@@ -57,7 +57,7 @@
 	}
 ?>
 
-You can specify descriptive names for each game's team codes.<p>
+<?php echo l("You can specify descriptive names for each game's team codes"); ?>.<p>
 
 <?php $query = mysql_query("
 		SELECT
@@ -78,7 +78,6 @@ You can specify descriptive names for each game's team codes.<p>
 
 <table width="75%" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td align="center"><input type="submit" value="  Apply  " class="submit"></td>
+	<td align="center"><input type="submit" value=" <?php echo l('Apply'); ?> " class="submit"></td>
 </tr>
 </table>
-

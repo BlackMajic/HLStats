@@ -281,3 +281,8 @@ has an action = eine Aktion namens
 then you can either make the action code just = hat, dann kann man die Aktion Code entweder
 (in which case it will match all maps) or you can make it = (In diesem fall wäre das für alle Maps) oder Sie machen
 to match only on the "rock2" map = um nur die "rock" Map zu bewerten
+
+Team Code = Team Code
+Team Name = Teamname
+Hide Team = Team ausblenden
+You can specify descriptive names for each game's team codes = Sie können für jeden Team Code einen Namen vergeben
