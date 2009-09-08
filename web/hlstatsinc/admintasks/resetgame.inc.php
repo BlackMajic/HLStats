@@ -118,29 +118,28 @@
 
 		echo "</ul>\n";
 
-		echo "Done.<p>";
+		echo l("Done"),"<p>";
 	}
 	else {
-
 ?>
 <table width="75%" border="0" cellspacing="0" cellpadding="0">
 	<tr>
 		<td bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>" style="padding: 10px;">
 			<?php echo $g_options["font_normal"]; ?>
-			Are you sure you want to reset all statistics for game <b><?php echo $gamename;?></b> ? <br />
+			<?php echo l('Are you sure you want to reset all statistics for game'); ?> <b><?php echo $gamename;?></b> ? <br />
 			<br />
-			All players, clans and events will be deleted from the database.<br />
-			(All other admin settings will be retained.)<br />
+			<?php echo l('All players, clans and events will be deleted from the database'); ?>.<br />
+			<?php echo l('(All other admin settings will be retained)'); ?><br />
 			<br />
-			<b>Note</b> You should kill <b>hlstats.pl</b>
-			before resetting the stats. You can restart it after they are reset.<br />
+			<b><?php echo l('Note'); ?></b> <?php echo l('You should kill'); ?> <b>hlstats.pl</b>
+			<?php echo l('before resetting the stats. You can restart it after they are reset'); ?>.<br />
 			<br />
 			<?php echo $g_options["fontend_normal"]; ?>
 		</td>
 	</tr>
 	<tr>
 		<td align="center" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>" style="padding: 10px;">
-			<input type="submit" name="submitReset" value="  Reset  " class="submit">
+			<input type="submit" name="submitReset" value=" <?php echo l('Reset'); ?>  " class="submit">
 		</td>
 	</tr>
 </table>

@@ -258,3 +258,9 @@ Go to = Gehe zu
 Basic View = Normale Ansicht
 Advanced View = Erweiterte Ansicht
 The "Public Address" should be the address you want shown to users. If left blank, it will be generated from the IP Address and Port. If you are using any kind of log relaying utility (i.e. hlstats.pl will not be receiving data directly from the game servers), you will want to set the IP Address and Port to the address of the log relay program, and set the Public Address to the real address of the game server. You will need a separate log relay for each game server. You can specify a hostname (or anything at all) in the Public Address = Die öffentliche Adresse ist für die Benutzer. Wenn das Feld leer gelassen wird, wird die Adresse aus der Server IP und dem Port erstellt. Wenn sie eine Art von Log Verteiler (hlstats.pl bekommt die Log Daten nicht direkt vom Game-Server) muss man die IP Adresse und den Port darauf hin setzten und die öffentliche Adresse auf die des Gameservers setzten. Man benötigt pro gameserver einen Log Verteiler. Man kann auch eine URL in das öffebtliche Adressen Feld eintragen
+
+Are you sure you want to reset all statistics for game = Wollen Sie wirklich die Statistiken zurücksetzen für das Spiel
+All players, clans and events will be deleted from the database = Alle Spieler,Clans und Events werden aus der Datenbank gelöscht
+(All other admin settings will be retained) = Alle anderen Einstellungen bleiben erhalten
+You should kill = Beenden Sie
+before resetting the stats. You can restart it after they are reset = bevor Sie die Stats zurücksetzten.
