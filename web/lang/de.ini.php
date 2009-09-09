@@ -426,6 +426,7 @@ Kill = Frag
 Death = Tot
 killed me with = tötete mich mit
 with = mit
+Disconnect = Verlassen
 
 Weapon Details = Waffendetails
 
