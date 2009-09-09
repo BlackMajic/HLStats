@@ -71,8 +71,9 @@ $table = new Table(
 		),
 		new TableColumn(
 			"frags",
-			"Kills on $map",
-			"width=35&align=right"
+			l("Kills on")." ".$map,
+			"width=35&align=right",
+			false
 		)
 	),
 	"killerId", // keycol

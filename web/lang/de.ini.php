@@ -12,6 +12,7 @@ Delete = Löschen
 Help = Hilfe
 No = Nein
 Yes = Ja
+None = Kein
 
 Contents = Übersicht
 Games = Spiele
@@ -19,6 +20,7 @@ Game = Spiel
 Top Player = Top Spieler
 Top Clan = Top Clan
 Players = Spieler
+Player = Spieler
 Clans = Clans
 General Statistics = Statistic Übersicht
 players and = Spieler und
@@ -29,6 +31,7 @@ Server = Server
 Map = Map
 ago = her
 Type = Typ
+Change sorting order = Sortierung ändern
 
 Host = Host
 Connects = Verbindungen
@@ -402,6 +405,8 @@ Player event histories cover only the last = Spieler Event Historie beinhaltet n
 Items marked "Last = Einträge markiert mit "Letzte
 Days" or "*" above are generated from the player's Event History. Player kill, death and suicide totals and points ratings cover the entire recorded period = Tage" oder "*" sind aus der Speilerhsitorie erstellt. Frags,Kills oder Selsbmorde sind auf die gesammte Aufzeichnungsperiode bezogen
 Admin Options = Admin Optionen
+No info = Kein Information
+Data out of selected range = Daten auserhalb der Auswahl
 
 Edit Player = Spieler bearbeiten
 (View Player Details) = Spieler Details
@@ -421,3 +426,8 @@ Kill = Frag
 Death = Tot
 killed me with = tötete mich mit
 with = mit
+
+Weapon Details = Waffendetails
+
+Map Details = Map Details
+Kills on = Frags auf

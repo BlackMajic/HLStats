@@ -141,6 +141,9 @@ class Table
 			$totalwidth += $col->width;
 
 			echo "<td width=\"" . $col->width . "%\" align=\"$col->align\">";
+			if($col->translate) {
+				$col->title = l($col->title);
+			}
 
 			if ($col->sort != "no") {
 				echo getSortArrow($this->sort, $this->sortorder, $col->name,
@@ -150,7 +153,7 @@ class Table
 			else {
 				echo $g_options["font_small"];
 				echo "<font color=\"" . $g_options["table_head_text"] . "\">";
-				echo l($col->title);
+				echo $col->title;
 				echo "</font>";
 				echo $g_options["fontend_small"];
 			}
@@ -426,11 +429,13 @@ class TableColumn
 	var $sort = "yes";
 	var $type = "text";
 	var $embedlink = "no";
+	var $translate = true;
 
-	function TableColumn ($name, $title, $attrs="")
+	function TableColumn ($name, $title, $attrs="",$trans=true)
 	{
 		$this->name = $name;
 		$this->title= $title;
+		$this->translate = $trans;
 
 		$allowed_attrs = array(
 			"align",
