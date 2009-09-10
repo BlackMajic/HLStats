@@ -232,7 +232,7 @@ function showNews(id) {
 		<b>
 		<?php
 		if ($awards_numdays == 1) {
-			echo l("Daily Awards"), $awards_s_date;
+			echo l("Daily Awards")," ",l("for")," ",$awards_s_date;
 		}
 		else {
 			echo $awards_numdays," ",l('Day Awards'),": ",$awards_s_date," ",l('to')," ",$awards_d_date;
@@ -399,9 +399,7 @@ function showNews(id) {
 			<td width=10><?php echo $g_options["font_normal"]; ?><b>&#149;&nbsp;</b><?php echo $g_options["fontend_normal"]; ?></td>
 			<td width="100%"><?php
 				echo $g_options["font_normal"];
-
 				echo "<b>$num_players</b> ",l('players'),"  <b>$num_clans</b> ",l('and clans ranked on')," <b>$num_servers</b> ",l('servers'),".";
-
 				echo $g_options["fontend_normal"];
 			?></td>
 		</tr>
@@ -413,9 +411,7 @@ function showNews(id) {
 			<td width=10><?php echo $g_options["font_normal"]; ?><b>&#149;&nbsp;</b><?php echo $g_options["fontend_normal"]; ?></td>
 			<td width="100%"><?php
 				echo $g_options["font_normal"];
-
 				echo l("Last kill")," <b>$lastevent</b>";
-
 				echo $g_options["fontend_normal"];
 			?></td>
 		</tr>
@@ -427,9 +423,7 @@ function showNews(id) {
 			<td width=10><?php echo $g_options["font_normal"]; ?><b>&#149;&nbsp;</b><?php echo $g_options["fontend_normal"]; ?></td>
 			<td width="100%"><?php
 				echo $g_options["font_normal"];
-
 				echo l("All statistics are generated in real-time. Event history data expires after"), " <b>" . DELETEDAYS . "</b> ",l("days"),".";
-
 				echo $g_options["fontend_normal"];
 			?></td>
 		</tr>

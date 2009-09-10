@@ -61,6 +61,8 @@ Awards = Auszeichnungen
 Daily = Tägliche
 Day = Tag
 Days = Tage
+Daily Awards = Tagesauszeichnung
+for = für
 
 Apply = Anwenden
 ID = ID
