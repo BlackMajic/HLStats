@@ -84,7 +84,7 @@ $tblWeapons = new Table(
 
 $killCount = mysql_query("
 	SELECT
-		COUNT(*) kc
+		COUNT(".DB_PREFIX."_Players.playerId) kc
 	FROM
 		".DB_PREFIX."_Events_Frags
 	LEFT JOIN ".DB_PREFIX."_Players ON
@@ -98,7 +98,7 @@ mysql_free_result($killCount);
 $result = mysql_query("
 	SELECT
 		".DB_PREFIX."_Events_Frags.weapon,
-		IFNULL(".DB_PREFIX."_Weapons.modifier, 1.00) AS modifier,
+		".DB_PREFIX."_Weapons.modifier AS modifier,
 		COUNT(".DB_PREFIX."_Events_Frags.weapon) AS kills,
 		COUNT(".DB_PREFIX."_Events_Frags.weapon) / ".mysql_escape_string($totalkills)." * 100 AS percent
 	FROM
