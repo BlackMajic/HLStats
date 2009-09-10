@@ -432,6 +432,12 @@ Death = Tot
 killed me with = tötete mich mit
 with = mit
 Disconnect = Verlassen
+I left the game = Ich verlies das Spiel
+I entered the game = Ich betrat das Spiel
+I killed = Ich tötete
+Team Kill = Team frag
+Friendly Fire = Friendly Fire
+I killed teammate = Ich tötete ein Teammate
 
 Weapon Details = Waffendetails
 

@@ -188,10 +188,10 @@ insertEvents("TeamBonuses", "
 		<table>.playerId=".mysql_escape_string($player)."");
 
 if (MODE == "LAN") {
-	$uqIdStr = "IP Address:";
+	$uqIdStr = l("IP Address");
 }
 else {
-	$uqIdStr = "Unique ID:";
+	$uqIdStr = "Unique ID";
 }
 
 insertEvents("Connects", "
@@ -212,7 +212,7 @@ insertEvents("Disconnects", "
 	SELECT
 		'".l('Disconnect')."',
 		<table>.eventTime,
-		'I left the game',
+		'".l('I left the game')."',
 		".DB_PREFIX."_Servers.name,
 		<table>.map
 	FROM
@@ -226,7 +226,7 @@ insertEvents("Entries", "
 	SELECT
 		'Entry',
 		<table>.eventTime,
-		'I entered the game',
+		'".l('I entered the game')."',
 		".DB_PREFIX."_Servers.name,
 		<table>.map
 	FROM
@@ -240,7 +240,7 @@ insertEvents("Frags", "
 	SELECT
 		'".l('Kill')."',
 		<table>.eventTime,
-		CONCAT('I killed %A%$surl?mode=playerinfo&player=', victimId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' ".l('with')." ', weapon),
+		CONCAT('".l('I killed')." %A%$surl?mode=playerinfo&player=', victimId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' ".l('with')." ', weapon),
 		".DB_PREFIX."_Servers.name,
 		<table>.map
 	FROM
@@ -270,9 +270,9 @@ insertEvents("Frags", "
 
 insertEvents("Teamkills", "
 	SELECT
-		'Team Kill',
+		'".l('Team Kill')."',
 		<table>.eventTime,
-		CONCAT('I killed teammate %A%$surl?mode=playerinfo&player=', victimId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' with ', weapon),
+		CONCAT('".l('I killed teammate')." %A%$surl?mode=playerinfo&player=', victimId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' ".l('with')." ', weapon),
 		".DB_PREFIX."_Servers.name,
 		<table>.map
 	FROM
@@ -286,7 +286,7 @@ insertEvents("Teamkills", "
 
 insertEvents("Teamkills", "
 	SELECT
-		'Friendly Fire',
+		'".l('Friendly Fire')."',
 		<table>.eventTime,
 		CONCAT('My teammate %A%$surl?mode=playerinfo&player=', killerId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' killed me with ', weapon),
 		".DB_PREFIX."_Servers.name,
@@ -302,7 +302,7 @@ insertEvents("Teamkills", "
 
 insertEvents("ChangeRole", "
 	SELECT
-		'Role',
+		'".l('Role')."',
 		<table>.eventTime,
 		CONCAT('I changed role to ', role),
 		".DB_PREFIX."_Servers.name,
@@ -316,7 +316,7 @@ insertEvents("ChangeRole", "
 
 insertEvents("ChangeName", "
 	SELECT
-		'Name',
+		'".l('Name')."',
 		<table>.eventTime,
 		CONCAT('I changed my name from \"', oldName, '\" to \"', newName, '\"'),
 		".DB_PREFIX."_Servers.name,
@@ -330,7 +330,7 @@ insertEvents("ChangeName", "
 
 insertEvents("PlayerActions", "
 	SELECT
-		'Action',
+		'".l('Action')."',
 		<table>.eventTime,
 		CONCAT('I received a points bonus of ', bonus, ' for triggering \"', ".DB_PREFIX."_Actions.description, '\"'),
 		".DB_PREFIX."_Servers.name,
