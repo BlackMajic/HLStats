@@ -140,13 +140,14 @@ $queryCount = mysql_query("
 		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_PlayerActions.playerId AND
 		".DB_PREFIX."_Events_PlayerActions.actionId = ".DB_PREFIX."_Actions.id
 ");
+
 $result = mysql_fetch_assoc($queryCount);
 $numitems = $result['ac'];
 $totalact = $result['tc'];
 ?>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td width="50%"><?php echo $g_options["font_normal"]; ?><?php echo l('From a total of '); ?><b><?php echo intval($totalact); ?></b> <?php echo l('achievements'); ?> (<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('days'); ?>)<?php echo $g_options["fontend_normal"]; ?></td>
+	<td width="50%"><?php echo $g_options["font_normal"]; ?><?php echo l('From a total of'); ?> <b><?php echo intval($totalact); ?></b> <?php echo l('achievements'); ?> (<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('days'); ?>)<?php echo $g_options["fontend_normal"]; ?></td>
 	<td width="50%" align="right"><?php echo $g_options["font_normal"]; ?><?php echo l('Back to'); ?> <a href="<?php echo $g_options["scripturl"] . "?mode=actions&amp;game=$game"; ?>"><?php echo l('Action Statistics'); ?></a><?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
 </table><p>

@@ -432,3 +432,8 @@ Weapon Details = Waffendetails
 
 Map Details = Map Details
 Kills on = Frags auf
+
+Action Details = Aktionsdetails
+From a total of = Von gesammt
+achievements = Errungenschaften
+Skill Bonus Total = Skill Bonus gesamt

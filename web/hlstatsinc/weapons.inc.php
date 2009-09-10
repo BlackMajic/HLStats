@@ -109,7 +109,7 @@ $result = mysql_query("
 		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.killerId
 	WHERE
 		".DB_PREFIX."_Players.game='".mysql_escape_string($game)."'
-		AND (".DB_PREFIX."_Weapons.game='".mysql_escape_string($game)."' OR ".DB_PREFIX."_Weapons.weaponId IS NULL)
+		AND ".DB_PREFIX."_Weapons.game='".mysql_escape_string($game)."'
 		AND ".DB_PREFIX."_Players.hideranking = 0
 	GROUP BY
 		".DB_PREFIX."_Events_Frags.weapon
