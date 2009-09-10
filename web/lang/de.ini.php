@@ -445,3 +445,14 @@ Avg. Member Points = Durchsch. Punkte pro Spieler
 Total Kills = Frags (alle)
 Total Deaths = Tote (alle)
 Contribution to Clan Kills = Beitrag zu den Clan Frags
+
+Server Statistics = Serverstatistik
+Total Time = Gesamtzeit
+Total Frags = Frags (alle)
+Server Type = Servertyp
+Nextmap = Nächste Map
+Timeleft = Zeit übrig
+Connecting = Verbinden
+Valve Anti-Cheat = Valve Anti-Cheat
+Rules = Regeln
+Server Addons = Serveraddons
