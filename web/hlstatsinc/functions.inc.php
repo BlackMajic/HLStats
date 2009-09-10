@@ -171,9 +171,9 @@ function getSortArrow ($sort, $sortorder, $name, $longname,
 	}
 
 	$arrowstring .= "\" style=\"color: " . $g_options["table_head_text"]
-		. "\" title=\"Change sorting order\">"
+		. "\" title=\"".l('Change sorting order')."\">"
 		. "<font color=\"" . $g_options["table_head_text"] . "\">"
-		. l($longname)."</font></a>";
+		. $longname."</font></a>";
 
 	if ($sort == $name) {
 		$arrowstring .= "&nbsp;<img src=\"" . $g_options["imgdir"] . "/$sortimg\""

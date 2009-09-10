@@ -82,8 +82,9 @@ $table = new Table(
 		),
 		new TableColumn(
 			"frags",
-			ucfirst($weapon) . " kills",
-			"width=35&align=right"
+			ucfirst($weapon) . " ".l('kills'),
+			"width=35&align=right",
+			false
 		),
 	),
 	"killerId", // keycol
