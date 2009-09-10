@@ -437,3 +437,11 @@ Action Details = Aktionsdetails
 From a total of = Von gesammt
 achievements = Errungenschaften
 Skill Bonus Total = Skill Bonus gesamt
+
+Clan Details = Clandetails
+Clan Profile and Statistics Summary = Clandetails und Zusammenfassung
+Number of Members = Mitglieder
+Avg. Member Points = Durchsch. Punkte pro Spieler
+Total Kills = Frags (alle)
+Total Deaths = Tote (alle)
+Contribution to Clan Kills = Beitrag zu den Clan Frags

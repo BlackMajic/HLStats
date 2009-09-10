@@ -69,6 +69,7 @@ $query = mysql_query("
 	GROUP BY
 		".DB_PREFIX."_Clans.clanId
 ");
+
 if (mysql_num_rows($query) != 1)
 	error("No such clan '$clan'.");
 
@@ -89,7 +90,6 @@ else {
 	$result = mysql_fetch_assoc($query);
 	$gamename = $result['name'];
 }
-
 
 pageHeader(
 	array($gamename, l("Clan Details"), $cl_full),
@@ -119,7 +119,7 @@ pageHeader(
 				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
 					<td><?php
 						echo $g_options["font_normal"];
-						echo l("Home Page:");
+						echo l("Home Page");
 						echo $g_options["fontend_normal"];
 					?></td>
 					<td><?php
@@ -130,7 +130,7 @@ pageHeader(
 						}
 						else
 						{
-							echo '(',l("Not specified."),")";
+							echo '(',l("Not specified"),")";
 						}
 						echo $g_options["fontend_normal"];
 					?></td>
@@ -139,7 +139,7 @@ pageHeader(
 				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
 					<td><?php
 						echo $g_options["font_normal"];
-						echo l("Number of Members:");
+						echo l("Number of Members");
 						echo $g_options["fontend_normal"];
 					?></td>
 					<td><?php
@@ -152,7 +152,7 @@ pageHeader(
 				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
 					<td><?php
 						echo $g_options["font_normal"];
-						echo l("Avg. Member Points:");
+						echo l("Avg. Member Points");
 						echo $g_options["fontend_normal"];
 					?></td>
 					<td><?php
@@ -165,7 +165,7 @@ pageHeader(
 				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
 					<td><?php
 						echo $g_options["font_normal"];
-						echo l("Total Kills:");
+						echo l("Total Kills");
 						echo $g_options["fontend_normal"];
 					?></td>
 					<td><?php
@@ -178,7 +178,7 @@ pageHeader(
 				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
 					<td><?php
 						echo $g_options["font_normal"];
-						echo l("Total Deaths:");
+						echo l("Total Deaths");
 						echo $g_options["fontend_normal"];
 					?></td>
 					<td><?php
@@ -191,7 +191,7 @@ pageHeader(
 				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
 					<td><?php
 						echo $g_options["font_normal"];
-						echo l("Kills per Death:");
+						echo l("Kills per Death");
 						echo $g_options["fontend_normal"];
 					?></td>
 					<td><?php
@@ -250,7 +250,7 @@ pageHeader(
 			),
 			new TableColumn(
 				"percent",
-				"Contribution&nbsp;to Clan&nbsp;Kills",
+				"Contribution to Clan Kills",
 				"width=20&sort=no&type=bargraph"
 			),
 			new TableColumn(
@@ -328,7 +328,7 @@ pageHeader(
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td width="100%" align="right"><br><br>
-	<?php echo $g_options["font_small"]; ?><b><?php echo l('Admin Options:'); ?></b> <a href="<?php echo $g_options["scripturl"] . "?mode=admin&amp;task=toolsEditdetailsClan&amp;id=$clan"; ?>"><?php echo l('Edit Clan Details'); ?></a><?php echo $g_options["fontend_small"]; ?></td>
+	<?php echo $g_options["font_small"]; ?><b><?php echo l('Admin Options'); ?></b>: <a href="<?php echo $g_options["scripturl"] . "?mode=admin&amp;task=toolsEditdetailsClan&amp;id=$clan"; ?>"><?php echo l('Edit Clan Details'); ?></a><?php echo $g_options["fontend_small"]; ?></td>
 </tr>
 </table><p>
 <?php
