@@ -409,6 +409,9 @@ Days" or "*" above are generated from the player's Event History. Player kill, d
 Admin Options = Admin Optionen
 No info = Kein Information
 Data out of selected range = Daten auserhalb der Auswahl
+Rating (RD) = Bewertung (RD)
+Rating = Bewertung
+RD = RD
 
 Edit Player = Spieler bearbeiten
 (View Player Details) = Spieler Details
