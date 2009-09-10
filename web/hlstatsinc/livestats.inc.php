@@ -91,7 +91,7 @@ else {
 pageHeader(
 	array('Server Statistics', $server['name']),
 	array($server['gamename'] => $g_options['scripturl'] . '?game=' . $server['game'],
-		'Server Statistics' => $g_options['scripturl'] . '?game=' . $server['game'],
+		l('Server Statistics') => $g_options['scripturl'] . '?game=' . $server['game'],
 		$server['name'] => ''
 	)
 );
@@ -118,7 +118,7 @@ $server_players = array();
 
 # Get info
 if (!$server_details = Source_A2S_Info($server_ip, $server_port)) {
-	error("The details for this server couldn't be retrieved, this maybe because the server is currently unavailable.");
+	error(l("The details for this server couldn't be retrieved, this maybe because the server is currently unavailable."));
 }
 
 if ($server_details['gametype'] == 73)
@@ -198,10 +198,12 @@ $server_details['players_connecting'] -= $server_details['hltvcount'];
 				<tr bgcolor="<?php echo $g_options['table_bgcolor1']; ?>">
 					<td style="padding: 0px;" width="208" height="163"><img src="<?php
 $image = getImage('/maps/'.strtolower($server['game']).'/'.strtolower($server_details['map']));
-if ($image)
+if ($image) {
 	echo $image['url'];
-else
+}
+else {
 	echo $g_options['imgdir'].'/noimage.gif';
+}
 ?>" width="218" height="164" alt="<?php echo $server_details['map']; ?>"></td>
 					<td rowspan="2" valign="top" align="center" class="fontNormal">
 						<b><?php echo htmlentities($server_details['hostname'], ENT_COMPAT, "UTF-8"); ?></b><br>
@@ -325,11 +327,11 @@ if (count($server_players) > 0)
 								<td colspan="<?php echo $colspan; ?>" nowrap>&nbsp;</td>
 							</tr>
 							<tr>
-								<th align="right" colspan="<?php echo $colspan - 1; ?>" nowrap>Total Time</th>
+								<th align="right" colspan="<?php echo $colspan - 1; ?>" nowrap><?php echo l('Total Time'); ?></th>
 								<th align="right"><?php echo Format_Time($totaltime); ?></th>
 							</tr>
 							<tr>
-								<th align="right" colspan="<?php echo $colspan - 1; ?>" nowrap>Total Frags</th>
+								<th align="right" colspan="<?php echo $colspan - 1; ?>" nowrap><?php echo l('Total Frags'); ?></th>
 								<th align="right"><?php echo $totalfrags; ?></th>
 							</tr>
 <?php
@@ -338,7 +340,7 @@ if (count($server_players) > 0)
 	{
 ?>
 							<tr>
-								<th align="right" colspan="<?php echo $colspan - 1; ?>" nowrap>Average Ping</th>
+								<th align="right" colspan="<?php echo $colspan - 1; ?>" nowrap><?php echo l('Average Ping'); ?></th>
 								<th align="right"><?php echo round($totalping/$nonbots, 0); ?></th>
 							</tr>
 <?php
@@ -355,12 +357,12 @@ if (!empty($server_hltv))
 						<table border="0" width="99%">
 							<tr>
 								<th align="left" width="16"></th>
-								<th align="left">Name</th>
+								<th align="left"><?php echo l('Name'); ?></th>
 								<th align="left" width="125">IP</th>
-								<th align="right" width="40">Delay</th>
-								<th align="right" width="60">Viewers</th>
-								<th align="right" width="60">Capacity</th>
-								<th align="right" width="75">Connected</th>
+								<th align="right" width="40"><?php echo l('Delay'); ?></th>
+								<th align="right" width="60"><?php echo l('Viewers'); ?></th>
+								<th align="right" width="60"><?php echo l('Capacity'); ?></th>
+								<th align="right" width="75"><?php echo l('Connected'); ?></th>
 							</tr>
 <?php
 	foreach ($server_hltv as $hltv)
@@ -383,7 +385,7 @@ if (!empty($server_hltv))
 }
 if ($server_details['players_connecting'] > 0)
 {
-	echo 'There are currently <b>'.$server_details['players_connecting'].'</b> player(s) connecting to the server.';
+	echo l('There are currently'),' <b>'.$server_details['players_connecting'].'</b>', l('player(s) connecting to the server.');
 }
 ?>
 					</td>
@@ -415,58 +417,58 @@ elseif (isset($server_rules['mani_timeleft']))
 elseif (isset($server_rules['mp_timeleft']))
 	$server_details['timeleft'] = sprintf('%02u:%02u', ($server_rules['mp_timeleft'] / 60), ($server_rules['mp_timeleft'] % 60));
 ?>
-						Address: <?php echo $server_details['address']; ?><br>
-						Server Type: <?php echo $server_details['serveros']; ?>, <?php echo $server_details['servertype']; ?><br>
-						Map: <a href="<?php echo $g_options['scripturl']; ?>?mode=mapinfo&amp;map=<?php echo $server_details['map']; ?>&amp;game=<?php echo $server['game']; ?>"><?php echo $server_details['map']; ?></a><br>
+						<?php echo l('Address'); ?>: <?php echo $server_details['address']; ?><br>
+						<?php echo l('Server Type'); ?>: <?php echo $server_details['serveros']; ?>, <?php echo $server_details['servertype']; ?><br>
+						<?php echo l('Map'); ?>: <a href="<?php echo $g_options['scripturl']; ?>?mode=mapinfo&amp;map=<?php echo $server_details['map']; ?>&amp;game=<?php echo $server['game']; ?>"><?php echo $server_details['map']; ?></a><br>
 <?php
 if (isset($server_details['nextmap']))
-	echo 'Nextmap: <a href="'.$g_options['scripturl'].'?mode=mapinfo&amp;map='.$server_details['nextmap'].'&amp;game='.$server['game'].'">'.$server_details['nextmap'].'</a><br>';
+	echo l('Nextmap'),': <a href="'.$g_options['scripturl'].'?mode=mapinfo&amp;map='.$server_details['nextmap'].'&amp;game='.$server['game'].'">'.$server_details['nextmap'].'</a><br>';
 
 # Are there any time limits or frag limits?
 if (isset($server_details['timeleft']))
 {
-	echo 'Timeleft: '.$server_details['timeleft'];
+	echo l('Timeleft'),': '.$server_details['timeleft'];
 	if(isset($server_rules['mp_timelimit']))
 		echo ' ('.sprintf('%02u:%02u', $server_rules['mp_timelimit'], 0).')';
 	echo '<br>';
 }
 if (!empty($server_rules['mp_fraglimit']))
 {
-	echo 'Fragsleft: '.$server_rules['mp_fragsleft'];
+	echo l('Fragsleft'),': '.$server_rules['mp_fragsleft'];
 	if (isset($server_rules['mp_fragslimit']))
 		echo '('.$server_rules['mp_fraglimit'].')';
 	echo '<br>';
 }
 ?>
-						Password: <?php echo $server_details['password']; ?><br>
-						Players: <?php echo $server_details['players_real']; ?>/<?php echo $server_details['maxplayers'];?><br>
+						<?php echo l('Password'); ?>: <?php echo $server_details['password']; ?><br>
+						<?php echo l('Players'); ?>: <?php echo $server_details['players_real']; ?>/<?php echo $server_details['maxplayers'];?><br>
 <?php
 if (!empty($server_details['botcount'])) {
 	# Don't show this information if there are no bots
 ?>
-						Bots: <?php echo $server_details['numbots']; ?>/<?php echo $server_details['maxplayers']; ?><br>
+						<?php echo l('Bots'); ?>: <?php echo $server_details['numbots']; ?>/<?php echo $server_details['maxplayers']; ?><br>
 <?php
 }
 if (!empty($server_details['hltvcount'])) {
 	# Don't show this information if there is no HLTV
 ?>
-						HLTV: <?php echo $server_details['hltvcount']; ?>/<?php echo $server_details['maxplayers']; ?><br>
+						<?php echo l('HLTV'); ?>: <?php echo $server_details['hltvcount']; ?>/<?php echo $server_details['maxplayers']; ?><br>
 <?php
 }
 if (!empty($server_details['players_connecting'])) {
 	# Don't show this information if there are no players connecting
 ?>
-						Connecting: <?php echo $server_details['players_connecting'] ?>/<?php echo $server_details['maxplayers']; ?><br>
+						<?php echo l('Connecting'); ?>: <?php echo $server_details['players_connecting'] ?>/<?php echo $server_details['maxplayers']; ?><br>
 <?php
 }
 ?>
-						Valve Anti-Cheat: <?php echo $server_details['secure']; ?><br>
+						<?php echo l('Valve Anti-Cheat'); ?>: <?php echo $server_details['secure']; ?><br>
 <?php
 $addon_array = array();
 $server_details['addon_count'] = 0;
 if ($server_rules) {
 ?>
-						Rules:<br>
+						<?php echo l('Rules'); ?>:<br>
 						<select name="rules" style="width: 200px;">
 <?php
 	# Load our plugin list
@@ -477,14 +479,14 @@ if ($server_rules) {
 
 	ksort($server_rules);
 
-	foreach ($server_rules as $key => $value)
-	{
-		if (isset($server_addon[$key]))
-		{
-			if ($server_addon[$key]['url'])
+	foreach ($server_rules as $key => $value) {
+		if (isset($server_addon[$key])) {
+			if ($server_addon[$key]['url']) {
 				$addon_array[] = '<a href="'.$server_addon[$key]['url'].'" target="_blank">'.str_replace('%', $value, $server_addon[$key]['addon']).'</a>';
-			else
+			}
+			else {
 				$addon_array[] = str_replace('%', $value, $server_addon[$key]['addon']);
+			}
 			$server_details['addon_count']++;
 		}
 		echo "<option>$key = $value</option>\n";
@@ -497,7 +499,7 @@ if ($server_rules) {
 <?php
 if (!empty($server_details['addon_count'])) {
 ?>
-Server Addons:<br>
+<?php echo l('Server Addons'); ?>:<br>
 <ul>
 <?php
 	foreach ($addon_array as $addon) {

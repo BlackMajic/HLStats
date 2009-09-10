@@ -44,12 +44,12 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo $task->title; ?></b><p>
 
-You can enter a player or clan ID number directly, or you can search for a player or clan.<p>
+<?php echo l('You can enter a player or clan ID number directly, or you can search for a player or clan'); ?>.<p>
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 
 <tr valign="top">
-	<td width="100%"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Jump Direct</b><?php echo $g_options["fontend_normal"]; ?><p>
+	<td width="100%"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo l('Jump Direct'); ?></b><?php echo $g_options["fontend_normal"]; ?><p>
 
 		<form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
 		<input type="hidden" name="mode" value="admin">
@@ -64,7 +64,7 @@ You can enter a player or clan ID number directly, or you can search for a playe
 						<table width="100%" border="0" cellspacing="1" cellpadding="4">
 
 						<tr valign="middle">
-							<td nowrap width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?>Type:<?php echo $g_options["fontend_normal"]; ?></td>
+							<td nowrap width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?><?php echo l('Type'); ?>:<?php echo $g_options["fontend_normal"]; ?></td>
 							<td width="55%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
 								<?php
 									echo getSelect("task",
@@ -74,11 +74,11 @@ You can enter a player or clan ID number directly, or you can search for a playe
 										)
 									);
 								?>
-							<td rowspan="2"  bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><input type="submit" value=" Edit &gt;&gt; " class="submit"></td>
+							<td rowspan="2"  bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><input type="submit" value=" <?php echo l('Edit'); ?> &gt;&gt; " class="submit"></td>
 						</tr>
 
 						<tr valign="middle">
-							<td nowrap width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?>ID Number:<?php echo $g_options["fontend_normal"]; ?></td>
+							<td nowrap width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?><?php echo l('ID Number'); ?>:<?php echo $g_options["fontend_normal"]; ?></td>
 							<td width="55%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><input type="text" name="id" size=15 maxlength=12 class="textbox"></td>
 						</tr>
 

@@ -86,12 +86,12 @@ else {
 
 
 pageHeader(
-	array($gamename, "Event History", $pl_name),
+	array($gamename, l("Event History"), $pl_name),
 	array(
 		$gamename=>$g_options["scripturl"] . "?game=$game",
-		"Player Rankings"=>$g_options["scripturl"] . "?mode=players&amp;game=$game",
-		"Player Details"=>$g_options["scripturl"] . "?mode=playerinfo&amp;player=$player",
-		"Event History"=>""
+		l("Player Rankings")=>$g_options["scripturl"] . "?mode=players&amp;game=$game",
+		l("Player Details")=>$g_options["scripturl"] . "?mode=playerinfo&amp;player=$player",
+		l("Event History")=>""
 	),
 	$pl_name
 );
@@ -173,9 +173,9 @@ function insertEvents ($table, $select) {
 
 insertEvents("TeamBonuses", "
 	SELECT
-		'Team Bonus',
+		'".l('Team Bonus')."',
 		<table>.eventTime,
-		CONCAT('My team received a points bonus of ', bonus, ' for triggering \"', ".DB_PREFIX."_Actions.description, '\"'),
+		CONCAT('".l('My team received a points bonus of')," ', bonus, ' ".l('for triggering')." \"', ".DB_PREFIX."_Actions.description, '\"'),
 		".DB_PREFIX."_Servers.name,
 		<table>.map
 	FROM
@@ -196,9 +196,9 @@ else {
 
 insertEvents("Connects", "
 	SELECT
-		'Connect',
+		'".l('Connect'),"',
 		<table>.eventTime,
-		CONCAT('I connected to the server'),
+		CONCAT('".l('I connected to the server')."'),
 		".DB_PREFIX."_Servers.name,
 		<table>.map
 	FROM
@@ -210,7 +210,7 @@ insertEvents("Connects", "
 
 insertEvents("Disconnects", "
 	SELECT
-		'Disconnect',
+		'".l('Disconnect')."',
 		<table>.eventTime,
 		'I left the game',
 		".DB_PREFIX."_Servers.name,
@@ -238,9 +238,9 @@ insertEvents("Entries", "
 
 insertEvents("Frags", "
 	SELECT
-		'Kill',
+		'".l('Kill')."',
 		<table>.eventTime,
-		CONCAT('I killed %A%$surl?mode=playerinfo&player=', victimId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' with ', weapon),
+		CONCAT('I killed %A%$surl?mode=playerinfo&player=', victimId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' ".l('with')." ', weapon),
 		".DB_PREFIX."_Servers.name,
 		<table>.map
 	FROM
@@ -254,9 +254,9 @@ insertEvents("Frags", "
 
 insertEvents("Frags", "
 	SELECT
-		'Death',
+		'".l('Death')."',
 		<table>.eventTime,
-		CONCAT('%A%$surl?mode=playerinfo&player=', killerId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' killed me with ', weapon),
+		CONCAT('%A%$surl?mode=playerinfo&player=', killerId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' ".l('killed me with')." ', weapon),
 		".DB_PREFIX."_Servers.name,
 		<table>.map
 	FROM
@@ -435,7 +435,7 @@ $numitems = $result['ec'];
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 	<tr>
 		<td width="100%">
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Player Event History</b> (Last <?php echo DELETEDAYS; ?> Days)<?php echo $g_options["fontend_normal"];?><p>
+		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Player Event History'); ?></b> (<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?><p>
 		<?php
 			$table->draw($query, $numitems, 100);
 		?>

@@ -91,35 +91,29 @@ class Table
 		$this->startitem = ($this->page - 1) * $this->numperpage;
 
 
-		foreach ($columns as $col)
-		{
+		foreach ($columns as $col) {
 			if ($col->sort != "no")
 				$this->columnlist[] = $col->name;
 		}
 
 
-		if (!is_array($this->columnlist) || !in_array($this->sort, $this->columnlist))
-		{
+		if (!is_array($this->columnlist) || !in_array($this->sort, $this->columnlist)) {
 			$this->sort = $sort_default;
 		}
 
-		if ($this->sortorder != "asc" && $this->sortorder != "desc")
-		{
+		if ($this->sortorder != "asc" && $this->sortorder != "desc") {
 			$this->sortorder = $this->sort_default_order;
 		}
 
-		if ($this->sort == $sort_default2)
-		{
+		if ($this->sort == $sort_default2) {
 			$this->sort2 = $sort_default;
 		}
-		else
-		{
+		else {
 			$this->sort2 = $sort_default2;
 		}
 	}
 
-	function draw ($result, $numitems, $width=100, $align="center")
-	{
+	function draw ($result, $numitems, $width=100, $align="center") {
 		global $g_options, $game;
 
 		$numpages = ceil($numitems / $this->numperpage);
@@ -134,30 +128,29 @@ class Table
 <?php
 		$totalwidth = 0;
 
-		if ($this->showranking)
-		{
+		if ($this->showranking) {
 			$totalwidth += 5;
 
 			echo "<td width=\"5%\" align=\"right\">"
 				. "<font color=\"" . $g_options["table_head_text"] . "\">"
-				. $g_options["font_small"] . "Rank" . "</font>"
+				. $g_options["font_small"] . l("Rank") . "</font>"
 				. $g_options["fontend_small"] . "</td>\n";
 		}
 
-		foreach ($this->columns as $col)
-		{
+		foreach ($this->columns as $col) {
 			$totalwidth += $col->width;
 
 			echo "<td width=\"" . $col->width . "%\" align=\"$col->align\">";
+			if($col->translate) {
+				$col->title = l($col->title);
+			}
 
-			if ($col->sort != "no")
-			{
+			if ($col->sort != "no") {
 				echo getSortArrow($this->sort, $this->sortorder, $col->name,
 					$col->title, $this->var_sort, $this->var_sortorder,
 					$this->sorthash);
 			}
-			else
-			{
+			else {
 				echo $g_options["font_small"];
 				echo "<font color=\"" . $g_options["table_head_text"] . "\">";
 				echo $col->title;
@@ -170,15 +163,13 @@ class Table
 	</tr>
 
 <?php
-		if ($totalwidth != 100)
-		{
+		if ($totalwidth != 100) {
 			error("Warning: Column widths do not add to 100%! (=$totalwidth%)", false);
 		}
 
 		$rank = ($this->page - 1) * $this->numperpage + 1;
 
-		while ($rowdata = mysql_fetch_assoc($result))
-		{
+		while ($rowdata = mysql_fetch_assoc($result)) {
 			echo "<tr>\n";
 			$i = 0;
 
@@ -193,8 +184,7 @@ class Table
 					. $g_options["fontend_normal"] . "</td>\n";
 			}
 
-			foreach ($this->columns as $col)
-			{
+			foreach ($this->columns as $col) {
 				$c = ($i % 2) + 1;
 
 				$cellbody = "";
@@ -451,11 +441,13 @@ class TableColumn
 	var $sort = "yes";
 	var $type = "text";
 	var $embedlink = "no";
+	var $translate = true;
 
-	function TableColumn ($name, $title, $attrs="")
+	function TableColumn ($name, $title, $attrs="",$trans=true)
 	{
 		$this->name = $name;
 		$this->title= $title;
+		$this->translate = $trans;
 
 		$allowed_attrs = array(
 			"align",

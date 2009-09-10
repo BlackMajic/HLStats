@@ -50,7 +50,7 @@
 	$edlist->columns[] = new EditListColumn("for_WorldActions", "World Action", 0, false, "checkbox");
 	$edlist->columns[] = new EditListColumn("reward_player", "Player Points Reward", 4, false, "text", "0");
 	$edlist->columns[] = new EditListColumn("reward_team", "Team Points Reward", 4, false, "text", "0");
-	$edlist->columns[] = new EditListColumn("team", "Team", 0, false, "select", "".DB_PREFIX."_Teams.name/code/game='$gamecode'");
+	$edlist->columns[] = new EditListColumn("team", "Team", 0, false, "select", DB_PREFIX."_Teams.name/code/game='$gamecode'",0,false);
 	$edlist->columns[] = new EditListColumn("description", "Action Description", 23, true, "text", "", 128);
 
 
@@ -64,7 +64,10 @@
 
 ?>
 
-You can make an action map-specific by prepending the map name and an underscore to the Action Code. For example, if the map "<b>rock2</b>" has an action "<b>goalitem</b>" then you can either make the action code just "<b>goalitem</b>" (in which case it will match all maps) or you can make it "<b>rock2_goalitem</b>" to match only on the "rock2" map.<p>
+<?php echo l('You can make an action map-specific by prepending the map name and an underscore to the Action Code'); ?>.
+<?php echo l('For example, if the map'), " <b>rock2</b> ", l('has an action'), " <b>goalitem</b> ", l('then you can either make the action code just'); ?>
+<?php echo " <b>goalitem</b> ", l('(in which case it will match all maps) or you can make it'); ?>
+<?php echo " <b>rock2_goalitem</b> ", l('to match only on the "rock2" map'); ?>,'.<p>';
 
 <?php
 
@@ -93,7 +96,6 @@ You can make an action map-specific by prepending the map name and an underscore
 
 <table width="75%" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td align="center"><input type="submit" value="  Apply  " class="submit"></td>
+	<td align="center"><input type="submit" value=" <?php echo l('Apply'); ?> " class="submit"></td>
 </tr>
 </table>
-

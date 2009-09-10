@@ -146,13 +146,11 @@ function getSortArrow ($sort, $sortorder, $name, $longname,
 {
 	global $g_options;
 
-	if ($sortorder == "asc")
-	{
+	if ($sortorder == "asc") {
 		$sortimg = "sort-ascending.gif";
 		$othersortorder = "desc";
 	}
-	else
-	{
+	else {
 		$sortimg = "sort-descending.gif";
 		$othersortorder = "asc";
 	}
@@ -161,27 +159,23 @@ function getSortArrow ($sort, $sortorder, $name, $longname,
 			. "<a href=\"" . $g_options["scripturl"] . "?"
 			. makeQueryString($var_sort, $name, array($var_sortorder));
 
-	if ($sort == $name)
-	{
+	if ($sort == $name) {
 		$arrowstring .= "&amp;$var_sortorder=$othersortorder";
 	}
-	else
-	{
+	else {
 		$arrowstring .= "&amp;$var_sortorder=$sortorder";
 	}
 
-	if ($sorthash)
-	{
+	if ($sorthash) {
 		$arrowstring .= "#$sorthash";
 	}
 
 	$arrowstring .= "\" style=\"color: " . $g_options["table_head_text"]
-		. "\" title=\"Change sorting order\">"
+		. "\" title=\"".l('Change sorting order')."\">"
 		. "<font color=\"" . $g_options["table_head_text"] . "\">"
-		. "$longname</font></a>";
+		. $longname."</font></a>";
 
-	if ($sort == $name)
-	{
+	if ($sort == $name) {
 		$arrowstring .= "&nbsp;<img src=\"" . $g_options["imgdir"] . "/$sortimg\""
 			. "width='7' height='7' hspace='4' border='0' align=\"middle\" alt=\"$sortimg\">";
 	}
@@ -218,12 +212,12 @@ function getSelect ($name, $values, $currentvalue="")
 			$gotcval = true;
 		}
 
-		$select .= ">$v\n";
+		$select .= ">".l($v)."\n";
 	}
 
 	if ($currentvalue && !$gotcval)
 	{
-		$select .= "\t<option value=\"$currentvalue\" selected>$currentvalue\n";
+		$select .= "\t<option value=\"$currentvalue\" selected>l($currentvalue)\n";
 	}
 
 	$select .= "</select>";
@@ -488,5 +482,94 @@ function check_email_address($email) {
 		}
 	}
 	return true;
+}
+
+/**
+ * plain and simple language function
+ * check if given string is a key in $lData array
+ * if so return it, if not return string
+ *
+ * of default lang is uses, return string immediately
+ *
+ * @param string $string
+ * @return strin $ret
+ */
+function l($string) {
+	global $lData;
+
+	if(LANGUAGE === "en") {
+		return $string;
+	}
+
+	$ret = $string;
+	if(!empty($string)) {
+		if(isset($lData[$string])) {
+			$ret = $lData[$string];
+		}
+		elseif(SHOW_DEBUG === true) {
+			die($string.' -------is missing !-------');
+		}
+	}
+
+	return $ret;
+}
+
+/**
+ * Format an interval value with the requested granularity.
+ *
+ * @param integer $timestamp The length of the interval in seconds.
+ * @param integer $granularity How many different units to display in the string.
+ * @return string A string representation of the interval.
+ */
+function getInterval($timestamp, $granularity = 2) {
+    $seconds = time() - $timestamp;
+    $units = array(
+        '1 '.l('year').'|:count '.l('years') => 31536000,
+        '1 '.l('week').'|:count '.l('weeks') => 604800,
+        '1 '.l('day').'|:count '.l('days') => 86400,
+        '1 '.l('hour').'|:count '.l('hours') => 3600,
+        '1 '.l('min').'|:count '.l('mins') => 60,
+        '1 '.l('sec').'|:count '.l('secs') => 1);
+    $output = '';
+    foreach ($units as $key => $value) {
+        $key = explode('|', $key);
+        if ($seconds >= $value) {
+            $count = floor($seconds / $value);
+            $output .= ($output ? ' ' : '');
+            $output .= ($count == 1) ? $key[0] : str_replace(':count', $count, $key[1]);
+            $seconds %= $value;
+            $granularity--;
+        }
+        if ($granularity == 0) {
+            break;
+        }
+    }
+
+    return $output ? $output : '0 sec';
+}
+
+/**
+ * parse the lagunage file
+ * the parse ini file is too limited...
+ *
+ * @param string The file to parse
+ * @return array The parsed language
+ */
+function parse_custom_lang_file($file) {
+	$ret = array();
+
+	$lines = file($file, FILE_SKIP_EMPTY_LINES | FILE_TEXT);
+	foreach($lines as $line) {
+		$line = trim($line);
+		if(!empty($line)) {
+			$ld = explode(" = ",$line);
+			if(count($ld) != 2) {
+				die('Lang file is corrupt. Please check: '.$file.', '.$line);
+			}
+			$ret[$ld[0]] = $ld[1];
+		}
+	}
+
+	return $ret;
 }
 ?>

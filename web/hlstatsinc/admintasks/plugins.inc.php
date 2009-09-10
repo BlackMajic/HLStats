@@ -52,20 +52,19 @@
 	if ($_POST)
 	{
 		if ($edlist->update())
-			message("success", "Operation successful.");
+			message("success", l("Operation successful"));
 		else
 			message("warning", $edlist->error());
 	}
 
 ?>
 
-Here you can define a list of addons (plugins) the HLStats live statistics page will detect.<br>
-
-When HLStats queries a server for the rules the server will return something like this.<br><br>
+<?php echo l('Here you can define a list of addons (plugins) the HLStats live statistics page will detect'); ?>.<br>
+<?php echo l('When HLStats queries a server for the rules the server will return something like this'); ?>:<br><br>
 <table border="0" cellspacing="0" cellpadding="4">
 	<tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-		<td><?php echo $g_options["font_small"]; ?>Rule<?php echo $g_options["fontend_small"]; ?></td>
-		<td><?php echo $g_options["font_small"]; ?>Value<?php echo $g_options["fontend_small"]; ?></td>
+		<td><?php echo $g_options["font_small"],l('Rule'), $g_options["fontend_small"]; ?></td>
+		<td><?php echo $g_options["font_small"],l('Value'), $g_options["fontend_small"]; ?></td>
 	</tr>
 	<tr>
 		<td><?php echo $g_options["font_normal"]; ?>mp_footsteps<?php echo $g_options["fontend_normal"]; ?></td>
@@ -75,17 +74,16 @@ When HLStats queries a server for the rules the server will return something lik
 		<td><?php echo $g_options["font_normal"]; ?>sv_timelimit<?php echo $g_options["fontend_normal"]; ?></td>
 		<td><?php echo $g_options["font_normal"]; ?>30<?php echo $g_options["fontend_normal"]; ?></td>
 	</tr>
-</table><br><br>
-
-Addons usually create a cvar that is publicly available in the rules list. In most cases the cvar that shows the addons
-existance just shows the version of the addon. You can configure HLStats on this page to
-then show the proper name of the plugin and it's version on the live statistics page. For example:<br><br>
+</table><br>
+<br>
+<?php echo l("Addons usually create a cvar that is publicly available in the rules list. In most cases the cvar that shows the addons existance just shows the version of the addon. You can configure HLStats on this page to then show the proper name of the plugin and it's version on the live statistics page. For example"); ?>
+:<br><br>
 <table border="0" cellspacing="0" cellpadding="4">
 	<tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-		<td><?php echo $g_options["font_small"]; ?>Rule<?php echo $g_options["fontend_small"]; ?></td>
-		<td><?php echo $g_options["font_small"]; ?>Value<?php echo $g_options["fontend_small"]; ?></td>
-		<td><?php echo $g_options["font_small"]; ?>Addon<?php echo $g_options["fontend_small"]; ?></td>
-		<td><?php echo $g_options["font_small"]; ?>Version<?php echo $g_options["fontend_small"]; ?></td>
+		<td><?php echo $g_options["font_small"], l('Rule'), $g_options["fontend_small"]; ?></td>
+		<td><?php echo $g_options["font_small"], l('Value'), $g_options["fontend_small"]; ?></td>
+		<td><?php echo $g_options["font_small"], l('Addon'), $g_options["fontend_small"]; ?></td>
+		<td><?php echo $g_options["font_small"], l('Version'), $g_options["fontend_small"]; ?></td>
 	</tr>
 	<tr>
 		<td><?php echo $g_options["font_normal"]; ?>cdversion<?php echo $g_options["fontend_normal"]; ?></td>
@@ -101,10 +99,9 @@ then show the proper name of the plugin and it's version on the live statistics 
 	</tr>
 </table><br><br>
 
-The value in the table above shows the addon version. To include the version in your proper name of the addon you can use a <b>%</b>.
-If the addon happens to have a home page where more information can be found on the addon, you can put it in as the URL which will be
-linked to.<br>
-These default addons should help make understanding this feature easier.<br><br>
+<?php echo l('The value in the table above shows the addon version. To include the version in your proper name of the addon you can use a'); ?> <b>%</b>.<br />
+<?php echo l('If the addon happens to have a home page where more information can be found on the addon, you can put it in as the URL which will be linked to'); ?>.<br>
+<?php echo l('These default addons should help make understanding this feature easier'); ?>.<br><br>
 
 <?php
 
@@ -125,7 +122,6 @@ These default addons should help make understanding this feature easier.<br><br>
 
 <table width="75%" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td align="center"><input type="submit" value="  Apply  " class="submit"></td>
+	<td align="center"><input type="submit" value=" <?php echo l('Apply'); ?> " class="submit"></td>
 </tr>
 </table>
-

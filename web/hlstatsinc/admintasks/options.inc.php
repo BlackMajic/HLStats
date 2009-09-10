@@ -224,54 +224,54 @@
 
 	$optiongroups = array();
 
-	$optiongroups[1] = new OptionGroup("General");
-	$optiongroups[1]->options[] = new Option("sitename", "Site Name", "text");
-	$optiongroups[1]->options[] = new Option("siteurl", "Site URL", "text");
-	$optiongroups[1]->options[] = new Option("contact", "Contact URL", "text");
-	$optiongroups[1]->options[] = new Option("hideAwards", "Hide Daily Awards", "bool");
-	$optiongroups[1]->options[] = new Option("hideNews", "Hide News", "bool");
-	$optiongroups[1]->options[] = new Option("useFlash", "Use flash graphics", "bool");
-	$optiongroups[1]->options[] = new Option("allowSig", "Allow the use of signatures", "bool");
-	$optiongroups[1]->options[] = new Option("allowXML", "Allow XML interface", "bool");
+	$optiongroups[1] = new OptionGroup(l("General"));
+	$optiongroups[1]->options[] = new Option("sitename", l("Site Name"), "text");
+	$optiongroups[1]->options[] = new Option("siteurl", l("Site URL"), "text");
+	$optiongroups[1]->options[] = new Option("contact", l("Contact URL"), "text");
+	$optiongroups[1]->options[] = new Option("hideAwards", l("Hide Daily Awards"), "bool");
+	$optiongroups[1]->options[] = new Option("hideNews", l("Hide News"), "bool");
+	$optiongroups[1]->options[] = new Option("useFlash", l("Use flash graphics"), "bool");
+	$optiongroups[1]->options[] = new Option("allowSig", l("Allow the use of signatures"), "bool");
+	$optiongroups[1]->options[] = new Option("allowXML", l("Allow XML interface"), "bool");
 
-	$optiongroups[2] = new OptionGroup("Paths");
-	$optiongroups[2]->options[] = new Option("imgdir", "Image Directory URL", "text");
-	$optiongroups[2]->options[] = new Option("imgpath", "Image Directory Filesystem Path", "text");
-	$optiongroups[2]->options[] = new Option("map_dlurl", "Map Download URL<br><font size=1>(%MAP% = map, %GAME% = gamecode)</font>", "text");
+	$optiongroups[2] = new OptionGroup(l("Paths"));
+	$optiongroups[2]->options[] = new Option("imgdir", l("Image Directory URL"), "text");
+	$optiongroups[2]->options[] = new Option("imgpath", l("Image Directory Filesystem Path"), "text");
+	$optiongroups[2]->options[] = new Option("map_dlurl", l("Map Download URL")."<br><font size=1>(%MAP% = map, %GAME% = gamecode)</font>", "text");
 
-	$optiongroups[3] = new OptionGroup("Body Style");
-	$optiongroups[3]->options[] = new Option("body_background", "Background Image", "text");
-	$optiongroups[3]->options[] = new Option("body_bgcolor", "Background Colour", "text");
-	$optiongroups[3]->options[] = new Option("body_text", "Text Colour", "text");
-	$optiongroups[3]->options[] = new Option("body_link", "Link Colour", "text");
-	$optiongroups[3]->options[] = new Option("body_vlink", "Visited Link Colour", "text");
-	$optiongroups[3]->options[] = new Option("body_alink", "Active Link Colour", "text");
-	$optiongroups[3]->options[] = new Option("body_leftmargin", "Left/Right Margin", "text");
-	$optiongroups[3]->options[] = new Option("body_topmargin", "Top/Bottom Margin", "text");
+	$optiongroups[3] = new OptionGroup(l("Body Style"));
+	$optiongroups[3]->options[] = new Option("body_background", l("Background Image"), "text");
+	$optiongroups[3]->options[] = new Option("body_bgcolor", l("Background Colour"), "text");
+	$optiongroups[3]->options[] = new Option("body_text", l("Text Colour"), "text");
+	$optiongroups[3]->options[] = new Option("body_link", l("Link Colour"), "text");
+	$optiongroups[3]->options[] = new Option("body_vlink", l("Visited Link Colour"), "text");
+	$optiongroups[3]->options[] = new Option("body_alink", l("Active Link Colour"), "text");
+	$optiongroups[3]->options[] = new Option("body_leftmargin", l("Left/Right Margin"), "text");
+	$optiongroups[3]->options[] = new Option("body_topmargin", l("Top/Bottom Margin"), "text");
 
-	$optiongroups[4] = new OptionGroup("Location Bar Style");
-	$optiongroups[4]->options[] = new Option("location_bgcolor", "Background Colour", "text");
-	$optiongroups[4]->options[] = new Option("location_text", "Text Colour", "text");
-	$optiongroups[4]->options[] = new Option("location_link", "Link Colour", "text");
+	$optiongroups[4] = new OptionGroup(l("Location Bar Style"));
+	$optiongroups[4]->options[] = new Option("location_bgcolor", l("Background Colour"), "text");
+	$optiongroups[4]->options[] = new Option("location_text", l("Text Colour"), "text");
+	$optiongroups[4]->options[] = new Option("location_link", l("Link Colour"), "text");
 
-	$optiongroups[5] = new OptionGroup("Table Style");
-	$optiongroups[5]->options[] = new Option("table_border", "Border Colour", "text");
-	$optiongroups[5]->options[] = new Option("table_bgcolor1", "Cell Background Colour (1)", "text");
-	$optiongroups[5]->options[] = new Option("table_bgcolor2", "Cell Background Colour (2)", "text");
-	$optiongroups[5]->options[] = new Option("table_wpnbgcolor", "Weapon Background Colour", "text");
-	$optiongroups[5]->options[] = new Option("table_head_bgcolor", "Head Background Colour", "text");
-	$optiongroups[5]->options[] = new Option("table_head_text", "Head Text Colour", "text");
+	$optiongroups[5] = new OptionGroup(l("Table Style"));
+	$optiongroups[5]->options[] = new Option("table_border", l("Border Colour"), "text");
+	$optiongroups[5]->options[] = new Option("table_bgcolor1", l("Cell Background Colour 1"), "text");
+	$optiongroups[5]->options[] = new Option("table_bgcolor2", l("Cell Background Colour 2"), "text");
+	$optiongroups[5]->options[] = new Option("table_wpnbgcolor", l("Weapon Background Colour"), "text");
+	$optiongroups[5]->options[] = new Option("table_head_bgcolor", l("Head Background Colour"), "text");
+	$optiongroups[5]->options[] = new Option("table_head_text", l("Head Text Colour"), "text");
 
-	$optiongroups[6] = new OptionGroup("Fonts");
-	$optiongroups[6]->options[] = new Option("font_normal", "Normal Font Tag(s)", "textarea");
-	$optiongroups[6]->options[] = new Option("fontend_normal", "Normal Font Closing Tag(s)", "textarea");
-	$optiongroups[6]->options[] = new Option("font_small", "Small Font Tag(s)", "textarea");
-	$optiongroups[6]->options[] = new Option("fontend_small", "Small Font Closing Tag(s)", "textarea");
-	$optiongroups[6]->options[] = new Option("font_title", "Title Font Tag(s)", "textarea");
-	$optiongroups[6]->options[] = new Option("fontend_title", "Title Font Closing Tag(s)", "textarea");
+	$optiongroups[6] = new OptionGroup(l("Fonts"));
+	$optiongroups[6]->options[] = new Option("font_normal", l("Normal Font Tag"), "textarea");
+	$optiongroups[6]->options[] = new Option("fontend_normal", l("Normal Font Closing Tag"), "textarea");
+	$optiongroups[6]->options[] = new Option("font_small", l("Small Font Tag"), "textarea");
+	$optiongroups[6]->options[] = new Option("fontend_small", l("Small Font Closing Tag"), "textarea");
+	$optiongroups[6]->options[] = new Option("font_title", l("Title Font Tag"), "textarea");
+	$optiongroups[6]->options[] = new Option("fontend_title", l("Title Font Closing Tag"), "textarea");
 
-	$optiongroups[7] = new OptionGroup("Preset Styles");
-	$optiongroups[7]->options[] = new Option("style", "Load Preset Style", "style_select");
+	$optiongroups[7] = new OptionGroup(l("Preset Styles"));
+	$optiongroups[7]->options[] = new Option("style", l("Load Preset Style"), "style_select");
 
 
 	if (isset($_POST['saveOptions'])) {
@@ -282,13 +282,13 @@
 			foreach ($optiongroups as $og) {
 				$og->changeStyle($style);
 			}
-			message("success", "Options updated successfully.");
+			message("success", l("Options updated successfully"));
 		}
 		else {
 			foreach ($optiongroups as $og) {
 				$og->update();
 			}
-			message("success", "Options updated successfully.");
+			message("success", l("Options updated successfully"));
 		}
 	}
 
@@ -304,6 +304,6 @@
 ?>
 <table width="75%" border="0" cellspacing="0" cellpadding="0">
 	<tr>
-		<td align="center"><input type="submit" name="saveOptions" value="  Apply  " class="submit"></td>
+		<td align="center"><input type="submit" name="saveOptions" value="  <?php echo l('Apply'); ?>  " class="submit"></td>
 	</tr>
 </table>

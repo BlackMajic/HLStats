@@ -72,6 +72,14 @@ define("DB_PCONNECT", 0);
 /// General Settings
 ///
 
+// LANGUAGE
+//			load the given translation
+//			Possible values are the file in the lang folder
+//			Use the LANGCODE.ini.php to put in here
+//			Default is en.
+//			If a translation is not found the en text will be displayed.
+define('LANGUAGE','en');
+
 // INCLUDE_PATH - Filesystem path to the hlstatsinc directory. This path can
 //                be specified relative to hlstats.php by prepending ./ or
 //                ../  If the path begins with a / then it is taken as a
