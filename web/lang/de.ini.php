@@ -72,7 +72,7 @@ Kills = Frags
 kills = Frags
 Deaths = Todesfall
 Kills per Death = Frags/Todesfall
-Tag = Hundemarke
+Tag = Hundemarke (Tag)
 Members = Mitglieder
 Last = Letzte
 Back to = Zurück zu
@@ -478,3 +478,20 @@ Connecting = Verbinden
 Valve Anti-Cheat = Valve Anti-Cheat
 Rules = Regeln
 Server Addons = Serveraddons
+
+Chat History = Chat Historie
+Say = Sprechen
+I said = Ich sagte
+
+Player names = Spielernamen
+Player Unique IDs = Spieler Unique IDs
+Clan names = Clan Namen
+Find Now = Jetzt suchen
+Unique ID = Uniqe ID
+Search results = Suchergebnisse
+items matching = zutreffende Ergebnisse
+Find a Player or Clan = Finde einen Spieler oder Clan
+Search For = Suche nach
+In = In
+Search Results = Suchergebnisse
+

@@ -196,7 +196,7 @@ function getSortArrow ($sort, $sortorder, $name, $longname,
 // The 'currentvalue' will be given the SELECTED attribute.
 //
 
-function getSelect ($name, $values, $currentvalue="")
+function getSelect ($name, $values, $currentvalue="",$trans=true)
 {
 	$select = "<select name=\"$name\">\n";
 
@@ -212,7 +212,12 @@ function getSelect ($name, $values, $currentvalue="")
 			$gotcval = true;
 		}
 
-		$select .= ">".l($v)."\n";
+		if($trans === true) {
+			$select .= ">".l($v)."\n";
+		}
+		else {
+			$select .= ">".$v."\n";
+		}
 	}
 
 	if ($currentvalue && !$gotcval)

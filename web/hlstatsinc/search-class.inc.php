@@ -70,7 +70,7 @@
 			if (!is_array($searchtypes))
 			{
 				$searchtypes = array(
-					"player"=>"Player names",
+					"player"=> "Player names",
 					"uniqueid"=>"Player " . $this->uniqueid_string_plural,
 					"clan"=>"Clan names"
 				);
@@ -80,7 +80,7 @@
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 
 <tr valign="top">
-	<td width="100%"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Find a Player or Clan</b><?php echo $g_options["fontend_normal"]; ?><p>
+	<td width="100%"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo l('Find a Player or Clan'); ?></b><?php echo $g_options["fontend_normal"]; ?><p>
 
 		<form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
 <?php
@@ -97,14 +97,14 @@
 			<td width="90%">
 				<table width="40%" border="0" cellspacing="0" cellpadding="2">
 				<tr valign="top" bgcolor="<?php echo $g_options["table_border"]; ?>">
-					<td nowrap width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?>Search For:<?php echo $g_options["fontend_normal"]; ?></td>
+					<td nowrap width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?><?php echo l('Search For'); ?>:<?php echo $g_options["fontend_normal"]; ?></td>
 					<td width="55%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><input type="text" name="q" size=20 maxlength=128 value="<?php echo htmlentities(strip_tags($this->query), ENT_NOQUOTES, "UTF-8"); ?>" class="textbox"></td>
 					<td valign="middle" rowspan="3" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-						<input type="submit" value=" Find Now " class="submit">
+						<input type="submit" value=" <?php echo l('Find Now'); ?> " class="submit">
 					</td>
 				</tr>
 				<tr valign="middle">
-					<td nowrap width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?>In:<?php echo $g_options["fontend_normal"]; ?></td>
+					<td nowrap width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?><?php echo l('In'); ?>:<?php echo $g_options["fontend_normal"]; ?></td>
 					<td width="55%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
 						<?php
 							echo getSelect("st",
@@ -114,7 +114,7 @@
 						?></td>
 				</tr>
 				<tr valign="middle">
-					<td nowrap width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?>Game:<?php echo $g_options["fontend_normal"]; ?></td>
+					<td nowrap width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?><?php echo l('Game'); ?>:<?php echo $g_options["fontend_normal"]; ?></td>
 					<td width="55%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
 						<?php
 							$games[""] = "(All)";
@@ -125,7 +125,7 @@
 								$games[$result['code']] = $result['name'];
 							}
 
-							echo getSelect("game", $games, $this->game);
+							echo getSelect("game", $games, $this->game,false);
 						?></td>
 				</tr>
 				</table>
@@ -150,7 +150,7 @@
 
 <tr valign="top">
 	<td width="100%"><a name="results"></a>
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;Search Results</b><?php echo $g_options["fontend_normal"]; ?></td>
+		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo l('Search Results'); ?></b><?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
 
 </table><p>
@@ -394,7 +394,7 @@
 
 			echo "<p><center>"
 				. $g_options["font_normal"]
-				. "Search results: <b>$numitems</b> items matching \"" . htmlentities(strip_tags($sr_query), ENT_NOQUOTES, "UTF-8") . "\"."
+				. l('Search results').": <b>$numitems</b> ".l('items matching')." \"" . htmlentities(strip_tags($sr_query), ENT_NOQUOTES, "UTF-8") . "\"."
 				. $g_options["fontend_normal"]
 				. "</center>";
 		}

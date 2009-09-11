@@ -88,12 +88,12 @@ else {
 
 
 pageHeader(
-	array($gamename, l("Event Chat History"), $pl_name),
+	array($gamename, l("Chat History"), $pl_name),
 	array(
 		$gamename=>$g_options["scripturl"] . "?game=$game",
 		l("Player Rankings")=>$g_options["scripturl"] . "?mode=players&amp;game=$game",
 		l("Player Details")=>$g_options["scripturl"] . "?mode=playerinfo&amp;player=$player",
-		l("Event Chat History")=>""
+		l("Chat History")=>""
 	),
 	$pl_name
 );
@@ -176,7 +176,7 @@ function insertEvents ($table, $select) {
 
 
 if (MODE == "LAN") {
-	$uqIdStr = "IP Address:";
+	$uqIdStr = l("IP Address");
 }
 else {
 	$uqIdStr = "Unique ID:";
@@ -184,9 +184,9 @@ else {
 
 insertEvents("Chat", "
 	SELECT
-	 	'Say',
+	 	'".l('Say')."',
 	 	<table>.eventTime,
-	 	CONCAT('I said \"', message, '\"'),
+	 	CONCAT('".l('I said')." \"', message, '\"'),
 	 	".DB_PREFIX."_Servers.name,
 	 	<table>.map
 	FROM
