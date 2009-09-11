@@ -438,6 +438,17 @@ I killed = Ich tötete
 Team Kill = Team frag
 Friendly Fire = Friendly Fire
 I killed teammate = Ich tötete ein Teammate
+My teammate = Mein Teammitglied
+I changed role to = Ich wechselte die Rolle zu
+I changed my name from = Ich änderte meinen Namen von
+to = zu
+I received a points bonus of = Ich bekam einen Bonus von 
+against = gegen
+triggered = löste aus
+against me = gegen mich
+Suicide = Slebstmort
+I committed suicide with = Ich beging Selbstmort mit
+I joined team = Ich bin nun
 
 Weapon Details = Waffendetails
 

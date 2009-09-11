@@ -288,7 +288,7 @@ insertEvents("Teamkills", "
 	SELECT
 		'".l('Friendly Fire')."',
 		<table>.eventTime,
-		CONCAT('My teammate %A%$surl?mode=playerinfo&player=', killerId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' killed me with ', weapon),
+		CONCAT('".l('My teammate')." %A%$surl?mode=playerinfo&player=', killerId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' ".l('killed me with')." ', weapon),
 		".DB_PREFIX."_Servers.name,
 		<table>.map
 	FROM
@@ -304,7 +304,7 @@ insertEvents("ChangeRole", "
 	SELECT
 		'".l('Role')."',
 		<table>.eventTime,
-		CONCAT('I changed role to ', role),
+		CONCAT('".l("I changed role to")." ', role),
 		".DB_PREFIX."_Servers.name,
 		<table>.map
 	FROM
@@ -318,7 +318,7 @@ insertEvents("ChangeName", "
 	SELECT
 		'".l('Name')."',
 		<table>.eventTime,
-		CONCAT('I changed my name from \"', oldName, '\" to \"', newName, '\"'),
+		CONCAT('".l('I changed my name from')." \"', oldName, '\" ".l('to')." \"', newName, '\"'),
 		".DB_PREFIX."_Servers.name,
 		<table>.map
 	FROM
@@ -332,7 +332,7 @@ insertEvents("PlayerActions", "
 	SELECT
 		'".l('Action')."',
 		<table>.eventTime,
-		CONCAT('I received a points bonus of ', bonus, ' for triggering \"', ".DB_PREFIX."_Actions.description, '\"'),
+		CONCAT('".l('I received a points bonus of')." ', bonus, ' ".l('for triggering')." \"', ".DB_PREFIX."_Actions.description, '\"'),
 		".DB_PREFIX."_Servers.name,
 		<table>.map
 	FROM
@@ -346,9 +346,9 @@ insertEvents("PlayerActions", "
 
 insertEvents("PlayerPlayerActions", "
 	SELECT
-		'Action',
+		'".l('Action')."',
 		<table>.eventTime,
-		CONCAT('I received a points bonus of ', bonus, ' for triggering \"', ".DB_PREFIX."_Actions.description, '\" against %A%$surl?mode=playerinfo&player=', victimId, '%', ".DB_PREFIX."_Players.lastName, '%/A%'),
+		CONCAT('".l('I received a points bonus of')." ', bonus, ' ".l('for triggering')." \"', ".DB_PREFIX."_Actions.description, '\" ".l('against')." %A%$surl?mode=playerinfo&player=', victimId, '%', ".DB_PREFIX."_Players.lastName, '%/A%'),
 		".DB_PREFIX."_Servers.name,
 		<table>.map
 	FROM
@@ -364,9 +364,9 @@ insertEvents("PlayerPlayerActions", "
 
 insertEvents("PlayerPlayerActions", "
 	SELECT
-		'Action',
+		'"-l('Action')."',
 		<table>.eventTime,
-		CONCAT('%A%$surl?mode=playerinfo&player=', <table>.playerId, '%', ".DB_PREFIX."_Players.lastName, '%/A% triggered \"', ".DB_PREFIX."_Actions.description, '\" against me'),
+		CONCAT('%A%$surl?mode=playerinfo&player=', <table>.playerId, '%', ".DB_PREFIX."_Players.lastName, '%/A% ".l('triggered')." \"', ".DB_PREFIX."_Actions.description, '\" ".l('against me')."'),
 		".DB_PREFIX."_Servers.name,
 		<table>.map
 	FROM
@@ -382,9 +382,9 @@ insertEvents("PlayerPlayerActions", "
 
 insertEvents("Suicides", "
 	SELECT
-		'Suicide',
+		'".l('Suicide')."',
 		<table>.eventTime,
-		CONCAT('I committed suicide with \"', weapon, '\"'),
+		CONCAT('".l('I committed suicide with')." \"', weapon, '\"'),
 		".DB_PREFIX."_Servers.name,
 		<table>.map
 	FROM
@@ -396,11 +396,11 @@ insertEvents("Suicides", "
 
 insertEvents("ChangeTeam", "
 	SELECT
-		'Team',
+		'".l('Team')."',
 		<table>.eventTime,
 		IF(".DB_PREFIX."_Teams.name IS NULL,
-			CONCAT('I joined team \"', team, '\"'),
-			CONCAT('I joined team \"', team, '\" (', ".DB_PREFIX."_Teams.name, ')')
+			CONCAT('".l('I joined team')." \"', team, '\"'),
+			CONCAT('".l('I joined team')." \"', team, '\" (', ".DB_PREFIX."_Teams.name, ')')
 		),
 		".DB_PREFIX."_Servers.name,
 		<table>.map
