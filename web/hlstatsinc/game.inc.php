@@ -43,7 +43,7 @@ pageHeader(array($gamename), array($gamename=>""));
 
 // should we hide the news ?
 if(!$g_options['hideNews']) {
-	$queryNews = mysql_query("SELECT * FROM ".DB_PREFIX."_News ORDER BY date DESC");
+	$queryNews = mysql_query("SELECT id,`date`,`user`,`email`,`subject`,`message` FROM ".DB_PREFIX."_News ORDER BY `date` DESC");
 	if(mysql_num_rows($queryNews) > 0) {
 ?>
 <script type="text/javascript" language="javascript">

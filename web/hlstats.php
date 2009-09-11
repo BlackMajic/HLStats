@@ -136,7 +136,7 @@ $modes = array(
 	"playerchathistory"
 );
 
-$mode = 'contents';
+$mode = '';
 if(!empty($_GET["mode"])) {
 	if(in_array($_GET["mode"], $modes) && validateInput($_GET['mode'],'nospace') === true ) {
 		$mode = $_GET['mode'];
@@ -164,14 +164,36 @@ if(isset($_GET['game'])) {
 	if($check === true) {
 		$game = $_GET['game'];
 
-		$query = mysql_query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='".mysql_escape_string($game)."'");
+		$query = mysql_query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='".mysql_escape_string($game)."' AND `hidden` = '0'");
 		if(mysql_num_rows($query) < 1) {
 			error("No such game '$game'.");
 		}
 		else {
 			$result = mysql_fetch_assoc($query);
 			$gamename = $result['name'];
+			if(empty($mode)) $mode = 'game';
 		}
+	}
+}
+else {
+	// decide if we show the games or the game file
+	$queryAllGames = mysql_query("SELECT code,name FROM ".DB_PREFIX."_Games WHERE hidden='0' ORDER BY name ASC");
+	$num_games = mysql_num_rows($queryAllGames);
+
+	if ($num_games == 1) {
+		//$query = mysql_query("SELECT code,name FROM ".DB_PREFIX."_Games WHERE hidden='0'");
+		//$result = mysql_fetch_assoc($query);
+		if(!empty($num_games)) {
+			$game = $num_games['code'];
+			$gamename = $num_games['name'];
+			if(empty($mode)) $mode = 'game';
+		}
+		else {
+			error("No such game.");
+		}
+	}
+	else {
+		if(empty($mode)) $mode = 'games';
 	}
 }
 
