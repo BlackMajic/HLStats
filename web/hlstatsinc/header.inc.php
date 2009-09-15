@@ -105,5 +105,3 @@
 		</div>
 	</div>
 	<div id="main">
-		<h1><?php end($title); echo current($title); ?></h1>
-	</div>

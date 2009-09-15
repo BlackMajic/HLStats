@@ -39,10 +39,10 @@
  */
 
 pageHeader(array(l("Contents")), array(l("Contents")=>""));
+
 // should we hide the news ?
 if(!$g_options['hideNews']) {
 	$queryNews = mysql_query("SELECT id,`date`,`user`,`email`,`subject`,`message` FROM ".DB_PREFIX."_News ORDER BY `date` DESC");
-
 	if(mysql_num_rows($queryNews) > 0) {
 ?>
 
@@ -59,6 +59,7 @@ if(!$g_options['hideNews']) {
 	}
 	//-->
 	</script>
+	<h1><?php echo l('News'); ?></h1>
 
 	<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 		<tr>
