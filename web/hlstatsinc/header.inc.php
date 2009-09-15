@@ -45,7 +45,7 @@
  * This file can contain PHP code.
  */
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
 <head>
 	<meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
@@ -55,132 +55,55 @@
 			echo " - $t";
 		}
 	?></title>
-	<style type="text/css">
-		.fontNormal {
-			font-family: Verdana, Arial, sans-serif;
-			font-size: 11px;
-		}
-
-		.fontSmall {
-			font-family: Verdana, Arial, sans-serif;
-			font-size: 9px;
-		}
-
-		.fontTitle {
-			font-family: Arial, sans-serif;
-			font-size: 18px;
-		}
-
-		.weapon {
-			text-decoration: none;
-		}
-
-		input, textarea, select {
-			font-family: Verdana, Arial, sans-serif;
-			font-size: 11px;
-		}
-
-		input.textbox, input.checkbox {
-			border-width: 1px;
-		}
-
-		input.submit {
-			height: 22px;
-		}
-
-		input.smallsubmit {
-			font-size: 9px;
-			height: 20px;
-		}
-
-		tt {
-			font-family: Courier New, Courier, fixed;
-			font-size: 12px;
-		}
-
-		body {
-			margin-top: <?php echo $g_options["body_topmargin"]; ?>px;
-			margin-right: <?php echo $g_options["body_leftmargin"]; ?>px;
-			margin-bottom: <?php echo $g_options["body_topmargin"]; ?>px;
-			margin-left: <?php echo $g_options["body_leftmargin"]; ?>px;
-		}
-		a:hover {
-			color:<?php echo $g_options["body_hlink"]; ?>;
-		}
-	</style>
-
-	<!--[if lte IE 6]>
-	<style>
-        img {
-            behavior: url(<?php echo INCLUDE_PATH; ?>/iepngfix.htc);
-        }
-	</style>
-	<![endif]-->
-
+	<link rel="stylesheet" href="css/default.css" type="text/css" media="screen" title="no title" charset="utf-8" />
 </head>
-<body bgcolor="<?php echo $g_options["body_bgcolor"]; ?>"
-	background="<?php echo $g_options["body_background"]; ?>"
-	text="<?php echo $g_options["body_text"]; ?>"
-	link="<?php echo $g_options["body_link"]; ?>"
-	vlink="<?php echo $g_options["body_vlink"]; ?>"
-	alink="<?php echo $g_options["body_alink"]; ?>">
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr valign="top">
-	<td width="100%">
-		<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr valign="bottom">
-			<td width=77 style="background-image:url(<?php echo $g_options["imgdir"]; ?>/title-background.gif);"><a href="<?php echo $g_options["scripturl"]; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/title.gif" width="185" height="40" alt="HLStats" border="0"></a></td>
-			<td width="100%" align="right" style="background-image:url(<?php echo $g_options["imgdir"]; ?>/title-background.gif);"><a href="<?php echo $g_options["scripturl"]; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/title-contents.gif" alt="Contents" border="0" hspace="2"></a><a href="<?php echo $g_options["scripturl"] . "?mode=search"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/title-search.gif" alt="Search" border="0" hspace="2"></a><a href="<?php echo $g_options["scripturl"] . "?mode=help"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/title-help.gif" alt="Help" border="0" hspace="2"></a><img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="6" height="1" border="0" alt="spacer.gif"></td>
-		</tr>
-		</table>
-	</td>
-</tr>
-<tr valign="top">
-	<td width="100%"><img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="1" border="0" alt="spacer.gif"></td>
-</tr>
-<tr valign="top">
-	<td width="100%">
-		<table width="100%" border="0" cellspacing="0" cellpadding="4" bgcolor="<?php echo $g_options["location_bgcolor"]; ?>">
-		<tr valign="middle">
-			<td width="100%"><?php echo $g_options["font_normal"]; ?><font color="<?php echo $g_options["location_text"]; ?>">&nbsp;&nbsp;&nbsp;
-			<?php if ($g_options["sitename"] && $g_options["siteurl"]) {
-		          echo "<a href=\"" . $g_options["siteurl"] . "\" style=\"color: " . $g_options["location_link"] . "\">" . $g_options["sitename"] . "</a>: ";
-	           }
-
-	echo "<a href=\"" . $g_options["scripturl"] . "\" style=\"color: " . $g_options["location_link"] . "\">HLStats</a>";
-
-	$i=0;
-	foreach ($location as $l=>$url) {
-		$url = ereg_replace("%s", $g_options["scripturl"], $url);
-		echo ": ";
-
-		if ($url) {
-			echo "<a href=\"$url\" style=\"color: " . $g_options["location_link"] . "\">$l</a>";
-		}
-		else {
-			echo "<b>$l</b>";
-		}
-
-		$i++;
-	}
-
-	echo "</font>";
-	echo $g_options["fontend_normal"];
-?></td>
-		</tr>
-		</table>
-	</td>
-</tr>
-</table><br>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr valign="top">
-	<td width="100%"><?php
-		echo $g_options["font_title"];
-
-		end($title);
-		echo current($title);
-
-		echo $g_options["fontend_title"];
-	?></td>
-</tr>
-</table><p>
+<body>
+<div id="wrap">
+	<div id="header">
+		<span id="slogan">Home</span>
+		<ul>
+			<li id="current"><a href="hlstats.php"><span>Content</span></a></li>
+			<li id="current"><a href="hlstats.php?mode=search"><span>Search</span></a></li>
+			<li id="current"><a href="hlstats.php?mode=help"><span>Help</span></a></li>
+		</ul>
+	</div>
+	<div id="header-logo">
+		<div id="logo">HL<span class="red">Stats</span></div>
+		<div id="breadcrumb">
+			<a href="<?php echo $g_options["siteurl"]; ?>"><?php echo $g_options["sitename"]; ?></a>:
+			<a href="hlstats.php">HLStats</a>
+			<?php
+			$i=0;
+			foreach ($location as $l=>$url) {
+				$url = ereg_replace("%s", $g_options["scripturl"], $url);
+				echo ": ";
+				if ($url) {
+					echo "<a href=\"$url\" style=\"color: " . $g_options["location_link"] . "\">$l</a>";
+				}
+				else {
+					echo "<b>$l</b>";
+				}
+				$i++;
+			}
+			?>
+		</div>
+	</div>
+	<div id="sidebar" >
+		<h1>Menu</h1>
+		<div class="left-box">
+			<ul class="sidemenu">
+				<li>ss</li>
+				<li>ss</li>
+			</ul>
+		</div>
+		<h1>more...</h1>
+		<div class="left-box">
+			<ul class="sidemenu">
+				<li>ss</li>
+				<li>ss</li>
+			</ul>
+		</div>
+	</div>
+	<div id="main">
+		<h1><?php end($title); echo current($title); ?></h1>
+	</div>

@@ -176,8 +176,6 @@ function showNews(id) {
 						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt=spacer.gif><br>
 				        <img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=actions&amp;game=$game"; ?>"><b><?php echo l('Action Statistics'); ?>...</b></a><br>
 						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt="spacer.gif"><br>
-						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=maps&amp;game=$game"; ?>"><b><?php echo l('Map Statistics'); ?>...</b></a><br />
-						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt="spacer.gif"><br>
 						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=maps&amp;game=$game"; ?>"><b><?php echo l('Map Statistics'); ?>...</b></a><?php echo $g_options["fontend_normal"]; ?>
 					</td>
 				</tr>
