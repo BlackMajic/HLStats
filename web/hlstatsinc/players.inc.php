@@ -500,11 +500,19 @@ pageHeader(
 		$queryPlayers = mysql_query($queryPlayersStr);
 
 		// the count
-		$query = mysql_query("SELECT COUNT(*) as pc
+		$queryStr = "SELECT COUNT(*) as pc
 					FROM `".DB_PREFIX."_Players`
 					WHERE game='".mysql_escape_string($game)."'
-						AND hideranking=0
-						AND kills >= ".mysql_escape_string($minkills)."");
+						AND hideranking=0";
+		if(isset($_GET['showall']) && $_GET['showall'] === "1") {
+			$queryStr .= " ";
+		}
+		else {
+			$queryStr .= " AND active = '1'";
+		}
+		$queryStr .= " AND kills >= ".mysql_escape_string($minkills)."";
+
+		$query = mysql_query($queryStr);
 		$resultCount = mysql_fetch_assoc($query);
 		$numitems = $resultCount['pc'];
 	}
