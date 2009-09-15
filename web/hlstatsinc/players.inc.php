@@ -66,10 +66,22 @@ pageHeader(
 	<input type="hidden" name="game" value="<?php echo $game; ?>">
 	<input type="hidden" name="st" value="player">
 	<table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
-	<tr valign="bottom">
-		<td width="75%"><?php echo $g_options["font_normal"]; ?><b>&#149;</b> <?php echo l('Find a player'); ?>: <input type="text" name="q" size=20 maxlength=64 class="textbox"> <input type="submit" value="<?php echo l('Search'); ?>" class="smallsubmit"><?php echo $g_options["fontend_normal"]; ?></td>
-		<td width="25%" align="right" nowrap><?php echo $g_options["font_normal"]; ?><?php echo l('Go to'); ?> <a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="clan.gif"><?php echo l('Clan Rankings'); ?></a><?php echo $g_options["fontend_normal"]; ?></td>
-	</tr>
+		<tr valign="bottom">
+			<td width="50%"><?php echo $g_options["font_normal"]; ?><b>&#149;</b> <?php echo l('Find a player'); ?>: <input type="text" name="q" size=20 maxlength=64 class="textbox"> <input type="submit" value="<?php echo l('Search'); ?>" class="smallsubmit"><?php echo $g_options["fontend_normal"]; ?></td>
+			<td width="50%"><?php echo $g_options["font_normal"]; ?>
+				<b>&#149;</b>
+				<?php if(isset($_GET['showall']) && $_GET['showall'] === "1") {
+					echo '<a href="?mode=players&amp;game=',$game,'">',l('Show only active players'),'</a>';
+				}
+				else {
+					echo '<a href="?mode=players&amp;game=',$game,'&amp;showall=1">',l('Show all players (including inactive ones)'),'</a>';
+				}
+				?>
+
+				<?php echo $g_options["fontend_normal"]; ?>
+			</td>
+			<td width="25%" align="right" nowrap><?php echo $g_options["font_normal"]; ?><?php echo l('Go to'); ?> <a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="clan.gif"><?php echo l('Clan Rankings'); ?></a><?php echo $g_options["fontend_normal"]; ?></td>
+		</tr>
 	</table>
 </form>
 
@@ -188,8 +200,7 @@ pageHeader(
 					FROM ".DB_PREFIX."_Events_StatsmeTime
 					LEFT JOIN ".DB_PREFIX."_Servers
 						ON ".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_StatsmeTime.serverId
-					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
-						AND `".DB_PREFIX."_Players`.`actvie` = '1'");
+					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'");
 
 		while($result = mysql_fetch_assoc($query)) {
 			$onlineArr[$result['playerId']][] = $result;
@@ -364,14 +375,15 @@ pageHeader(
 
 		$queryPlayersStr = "SELECT
 				t1.playerId,
-				lastName,
-				oldSkill,
-				skill,
-				ROUND(rating) as rating,
-				ROUND(SQRT(rd2)) as rd,
-				kills,
-				deaths,
-				IFNULL(kills/deaths, '-') AS kpd
+				t1.lastName,
+				t1.oldSkill,
+				t1.skill,
+				ROUND(t1.rating) as rating,
+				ROUND(SQRT(t1.rd2)) as rd,
+				t1.kills,
+				t1.deaths,
+				t1.active,
+				IFNULL(t1.kills/t1.deaths, '-') AS kpd
 			FROM
 				".DB_PREFIX."_Players as t1";
 		if(defined('HIDE_BOTS') && HIDE_BOTS == "1") {
@@ -380,8 +392,13 @@ pageHeader(
 		$queryPlayersStr .= " WHERE
 				t1.game='$game'
 				AND t1.hideranking=0
-				AND t1.rd2 <= $rd2limit
-				AND t1.active = '1'";
+				AND t1.rd2 <= $rd2limit";
+		if(isset($_GET['showall']) && $_GET['showall'] === "1") {
+			$queryPlayersStr .= " ";
+		}
+		else {
+			$queryPlayersStr .= " AND t1.active = '1'";
+		}
 		if(defined('HIDE_BOTS') && HIDE_BOTS == "1") {
 			$queryPlayersStr .= " AND t2.uniqueID not like 'BOT:%'";
 		}
@@ -454,6 +471,7 @@ pageHeader(
 				t1.oldSkill,
 				t1.kills,
 				t1.deaths,
+				t1.active,
 				IFNULL(t1.kills/t1.deaths, '-') AS kpd
 			FROM
 				".DB_PREFIX."_Players as t1";
@@ -463,8 +481,13 @@ pageHeader(
 		$queryPlayersStr .= " WHERE
 				t1.game='".mysql_escape_string($game)."'
 				AND t1.hideranking=0
-				AND t1.kills >= '".mysql_escape_string($minkills)."'
-				AND t1.active = '1'";
+				AND t1.kills >= '".mysql_escape_string($minkills)."'";
+		if(isset($_GET['showall']) && $_GET['showall'] === "1") {
+			$queryPlayersStr .= " ";
+		}
+		else {
+			$queryPlayersStr .= " AND t1.active = '1'";
+		}
 		if(defined('HIDE_BOTS') && HIDE_BOTS == "1") {
 			$queryPlayersStr .= " AND t2.uniqueID not like 'BOT:%'";
 		}

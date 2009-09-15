@@ -79,6 +79,8 @@ Back to = Zurück zu
 Find a player = Finde Spieler
 Search = Suchen
 Go to = Gehe zu
+Show all players (including inactive ones) = Zeige alle Spieler (beinhaltet auch inaktive Spieler)
+Show only active players = Nur aktive Spieler anzeigen
 
 Player Rankings = Spieler Rankings
 Sections = Bereiche
@@ -442,7 +444,7 @@ My teammate = Mein Teammitglied
 I changed role to = Ich wechselte die Rolle zu
 I changed my name from = Ich änderte meinen Namen von
 to = zu
-I received a points bonus of = Ich bekam einen Bonus von 
+I received a points bonus of = Ich bekam einen Bonus von
 against = gegen
 triggered = löste aus
 against me = gegen mich
@@ -494,4 +496,3 @@ Find a Player or Clan = Finde einen Spieler oder Clan
 Search For = Suche nach
 In = In
 Search Results = Suchergebnisse
-
