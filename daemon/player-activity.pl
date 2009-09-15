@@ -171,7 +171,7 @@ my $frame = time() - ($conf_timeFrame*86400); # time in seconds
 &doQuery("UPDATE ${db_prefix}_Players
 									SET `active` = '0'
 									WHERE `skillchangeDate` < '".$frame."'
-										AND `skillchangeDate` IS NOT NULL
+										AND `skillchangeDate` IS NULL
 										AND `active` = '1'");
 
 print "\n++ Player activity updated successfully.\n";

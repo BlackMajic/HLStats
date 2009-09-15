@@ -86,7 +86,8 @@ pageHeader(
 						FROM `".DB_PREFIX."_Events_Connects`
 						LEFT JOIN `".DB_PREFIX."_Players`
 							ON `".DB_PREFIX."_Events_Connects`.`playerId` = `".DB_PREFIX."_Players`.`playerId`
-						WHERE `".DB_PREFIX."_Players`.`game` = '".mysql_escape_string($game)."'");
+						WHERE `".DB_PREFIX."_Players`.`game` = '".mysql_escape_string($game)."'
+							AND `".DB_PREFIX."_Players`.`active` = '1'");
 
         while ($result = mysql_fetch_assoc($query)) {
             // we group by day
@@ -102,7 +103,8 @@ pageHeader(
 		                FROM `".DB_PREFIX."_Events_Disconnects`
 		                LEFT JOIN `".DB_PREFIX."_Players`
 		                	ON `".DB_PREFIX."_Events_Disconnects`.`playerId` = `".DB_PREFIX."_Players`.`playerId`
-		                WHERE `".DB_PREFIX."_Players`.`game` = '".mysql_escape_string($game)."'");
+		                WHERE `".DB_PREFIX."_Players`.`game` = '".mysql_escape_string($game)."'
+							AND `".DB_PREFIX."_Players`.`active` = '1'");
         while ($result = mysql_fetch_assoc($query)) {
             // we group by day
             //$dataArr = explode(" ",$result['eventTime']);
@@ -188,7 +190,8 @@ pageHeader(
 					FROM ".DB_PREFIX."_Events_StatsmeTime
 					LEFT JOIN ".DB_PREFIX."_Servers
 						ON ".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_StatsmeTime.serverId
-					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'");
+					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
+						AND `".DB_PREFIX."_Players`.`actvie` = '1'");
 
 		while($result = mysql_fetch_assoc($query)) {
 			$onlineArr[$result['playerId']][] = $result;
