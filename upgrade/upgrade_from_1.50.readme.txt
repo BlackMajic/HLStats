@@ -1,0 +1,3 @@
+hlstats.conf anpassen (die example vergleichen)
+sql file ausführen
+hlstats.pl neu starten

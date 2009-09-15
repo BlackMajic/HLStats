@@ -162,3 +162,14 @@ RconIgnoreSelf = 0
 # amx_psay > return a private say with amxMod
 # sm_psay > return a private say with sourceMod
 RconSay = say
+
+##
+## player-activity.pl
+## settings
+##
+[playerActivity]
+# Time frame after players are marked as inactive
+# This depends on skill change. If a player has no skill change
+# in this time frame the player will be set as inactive
+# Default 5 Days (value in days)
+timeFrame = 5
