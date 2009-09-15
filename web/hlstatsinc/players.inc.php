@@ -86,8 +86,7 @@ pageHeader(
 						FROM `".DB_PREFIX."_Events_Connects`
 						LEFT JOIN `".DB_PREFIX."_Players`
 							ON `".DB_PREFIX."_Events_Connects`.`playerId` = `".DB_PREFIX."_Players`.`playerId`
-						WHERE `".DB_PREFIX."_Players`.`game` = '".mysql_escape_string($game)."'
-							AND `".DB_PREFIX."_Players`.`active` = '1'");
+						WHERE `".DB_PREFIX."_Players`.`game` = '".mysql_escape_string($game)."'");
 
         while ($result = mysql_fetch_assoc($query)) {
             // we group by day
@@ -103,8 +102,7 @@ pageHeader(
 		                FROM `".DB_PREFIX."_Events_Disconnects`
 		                LEFT JOIN `".DB_PREFIX."_Players`
 		                	ON `".DB_PREFIX."_Events_Disconnects`.`playerId` = `".DB_PREFIX."_Players`.`playerId`
-		                WHERE `".DB_PREFIX."_Players`.`game` = '".mysql_escape_string($game)."'
-							AND `".DB_PREFIX."_Players`.`active` = '1'");
+		                WHERE `".DB_PREFIX."_Players`.`game` = '".mysql_escape_string($game)."'");
         while ($result = mysql_fetch_assoc($query)) {
             // we group by day
             //$dataArr = explode(" ",$result['eventTime']);
@@ -364,58 +362,36 @@ pageHeader(
 			true
 		);
 
+		$queryPlayersStr = "SELECT
+				t1.playerId,
+				lastName,
+				oldSkill,
+				skill,
+				ROUND(rating) as rating,
+				ROUND(SQRT(rd2)) as rd,
+				kills,
+				deaths,
+				IFNULL(kills/deaths, '-') AS kpd
+			FROM
+				".DB_PREFIX."_Players as t1";
 		if(defined('HIDE_BOTS') && HIDE_BOTS == "1") {
-	    	$queryPlayers = mysql_query("SELECT
-	    			t1.playerId,
-	    			lastName,
-	    			oldSkill,
-	    			skill,
-	    			ROUND(rating) as rating,
-	    			ROUND(SQRT(rd2)) as rd,
-	    			kills,
-	    			deaths,
-	    			IFNULL(kills/deaths, '-') AS kpd
-	    		FROM
-	    			".DB_PREFIX."_Players as t1
-	    			INNER JOIN ".DB_PREFIX."_PlayerUniqueIds as t2 ON t1.playerId = t2.playerId
-	    		WHERE
-	    			t1.game='$game'
-	    			AND t1.hideranking=0
-	    			AND t1.rd2 <= $rd2limit
-	    			AND t2.uniqueID not like 'BOT:%'
-	    		ORDER BY
-	    			$table->sort $table->sortorder,
-	    			$table->sort2 $table->sortorder,
-	    			lastName ASC
-	    		LIMIT $table->startitem,$table->numperpage");
-
+			$queryPlayersStr .= " INNER JOIN ".DB_PREFIX."_PlayerUniqueIds as t2 ON t1.playerId = t2.playerId";
 		}
-		else {
-			$queryPlayers = mysql_query("SELECT
-					t1.playerId,
-					t1.lastName,
-					t1.skill,
-					t1.oldSkill,
-					ROUND(rating) as rating,
-					ROUND(SQRT(rd2)) as rd,
-					t1.kills,
-					t1.deaths,
-					IFNULL(t1.kills/t1.deaths, '-') AS kpd
-				FROM
-					".DB_PREFIX."_Players as t1
-				WHERE
-					t1.game='$game'
-					AND t1.hideranking=0
-					AND rd2 <= $rd2limit
-				GROUP BY t1.playerId
-				ORDER BY
-					$table->sort $table->sortorder,
-					$table->sort2 $table->sortorder,
-					lastName ASC
-				LIMIT $table->startitem,$table->numperpage");
-
+		$queryPlayersStr .= " WHERE
+				t1.game='$game'
+				AND t1.hideranking=0
+				AND t1.rd2 <= $rd2limit
+				AND t1.active = '1'";
+		if(defined('HIDE_BOTS') && HIDE_BOTS == "1") {
+			$queryPlayersStr .= " AND t2.uniqueID not like 'BOT:%'";
 		}
-		$result = mysql_query($query);
+		$queryPlayersStr .= " ORDER BY
+				$table->sort $table->sortorder,
+				$table->sort2 $table->sortorder,
+				lastName ASC
+			LIMIT $table->startitem,$table->numperpage";
+
+		$queryPlayers = mysql_query($queryPlayersStr);
 
 		$query = mysql_query("SELECT COUNT(*) AS pc
 					FROM `".DB_PREFIX."_Players`
@@ -428,6 +404,7 @@ pageHeader(
 	}
 	elseif(defined('ELORATING') && (ELORATING === "2")) {
 		// we want only the rating system
+		exit("NOT WORKING YET !");
 	}
 	else {
 		// the players table
@@ -470,54 +447,36 @@ pageHeader(
 			true
 		);
 
+		$queryPlayersStr = "SELECT
+				t1.playerId,
+				t1.lastName,
+				t1.skill,
+				t1.oldSkill,
+				t1.kills,
+				t1.deaths,
+				IFNULL(t1.kills/t1.deaths, '-') AS kpd
+			FROM
+				".DB_PREFIX."_Players as t1";
 		if(defined('HIDE_BOTS') && HIDE_BOTS == "1") {
-	    	$queryPlayers = mysql_query("SELECT
-	    			t1.playerId,
-	    			lastName,
-	    			oldSkill,
-	    			skill,
-	    			kills,
-	    			deaths,
-	    			IFNULL(kills/deaths, '-') AS kpd
-	    		FROM
-	    			".DB_PREFIX."_Players as t1
-	    			INNER JOIN ".DB_PREFIX."_PlayerUniqueIds as t2 ON t1.playerId = t2.playerId
-	    		WHERE
-	    			t1.game='$game'
-	    			AND t1.hideranking=0
-	    			AND t1.kills >= $minkills
-	    			AND t2.uniqueID not like 'BOT:%'
-	    		ORDER BY
-	    			$table->sort $table->sortorder,
-	    			$table->sort2 $table->sortorder,
-	    			lastName ASC
-	    		LIMIT $table->startitem,$table->numperpage");
-
+			$queryPlayersStr .= " INNER JOIN ".DB_PREFIX."_PlayerUniqueIds as t2 ON t1.playerId = t2.playerId";
 		}
-		else {
-			$queryPlayers = mysql_query("SELECT
-					t1.playerId,
-					t1.lastName,
-					t1.skill,
-					t1.oldSkill,
-					t1.kills,
-					t1.deaths,
-					IFNULL(t1.kills/t1.deaths, '-') AS kpd
-				FROM
-					".DB_PREFIX."_Players as t1
-				WHERE
-					t1.game='".mysql_escape_string($game)."'
-					AND t1.hideranking=0
-					AND t1.kills >= '".mysql_escape_string($minkills)."'
-				GROUP BY t1.playerId
-				ORDER BY
-					".$table->sort." ".$table->sortorder.",
-					".$table->sort2." ".$table->sortorder.",
-					lastName ASC
-				LIMIT ".$table->startitem.",".$table->numperpage."");
-
+		$queryPlayersStr .= " WHERE
+				t1.game='".mysql_escape_string($game)."'
+				AND t1.hideranking=0
+				AND t1.kills >= '".mysql_escape_string($minkills)."'
+				AND t1.active = '1'";
+		if(defined('HIDE_BOTS') && HIDE_BOTS == "1") {
+			$queryPlayersStr .= " AND t2.uniqueID not like 'BOT:%'";
 		}
+		$queryPlayersStr .= " ORDER BY
+				$table->sort $table->sortorder,
+				$table->sort2 $table->sortorder,
+				lastName ASC
+			LIMIT $table->startitem,$table->numperpage";
 
+		$queryPlayers = mysql_query($queryPlayersStr);
+
+		// the count
 		$query = mysql_query("SELECT COUNT(*) as pc
 					FROM `".DB_PREFIX."_Players`
 					WHERE game='".mysql_escape_string($game)."'
