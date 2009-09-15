@@ -387,6 +387,8 @@ sub updateDB
 			deaths=deaths + $deaths,
 			suicides=suicides + $suicides,
 			oldSkill=skill,
+			skillchangeDate='".time()."',
+			active = '1',
 			skill=$skill,
 			rating=$rating,
 			rd2=$rd2,
