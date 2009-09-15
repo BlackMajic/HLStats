@@ -42,9 +42,7 @@
 
 
 # HLStats release version number
-
-$VERSION = "development version";
-$g_version = $VERSION;
+our $g_version = "development version";
 
 %PATTERNS = ();
 %NAMES    = ();

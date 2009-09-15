@@ -46,13 +46,6 @@
 # $opt_configfile_name - Filename of configuration file.
 $opt_configfile_name = "hlstats.conf";
 
-# $opt_libdir - Directory to look in for local required files
-#               (our *.plib, *.pm files).
-# not needed anymore
-# replaced by dirname funtion below
-#$opt_libdir = "./";
-
-
 ##
 ##
 ################################################################################
@@ -73,8 +66,6 @@ require "$opt_libdir/HLstats.plib";
 
 $|=1;
 Getopt::Long::Configure ("bundling");
-
-
 
 ##
 ## MAIN
@@ -144,11 +135,10 @@ if ($opt_help)
 	exit(0);
 }
 
-if ($opt_version)
-{
+if ($opt_version) {
 	print "hlstats-awards.pl (HLStats) $g_version\n"
 		. "Real-time player and clan rankings and statistics for Half-Life\n\n"
-		. "http://hlstats-community.org\n"
+		. "http://www.hlstats-community.org\n"
 		. "This is free software; see the source for copying conditions.  There is NO\n"
 		. "warranty; not even for MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.\n";
 	exit(0);
