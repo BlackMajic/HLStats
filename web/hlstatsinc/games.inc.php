@@ -60,16 +60,6 @@ if(!$g_options['hideNews']) {
 	//-->
 	</script>
 	<h1><?php echo l('News'); ?></h1>
-
-	<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-		<tr>
-			<td>
-				<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif">
-				<b>&nbsp;<?php echo l('News'); ?></b><?php echo $g_options["fontend_normal"];?>
-				<table width="75%" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options["table_border"]; ?>">
-					<tr valign="top">
-						<td>
-
 	<?php
 		$i = 0;
 		while ($rowdata = mysql_fetch_assoc($queryNews)) {
