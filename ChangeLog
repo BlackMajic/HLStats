@@ -4,7 +4,7 @@ HLStats ChangeLog
 1.51 (TBA)
 *) New: Player are now seperated into "active" and "inactive" Players
 		The players which have now activity (skill change) in a given timeframe
-		are set to inactive and will no be show in players overview.
+		are set to inactive and will not be show in players overview.
 *) New: Role pictures in player info page if available.
 *) Updated: Display of the awards and more stuff (thx to freaker and someone)
 *) Updated: Ignore BOT option ignores everything which has BOT as unique ID
