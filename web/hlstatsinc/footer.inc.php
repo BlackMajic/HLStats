@@ -47,6 +47,30 @@
  */
 ?>
 <br>
+<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
+<tr align="right">
+	<td>
+		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+			<select size="1" name="lang_custom">
+				<?php
+				global $current_lang;
+				$available_langs = glob(getcwd()."/lang/*.ini.php");
+				$available_langs[] = "en";
+				echo '<option value='.$GLOBALS['current_lang'].'>'.$GLOBALS['current_lang'].'</option>';
+				foreach($available_langs as $available_lang) {
+					$available_lang = ereg_replace("(.*lang[/\\])|.ini.php", "", $available_lang);
+					if($available_lang !== $current_lang) {
+						echo '<option value='.$available_lang.'>'.$available_lang."\n</option>";
+					}
+				}
+				?>
+			</select>
+			<input type="hidden" name="change_lang" value="1" />
+			<input type="submit" name="submit" value="change language" />
+		</form>
+	</td>
+</tr>
+</table>
 <center>
 <?php echo $g_options["font_small"]; ?>
 	<?php echo l('Generated in real-time by'); ?> <a href="http://www.hlstats-community.org">HLStats</a> <?php echo VERSION; ?> &nbsp;&nbsp;&nbsp; [<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin">Admin</a>]

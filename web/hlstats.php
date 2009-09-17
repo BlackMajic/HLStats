@@ -70,9 +70,47 @@ require(INCLUDE_PATH . "/functions.inc.php");
 require(INCLUDE_PATH . "/classes.inc.php");
 
 /**
+ * set language cookie
+ */
+if(isset($_POST['change_lang']) && isset($_POST['lang_custom'])) {
+	if($_POST['change_lang'] == 1 && isset($_COOKIE['lang'])) {
+		if($_COOKIE['lang'] !== $_POST['lang_custom']) {
+			if(file_exists(getcwd().'/lang/'.$_POST['lang_custom'].'.ini.php') OR $_POST['lang_custom'] == "en") {
+				setcookie("lang", $_POST['lang_custom']);
+				$_COOKIE['lang'] = $_POST['lang_custom'];
+			}
+		}
+	}
+	elseif($_POST['change_lang'] == 1) {
+		if(file_exists(getcwd().'/lang/'.$_POST['lang_custom'].'.ini.php') OR $_POST['lang_custom'] == "en") {
+			setcookie("lang", $_POST['lang_custom']);
+			$_COOKIE['lang'] = $_POST['lang_custom'];
+		}
+	}
+}
+
+/**
  * load the language
  */
-if(LANGUAGE !== 'en') { // only do something if we do not use the default lang
+if(isset($_COOKIE['lang'])) { //check if language-cookie is set and valid
+	if($_COOKIE['lang'] !== 'en') {
+		$langFile = getcwd().'/lang/'.$_COOKIE['lang'].'.ini.php';
+		if(!file_exists($langFile)) {
+			setcookie("lang", '', mktime(12,0,0,1, 1, 1990));
+			unset($_COOKIE['lang']);
+			unset($langFile);
+		}
+		else {
+			$lData = parse_custom_lang_file($langFile);
+			$current_lang = $_COOKIE['lang'];
+		}
+	}
+	else {
+		$current_lang = "en";
+	}
+}
+
+if(!isset($_COOKIE['lang']) && LANGUAGE !== 'en') { // use standard language if cookie is not set or invalid
 	$langFile = getcwd().'/lang/'.LANGUAGE.'.ini.php';
 	if(!file_exists($langFile)) {
 		die('Language file coul not be loaded. Please check your LANGUAGE setting in configuration file.');
@@ -81,6 +119,10 @@ if(LANGUAGE !== 'en') { // only do something if we do not use the default lang
 	if(empty($lData)) {
 		die('Language file could not be parsed. Please check your LANGUAGE setting in configuration file.');
 	}
+	$current_lang = LANGUAGE;
+}
+elseif(!isset($current_lang)) {
+	$current_lang = "en";
 }
 
 // set utf-8 header

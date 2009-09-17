@@ -501,8 +501,9 @@ function check_email_address($email) {
  */
 function l($string) {
 	global $lData;
+	global $current_lang;
 
-	if(LANGUAGE === "en") {
+	if($current_lang === "en") {
 		return $string;
 	}
 
