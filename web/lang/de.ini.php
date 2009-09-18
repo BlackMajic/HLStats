@@ -1,6 +1,7 @@
 News = Aktuelles
 from = von
 Author = Autor
+written by = geschrieben von
 Subject = Betreff
 Message = Nachricht
 Posted at = geschrieben am

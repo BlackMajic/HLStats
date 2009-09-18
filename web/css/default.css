@@ -3,9 +3,14 @@
 
 body {
 	margin: 0; padding: 0;
-	font: 70%/1.5 Verdana, Tahoma, Arial, Helvetica, sans-serif;
+	font: 12px Verdana, Tahoma, Arial, Helvetica, sans-serif;
 	color: #333;
 	background: #FFF url(../hlstatsimg/site/bg.gif) repeat-x;
+}
+td,input,button,th {
+	margin: 0; padding: 0;
+	font: 12px Verdana, Tahoma, Arial, Helvetica, sans-serif;
+	color: #333;
 }
 
 /* links */
@@ -39,7 +44,8 @@ h3 {
 
 /* images */
 img {
-	border: 2px solid #CCC;
+	/* border: 2px solid #CCC; */
+	border: 0;
 }
 img.float-right {
   margin: 5px 0px 10px 10px;
@@ -146,6 +152,11 @@ form.search input.searchbutton {
 	width: 60px;
 }
 
+th {
+	text-align: left;
+	font-weight: bold;
+}
+
 /**********************************
   LAYOUT
 ***********************************/
@@ -185,7 +196,6 @@ form.search input.searchbutton {
 #header-logo #breadcrumb {
 	position: absolute;
 	top: 15px; left: 130px;
-	font: 100% Verdana, Tahoma, Arial, Helvetica, sans-serif;
 	margin: 0; padding: 0;
 	color: #000;
 }
@@ -193,8 +203,8 @@ form.search input.searchbutton {
 /* navigation tabs */
 #header ul {
 	position: absolute;
-   margin:0;
-   list-style:none;
+	margin:0;
+	list-style:none;
 	right:-18px ; bottom: 3px;
 	font: bold 13px 'Trebuchet MS', Arial, Sans-serif;
 }
@@ -241,7 +251,10 @@ form.search input.searchbutton {
 	margin: 0; padding: 0;
 	width: 665px;
 }
-#main h1 {
+#main-full {
+	margin: 0; padding: 0;
+}
+#main h1, #main-full h1 {
 	margin: 10px 0;
 	padding: 4px 0 4px 8px;
 	font-size: 105%;

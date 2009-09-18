@@ -88,6 +88,7 @@
 			?>
 		</div>
 	</div>
+	<!--
 	<div id="sidebar" >
 		<h1>Menu</h1>
 		<div class="left-box">
@@ -104,4 +105,5 @@
 			</ul>
 		</div>
 	</div>
-	<div id="main">
+	//-->
+	<div id="main-full">
