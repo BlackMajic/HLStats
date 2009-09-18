@@ -42,148 +42,77 @@
 pageHeader(array($gamename), array($gamename=>""));
 
 // should we hide the news ?
-if(!$g_options['hideNews']) {
-	$queryNews = mysql_query("SELECT id,`date`,`user`,`email`,`subject`,`message` FROM ".DB_PREFIX."_News ORDER BY `date` DESC");
+if(!$g_options['hideNews'] && $num_games === 1) {
+	$queryNews = mysql_query("SELECT id,`date`,`user`,`email`,`subject`,`message`
+							 FROM ".DB_PREFIX."_News
+							 ORDER BY `date` DESC");
 	if(mysql_num_rows($queryNews) > 0) {
 ?>
 <script type="text/javascript" language="javascript">
-<!--
-function showNews(id) {
-	if(document.getElementById("newsBox_" + id).style.display == "none") {
-		document.getElementById("newsBox_" + id).style.display = "block";
-	}
-	else {
-		document.getElementById("newsBox_" + id).style.display = "none";
-	}
-
-}
-//-->
-</script>
-
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-	<tr>
-		<td>
-			<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif">
-			<b>&nbsp;<?php echo l('News'); ?></b><?php echo $g_options["fontend_normal"];?>
-			<table width="75%" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options["table_border"]; ?>">
-				<tr valign="top">
-					<td>
-
-<?php
-	$i = 0;
-	while ($rowdata = mysql_fetch_array($queryNews)) {
-		if($i == 0) {
-?>
-						<div class="newsBox" id="newsBox_<?php echo $i; ?>">
-<?php
+	<!--
+	function showNews(id) {
+		if(document.getElementById("newsBox_" + id).style.display == "none") {
+			document.getElementById("newsBox_" + id).style.display = "block";
 		}
 		else {
-?>
-						<table cellpadding="2" cellspacing="1" border="0" width="100%">
-							<tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-								<td colspan="2">&nbsp;</td>
-							</tr>
-							<tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-								<td colspan="2">
-									<?php echo $g_options["font_normal"]; ?>
-									<a href="javascript:showNews('<?php echo $i; ?>');"><?php echo htmlentities($rowdata['subject'],ENT_QUOTES, "UTF-8"); ?></a>
-									<?php echo l('from'); ?> <?php echo $rowdata['date']; ?>
-								</td>
-							</tr>
-						</table>
-						<?php echo $g_options["fontend_normal"];?>
-						<div class="newsBox" id="newsBox_<?php echo $i; ?>" style="display: none;">
-<?php
+			document.getElementById("newsBox_" + id).style.display = "none";
 		}
-?>
-						<table cellpadding="2" cellspacing="1" border="0" width="100%">
-							<tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-								<td width="100">
-									<?php echo $g_options["font_normal"]; ?>
-									<b><?php echo l('Author'); ?></b>
-									<?php echo $g_options["fontend_normal"];?>
-								</td>
-								<td width="*">
-									<?php echo $g_options["font_normal"]; ?>
-									<a href="mailto:<?php echo $rowdata['email']; ?>"><?php echo $rowdata['user']; ?></a>
-									<?php echo $g_options["fontend_normal"];?>
-								</td>
-							</tr>
-							<tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-								<td width="100">
-									<?php echo $g_options["font_normal"]; ?>
-									<b><?php echo l('Subject'); ?></b>
-									<?php echo $g_options["fontend_normal"];?>
-								</td>
-								<td width="*">
-									<?php echo $g_options["font_normal"]; ?>
-									<?php echo $rowdata['subject']; ?>
-									<?php echo $g_options["fontend_normal"];?>
-								</td>
-							</tr>
-							<tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-								<td width="100" valign="top">
-									<?php echo $g_options["font_normal"]; ?>
-									<b><?php echo l('Message'); ?></b>
-									<?php echo $g_options["fontend_normal"];?>
-								</td>
-								<td width="*">
-									<?php echo $g_options["font_normal"]; ?>
-									<?php echo nl2br($rowdata['message']); ?>
-									<?php echo $g_options["fontend_normal"];?>
-								</td>
-							</tr>
-							<tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-								<td width="100">
-									<?php echo $g_options["font_normal"]; ?>
-									<b><?php echo l('Posted at'); ?></b>
-									<?php echo $g_options["fontend_normal"];?>
-								</td>
-								<td width="*">
-									<?php echo $g_options["font_normal"]; ?>
-									<?php echo $rowdata['date']; ?>
-									<?php echo $g_options["fontend_normal"];?>
-								</td>
-							</tr>
-						</table>
-						</div>
-<?php
-		$i++;
+
 	}
-?>
-						</table>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
-<?php
+	//-->
+	</script>
+	<h1><?php echo l('News'); ?></h1>
+	<?php
+		$i = 0;
+		while ($rowdata = mysql_fetch_assoc($queryNews)) {
+			if($i == 0) {
+	?>
+	<div class="newsBox" id="newsBox_<?php echo $i; ?>">
+	<?php
+			}
+			else {
+	?>
+	<a href="javascript:showNews('<?php echo $i; ?>');"><?php echo htmlentities($rowdata['subject'],ENT_QUOTES, "UTF-8"); ?></a>
+	<?php echo l('from'); ?> <?php echo $rowdata['date']; ?>
+	<div class="newsBox" id="newsBox_<?php echo $i; ?>" style="display: none;">
+	<?php
+			}
+	?>
+		<p>
+			<i><?php echo $rowdata['subject']; ?></i><br />
+			<br />
+			<?php echo nl2br($rowdata['message']); ?>
+		</p>
+		<p class="comments align-right clear"><?php echo l('written by'),' ',$rowdata['user'],' (',$rowdata['date'],')'; ?></p>
+	</div>
+	<?php
+			$i++;
 		}
+	?>
+	<?php
 	}
+}
 ?>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-	<tr>
-		<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo l('Sections'); ?></b><?php echo $g_options["fontend_normal"];?>
-			<table width="75%" align="center" border="0" cellspacing="0" cellpadding="0">
-				<tr valign="top">
-					<td nowrap>
-						<?php echo $g_options["font_normal"]; ?><a href="<?php echo $g_options["scripturl"] . "?mode=players&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="player.gif"><b><?php echo l('Player Rankings'); ?></b></a><br>
-						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt="spacer.gif"><br>
-						<a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="clan.gif"><b><?php echo l('Clan Rankings'); ?>...</b></a><br>
-						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt=spacer.gif><br>
-						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=weapons&amp;game=$game"; ?>"><b><?php echo l('Weapon Statistics'); ?>...</b></a><br>
-						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt=spacer.gif><br>
-				        <img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=actions&amp;game=$game"; ?>"><b><?php echo l('Action Statistics'); ?>...</b></a><br>
-						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="5" border="0" alt="spacer.gif"><br>
-						<img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="spacer.gif"><a href="<?php echo $g_options["scripturl"] . "?mode=maps&amp;game=$game"; ?>"><b><?php echo l('Map Statistics'); ?>...</b></a><?php echo $g_options["fontend_normal"]; ?>
-					</td>
-				</tr>
-			</table>
-		</td>
-	</tr>
-</table>
+<h1><?php echo l('Sections'); ?></h1>
 <p>
+	<ul>
+		<li>
+			<a href="<?php echo $g_options["scripturl"] . "?mode=players&amp;game=$game"; ?>"> <img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="player.gif"><b><?php echo l('Player Rankings'); ?></b></a>
+		</li>
+		<li>
+			<a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"> <img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="clan.gif"><b><?php echo l('Clan Rankings'); ?>...</b></a>
+		</li>
+		<li>
+			<a href="<?php echo $g_options["scripturl"] . "?mode=weapons&amp;game=$game"; ?>"><b><?php echo l('Weapon Statistics'); ?>...</b></a>
+		</li>
+		<li>
+			<a href="<?php echo $g_options["scripturl"] . "?mode=actions&amp;game=$game"; ?>"><b><?php echo l('Action Statistics'); ?>...</b></a>
+		</li>
+		<li>
+			<a href="<?php echo $g_options["scripturl"] . "?mode=maps&amp;game=$game"; ?>"><b><?php echo l('Map Statistics'); ?>...</b></a>
+		</li>
+	</ul>
+</p>
 <?php
 	if (!$g_options['hideAwards']) {
 		$queryAwards = mysql_query("SELECT
@@ -225,74 +154,50 @@ function showNews(id) {
 
 		if (mysql_num_rows($queryAwards) > 0 && $awards_d_date) {
 ?>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td><?php echo $g_options["font_normal"]; ?>
-		&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif">&nbsp;
-		<b>
-		<?php
-		if ($awards_numdays == 1) {
-			echo l("Daily Awards")," ",l("for")," ",$awards_s_date;
-		}
-		else {
-			echo $awards_numdays," ",l('Day Awards'),": ",$awards_s_date," ",l('to')," ",$awards_d_date;
-		}
-		?>
-		</b>
-		<?php echo $g_options["fontend_normal"];?>
-		<p>
-		<table width="75%" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options["table_border"]; ?>">
-		<tr>
-			<td>
-				<table width="100%" border="0" cellspacing="1" cellpadding="4">
+<h1><?php
+	if ($awards_numdays == 1) {
+		echo l("Daily Awards")," ",l("for")," ",$awards_s_date;
+	}
+	else {
+		echo $awards_numdays," ",l('Day Awards'),": ",$awards_s_date," ",l('to')," ",$awards_d_date;
+	}
+?></h1>
+<div class="content">
+	<table width="100%" border="0" cellspacing="1" cellpadding="4">
 <?php
-			$c = 0;
-			while ($awarddata = mysql_fetch_assoc($queryAwards)) {
-				$colour = ($c % 2) + 1;
-				$c++;
+	$c = 0;
+	while ($awarddata = mysql_fetch_assoc($queryAwards)) {
+		$colour = ($c % 2) + 1;
+		$c++;
 ?>
-					<tr bgcolor="<?php echo $g_options["table_bgcolor$colour"]; ?>">
-						<td width="30%">
-						<?php
-							echo $g_options["font_normal"];
-							echo htmlspecialchars($awarddata["name"]);
-							echo $g_options["fontend_normal"];
-						?>
-						</td>
-						<td width="70%">
-						<?php
-							echo $g_options["font_normal"];
-
-							if ($awarddata["d_winner_id"]) {
-								echo "<a href=\"" . $g_options["scripturl"] . "?mode=playerinfo&amp;player="
-									. $awarddata["d_winner_id"] . "\"><img src=\""
-									. $g_options["imgdir"] . "/player.gif\" width=16 height=16 "
-									. "hspace='4' border='0' align=\"middle\" alt=\"player.gif\"><b>"
-									. htmlspecialchars($awarddata["d_winner_name"]) . "</b></a> ("
-									. $awarddata["d_winner_count"] . " " . htmlspecialchars($awarddata["verb"]) . ")";
-							}
-							else {
-								echo "&nbsp;&nbsp;(Nobody)";
-							}
-							echo $g_options["fontend_normal"];
-							?>
-						</td>
-					</tr>
-
-<?php
-			}
-?>				</table>
+		<tr>
+			<th width="30%"><?php echo htmlspecialchars($awarddata["name"]);?></th>
+			<td width="70%">
+			<?php
+				if ($awarddata["d_winner_id"]) {
+					echo "<a href=\"" . $g_options["scripturl"] . "?mode=playerinfo&amp;player="
+						. $awarddata["d_winner_id"] . "\"><img src=\""
+						. $g_options["imgdir"] . "/player.gif\" width=16 height=16 "
+						. "hspace='4' border='0' align=\"middle\" alt=\"player.gif\">&nbsp;<b>"
+						. htmlspecialchars($awarddata["d_winner_name"]) . "</b></a> ("
+						. $awarddata["d_winner_count"] . " " . htmlspecialchars($awarddata["verb"]) . ")";
+				}
+				else {
+					echo "&nbsp;&nbsp;(Nobody)";
+				}
+				?>
 			</td>
 		</tr>
-		</table>
-	</td>
-</tr>
-</table>
+<?php
+		}
+?>
+	</table>
 <?php
 		}
 	}
 ?>
-</p><br/>
+</div>
+<br/>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo l('Participating Servers'); ?></b><?php echo $g_options["fontend_normal"];?>

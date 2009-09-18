@@ -158,6 +158,10 @@ if(!empty($_GET['logout'])) {
 	}
 }
 
+// decide if we show the games or the game file
+$queryAllGames = mysql_query("SELECT code,name FROM ".DB_PREFIX."_Games WHERE hidden='0' ORDER BY name ASC");
+$num_games = mysql_num_rows($queryAllGames);
+
 $game = '';
 if(isset($_GET['game'])) {
 	$check = validateInput($_GET['game'],'nospace');
@@ -176,10 +180,6 @@ if(isset($_GET['game'])) {
 	}
 }
 else {
-	// decide if we show the games or the game file
-	$queryAllGames = mysql_query("SELECT code,name FROM ".DB_PREFIX."_Games WHERE hidden='0' ORDER BY name ASC");
-	$num_games = mysql_num_rows($queryAllGames);
-
 	if ($num_games == 1) {
 		//$query = mysql_query("SELECT code,name FROM ".DB_PREFIX."_Games WHERE hidden='0'");
 		//$result = mysql_fetch_assoc($query);

@@ -94,8 +94,8 @@ if(!$g_options['hideNews']) {
 ?>
 
 <h1><?php echo l('Games'); ?></h1>
-<p>
-	<table align="center" border="0" cellspacing="0" cellpadding="2" width="100%">
+<div class="content">
+	<table border="0" cellspacing="0" cellpadding="2" width="100%">
 		<tr>
 			<th colspan="3"><?php echo l('Game'); ?></th>
 			<th align="center"><?php echo l('Top Player'); ?></th>
@@ -181,7 +181,7 @@ if(!$g_options['hideNews']) {
 		}
 	?>
 	</table>
-</p>
+</div>
 <h1><?php echo l('General Statistics'); ?></h1>
 <p>
 <?php
