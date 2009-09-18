@@ -39,7 +39,10 @@
  */
 
 pageHeader(array(l("Contents")), array(l("Contents")=>""));
+?>
+<div id="main-full">
 
+<?php
 // should we hide the news ?
 if(!$g_options['hideNews']) {
 	$queryNews = mysql_query("SELECT id,`date`,`user`,`email`,`subject`,`message`
@@ -101,7 +104,6 @@ if(!$g_options['hideNews']) {
 			<th align="center"><?php echo l('Top Player'); ?></th>
 			<th align="center"><?php echo l('Top Clan'); ?></th>
 		</tr>
-
 	<?php
 		while ($gamedata = mysql_fetch_assoc($queryAllGames)) {
 			$queryTopPlayer = mysql_query("

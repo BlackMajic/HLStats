@@ -40,7 +40,31 @@
  */
 
 pageHeader(array($gamename), array($gamename=>""));
-
+?>
+<div id="sidebar" >
+	<h1><?php echo l('Sections'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>
+				<a href="<?php echo $g_options["scripturl"] . "?mode=players&amp;game=$game"; ?>"> <b><?php echo l('Player Rankings'); ?></b> <img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="player.gif"></a>
+			</li>
+			<li>
+				<a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"> <b><?php echo l('Clan Rankings'); ?></b> <img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="clan.gif"></a>
+			</li>
+			<li>
+				<a href="<?php echo $g_options["scripturl"] . "?mode=weapons&amp;game=$game"; ?>"><b><?php echo l('Weapon Statistics'); ?></b></a>
+			</li>
+			<li>
+				<a href="<?php echo $g_options["scripturl"] . "?mode=actions&amp;game=$game"; ?>"><b><?php echo l('Action Statistics'); ?></b></a>
+			</li>
+			<li>
+				<a href="<?php echo $g_options["scripturl"] . "?mode=maps&amp;game=$game"; ?>"><b><?php echo l('Map Statistics'); ?></b></a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="main">
+<?php
 // should we hide the news ?
 if(!$g_options['hideNews'] && $num_games === 1) {
 	$queryNews = mysql_query("SELECT id,`date`,`user`,`email`,`subject`,`message`
@@ -92,28 +116,6 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 	<?php
 	}
 }
-?>
-<h1><?php echo l('Sections'); ?></h1>
-<p>
-	<ul>
-		<li>
-			<a href="<?php echo $g_options["scripturl"] . "?mode=players&amp;game=$game"; ?>"> <img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="player.gif"><b><?php echo l('Player Rankings'); ?></b></a>
-		</li>
-		<li>
-			<a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"> <img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="clan.gif"><b><?php echo l('Clan Rankings'); ?>...</b></a>
-		</li>
-		<li>
-			<a href="<?php echo $g_options["scripturl"] . "?mode=weapons&amp;game=$game"; ?>"><b><?php echo l('Weapon Statistics'); ?>...</b></a>
-		</li>
-		<li>
-			<a href="<?php echo $g_options["scripturl"] . "?mode=actions&amp;game=$game"; ?>"><b><?php echo l('Action Statistics'); ?>...</b></a>
-		</li>
-		<li>
-			<a href="<?php echo $g_options["scripturl"] . "?mode=maps&amp;game=$game"; ?>"><b><?php echo l('Map Statistics'); ?>...</b></a>
-		</li>
-	</ul>
-</p>
-<?php
 	if (!$g_options['hideAwards']) {
 		$queryAwards = mysql_query("SELECT
 									".DB_PREFIX."_Awards.awardType,
@@ -197,20 +199,15 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 	}
 ?>
 </div>
-<br/>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo l('Participating Servers'); ?></b><?php echo $g_options["fontend_normal"];?>
-		<table width="75%" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options["table_border"]; ?>">
-			<tr>
-				<td>
-					<table width="100%" border="0" cellspacing="1" cellpadding="4">
-						<tr valign="bottom" bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-							<td width="60%"><?php echo $g_options["font_small"]; ?><font color="<?php echo $g_options["table_head_text"]; ?>">&nbsp;<?php echo l('Name'); ?></font><?php echo $g_options["fontend_small"]; ?></td>
-							<td width="40%"><?php echo $g_options["font_small"]; ?><font color="<?php echo $g_options["table_head_text"]; ?>">&nbsp;<?php echo l('Address'); ?></font><?php echo $g_options["fontend_small"]; ?></td>
-							<td width="20%"><?php echo $g_options["font_small"]; ?><font color="<?php echo $g_options["table_head_text"]; ?>">&nbsp;<?php echo l('Statistics'); ?></font><?php echo $g_options["fontend_small"]; ?></td>
-						</tr>
 
+<h1><?php echo l('Participating Servers'); ?></h1>
+<div class="content">
+	<table width="100%" border="0" cellspacing="1" cellpadding="4">
+		<tr>
+			<th>&nbsp;<?php echo l('Name'); ?></th>
+			<th>&nbsp;<?php echo l('Address'); ?></th>
+			<th>&nbsp;<?php echo l('Statistics'); ?></th>
+		</tr>
 <?php
 	$query = mysql_query("SELECT
 							serverId, name,
@@ -226,7 +223,6 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 						ORDER BY
 							name ASC,
 							addr ASC");
-
 	$i=0;
 	while ($rowdata = mysql_fetch_array($query)) {
 		$c = ($i % 2) + 1;
@@ -239,101 +235,65 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 			$addr = $rowdata["addr"];
 		}
 ?>
-
-				<tr valign="middle" bgcolor="<?php echo $g_options["table_bgcolor$c"]; ?>">
-					<td align="left"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/server.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="server.gif"><?php
-						echo $rowdata["name"];
-						echo $g_options["fontend_normal"]; ?></td>
-					<td align="left"><?php
-						echo $g_options["font_normal"];
-						echo $addr;
-						echo $g_options["fontend_normal"];
-					?></td>
-					<td align="center"><?php
-						echo $g_options["font_normal"];
-						echo "<a href=\"$g_options[scripturl]?mode=livestats&amp;server=$rowdata[serverId]\">",l('View'),"</a>";
-						echo $g_options["fontend_normal"];
-					?></td>
-				</tr>
-<?php			$i++;
+		<tr>
+			<td align="left">
+				<img src="<?php echo $g_options["imgdir"]; ?>/server.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="server.gif">
+				<?php echo $rowdata["name"]; ?>
+			</td>
+			<td align="left"><?php echo $addr; ?></td>
+			<td align="center"><?php echo "<a href=\"$g_options[scripturl]?mode=livestats&amp;server=$rowdata[serverId]\">",l('View'),"</a>"; ?></td>
+		</tr>
+<?php
+		$i++;
 	}
 ?>
-				</table></td>
-		</tr>
-		</table></td>
-</tr>
-
-</table><p>
-<br>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo $gamename; ?> <?php echo l('Statistics'); ?></b><?php echo $g_options["fontend_normal"];?><p>
-
-		<?php
-			$query = mysql_query("SELECT COUNT(*) AS plc FROM ".DB_PREFIX."_Players WHERE game='".mysql_escape_string($game)."'");
-			$result = mysql_fetch_assoc($query);
-			$num_players = $result['plc'];
-
-			$query = mysql_query("SELECT COUNT(*) AS cc FROM ".DB_PREFIX."_Clans WHERE game='".mysql_escape_string($game)."'");
-			$result = mysql_fetch_assoc($query);
-			$num_clans = $result['cc'];
-
-			$query = mysql_query("SELECT COUNT(*) AS sc FROM ".DB_PREFIX."_Servers WHERE game='".mysql_escape_string($game)."'");
-			$result = mysql_fetch_assoc($query);
-			$num_servers = $result['sc'];
-
-			$query = mysql_query("
-				SELECT
-					DATE_FORMAT(eventTime, '%r, %a. %e %b.') as lastEvent
-				FROM
-					".DB_PREFIX."_Events_Frags
-				LEFT JOIN ".DB_PREFIX."_Servers ON
-					".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_Frags.serverId
-				WHERE
-					".DB_PREFIX."_Servers.game='$game'
-				ORDER BY eventTime DESC
-				LIMIT 1
-			");
-			$result = mysql_fetch_assoc($query);
-			$lastevent = $result['lastEvent'];
-?>
-
-		<table width="75%" align="center" border="0" cellspacing="0" cellpadding="3">
-
-		<tr valign="top">
-			<td width=10><?php echo $g_options["font_normal"]; ?><b>&#149;&nbsp;</b><?php echo $g_options["fontend_normal"]; ?></td>
-			<td width="100%"><?php
-				echo $g_options["font_normal"];
-				echo "<b>$num_players</b> ",l('players'),"  <b>$num_clans</b> ",l('and clans ranked on')," <b>$num_servers</b> ",l('servers'),".";
-				echo $g_options["fontend_normal"];
-			?></td>
-		</tr>
-
+	</table>
+</div>
+<h1><?php echo $gamename; ?> <?php echo l('Statistics'); ?></h1>
 <?php
-			if ($lastevent) {
+	$query = mysql_query("SELECT COUNT(*) AS plc FROM ".DB_PREFIX."_Players WHERE game='".mysql_escape_string($game)."'");
+	$result = mysql_fetch_assoc($query);
+	$num_players = $result['plc'];
+
+	$query = mysql_query("SELECT COUNT(*) AS cc FROM ".DB_PREFIX."_Clans WHERE game='".mysql_escape_string($game)."'");
+	$result = mysql_fetch_assoc($query);
+	$num_clans = $result['cc'];
+
+	$query = mysql_query("SELECT COUNT(*) AS sc FROM ".DB_PREFIX."_Servers WHERE game='".mysql_escape_string($game)."'");
+	$result = mysql_fetch_assoc($query);
+	$num_servers = $result['sc'];
+
+	$query = mysql_query("
+		SELECT
+			DATE_FORMAT(eventTime, '%r, %a. %e %b.') as lastEvent
+		FROM
+			".DB_PREFIX."_Events_Frags
+		LEFT JOIN ".DB_PREFIX."_Servers ON
+			".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_Frags.serverId
+		WHERE
+			".DB_PREFIX."_Servers.game='$game'
+		ORDER BY eventTime DESC
+		LIMIT 1
+	");
+	$result = mysql_fetch_assoc($query);
+	$lastevent = $result['lastEvent'];
 ?>
-		<tr valign="top">
-			<td width=10><?php echo $g_options["font_normal"]; ?><b>&#149;&nbsp;</b><?php echo $g_options["fontend_normal"]; ?></td>
-			<td width="100%"><?php
-				echo $g_options["font_normal"];
-				echo l("Last kill")," <b>$lastevent</b>";
-				echo $g_options["fontend_normal"];
-			?></td>
-		</tr>
+<p>
+	<ul>
+		<li>
+			<?php echo "<b>$num_players</b> ",l('players'),"  <b>$num_clans</b> ",l('and clans ranked on')," <b>$num_servers</b> ",l('servers'),"."; ?>
+		</li>
 <?php
-			}
+	if ($lastevent) {
 ?>
-
-		<tr valign="top">
-			<td width=10><?php echo $g_options["font_normal"]; ?><b>&#149;&nbsp;</b><?php echo $g_options["fontend_normal"]; ?></td>
-			<td width="100%"><?php
-				echo $g_options["font_normal"];
-				echo l("All statistics are generated in real-time. Event history data expires after"), " <b>" . DELETEDAYS . "</b> ",l("days"),".";
-				echo $g_options["fontend_normal"];
-			?></td>
-		</tr>
-
-		</table></td>
-</tr>
-</table><p>
-<br>
+		<li>
+			<?php echo l("Last kill")," <b>$lastevent</b>"; ?>
+		</li>
+<?php
+	}
+?>
+		<li>
+			<?php echo l("All statistics are generated in real-time. Event history data expires after"), " <b>" . DELETEDAYS . "</b> ",l("days"),"."; ?>
+		</li>
+	</ul>
+</p>

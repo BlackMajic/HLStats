@@ -88,22 +88,5 @@
 			?>
 		</div>
 	</div>
-	<!--
-	<div id="sidebar" >
-		<h1>Menu</h1>
-		<div class="left-box">
-			<ul class="sidemenu">
-				<li>ss</li>
-				<li>ss</li>
-			</ul>
-		</div>
-		<h1>more...</h1>
-		<div class="left-box">
-			<ul class="sidemenu">
-				<li>ss</li>
-				<li>ss</li>
-			</ul>
-		</div>
-	</div>
-	//-->
-	<div id="main-full">
+	<!-- the main content div is in the includes itself -->
+	<!-- since there we can decide if we a sidenav or not -->
