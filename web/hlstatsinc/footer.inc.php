@@ -50,7 +50,14 @@
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr align="right">
 	<td>
-		<form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="post">
+		<form action="<?php echo $_SERVER['PHP_SELF'];
+					if(count($_GET) > 0) {
+						foreach($_GET as $mode_name => $mode_var) {
+							if(!empty($mode_var)) {
+								echo '?'.$mode_name.'='.$mode_var;
+							}
+						}
+				       } ?>" method="post">
 			<select size="1" name="lang_custom">
 				<?php
 				global $current_lang;
