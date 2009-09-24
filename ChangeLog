@@ -2,6 +2,9 @@ HLStats ChangeLog
 ==============
 
 1.51 (TBA)
+*) New: HLStats can now be translated via ini files. The default language
+		is set in the hlstats.conf.php file. Update the configuration !
+*) New: Visitors can now change the language of the web content via cookies
 *) New: Player are now seperated into "active" and "inactive" Players
 		The players which have now activity (skill change) in a given timeframe
 		are set to inactive and will not be show in players overview.
