@@ -46,34 +46,23 @@
  * This file can contain PHP code.
  */
 ?>
-<br>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr align="right">
 	<td>
-		<form action="<?php echo $_SERVER['PHP_SELF'];
-					if(count($_GET) > 0) {
-						foreach($_GET as $mode_name => $mode_var) {
-							if(!empty($mode_var)) {
-								echo '?'.$mode_name.'='.$mode_var;
-							}
-						}
-				       } ?>" method="post">
-			<select size="1" name="lang_custom">
+		<form action="" method="post">
+			<select name="hls_lang_selection">
+				<option value="en">EN</option>
 				<?php
-				global $current_lang;
 				$available_langs = glob(getcwd()."/lang/*.ini.php");
-				$available_langs[] = "en";
-				echo '<option value='.$GLOBALS['current_lang'].'>'.$GLOBALS['current_lang'].'</option>';
 				foreach($available_langs as $available_lang) {
-					$available_lang = ereg_replace("(.*lang[/\\])|.ini.php", "", $available_lang);
-					if($available_lang !== $current_lang) {
-						echo '<option value='.$available_lang.'>'.$available_lang."\n</option>";
-					}
+					$available_lang = str_replace(".ini.php",'',basename($available_lang));
+					$selected = '';
+					if($cl === $available_lang) $selected="selected='1'";
+					echo '<option value="'.$available_lang.'" '.$selected.'>'.strtoupper($available_lang)."</option>";
 				}
 				?>
 			</select>
-			<input type="hidden" name="change_lang" value="1" />
-			<input type="submit" name="submit" value="change language" />
+			<input type="submit" name="submit-change-lang" value="<?php echo l('Change language'); ?>" />
 		</form>
 	</td>
 </tr>

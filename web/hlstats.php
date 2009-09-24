@@ -70,9 +70,39 @@ require(INCLUDE_PATH . "/functions.inc.php");
 require(INCLUDE_PATH . "/classes.inc.php");
 
 /**
- * set language cookie
+ * lang change via cookies
  */
-if(isset($_POST['change_lang']) && isset($_POST['lang_custom'])) {
+$cl = LANGUAGE;
+if(isset($_POST['submit-change-lang'])) {
+	$check = validateInput($_POST['hls_lang_selection'],'nospace');
+	if($check === true && !isset($_POST['hls_lang_selection'][2])) {
+		// ok we can assume that we have a valid post value
+		// we have a lang change
+		// set the cookie and reload the page
+		setcookie("hls_language",$_POST['hls_lang_selection'],time()+600,dirname($_SERVER["SCRIPT_NAME"]).'/','',false,true);
+		header('Location: '.$_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING']);
+	}
+}
+elseif(isset($_COOKIE['hls_language']) && !empty($_COOKIE['hls_language'])) {
+	$check = validateInput($_COOKIE['hls_language'],'nospace');
+	if($check === true && !isset($_COOKIE['hls_language'][2])) {
+		// ok we can assume that we have a valid cookie
+		$cl = $_COOKIE['hls_language'];
+	}
+}
+if($cl !== 'en') { // use standard language
+	$langFile = getcwd().'/lang/'.$cl.'.ini.php';
+	if(!file_exists($langFile)) {
+		die('Language file coul not be loaded. Please check your LANGUAGE setting in configuration file.');
+	}
+	$lData = parse_custom_lang_file($langFile);
+	if(empty($lData)) {
+		die('Language file could not be parsed. Please check your LANGUAGE setting in configuration file.');
+	}
+}
+
+/*
+ if(isset($_POST['change_lang']) && isset($_POST['lang_custom'])) {
 	if($_POST['change_lang'] == 1 && isset($_COOKIE['lang'])) {
 		if($_COOKIE['lang'] !== $_POST['lang_custom']) {
 			if(file_exists(getcwd().'/lang/'.$_POST['lang_custom'].'.ini.php') OR $_POST['lang_custom'] == "en") {
@@ -89,9 +119,6 @@ if(isset($_POST['change_lang']) && isset($_POST['lang_custom'])) {
 	}
 }
 
-/**
- * load the language
- */
 if(isset($_COOKIE['lang'])) { //check if language-cookie is set and valid
 	if($_COOKIE['lang'] !== 'en') {
 		$langFile = getcwd().'/lang/'.$_COOKIE['lang'].'.ini.php';
@@ -124,6 +151,7 @@ if(!isset($_COOKIE['lang']) && LANGUAGE !== 'en') { // use standard language if 
 elseif(!isset($current_lang)) {
 	$current_lang = "en";
 }
+*/
 
 // set utf-8 header
 // we have to save all the stuff with utf-8 to make it work !!
@@ -241,6 +269,6 @@ else {
 
 include(INCLUDE_PATH . "/".$mode.".inc.php");
 
-pageFooter();
+include(INCLUDE_PATH . "/footer.inc.php");
 mysql_close($db_con);
 ?>

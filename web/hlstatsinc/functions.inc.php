@@ -118,20 +118,6 @@ function pageHeader($title, $location) {
 	include(INCLUDE_PATH . "/header.inc.php");
 }
 
-
-//
-// void pageFooter (void)
-//
-// Prints the page footer.
-//
-
-function pageFooter()
-{
-	global $g_options;
-	include(INCLUDE_PATH . "/footer.inc.php");
-}
-
-
 //
 // void getSortArrow (string sort, string sortorder, string name,
 //                    string longname, [string var_sort,
@@ -500,10 +486,9 @@ function check_email_address($email) {
  * @return strin $ret
  */
 function l($string) {
-	global $lData;
-	global $current_lang;
+	global $lData, $cl;
 
-	if($current_lang === "en") {
+	if($cl === "en") {
 		return $string;
 	}
 

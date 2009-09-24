@@ -33,6 +33,8 @@ ago = her
 Type = Typ
 Change sorting order = Sortierung ändern
 
+Change language = Sprache ändern
+
 Host = Host
 Connects = Verbindungen
 Percentage of Connects = Prozent von allen Verbindungen
