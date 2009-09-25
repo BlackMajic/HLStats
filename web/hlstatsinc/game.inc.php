@@ -46,19 +46,19 @@ pageHeader(array($gamename), array($gamename=>""));
 	<div class="left-box">
 		<ul class="sidemenu">
 			<li>
-				<a href="<?php echo $g_options["scripturl"] . "?mode=players&amp;game=$game"; ?>"> <b><?php echo l('Player Rankings'); ?></b> <img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="player.gif"></a>
+				<a href="<?php echo $g_options["scripturl"] . "?mode=players&amp;game=$game"; ?>"><?php echo l('Player Rankings'); ?></a>
 			</li>
 			<li>
-				<a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"> <b><?php echo l('Clan Rankings'); ?></b> <img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="4" border="0" align="middle" alt="clan.gif"></a>
+				<a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"><?php echo l('Clan Rankings'); ?></a>
 			</li>
 			<li>
-				<a href="<?php echo $g_options["scripturl"] . "?mode=weapons&amp;game=$game"; ?>"><b><?php echo l('Weapon Statistics'); ?></b></a>
+				<a href="<?php echo $g_options["scripturl"] . "?mode=weapons&amp;game=$game"; ?>"><?php echo l('Weapon Statistics'); ?></a>
 			</li>
 			<li>
-				<a href="<?php echo $g_options["scripturl"] . "?mode=actions&amp;game=$game"; ?>"><b><?php echo l('Action Statistics'); ?></b></a>
+				<a href="<?php echo $g_options["scripturl"] . "?mode=actions&amp;game=$game"; ?>"><?php echo l('Action Statistics'); ?></a>
 			</li>
 			<li>
-				<a href="<?php echo $g_options["scripturl"] . "?mode=maps&amp;game=$game"; ?>"><b><?php echo l('Map Statistics'); ?></b></a>
+				<a href="<?php echo $g_options["scripturl"] . "?mode=maps&amp;game=$game"; ?>"><?php echo l('Map Statistics'); ?></a>
 			</li>
 		</ul>
 	</div>
