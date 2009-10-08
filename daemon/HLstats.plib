@@ -854,7 +854,7 @@ sub getPlayerInfo
 				team     => $team
 			};
 		}
-		elsif($uniqueid =~ /BODT/) {
+		elsif($uniqueid =~ /BOT/) {
 			$md5 = Digest::MD5->new;
 			$md5->add($name);
 			$md5->add($s_addr);
