@@ -10,3 +10,7 @@ ALTER TABLE `hlstats_Players` ADD INDEX ( `hideranking` );
 ALTER TABLE `hlstats_Events_PlayerActions` ADD INDEX ( `actionId` );
 ALTER TABLE `hlstats_Events_PlayerActions` ADD INDEX ( `playerId` );
 ALTER TABLE `hlstats_Events_PlayerActions` ADD INDEX ( `serverId` );
+ALTER TABLE `hlstats_Events_PlayerPlayerActions` ADD INDEX ( `serverId` );
+ALTER TABLE `hlstats_Events_PlayerPlayerActions` ADD INDEX ( `playerId` );
+ALTER TABLE `hlstats_Events_PlayerPlayerActions` ADD INDEX ( `victimId` );
+ALTER TABLE `hlstats_Events_PlayerPlayerActions` ADD INDEX ( `actionId` );
