@@ -1757,6 +1757,7 @@ if (mysql_num_rows($query) != 0) {
 		$query = mysql_query("
 				SELECT
 					".DB_PREFIX."_Players.lastName AS name,
+					".DB_PREFIX."_Players.active,
 					Count(".DB_PREFIX."_Frags_Kills.kills) AS kills,
 					Count(".DB_PREFIX."_Frags_Kills.deaths) AS deaths,
 					".DB_PREFIX."_Frags_Kills.playerId as victimId,
@@ -1777,6 +1778,7 @@ if (mysql_num_rows($query) != 0) {
 				ORDER BY
 	            ".$tblPlayerKillStats->sort." ".$tblPlayerKillStats->sortorder.",
 	            ".$tblPlayerKillStats->sort2." ".$tblPlayerKillStats->sortorder."
+				LIMIT 10
 		");
 
 	$numitems = mysql_num_rows($query);
