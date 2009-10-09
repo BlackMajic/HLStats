@@ -98,6 +98,7 @@ $query = mysql_query("
 	SELECT
 		".DB_PREFIX."_Events_Frags.killerId,
 		".DB_PREFIX."_Players.lastName AS killerName,
+		".DB_PREFIX."_Players.active,
 		COUNT(".DB_PREFIX."_Events_Frags.weapon) AS frags
 	FROM
 		".DB_PREFIX."_Events_Frags
@@ -106,7 +107,7 @@ $query = mysql_query("
 	WHERE
 		".DB_PREFIX."_Events_Frags.weapon='".mysql_escape_string($weapon)."'
 		AND ".DB_PREFIX."_Players.game='".mysql_escape_string($game)."'
-		AND ".DB_PREFIX."_Players.hideranking<>'1'
+		AND ".DB_PREFIX."_Players.hideranking = 0
 	GROUP BY
 		".DB_PREFIX."_Events_Frags.killerId
 	ORDER BY
@@ -125,6 +126,7 @@ $queryCount = mysql_query("
 	WHERE
 		".DB_PREFIX."_Events_Frags.weapon='$weapon'
 		AND ".DB_PREFIX."_Players.game='$game'
+		AND ".DB_PREFIX."_Players.hideranking = 0
 ");
 $result = mysql_fetch_assoc($queryCount);
 $numitems = $result['wc'];

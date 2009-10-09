@@ -87,7 +87,8 @@ $query = mysql_query("
 	SELECT
 		".DB_PREFIX."_Events_Frags.killerId,
 		".DB_PREFIX."_Players.lastName AS killerName,
-		COUNT(".DB_PREFIX."_Events_Frags.map) AS frags
+		COUNT(".DB_PREFIX."_Events_Frags.map) AS frags,
+		".DB_PREFIX."_Players.active
 	FROM
 		".DB_PREFIX."_Events_Frags
 	LEFT JOIN ".DB_PREFIX."_Players ON
@@ -95,7 +96,7 @@ $query = mysql_query("
 	WHERE
 		".DB_PREFIX."_Events_Frags.map='".mysql_escape_string($map)."'
 		AND ".DB_PREFIX."_Players.game='".mysql_escape_string($game)."'
-		AND ".DB_PREFIX."_Players.hideranking<>'1'
+		AND ".DB_PREFIX."_Players.hideranking = 0
 	GROUP BY
 		".DB_PREFIX."_Events_Frags.killerId
 	ORDER BY
