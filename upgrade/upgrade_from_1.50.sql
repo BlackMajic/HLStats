@@ -7,3 +7,6 @@ ALTER TABLE `hlstats_Players` ADD `skillchangeDate` INT( 10 ) NULL AFTER `oldSki
 ALTER TABLE `hlstats_Players` ADD `active` INT( 1 ) NOT NULL DEFAULT '1' AFTER `skillchangeDate` ;
 ALTER TABLE `hlstats_Players` ADD INDEX ( `active` ) ;
 ALTER TABLE `hlstats_Players` ADD INDEX ( `hideranking` );
+ALTER TABLE `hlstats_Events_PlayerActions` ADD INDEX ( `actionId` );
+ALTER TABLE `hlstats_Events_PlayerActions` ADD INDEX ( `playerId` );
+ALTER TABLE `hlstats_Events_PlayerActions` ADD INDEX ( `serverId` );
