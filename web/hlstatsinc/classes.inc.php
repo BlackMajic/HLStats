@@ -234,11 +234,15 @@ class Table
 					$cellbody .= "<a href=\"" . $g_options["scripturl"] . "?$link\">";
 				}
 
-				if ($col->icon)
-				{
-					$cellbody .= "<img src=\"" . $g_options["imgdir"]
-						. "/$col->icon.gif\" width='16' height='16' hspace='4' "
-						. "border='0' align=\"middle\" alt=\"$col->icon.gif\">";
+				if ($col->icon) {
+					$pic = $col->icon.".gif";
+					if($col->icon == "player") {
+						if(isset($rowdata['active']) && $rowdata['active'] == "0") {
+							$pic = "player_inactive.gif";
+						}
+					}
+					$cellbody .= "<img src='".$g_options["imgdir"].$pic."' width='16' height='16' hspace='4' "
+						. "border='0' align=\"middle\" alt=\"$col->icon\">";
 				}
 				switch ($col->type)
 				{
