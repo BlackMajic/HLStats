@@ -190,6 +190,7 @@ if(!$g_options['hideNews']) {
 						WHERE
 							game='".$gamedata['code']."'
 							AND hideranking=0
+							AND active=1
 						ORDER BY
 							skill DESC
 						LIMIT 1

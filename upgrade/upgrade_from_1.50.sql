@@ -5,3 +5,5 @@ ALTER TABLE hlstats_Weapons ADD INDEX ( code );
 ALTER TABLE `hlstats_Events_Frags` ADD INDEX ( `map` )  ;
 ALTER TABLE `hlstats_Players` ADD `skillchangeDate` INT( 10 ) NULL AFTER `oldSkill` ;
 ALTER TABLE `hlstats_Players` ADD `active` INT( 1 ) NOT NULL DEFAULT '1' AFTER `skillchangeDate` ;
+ALTER TABLE `hlstats_Players` ADD INDEX ( `active` ) ;
+ALTER TABLE `hlstats_Players` ADD INDEX ( `hideranking` );
