@@ -139,7 +139,7 @@ pageHeader(
 
 	$resultquery = mysql_query("
 		SELECT
-			".DB_PREFIX."_Clans.clanId
+			COUNT(*) AS cc
 		FROM
 			".DB_PREFIX."_Clans
 		LEFT JOIN ".DB_PREFIX."_Players ON
@@ -152,7 +152,7 @@ pageHeader(
 		HAVING
 			COUNT(".DB_PREFIX."_Players.playerId) >= ".mysql_escape_string($minmembers)."");
 	$result = mysql_fetch_assoc($resultquery);
-	$resultCount = $result['clanId'];
+	$resultCount = $result['cc'];
 
 	$table->draw($queryClans, $resultCount, 90);
 ?>

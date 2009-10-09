@@ -292,6 +292,7 @@ pageHeader(
 			skill,
 			kills,
 			deaths,
+			active,
 			IFNULL(kills/deaths, '-') AS kpd,
 			(kills/" . mysql_escape_string($clandata["kills"]) . ") * 100 AS percent
 		FROM
