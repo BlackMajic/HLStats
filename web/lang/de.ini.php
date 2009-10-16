@@ -238,6 +238,7 @@ IF you remove support for a game, all data associated with this game will be del
 DELETE GAME = Spiel löschen
 
 Pattern = Muster
+Example patterns = Musterbeispiele
 Example = Beispiel
 Match Position = Muster Position
 EITHER = Beide
