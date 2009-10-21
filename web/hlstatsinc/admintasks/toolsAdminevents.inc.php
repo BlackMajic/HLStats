@@ -173,7 +173,7 @@
 <input type="hidden" name="sort" value="<?php if(!empty($sort)) echo $sort; ?>">
 <input type="hidden" name="sortorder" value="<?php if(!empty($sortorder)) echo $sortorder; ?>">
 
-<b>&#149;</b> Show only events of type: <?php
+<b>&#149;</b> <?php echo l('Show only events of type'); ?>: <?php
 	$resultTypes = mysql_query("
 		SELECT
 			DISTINCT eventType
@@ -183,14 +183,14 @@
 			eventType ASC
 	");
 
-	$types[""] = "(All)";
+	$types[""] = "All";
 
 	while ($result = mysql_fetch_assoc($resultTypes))
 	{
 		$types[$result['eventType']] = $result['eventType'];
 	}
 
-	echo getSelect("type", $types, $type);
+	echo getSelect("type", $types, $type,false);
 ?> <input type="submit" value="Filter" class="smallsubmit"><p>
 </form>
 <?php
