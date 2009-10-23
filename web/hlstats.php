@@ -199,11 +199,10 @@ else {
 	$num_games = mysql_num_rows($queryAllGames);
 
 	if ($num_games == 1) {
-		//$query = mysql_query("SELECT code,name FROM ".DB_PREFIX."_Games WHERE hidden='0'");
-		//$result = mysql_fetch_assoc($query);
+		$result = mysql_fetch_assoc($queryAllGames);
 		if(!empty($num_games)) {
-			$game = $num_games['code'];
-			$gamename = $num_games['name'];
+			$game = $result['code'];
+			$gamename = $result['name'];
 			if(empty($mode)) $mode = 'game';
 		}
 		else {
