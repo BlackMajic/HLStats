@@ -30,6 +30,8 @@ HLStats ChangeLog
 *) Fixed: Special chars problem in players overview page (thx to freaker)
 *) Fixed: Missing check in doEvent_Chat function (thx to VladiBG)
 *) Fixed: rcon messages. Missing quotes (thx to freaker)
+*) Fixed: Missing game information if only one game is installed 
+		(thx freaker) (#22)
 
 1.50 (18-06-2009)
 *) New: EloRating system. Can be activated and used sperate it along with the existing (thx to HampusW)
