@@ -1715,7 +1715,7 @@ if (mysql_num_rows($query) != 0) {
 			playerId INT(10),
 			kills INT(10),
 			deaths INT(10)
-		)
+		) DEFAULT CHARSET=utf8
 	");
 	 mysql_query("
 			INSERT INTO

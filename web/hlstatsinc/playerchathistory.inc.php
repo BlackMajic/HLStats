@@ -154,7 +154,7 @@ mysql_query("
 		eventDesc VARCHAR(255) NOT NULL,
 		serverName VARCHAR(32) NOT NULL,
 		map VARCHAR(32) NOT NULL
-	)
+	) DEFAULT CHARSET=utf8
 ");
 
 function insertEvents ($table, $select) {
