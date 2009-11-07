@@ -136,7 +136,7 @@ mysql_free_result($queryCount);
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td colspan="2">
-		<img src="<?php echo $g_options["imgdir"]; ?>/weapons/<?php echo $game; ?>/<?php echo $weapon; ?>.png" border="0" />
+		<img src="<?php echo $g_options["imgdir"]; ?>/weapons/<?php echo $game; ?>/<?php echo $weapon; ?>.png" alt="<?php echo $wep_name; ?>" title="<?php echo $wep_name; ?>"border="0" />
 	</td>
 </tr>
 <tr>

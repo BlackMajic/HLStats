@@ -98,7 +98,7 @@
 				<table width="40%" border="0" cellspacing="0" cellpadding="2">
 				<tr valign="top" bgcolor="<?php echo $g_options["table_border"]; ?>">
 					<td nowrap width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?><?php echo l('Search For'); ?>:<?php echo $g_options["fontend_normal"]; ?></td>
-					<td width="55%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><input type="text" name="q" size=20 maxlength=128 value="<?php echo htmlentities(strip_tags($this->query), ENT_NOQUOTES, "UTF-8"); ?>" class="textbox"></td>
+					<td width="55%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><input type="text" name="q" size=20 maxlength=128 value="<?php echo $this->query; ?>" class="textbox"></td>
 					<td valign="middle" rowspan="3" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
 						<input type="submit" value=" <?php echo l('Find Now'); ?> " class="submit">
 					</td>
@@ -156,7 +156,7 @@
 </table><p>
 <?php
 			$sr_query = ereg_replace(" ", "%", $this->query);
-			$sr_query = htmlentities(strip_tags($sr_query), ENT_NOQUOTES, "UTF-8");
+			$sr_query = $sr_query;
 
 			if ($this->type == "player")
 			{
@@ -228,6 +228,7 @@
 						".$andgame."");
 				$result = mysql_fetch_assoc($queryCount);
 				$numitems = $result['pn'];
+
 
 				$table->draw($query, $numitems, 90);
 			}
@@ -365,8 +366,8 @@
 					WHERE
 						".DB_PREFIX."_Games.hidden='0' AND
 						(
-							".DB_PREFIX."_Clans.tag LIKE '%$sr_query%'
-							OR ".DB_PREFIX."_Clans.name LIKE '%$sr_query%'
+							".DB_PREFIX."_Clans.tag LIKE '%".mysql_escape_string($sr_query)."%'
+							OR ".DB_PREFIX."_Clans.name LIKE '%".mysql_escaoe_string($sr_query)."%'
 						)
 						$andgame
 					ORDER BY
@@ -394,7 +395,7 @@
 
 			echo "<p><center>"
 				. $g_options["font_normal"]
-				. l('Search results').": <b>$numitems</b> ".l('items matching')." \"" . htmlentities(strip_tags($sr_query), ENT_NOQUOTES, "UTF-8") . "\"."
+				. l('Search results').": <b>$numitems</b> ".l('items matching')." \"" . $sr_query . "\"."
 				. $g_options["fontend_normal"]
 				. "</center>";
 		}

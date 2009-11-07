@@ -215,6 +215,7 @@ Restricted = Eingeschränkt
 Administrator = Administrator
 users only have access to the Host Groups, Clan Tag Patterns, Weapons, Teams, Awards and Actions configuration areas. This means these users cannot set Options or add new Games, Servers or Admin Users to HLStats, or use any of the admin Tools = Benutzer haben nur eingeschränkten Zugriff. Diese Benutzer können keine wichtigen Einstellungen ändern
 users have full, unrestricted access = Benutzer mit vollen Rechten
+No Access = Kein Berechtigung
 
 ERROR while importing this game = FEHLER beim Import dieses Spieles
 Import done = Import erfolgreich
@@ -237,6 +238,7 @@ IF you remove support for a game, all data associated with this game will be del
 DELETE GAME = Spiel löschen
 
 Pattern = Muster
+Example patterns = Musterbeispiele
 Example = Beispiel
 Match Position = Muster Position
 EITHER = Beide
@@ -498,3 +500,5 @@ Find a Player or Clan = Finde einen Spieler oder Clan
 Search For = Suche nach
 In = In
 Search Results = Suchergebnisse
+
+Show only events of type = Zeige nur Events von dem Typ

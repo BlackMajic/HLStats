@@ -1304,6 +1304,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 	$query = mysql_query("
 		SELECT
 			".DB_PREFIX."_Events_Frags.weapon,
+			".DB_PREFIX."_Weapons.name,
 			IFNULL(".DB_PREFIX."_Weapons.modifier, 1.00) AS modifier,
 			COUNT(".DB_PREFIX."_Events_Frags.weapon) AS kills,
 			COUNT(".DB_PREFIX."_Events_Frags.weapon) / ".mysql_escape_string($realkills)." * 100 AS percent
@@ -1417,6 +1418,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 	$query = mysql_query("
 		SELECT
 			".DB_PREFIX."_Events_Statsme.weapon AS smweapon,
+			".DB_PREFIX."_Weapons.name,
 			SUM(".DB_PREFIX."_Events_Statsme.kills) AS smkills,
 			SUM(".DB_PREFIX."_Events_Statsme.hits) AS smhits,
 			SUM(".DB_PREFIX."_Events_Statsme.shots) AS smshots,
@@ -1431,6 +1433,8 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 			".DB_PREFIX."_Events_Statsme
 		LEFT JOIN ".DB_PREFIX."_Servers ON
 			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Statsme.serverId
+		LEFT JOIN ".DB_PREFIX."_Weapons ON
+			".DB_PREFIX."_Weapons.code = ".DB_PREFIX."_Events_Statsme.weapon
 		WHERE
 			".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
 			AND ".DB_PREFIX."_Events_Statsme.PlayerId=".mysql_escape_string($player)."
@@ -1537,6 +1541,7 @@ if (mysql_num_rows($query) != 0) {
 	$query = mysql_query("
 		SELECT
 			".DB_PREFIX."_Events_Statsme2.weapon AS smweapon,
+			".DB_PREFIX."_Weapons.name,
 			SUM(".DB_PREFIX."_Events_Statsme2.head) AS smhead,
 			SUM(".DB_PREFIX."_Events_Statsme2.chest) AS smchest,
 			SUM(".DB_PREFIX."_Events_Statsme2.stomach) AS smstomach,
@@ -1551,6 +1556,8 @@ if (mysql_num_rows($query) != 0) {
 			".DB_PREFIX."_Events_Statsme2
 		LEFT JOIN ".DB_PREFIX."_Servers ON
 			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Statsme2.serverId
+		LEFT JOIN ".DB_PREFIX."_Weapons ON
+			".DB_PREFIX."_Weapons.code = ".DB_PREFIX."_Events_Statsme2.weapon
 		WHERE
 			".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
 			AND ".DB_PREFIX."_Events_Statsme2.PlayerId=".mysql_escape_string($player)."

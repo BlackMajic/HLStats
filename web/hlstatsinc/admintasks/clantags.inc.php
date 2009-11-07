@@ -91,7 +91,7 @@
 
 </table><p>
 
-Example patterns:<p>
+<?php echo l('Example patterns'); ?>:<p>
 
 <table border="0" cellspacing="0" cellpadding="4">
 

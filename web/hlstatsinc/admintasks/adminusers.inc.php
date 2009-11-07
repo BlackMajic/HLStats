@@ -42,9 +42,9 @@
 	if ($auth->userdata["acclevel"] < 100) die ("Access denied!");
 
 	$edlist = new EditList("username", DB_PREFIX."_Users", "user", false);
-	$edlist->columns[] = new EditListColumn("username", l("Username"), 15, true, "text", "", 16);
-	$edlist->columns[] = new EditListColumn("password", l("Password"), 15, true, "password", "", 16);
-	$edlist->columns[] = new EditListColumn("acclevel", l("Access Level"), 25, true, "select", "0/No Access;80/Restricted;100/Administrator");
+	$edlist->columns[] = new EditListColumn("username", "Username", 15, true, "text", "", 16);
+	$edlist->columns[] = new EditListColumn("password", "Password", 15, true, "password", "", 16);
+	$edlist->columns[] = new EditListColumn("acclevel", "Access Level", 25, true, "select", "0/No Access;80/Restricted;100/Administrator");
 
 
 	if ($_POST)
@@ -57,7 +57,7 @@
 
 ?>
 <p>
-<?php echo ('Usernames and passwords can be set up for access to this HLStats Admin area. For most sites you will only want one admin user - yourself. Some sites may however need to give administration access to several people'); ?>
+<?php echo l('Usernames and passwords can be set up for access to this HLStats Admin area. For most sites you will only want one admin user - yourself. Some sites may however need to give administration access to several people'); ?>
 </p>
 <p>
 	<b><?php echo l('Note'); ?></b>

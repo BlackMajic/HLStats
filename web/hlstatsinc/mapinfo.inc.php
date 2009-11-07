@@ -143,7 +143,7 @@ $totalkills = $result['tc'];
 		echo $g_options["font_normal"];
 
 		if ($image) {
-			echo "<img src=\"" . $image["url"] . "\" " . $image["size"] . " border=1 alt=\"$map\">";
+			echo "<img src=\"" . $image["url"] . "\" " . $image["size"] . " border='1' alt=\"$map\" title='".$map."'>";
 		}
 		if ($g_options["map_dlurl"]) {
 			$map_dlurl = str_replace("%MAP%", $map, $g_options["map_dlurl"]);

@@ -99,6 +99,7 @@ $result = mysql_query("
 	SELECT
 		".DB_PREFIX."_Events_Frags.weapon,
 		".DB_PREFIX."_Weapons.modifier AS modifier,
+		".DB_PREFIX."_Weapons.name,
 		COUNT(".DB_PREFIX."_Events_Frags.weapon) AS kills,
 		COUNT(".DB_PREFIX."_Events_Frags.weapon) / ".mysql_escape_string($totalkills)." * 100 AS percent
 	FROM

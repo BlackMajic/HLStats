@@ -140,9 +140,7 @@
 
 	<?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
-
 </table>
-
 <?php
-	pageFooter();
+	include(INCLUDE_PATH . "/footer.inc.php");
 ?>

@@ -256,7 +256,7 @@ class Table
 						// check if image exists
 						if ($image)
 						{
-							$cellbody .= "<img src=\"" . $image["url"] . "\" " . $image["size"] . " border='0' title='".strToUpper($colval)."' alt=\"" . strToUpper($colval) . "\">";
+							$cellbody .= "<img src=\"" . $image["url"] . "\" " . $image["size"] . " border='0' title='".$rowdata['name']."' alt=\"" . $rowdata['name'] . "\">";
 						}
 						else
 						{
