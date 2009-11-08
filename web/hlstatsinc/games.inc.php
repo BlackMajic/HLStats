@@ -65,7 +65,7 @@ if(!$g_options['hideNews']) {
 			<td>
 				<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif">
 				<b>&nbsp;<?php echo l('News'); ?></b><?php echo $g_options["fontend_normal"];?>
-				<table width="75%" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options["table_border"]; ?>">
+				<table width="80%" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options["table_border"]; ?>">
 					<tr valign="top">
 						<td>
 
