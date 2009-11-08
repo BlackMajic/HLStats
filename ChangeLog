@@ -32,6 +32,8 @@ HLStats ChangeLog
 *) Fixed: rcon messages. Missing quotes (thx to freaker)
 *) Fixed: Missing game information if only one game is installed 
 		(thx freaker) (#22)
+*) Fixed: News Box to small (#25)
+*) Fixed: Special chars error in temporary tables (#21)
 
 1.50 (18-06-2009)
 *) New: EloRating system. Can be activated and used sperate it along with the existing (thx to HampusW)
