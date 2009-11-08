@@ -34,6 +34,7 @@ HLStats ChangeLog
 		(thx freaker) (#22)
 *) Fixed: News Box to small (#25)
 *) Fixed: Special chars error in temporary tables (#21)
+*) Fixed: Admin Events view, filter was not working (#12)
 
 1.50 (18-06-2009)
 *) New: EloRating system. Can be activated and used sperate it along with the existing (thx to HampusW)

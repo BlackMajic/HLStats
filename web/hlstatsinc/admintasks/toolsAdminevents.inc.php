@@ -140,10 +140,10 @@
 			".DB_PREFIX."_Servers.serverId = <table>.serverId
 	");
 
-	$type = '';
+	$type = $_GET['type'];
 	$where = "";
-	if ($type) {
-		$where = "WHERE eventType='$type'";
+	if (!empty($type)) {
+		$where = "WHERE eventType='".mysql_escape_string($type)."'";
 	}
 
 	$query = mysql_query("
