@@ -43,9 +43,6 @@
 ## Settings
 ##
 
-# $opt_configfile_name - Filename of configuration file.
-$opt_configfile_name = "hlstats.conf";
-
 ##
 ##
 ################################################################################
@@ -60,7 +57,6 @@ use Config::Tiny; ## new config syntax
 use File::Basename;
 
 $opt_libdir = dirname(__FILE__);
-$opt_configfile = "$opt_libdir/$opt_configfile_name";
 
 require "$opt_libdir/HLstats.plib";
 
@@ -109,7 +105,7 @@ Generate awards from Half-Life server statistics.
 Long options can be abbreviated, where such abbreviation is not ambiguous.
 
 Most options can be specified in the configuration file:
-  $opt_configfile
+  $opt_libdir/hlstats.conf.ini 
 Note: Options set on the command line take precedence over options set in the
 configuration file.
 
