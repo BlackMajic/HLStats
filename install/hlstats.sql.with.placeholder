@@ -16,7 +16,7 @@ CREATE TABLE `#DB_PREFIX#_Actions` (
   PRIMARY KEY  (`id`),
   UNIQUE KEY `gamecode` (`game`,`code`),
   KEY `code` (`code`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Awards`;
@@ -31,12 +31,12 @@ CREATE TABLE `#DB_PREFIX#_Awards` (
   `d_winner_count` int(10) unsigned default NULL,
   PRIMARY KEY  (`awardId`),
   UNIQUE KEY `code` (`game`,`awardType`,`code`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Clans`;
 CREATE TABLE `#DB_PREFIX#_Clans` (
-  `clanId` int(10) unsigned NOT NULL auto_increment,
+ `clanId` int(10) unsigned NOT NULL auto_increment,
   `tag` varchar(32) NOT NULL default '',
   `name` varchar(128) NOT NULL default '',
   `homepage` varchar(64) NOT NULL default '',
@@ -44,7 +44,7 @@ CREATE TABLE `#DB_PREFIX#_Clans` (
   PRIMARY KEY  (`clanId`),
   UNIQUE KEY `tag` (`game`,`tag`),
   KEY `game` (`game`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_ClanTags`;
@@ -54,7 +54,7 @@ CREATE TABLE `#DB_PREFIX#_ClanTags` (
   `position` enum('EITHER','START','END') NOT NULL default 'EITHER',
   PRIMARY KEY  (`id`),
   UNIQUE KEY `pattern` (`pattern`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=29 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 
 INSERT INTO `#DB_PREFIX#_ClanTags` (`id`, `pattern`, `position`) VALUES
@@ -97,7 +97,7 @@ CREATE TABLE `#DB_PREFIX#_Events_Admin` (
   `message` varchar(128) NOT NULL default '',
   `playerName` varchar(128) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_ChangeName`;
 CREATE TABLE `#DB_PREFIX#_Events_ChangeName` (
@@ -109,7 +109,7 @@ CREATE TABLE `#DB_PREFIX#_Events_ChangeName` (
   `oldName` varchar(64) NOT NULL default '',
   `newName` varchar(64) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_ChangeRole`;
 CREATE TABLE `#DB_PREFIX#_Events_ChangeRole` (
@@ -120,19 +120,19 @@ CREATE TABLE `#DB_PREFIX#_Events_ChangeRole` (
   `playerId` int(10) unsigned NOT NULL default '0',
   `role` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_ChangeTeam`;
 CREATE TABLE `#DB_PREFIX#_Events_ChangeTeam` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+ `id` int(10) unsigned NOT NULL auto_increment,
   `eventTime` datetime NOT NULL default '0000-00-00 00:00:00',
   `serverId` int(10) unsigned NOT NULL default '0',
   `map` varchar(64) NOT NULL,
   `playerId` int(10) unsigned NOT NULL default '0',
   `team` varchar(32) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_Connects`;
 CREATE TABLE `#DB_PREFIX#_Events_Connects` (
@@ -145,17 +145,17 @@ CREATE TABLE `#DB_PREFIX#_Events_Connects` (
   `hostname` varchar(128) NOT NULL default '',
   `hostgroup` varchar(128) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_Disconnects`;
 CREATE TABLE `#DB_PREFIX#_Events_Disconnects` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+ `id` int(10) unsigned NOT NULL auto_increment,
   `eventTime` datetime NOT NULL default '0000-00-00 00:00:00',
   `serverId` int(10) unsigned NOT NULL default '0',
   `map` varchar(64) NOT NULL,
   `playerId` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_Entries`;
 CREATE TABLE `#DB_PREFIX#_Events_Entries` (
@@ -165,19 +165,23 @@ CREATE TABLE `#DB_PREFIX#_Events_Entries` (
   `map` varchar(64) NOT NULL,
   `playerId` int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_Frags`;
 CREATE TABLE `#DB_PREFIX#_Events_Frags` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+ `id` int(10) unsigned NOT NULL auto_increment,
   `eventTime` datetime NOT NULL default '0000-00-00 00:00:00',
   `serverId` int(10) unsigned NOT NULL default '0',
   `map` varchar(64) NOT NULL,
   `killerId` int(10) unsigned NOT NULL default '0',
   `victimId` int(10) unsigned NOT NULL default '0',
   `weapon` varchar(64) NOT NULL,
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  PRIMARY KEY  (`id`),
+  KEY `victimId` (`victimId`),
+  KEY `killerId` (`killerId`),
+  KEY `weapon` (`weapon`),
+  KEY `map` (`map`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_PlayerActions`;
 CREATE TABLE `#DB_PREFIX#_Events_PlayerActions` (
@@ -188,12 +192,15 @@ CREATE TABLE `#DB_PREFIX#_Events_PlayerActions` (
   `playerId` int(10) unsigned NOT NULL default '0',
   `actionId` int(10) unsigned NOT NULL default '0',
   `bonus` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  PRIMARY KEY  (`id`),
+  KEY `actionId` (`actionId`),
+  KEY `playerId` (`playerId`),
+  KEY `serverId` (`serverId`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_PlayerPlayerActions`;
 CREATE TABLE `#DB_PREFIX#_Events_PlayerPlayerActions` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+ `id` int(10) unsigned NOT NULL auto_increment,
   `eventTime` datetime NOT NULL default '0000-00-00 00:00:00',
   `serverId` int(10) unsigned NOT NULL default '0',
   `map` varchar(64) NOT NULL,
@@ -201,12 +208,16 @@ CREATE TABLE `#DB_PREFIX#_Events_PlayerPlayerActions` (
   `victimId` int(10) unsigned NOT NULL default '0',
   `actionId` int(10) unsigned NOT NULL default '0',
   `bonus` int(11) NOT NULL default '0',
-  PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  PRIMARY KEY  (`id`),
+  KEY `serverId` (`serverId`),
+  KEY `playerId` (`playerId`),
+  KEY `victimId` (`victimId`),
+  KEY `actionId` (`actionId`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_Rcon`;
 CREATE TABLE `#DB_PREFIX#_Events_Rcon` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+ `id` int(10) unsigned NOT NULL auto_increment,
   `eventTime` datetime NOT NULL default '0000-00-00 00:00:00',
   `serverId` int(10) unsigned NOT NULL default '0',
   `map` varchar(64) NOT NULL,
@@ -215,7 +226,7 @@ CREATE TABLE `#DB_PREFIX#_Events_Rcon` (
   `password` varchar(32) NOT NULL default '',
   `command` varchar(128) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_Statsme`;
 CREATE TABLE `#DB_PREFIX#_Events_Statsme` (
@@ -233,7 +244,7 @@ CREATE TABLE `#DB_PREFIX#_Events_Statsme` (
   `deaths` int(6) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `playerId` (`playerId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_Statsme2`;
 CREATE TABLE `#DB_PREFIX#_Events_Statsme2` (
@@ -252,7 +263,7 @@ CREATE TABLE `#DB_PREFIX#_Events_Statsme2` (
   `rightleg` int(6) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `playerId` (`playerId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_StatsmeLatency`;
 CREATE TABLE `#DB_PREFIX#_Events_StatsmeLatency` (
@@ -264,7 +275,7 @@ CREATE TABLE `#DB_PREFIX#_Events_StatsmeLatency` (
   `ping` int(6) unsigned NOT NULL default '0',
   PRIMARY KEY  (`id`),
   KEY `playerId` (`playerId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_StatsmeTime`;
 CREATE TABLE `#DB_PREFIX#_Events_StatsmeTime` (
@@ -276,7 +287,7 @@ CREATE TABLE `#DB_PREFIX#_Events_StatsmeTime` (
   `time` time NOT NULL default '00:00:00',
   PRIMARY KEY  (`id`),
   KEY `playerId` (`playerId`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_Suicides`;
 CREATE TABLE `#DB_PREFIX#_Events_Suicides` (
@@ -287,7 +298,7 @@ CREATE TABLE `#DB_PREFIX#_Events_Suicides` (
   `playerId` int(10) unsigned NOT NULL default '0',
   `weapon` varchar(64) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_TeamBonuses`;
 CREATE TABLE `#DB_PREFIX#_Events_TeamBonuses` (
@@ -299,11 +310,11 @@ CREATE TABLE `#DB_PREFIX#_Events_TeamBonuses` (
   `actionId` int(10) unsigned NOT NULL default '0',
   `bonus` int(11) NOT NULL default '0',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_Teamkills`;
 CREATE TABLE `#DB_PREFIX#_Events_Teamkills` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+  id` int(10) unsigned NOT NULL auto_increment,
   `eventTime` datetime NOT NULL default '0000-00-00 00:00:00',
   `serverId` int(10) unsigned NOT NULL default '0',
   `map` varchar(64) NOT NULL,
@@ -311,11 +322,12 @@ CREATE TABLE `#DB_PREFIX#_Events_Teamkills` (
   `victimId` int(10) unsigned NOT NULL default '0',
   `weapon` varchar(64) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
+
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Games`;
 CREATE TABLE `#DB_PREFIX#_Games` (
-  `code` varchar(16) NOT NULL default '',
+ `code` varchar(16) NOT NULL default '',
   `name` varchar(128) NOT NULL default '',
   `source` tinyint(1) NOT NULL default '0',
   `hidden` enum('0','1') NOT NULL default '0',
@@ -328,18 +340,18 @@ CREATE TABLE `#DB_PREFIX#_HostGroups` (
   `pattern` varchar(128) NOT NULL default '',
   `name` varchar(128) NOT NULL default '',
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_News`;
 CREATE TABLE `#DB_PREFIX#_News` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+ `id` int(10) unsigned NOT NULL auto_increment,
   `date` varchar(32) NOT NULL,
   `user` varchar(128) NOT NULL,
   `email` varchar(128) NOT NULL,
   `subject` varchar(128) NOT NULL,
   `message` text NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=2 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 
 INSERT INTO `#DB_PREFIX#_News` (`id`, `date`, `user`, `email`, `subject`, `message`) VALUES
@@ -347,7 +359,7 @@ INSERT INTO `#DB_PREFIX#_News` (`id`, `date`, `user`, `email`, `subject`, `messa
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Options`;
 CREATE TABLE `#DB_PREFIX#_Options` (
-  `keyname` varchar(32) NOT NULL default '',
+ `keyname` varchar(32) NOT NULL default '',
   `value` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`keyname`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
@@ -414,6 +426,8 @@ CREATE TABLE `#DB_PREFIX#_Players` (
   `suicides` int(11) NOT NULL default '0',
   `skill` int(11) NOT NULL default '1000',
   `oldSkill` int(11) NOT NULL default '1000',
+  `skillchangeDate` int(10) default NULL,
+  `active` int(1) NOT NULL default '1',
   `fullName` varchar(128) default NULL,
   `email` varchar(128) default NULL,
   `homepage` varchar(128) default NULL,
@@ -425,12 +439,14 @@ CREATE TABLE `#DB_PREFIX#_Players` (
   `rating_last` timestamp NOT NULL default CURRENT_TIMESTAMP,
   PRIMARY KEY  (`playerId`),
   KEY `clan` (`clan`),
-  KEY `game` (`game`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  KEY `game` (`game`),
+  KEY `active` (`active`),
+  KEY `hideranking` (`hideranking`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_PlayerUniqueIds`;
 CREATE TABLE `#DB_PREFIX#_PlayerUniqueIds` (
-  `playerId` int(10) unsigned NOT NULL default '0',
+ `playerId` int(10) unsigned NOT NULL default '0',
   `uniqueId` varchar(64) NOT NULL default '',
   `game` varchar(16) NOT NULL default '',
   `merge` int(10) unsigned default NULL,
@@ -440,18 +456,18 @@ CREATE TABLE `#DB_PREFIX#_PlayerUniqueIds` (
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Roles`;
 CREATE TABLE `#DB_PREFIX#_Roles` (
-  `roleId` int(10) unsigned NOT NULL auto_increment,
+ `roleId` int(10) unsigned NOT NULL auto_increment,
   `game` varchar(16) NOT NULL default 'valve',
   `code` varchar(32) NOT NULL default '',
   `name` varchar(64) NOT NULL default '',
   `hidden` enum('0','1') NOT NULL default '0',
   PRIMARY KEY  (`roleId`),
   UNIQUE KEY `gamecode` (`game`,`code`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Servers`;
 CREATE TABLE `#DB_PREFIX#_Servers` (
-  `serverId` int(10) unsigned NOT NULL auto_increment,
+ `serverId` int(10) unsigned NOT NULL auto_increment,
   `address` varchar(15) NOT NULL default '',
   `port` int(5) unsigned NOT NULL default '0',
   `name` varchar(64) NOT NULL default '',
@@ -459,10 +475,10 @@ CREATE TABLE `#DB_PREFIX#_Servers` (
   `publicaddress` varchar(64) NOT NULL default '',
   `statusurl` varchar(255) default NULL,
   `rcon_password` varchar(48) NOT NULL default '',
-  `defaultMap` VARCHAR( 128 ) NOT NULL,
+  `defaultMap` varchar(128) NOT NULL,
   PRIMARY KEY  (`serverId`),
   UNIQUE KEY `addressport` (`address`,`port`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Server_Addons`;
 CREATE TABLE `#DB_PREFIX#_Server_Addons` (
@@ -471,6 +487,7 @@ CREATE TABLE `#DB_PREFIX#_Server_Addons` (
   `url` varchar(255) NOT NULL default '',
   PRIMARY KEY  (`rule`)
 ) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 
 INSERT INTO `#DB_PREFIX#_Server_Addons` (`rule`, `addon`, `url`) VALUES
 ('hlg_version', 'HLGuard %', 'http://www.thezproject.org/projects.php?pid=1'),
@@ -534,7 +551,7 @@ CREATE TABLE `#DB_PREFIX#_Teams` (
   `hidden` enum('0','1') NOT NULL default '0',
   PRIMARY KEY  (`teamId`),
   UNIQUE KEY `gamecode` (`game`,`code`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Users`;
 CREATE TABLE `#DB_PREFIX#_Users` (
@@ -557,12 +574,13 @@ CREATE TABLE `#DB_PREFIX#_Weapons` (
   `name` varchar(64) NOT NULL default '',
   `modifier` float(10,2) NOT NULL default '1.00',
   PRIMARY KEY  (`weaponId`),
-  UNIQUE KEY `gamecode` (`game`,`code`)
-) ENGINE=MyISAM DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+  UNIQUE KEY `gamecode` (`game`,`code`),
+  KEY `code` (`code`)
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_Chat`;
 CREATE TABLE `#DB_PREFIX#_Events_Chat` (
-  `id` int(10) unsigned NOT NULL auto_increment,
+ `id` int(10) unsigned NOT NULL auto_increment,
   `eventTime` datetime NOT NULL default '0000-00-00 00:00:00',
   `serverId` int(10) unsigned NOT NULL default '0',
   `map` varchar(64) NOT NULL,
@@ -570,4 +588,4 @@ CREATE TABLE `#DB_PREFIX#_Events_Chat` (
   `type` int(1) NOT NULL,
   `message` varchar(128) NOT NULL,
   PRIMARY KEY  (`id`)
-) ENGINE=MyISAM  DEFAULT CHARSET=utf8 AUTO_INCREMENT=1 ;
+) ENGINE=MyISAM  DEFAULT CHARSET=utf8;
