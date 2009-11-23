@@ -314,7 +314,7 @@ CREATE TABLE `#DB_PREFIX#_Events_TeamBonuses` (
 
 DROP TABLE IF EXISTS `#DB_PREFIX#_Events_Teamkills`;
 CREATE TABLE `#DB_PREFIX#_Events_Teamkills` (
-  id` int(10) unsigned NOT NULL auto_increment,
+  `id` int(10) unsigned NOT NULL auto_increment,
   `eventTime` datetime NOT NULL default '0000-00-00 00:00:00',
   `serverId` int(10) unsigned NOT NULL default '0',
   `map` varchar(64) NOT NULL,
