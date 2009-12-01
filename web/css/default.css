@@ -286,6 +286,7 @@ th {
 	border: 1px solid #EBEBEB;
 	margin: 0 0 5px 0;
 	background: #FFF;
+	padding: 5px;
 }
 #sidebar ul.sidemenu {
 	list-style: none;

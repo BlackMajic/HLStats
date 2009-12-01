@@ -419,6 +419,7 @@ Data out of selected range = Daten außerhalb der Auswahl
 Rating (RD) = Bewertung (RD)
 Rating = Bewertung
 RD = RD
+Options = Optionen
 
 Edit Player = Spieler bearbeiten
 (View Player Details) = Spieler Details

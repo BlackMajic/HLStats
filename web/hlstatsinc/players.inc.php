@@ -61,30 +61,47 @@ pageHeader(
 );
 ?>
 
-<form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
-	<input type="hidden" name="mode" value="search">
-	<input type="hidden" name="game" value="<?php echo $game; ?>">
-	<input type="hidden" name="st" value="player">
-	<table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
-		<tr valign="bottom">
-			<td width="50%"><?php echo $g_options["font_normal"]; ?><b>&#149;</b> <?php echo l('Find a player'); ?>: <input type="text" name="q" size=20 maxlength=64 class="textbox"> <input type="submit" value="<?php echo l('Search'); ?>" class="smallsubmit"><?php echo $g_options["fontend_normal"]; ?></td>
-			<td width="50%"><?php echo $g_options["font_normal"]; ?>
-				<b>&#149;</b>
-				<?php if(isset($_GET['showall']) && $_GET['showall'] === "1") {
-					echo '<a href="?mode=players&amp;game=',$game,'">',l('Show only active players'),'</a>';
-				}
-				else {
-					echo '<a href="?mode=players&amp;game=',$game,'&amp;showall=1">',l('Show all players (including inactive ones)'),'</a>';
-				}
-				?>
-
-				<?php echo $g_options["fontend_normal"]; ?>
-			</td>
-			<td width="25%" align="right" nowrap><?php echo $g_options["font_normal"]; ?><?php echo l('Go to'); ?> <a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="clan.gif"><?php echo l('Clan Rankings'); ?></a><?php echo $g_options["fontend_normal"]; ?></td>
-		</tr>
-	</table>
-</form>
-
+<div id="sidebar">
+	<h1><?php echo l('Options'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>
+		<?php if(isset($_GET['showall']) && $_GET['showall'] === "1") {
+			echo '<a href="?mode=players&amp;game=',$game,'">',l('Show only active players'),'</a>';
+		}
+		else {
+			echo '<a href="?mode=players&amp;game=',$game,'&amp;showall=1">',l('Show all players (including inactive ones)'),'</a>';
+		}
+		?>
+			</li>
+			<li>
+				<a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="clan.gif">&nbsp;<?php echo l('Clan Rankings'); ?></a>
+			</li>
+			<form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
+				<input type="hidden" name="mode" value="search">
+				<input type="hidden" name="game" value="<?php echo $game; ?>">
+				<input type="hidden" name="st" value="player">
+				<input type="text" name="q" size="20" maxlength="64"> 
+				<input type="submit" value="<?php echo l('Find a player'); ?>">
+			</form>
+			<form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
+				<input type="hidden" name="game" value="<?php echo $game; ?>" />
+				<input type="hidden" name="mode" value="players" />
+				<?php if (defined('ELORATING') && (ELORATING === "1" || ELORATING === "2")) { ?>
+					Don't show players with an RD higher than 
+					<input type="text" name="rdlimit" size="4"  value="<?php echo $rdlimit; ?>"> 
+					of 350 <input type="submit" value="Apply"> (lower RD = more accurate rating)
+				<?php } else { ?>
+				<?php echo l('Only show players with'); ?><br /> 
+					<input type="text" name="minkills" size="4" maxlength="2" value="<?php echo $minkills; ?>"><br /> 
+					<?php echo l('or more kills'); ?>.<br />
+					<input type="submit" value="<?php echo l('Apply'); ?>">
+				<?php } ?>
+			</form>
+		</ul>
+	</div>
+</div>
+<div id="main">
 <?php
     // if so show a timeline of player count
     if($g_options['useFlash'] == "1") {
@@ -519,23 +536,17 @@ pageHeader(
 	// output
 	$table->draw($queryPlayers, $numitems, 90);
 ?>
-<p>
-<form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
-<input type="hidden" name="game" value="<?php echo $game; ?>" />
-<input type="hidden" name="mode" value="players" />
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
-	<tr valign="bottom">
-		<td width="75%"><?php echo $g_options["font_normal"]; ?>
-			<b>&#149;</b>
-			<?php if (defined('ELORATING') && (ELORATING === "1" || ELORATING === "2")) { ?>
-				Don't show players with an RD higher than <input type="text" name="rdlimit" size="4"  value="<?php echo $rdlimit; ?>" class="textbox"> of 350 <input type="submit" value="Apply" class="smallsubmit"> (lower RD = more accurate rating)
-			<?php } else { ?>
-				<?php echo l('Only show players with'); ?> <input type="text" name="minkills" size=4 maxlength=2 value="<?php echo $minkills; ?>" class="textbox"> <?php echo l('or more kills'); ?>. <input type="submit" value="<?php echo l('Apply'); ?>" class="smallsubmit">'
-			<?php }
-				echo $g_options["fontend_normal"];
-			?>
-		</td>
-	</tr>
-</table>
-</form>
-</p>
+	<table cellpadding="2" cellspacing="0" border="0">
+		<tr>
+			<th><?php echo l('Rank'); ?></th>
+			<th><?php echo l('Name'); ?></th>
+			<th><?php echo l('Points'); ?></th>
+			<th><?php echo l('Kills'); ?></th>
+			<th><?php echo l('Deaths'); ?></th>
+			<th><?php echo l('Kills per Death'); ?></th>
+		</tr>
+		<?php 
+		
+		?>
+	</table>
+</div>
