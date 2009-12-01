@@ -46,9 +46,15 @@
  * This file can contain PHP code.
  */
 ?>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr align="right">
-	<td>
+</div> <!-- end main -->
+<div class="footer">
+	<p>
+		<?php echo l('Generated in real-time by'); ?> <a href="http://www.hlstats-community.org">HLStats</a> <?php echo VERSION; ?> &nbsp;&nbsp;&nbsp; [<a href="hlstats.php?mode=admin">Admin</a>]
+		<?php
+			if(isset($_COOKIE["authusername"]) && $_COOKIE['authusername'] != "") {
+				echo '&nbsp;[<a href="hlstats.php?logout=1">',l('Logout'),'</a>]';
+			}
+		?>
 		<form action="" method="post">
 			<select name="hls_lang_selection">
 				<option value="en">EN</option>
@@ -64,18 +70,7 @@
 			</select>
 			<input type="submit" name="submit-change-lang" value="<?php echo l('Change language'); ?>" />
 		</form>
-	</td>
-</tr>
-</table>
-<center>
-<?php echo $g_options["font_small"]; ?>
-	<?php echo l('Generated in real-time by'); ?> <a href="http://www.hlstats-community.org">HLStats</a> <?php echo VERSION; ?> &nbsp;&nbsp;&nbsp; [<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin">Admin</a>]
-<?php
-	if(isset($_COOKIE["authusername"]) && $_COOKIE['authusername'] != "") {
-		echo '&nbsp;[<a href="hlstats.php?logout=1">',l('Logout'),'</a>]';
-	}
-?>
-<?php echo $g_options["fontend_small"]; ?><br><br>
-</center>
+	</p>
+</div>
 </body>
 </html>
