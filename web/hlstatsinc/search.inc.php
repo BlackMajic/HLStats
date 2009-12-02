@@ -39,7 +39,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-require(INCLUDE_PATH . "/search-class.inc.php");
+require("hlstatsinc/search-class.inc.php");
 
 pageHeader(
 	array(l("Search")),

@@ -165,7 +165,7 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 	}
 ?></h1>
 <div class="content">
-	<table width="100%" border="0" cellspacing="1" cellpadding="4">
+	<table width="100%" border="0" cellspacing="0" cellpadding="4">
 <?php
 	$c = 0;
 	while ($awarddata = mysql_fetch_assoc($queryAwards)) {
@@ -185,7 +185,7 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 						. $awarddata["d_winner_count"] . " " . htmlspecialchars($awarddata["verb"]) . ")";
 				}
 				else {
-					echo "&nbsp;&nbsp;(Nobody)";
+					echo "(",l('Nobody').')';
 				}
 				?>
 			</td>

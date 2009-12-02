@@ -97,7 +97,7 @@
 </table><p>
 
 <?php
-	require(INCLUDE_PATH . "/search-class.inc.php");
+	require("hlstatsinc/search-class.inc.php");
 
 	$sr_query = '';
 	$sr_type  = 'player';

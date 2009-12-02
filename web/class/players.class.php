@@ -1,4 +1,4 @@
-<?php 
+<?php
 /**
  * Original development:
  * +
@@ -61,8 +61,11 @@ class Players {
 		}
 	}
 
+	/**
+	 * get the players for the current game
+	 */
 	public function getPlayersOveriew() {
-	
+
 	}
 }
 

@@ -257,7 +257,7 @@
 		function printAuth() {
 			global $g_options;
 
-			include(INCLUDE_PATH . "/adminauth.inc.php");
+			include("hlstatsinc/adminauth.inc.php");
 			exit();
 		}
 	}
@@ -941,7 +941,7 @@
 <img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="8" border="0"><br>
 
 <?php
-		include(INCLUDE_PATH . "/admintasks/$code.inc.php");
+		include("hlstatsinc/admintasks/$code.inc.php");
 
 	}
 	else
@@ -968,7 +968,7 @@ $task->title; ?></a></b><p>
 	<td width="10%">&nbsp;</td>
 	<td width="90%"><?php
 	echo $g_options["font_normal"];
-	include(INCLUDE_PATH . "/admintasks/".$code.".inc.php");
+	include("hlstatsinc/admintasks/".$code.".inc.php");
 	echo $g_options["fontend_normal"];
 ?></td>
 </tr>
@@ -1026,7 +1026,7 @@ alt="rightarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mo
 	<td width="10%">&nbsp;</td>
 	<td width="90%"><?php
 	echo $g_options["font_normal"];
-	include(INCLUDE_PATH . "/admintasks/$code.inc.php");
+	include("hlstatsinc/admintasks/$code.inc.php");
 	echo $g_options["fontend_normal"];
 ?></td>
 </tr>

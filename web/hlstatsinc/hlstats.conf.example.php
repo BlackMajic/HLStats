@@ -80,25 +80,6 @@ define("DB_PCONNECT", 0);
 //			If a translation is not found the en text will be displayed.
 define('LANGUAGE','en');
 
-// INCLUDE_PATH - Filesystem path to the hlstatsinc directory. This path can
-//                be specified relative to hlstats.php by prepending ./ or
-//                ../  If the path begins with a / then it is taken as a
-//                full absolute filesystem path. However if the path begins
-//                with none of these constructs, PHP will search your
-//                include_path (as set in php.ini) (probably NOT the current
-//                directory as might be expected!).
-//                   Example paths:
-//                      1) /usr/local/apache/hlstatsinc
-//                           (absolute path)
-//                      2) ../hlstatsinc
-//                      -) ./hlstatsinc
-//                           (paths relative to hlstats.php)
-//                      3) hlstats/include
-//                           (path relative to include_path)
-//                Under Windows, make sure you use forward slash (/) instead
-//                of back slash (\).
-define("INCLUDE_PATH", "./hlstatsinc");
-
 // DELETEDAYS - How many days the Event History covers. Must match the value
 //              of DeleteDays in hlstats.conf.
 //              default = 5

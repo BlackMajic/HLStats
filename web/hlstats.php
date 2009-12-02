@@ -66,8 +66,8 @@ require('hlstatsinc/hlstats.conf.php');
  * load required stuff
  * general classes like tablle class
  */
-require(INCLUDE_PATH . "/functions.inc.php");
-require(INCLUDE_PATH . "/classes.inc.php");
+require("hlstatsinc/functions.inc.php");
+require("hlstatsinc/classes.inc.php");
 
 /**
  * lang change via cookies
@@ -214,8 +214,8 @@ else {
 	}
 }
 
-include(INCLUDE_PATH . "/".$mode.".inc.php");
+include("hlstatsinc/".$mode.".inc.php");
 
-include(INCLUDE_PATH . "/footer.inc.php");
+include("hlstatsinc/footer.inc.php");
 mysql_close($db_con);
 ?>

@@ -187,7 +187,7 @@ pageHeader(
 
 if($g_options['useFlash'] == "1") { // we want use the flash graphics
 ?>
-    <script type="text/javascript" src="<?php echo INCLUDE_PATH; ?>/amcharts/swfobject.js"></script>
+    <script type="text/javascript" src="hlstatsinc/amcharts/swfobject.js"></script>
 <?php
 }
 ?>
@@ -818,9 +818,9 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 			</div>
 			<script type="text/javascript">
 				// <![CDATA]
-				var so = new SWFObject("<?php echo INCLUDE_PATH; ?>/amcharts/column/amcolumn.swf?<?php echo time(); ?>", "playerTimeline", "600", "<?php echo $timeLineData["height"]; ?>", "8", "<?php echo $g_options['body_bgcolor']; ?>");
-				so.addVariable("path", "<?php echo INCLUDE_PATH; ?>/amcharts/column/");
-				so.addVariable("settings_file", escape("<?php echo INCLUDE_PATH; ?>/amcharts/column/settings_playertime.xml"));
+				var so = new SWFObject("hlstatsinc/amcharts/column/amcolumn.swf?<?php echo time(); ?>", "playerTimeline", "600", "<?php echo $timeLineData["height"]; ?>", "8", "<?php echo $g_options['body_bgcolor']; ?>");
+				so.addVariable("path", "hlstatsinc/amcharts/column/");
+				so.addVariable("settings_file", escape("hlstatsinc/amcharts/column/settings_playertime.xml"));
 				so.addVariable("chart_data", "<?php echo $timeLineData['xml']; ?>");
 				so.addVariable("additional_chart_settings", "<settings><text_color><?php echo $g_options["body_text"]; ?></text_color></settings>");
 				so.addVariable("preloader_color", "<?php echo $g_options["body_text"]; ?>");
@@ -1911,9 +1911,9 @@ if (mysql_num_rows($query) != 0) {
 			</div>
 			<script type="text/javascript">
 				// <![CDATA]
-				var so = new SWFObject("<?php echo INCLUDE_PATH; ?>/amcharts/column/amcolumn.swf?<?php echo time(); ?>", "playerKills", "600", "<?php echo $timeLineData["height"]; ?>", "8", "<?php echo $g_options['body_bgcolor']; ?>");
-				so.addVariable("path", "<?php echo INCLUDE_PATH; ?>/amcharts/column/");
-				so.addVariable("settings_file", escape("<?php echo INCLUDE_PATH; ?>/amcharts/column/settings_playertime.xml"));
+				var so = new SWFObject("hlstatsinc/amcharts/column/amcolumn.swf?<?php echo time(); ?>", "playerKills", "600", "<?php echo $timeLineData["height"]; ?>", "8", "<?php echo $g_options['body_bgcolor']; ?>");
+				so.addVariable("path", "hlstatsinc/amcharts/column/");
+				so.addVariable("settings_file", escape("hlstatsinc/amcharts/column/settings_playertime.xml"));
 				so.addVariable("chart_data", "<?php echo $timeLineData['xml']; ?>");
 				so.addVariable("additional_chart_settings", "<settings><text_color><?php echo $g_options["body_text"]; ?></text_color></settings>");
 				so.addVariable("preloader_color", "<?php echo $g_options["body_text"]; ?>");

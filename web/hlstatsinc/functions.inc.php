@@ -115,7 +115,7 @@ function getOptions() {
 
 function pageHeader($title, $location) {
 	global $g_options;
-	include(INCLUDE_PATH . "/header.inc.php");
+	include("hlstatsinc/header.inc.php");
 }
 
 //

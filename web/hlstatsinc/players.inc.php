@@ -39,6 +39,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+require('class/players.class.php');
+$playersObj = new Players($game);
+
 $minkills = 1;
 if (isset($_GET["minkills"])) {
 	$check = validateInput($_GET['minkills'],'digit');
@@ -81,19 +84,19 @@ pageHeader(
 				<input type="hidden" name="mode" value="search">
 				<input type="hidden" name="game" value="<?php echo $game; ?>">
 				<input type="hidden" name="st" value="player">
-				<input type="text" name="q" size="20" maxlength="64"> 
+				<input type="text" name="q" size="20" maxlength="64">
 				<input type="submit" value="<?php echo l('Find a player'); ?>">
 			</form>
 			<form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
 				<input type="hidden" name="game" value="<?php echo $game; ?>" />
 				<input type="hidden" name="mode" value="players" />
 				<?php if (defined('ELORATING') && (ELORATING === "1" || ELORATING === "2")) { ?>
-					Don't show players with an RD higher than 
-					<input type="text" name="rdlimit" size="4"  value="<?php echo $rdlimit; ?>"> 
+					Don't show players with an RD higher than
+					<input type="text" name="rdlimit" size="4"  value="<?php echo $rdlimit; ?>">
 					of 350 <input type="submit" value="Apply"> (lower RD = more accurate rating)
 				<?php } else { ?>
-				<?php echo l('Only show players with'); ?><br /> 
-					<input type="text" name="minkills" size="4" maxlength="2" value="<?php echo $minkills; ?>"><br /> 
+				<?php echo l('Only show players with'); ?><br />
+					<input type="text" name="minkills" size="4" maxlength="2" value="<?php echo $minkills; ?>"><br />
 					<?php echo l('or more kills'); ?>.<br />
 					<input type="submit" value="<?php echo l('Apply'); ?>">
 				<?php } ?>
@@ -107,7 +110,7 @@ pageHeader(
     if($g_options['useFlash'] == "1") {
 
     	// we use flash
-    	echo '<script type="text/javascript" src="'.INCLUDE_PATH.'/amcharts/swfobject.js"></script>';
+    	echo '<script type="text/javascript" src="hlstatsinc/amcharts/swfobject.js"></script>';
 
         // get the connects
         $query = mysql_query("SELECT DATE_FORMAT(`".DB_PREFIX."_Events_Connects`.`eventTime`,'%Y-%m-%d') AS eventTime,
@@ -194,9 +197,9 @@ pageHeader(
 	        			</div>
 	        			<script type="text/javascript">
 	        				// <![CDATA]
-	        				var so = new SWFObject("<?php echo INCLUDE_PATH; ?>/amcharts/line/amline.swf?<?php echo time(); ?>", "playerTimeline", "600", "<?php echo $timeLineData["height"]; ?>", "8", "<?php echo $g_options['body_bgcolor']; ?>");
-	        				so.addVariable("path", "<?php echo INCLUDE_PATH; ?>/amcharts/line/");
-	        				so.addVariable("settings_file", escape("<?php echo INCLUDE_PATH; ?>/amcharts/line/settings.xml"));
+	        				var so = new SWFObject("hlstatsinc/amcharts/line/amline.swf?<?php echo time(); ?>", "playerTimeline", "600", "<?php echo $timeLineData["height"]; ?>", "8", "<?php echo $g_options['body_bgcolor']; ?>");
+	        				so.addVariable("path", "hlstatsinc/amcharts/line/");
+	        				so.addVariable("settings_file", escape("hlstatsinc/amcharts/line/settings.xml"));
 	        				so.addVariable("chart_data", "<?php echo $timeLineData['xml']; ?>");
 	        				so.addVariable("additional_chart_settings", "<settings><text_color><?php echo $g_options["body_text"]; ?></text_color></settings>");
 	        				so.addVariable("preloader_color", "<?php echo $g_options["body_text"]; ?>");
@@ -320,9 +323,9 @@ pageHeader(
 		        			</div>
 		        			<script type="text/javascript">
 		        				// <![CDATA]
-		        				var so = new SWFObject("<?php echo INCLUDE_PATH; ?>/amcharts/column/amcolumn.swf?<?php echo time(); ?>", "playerOnlineTime", "600", "<?php echo $timeLineData["height"]; ?>", "8", "<?php echo $g_options['body_bgcolor']; ?>");
-		        				so.addVariable("path", "<?php echo INCLUDE_PATH; ?>/amcharts/line/");
-		        				so.addVariable("settings_file", escape("<?php echo INCLUDE_PATH; ?>/amcharts/column/settings_mostTimeOnline.xml"));
+		        				var so = new SWFObject("hlstatsinc/amcharts/column/amcolumn.swf?<?php echo time(); ?>", "playerOnlineTime", "600", "<?php echo $timeLineData["height"]; ?>", "8", "<?php echo $g_options['body_bgcolor']; ?>");
+		        				so.addVariable("path", "hlstatsinc/amcharts/line/");
+		        				so.addVariable("settings_file", escape("hlstatsinc/amcharts/column/settings_mostTimeOnline.xml"));
 		        				so.addVariable("chart_data", "<?php echo $timeLineData['xml']; ?>");
 		        				so.addVariable("additional_chart_settings", "<settings><text_color><?php echo $g_options["body_text"]; ?></text_color></settings>");
 		        				so.addVariable("preloader_color", "<?php echo $g_options["body_text"]; ?>");
@@ -535,6 +538,10 @@ pageHeader(
 	}
 	// output
 	$table->draw($queryPlayers, $numitems, 90);
+
+	// get the players
+
+
 ?>
 	<table cellpadding="2" cellspacing="0" border="0">
 		<tr>
@@ -545,8 +552,8 @@ pageHeader(
 			<th><?php echo l('Deaths'); ?></th>
 			<th><?php echo l('Kills per Death'); ?></th>
 		</tr>
-		<?php 
-		
+		<?php
+
 		?>
 	</table>
 </div>

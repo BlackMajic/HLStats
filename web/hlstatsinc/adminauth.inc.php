@@ -142,5 +142,5 @@
 </tr>
 </table>
 <?php
-	include(INCLUDE_PATH . "/footer.inc.php");
+	include("hlstatsinc/footer.inc.php");
 ?>

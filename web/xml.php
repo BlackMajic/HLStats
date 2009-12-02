@@ -68,8 +68,8 @@ require('./hlstatsinc/hlstats.conf.php');
  * db class
  * general classes like table class
  */
-require(INCLUDE_PATH . "/functions.inc.php");
-require(INCLUDE_PATH . "/classes.inc.php");
+require("hlstatsinc/functions.inc.php");
+require("hlstatsinc/classes.inc.php");
 
 // deb class and options
 $db_con = mysql_connect(DB_ADDR,DB_USER,DB_PASS);
@@ -174,8 +174,8 @@ if($g_options['allowXML'] == "1") {
 					$xmlBody .= "<game>".$serverData['gamename']."</game>";
 
 					// load the required stuff
-					include(INCLUDE_PATH.'/binary_funcs.inc.php');
-					include(INCLUDE_PATH.'/hlquery_funcs.inc.php');
+					include('hlstatsinc/binary_funcs.inc.php');
+					include('hlstatsinc/hlquery_funcs.inc.php');
 
 					$xmlBody .= "<additional>";
 					// run some query to display some more info

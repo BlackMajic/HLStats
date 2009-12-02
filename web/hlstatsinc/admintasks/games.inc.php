@@ -70,13 +70,13 @@
 				case 'select':
 					// read the gamesupport_file
 					$check = validateInput($_POST['newGame'],'nospace');
-					if(file_exists(INCLUDE_PATH."/sql_files/".$_POST['newGame']) && $check === true) {
+					if(file_exists("hlstatsinc/sql_files/".$_POST['newGame']) && $check === true) {
 						/*
 						$fh = fopen("install/sql_files/".$_POST['newGame'],"r");
 						$sqlContent = fread($fh,filesize("install/sql_files/".$_POST['newGame']));
 						fclose($fh);
 						*/
-						$sqlContent = file_get_contents(INCLUDE_PATH."/sql_files/".$_POST['newGame']);
+						$sqlContent = file_get_contents("hlstatsinc/sql_files/".$_POST['newGame']);
 						$sqlContent = str_replace(array("\n","\t","\r"),array("\n"),$sqlContent);
 						// replace the table prefix with the constant
 						$sqlContent = str_replace("++DB_PREFIX++",DB_PREFIX,$sqlContent);
@@ -208,7 +208,7 @@
 		}
 
 		// get the available gamesupport files.
-		$sqlDir = INCLUDE_PATH."/sql_files";
+		$sqlDir = "hlstatsinc/sql_files";
 		if(file_exists($sqlDir)) {
 			$addMode = "select";
 			// read the gamesupport files

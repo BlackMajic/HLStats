@@ -1,6 +1,9 @@
 HLStats ChangeLog
 ==============
 
+1.52 (TBA)
+*) Changed: Constant INCLUDE_PATH removed.
+
 1.51 (2009-11-23)
 *) New: HLStats can now be translated via ini files. The default language
 		is set in the hlstats.conf.php file. Update the configuration !
@@ -31,7 +34,7 @@ HLStats ChangeLog
 *) Fixed: Special chars problem in players overview page (thx to freaker)
 *) Fixed: Missing check in doEvent_Chat function (thx to VladiBG)
 *) Fixed: rcon messages. Missing quotes (thx to freaker)
-*) Fixed: Missing game information if only one game is installed 
+*) Fixed: Missing game information if only one game is installed
 		(thx freaker) (#22)
 *) Fixed: News Box to small (#25)
 *) Fixed: Special chars error in temporary tables (#21)

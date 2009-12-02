@@ -100,6 +100,8 @@ actions = Aktionen
 Achieved = Erreicht
 Skill Bonus = Punkte Bonus
 
+Nobody = Keiner
+
 Participating Servers = Gelistete Server
 Name = Name
 Address = Adresse

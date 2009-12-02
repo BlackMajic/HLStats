@@ -59,8 +59,8 @@ $time = explode(' ', $time);
 $time = $time[1] + $time[0];
 $start = $time;
 
-include(INCLUDE_PATH.'/binary_funcs.inc.php');
-include(INCLUDE_PATH.'/hlquery_funcs.inc.php');
+include('hlstatsinc/binary_funcs.inc.php');
+include('hlstatsinc/hlquery_funcs.inc.php');
 
 $query = mysql_query("
 		SELECT
