@@ -42,15 +42,45 @@
 require('class/players.class.php');
 $playersObj = new Players($game);
 
-$minkills = 1;
+$minkills = 1; //@todo to remove
+
+/**
+ * check the get values
+ */
 if (isset($_GET["minkills"])) {
 	$check = validateInput($_GET['minkills'],'digit');
 	if($check === true) {
-		$minkills = $_GET["minkills"];
+		$playersObj->setOption("minkills",$_GET['minkills']);
+
+		$minkills = $_GET["minkills"]; //@todo to remove
+	}
+}
+if (isset($_GET["showall"])) {
+	$check = validateInput($_GET['showall'],'digit');
+	if($check === true) {
+		$playersObj->setOption("showall",$_GET['showall']);
+	}
+}
+if (isset($_GET["page"])) {
+	$check = validateInput($_GET['page'],'digit');
+	if($check === true) {
+		$playersObj->setOption("page",$_GET['page']);
+	}
+}
+if (isset($_GET["sort"])) {
+	$check = validateInput($_GET['sort'],'nospace');
+	if($check === true) {
+		$playersObj->setOption("sort",$_GET['sort']);
+	}
+}
+if (isset($_GET["sortorder"])) {
+	$check = validateInput($_GET['sortorder'],'nospace');
+	if($check === true) {
+		$playersObj->setOption("sortorder",$_GET['sortorder']);
 	}
 }
 
-// the rating system
+// the rating system @todo remove
 $rdlimit = 1000;
 if (isset($_GET["rdlimit"])) {
 	$check = validateInput($_GET['rdlimit'],'digit');
@@ -96,7 +126,7 @@ pageHeader(
 					of 350 <input type="submit" value="Apply"> (lower RD = more accurate rating)
 				<?php } else { ?>
 				<?php echo l('Only show players with'); ?><br />
-					<input type="text" name="minkills" size="4" maxlength="2" value="<?php echo $minkills; ?>"><br />
+					<input type="text" name="minkills" size="4" maxlength="2" value="<?php echo $playersObj->getOption('minkills'); ?>"><br />
 					<?php echo l('or more kills'); ?>.<br />
 					<input type="submit" value="<?php echo l('Apply'); ?>">
 				<?php } ?>
@@ -540,7 +570,7 @@ pageHeader(
 	$table->draw($queryPlayers, $numitems, 90);
 
 	// get the players
-
+	$playersObj->getPlayersOveriew();
 
 ?>
 	<table cellpadding="2" cellspacing="0" border="0">
