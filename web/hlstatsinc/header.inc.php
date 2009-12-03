@@ -78,7 +78,7 @@
 				$url = ereg_replace("%s", 'index.php', $url);
 				echo ": ";
 				if ($url) {
-					echo "<a href=\"$url\" style=\"color: " . $g_options["location_link"] . "\">$l</a>";
+					echo "<a href=\"$url\">$l</a>";
 				}
 				else {
 					echo "<b>$l</b>";

@@ -262,6 +262,45 @@ function parse_custom_lang_file($file) {
 	return $ret;
 }
 
+/**
+ * string makeQueryString
+ *
+ * @param array $params The array with the params to be added (key=>value)
+ * @param array $notkeys The keys to be removed
+ *
+ * @return string $querystring The final querystring for an url
+ */
+function makeQueryString($params, $notkeys = array()) {
+	$querystring = "";
+
+	if (!is_array($notkeys)) $notkeys = array();
+
+	foreach ($_GET as $k=>$v) {
+		if(!key_exists($k,$params) && !in_array($k, $notkeys)) {
+		//if ($k && $k != $key && !in_array($k, $notkeys)) {
+			$querystring .= urlencode($k) . "=" . urlencode($v) . "&amp;";
+		}
+	}
+
+	foreach($params as $key => $value) {
+		$querystring .= urlencode($key) . "=" . urlencode($value)."&amp;";
+	}
+	$querystring = trim($querystring,"&");
+
+	return $querystring;
+}
+
+/**
+ * inlcude the header and build the breadcrumb menu
+ *
+ * @param string $title The page title
+ * @param array $location The entries for the breadcrumb
+ */
+function pageHeader($title, $location) {
+	global $g_options;
+	include("hlstatsinc/header.inc.php");
+}
+
 ######## THOSE FUNCTIONS BELOW SHOULD BE CHECKED ############
 
 //
@@ -282,32 +321,6 @@ function error ($message, $exit=true) {
 </tr>
 </table>
 <?php if ($exit) exit;
-}
-
-//
-// string makeQueryString (string key, string value, [array notkeys])
-//
-// Generates an HTTP GET query string from the current HTTP GET variables,
-// plus the given 'key' and 'value' pair. Any current HTTP GET variables
-// whose keys appear in the 'notkeys' array, or are the same as 'key', will
-// be excluded from the returned query string.
-//
-
-function makeQueryString($key, $value, $notkeys = array()) {
-	$querystring = "";
-
-	if (!is_array($notkeys))
-		$notkeys = array();
-
-	foreach ($_GET as $k=>$v) {
-		if ($k && $k != $key && !in_array($k, $notkeys)) {
-			$querystring .= urlencode($k) . "=" . urlencode($v) . "&amp;";
-		}
-	}
-
-	$querystring .= urlencode($key) . "=" . urlencode($value);
-
-	return $querystring;
 }
 
 
@@ -333,16 +346,7 @@ function getOptions() {
 }
 
 
-//
-// void pageHeader (array title, array location)
-//
-// Prints the page heading.
-//
 
-function pageHeader($title, $location) {
-	global $g_options;
-	include("hlstatsinc/header.inc.php");
-}
 
 //
 // void getSortArrow (string sort, string sortorder, string name,

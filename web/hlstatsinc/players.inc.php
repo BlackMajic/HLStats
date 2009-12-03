@@ -102,7 +102,7 @@ $rd2limit = $rdlimit * $rdlimit;
 
 pageHeader(
 	array($gamename, l('Player Rankings')),
-	array($gamename=>"%s?game=$game", l('Player Rankings')=>"")
+	array($gamename => "%s?game=$game", l('Player Rankings')=>"")
 );
 ?>
 
@@ -383,204 +383,6 @@ pageHeader(
 		}
     }
 
-	// we want the elo rating system
-	if(defined('ELORATING') && (ELORATING === "1")) {
-		// the players table
-		$table = new Table(
-			array(
-				new TableColumn(
-					"lastName",
-					"Name",
-					"width=31&icon=player&link=" . urlencode("mode=playerinfo&amp;player=%k")
-				),
-				new TableColumn(
-					"skill",
-					"Points",
-					"width=11&align=right"
-				),
-				new TableColumn(
-					"rating",
-					"Rating",
-					"width=10&align=right"
-				),
-				new TableColumn(
-					"rd",
-					"RD",
-					"width=8&align=right"
-				),
-				new TableColumn(
-					"kills",
-					"Kills",
-					"width=10&align=right"
-				),
-				new TableColumn(
-					"deaths",
-					"Deaths",
-					"width=10&align=right"
-				),
-				new TableColumn(
-					"kpd",
-					"Kills per Death",
-					"width=10&align=right"
-				),
-				new TableColumn(
-					"playerId",
-					"ID",
-					"width=5&align=right&sort=no"
-				)
-			),
-			"playerId",
-			"skill",
-			"kpd",
-			true
-		);
-
-		$queryPlayersStr = "SELECT
-				t1.playerId,
-				t1.lastName,
-				t1.oldSkill,
-				t1.skill,
-				ROUND(t1.rating) as rating,
-				ROUND(SQRT(t1.rd2)) as rd,
-				t1.kills,
-				t1.deaths,
-				t1.active,
-				IFNULL(t1.kills/t1.deaths, '-') AS kpd
-			FROM
-				".DB_PREFIX."_Players as t1";
-		if(defined('HIDE_BOTS') && HIDE_BOTS == "1") {
-			$queryPlayersStr .= " INNER JOIN ".DB_PREFIX."_PlayerUniqueIds as t2 ON t1.playerId = t2.playerId";
-		}
-		$queryPlayersStr .= " WHERE
-				t1.game='$game'
-				AND t1.hideranking=0
-				AND t1.rd2 <= $rd2limit";
-		if(isset($_GET['showall']) && $_GET['showall'] === "1") {
-			$queryPlayersStr .= " ";
-		}
-		else {
-			$queryPlayersStr .= " AND t1.active = '1'";
-		}
-		if(defined('HIDE_BOTS') && HIDE_BOTS == "1") {
-			$queryPlayersStr .= " AND t2.uniqueID not like 'BOT:%'";
-		}
-		$queryPlayersStr .= " ORDER BY
-				$table->sort $table->sortorder,
-				$table->sort2 $table->sortorder,
-				lastName ASC
-			LIMIT $table->startitem,$table->numperpage";
-
-		$queryPlayers = mysql_query($queryPlayersStr);
-
-		$query = mysql_query("SELECT COUNT(*) AS pc
-					FROM `".DB_PREFIX."_Players`
-					WHERE game='".$game."'
-						AND hideranking=0
-						AND rd2 <= $rd2limit");
-		$resultCount = mysql_fetch_assoc($query);
-
-		$numitems = $resultCount['pc'];
-	}
-	elseif(defined('ELORATING') && (ELORATING === "2")) {
-		// we want only the rating system
-		exit("NOT WORKING YET !");
-	}
-	else {
-		// the players table
-		$table = new Table(
-			array(
-				new TableColumn(
-					"lastName",
-					"Name",
-					"width=46&icon=player&link=" . urlencode("mode=playerinfo&amp;player=%k")
-				),
-				new TableColumn(
-					"skill",
-					"Points",
-					"width=11&align=right"
-				),
-				new TableColumn(
-					"kills",
-					"Kills",
-					"width=11&align=right"
-				),
-				new TableColumn(
-					"deaths",
-					"Deaths",
-					"width=11&align=right"
-				),
-				new TableColumn(
-					"kpd",
-					"Kills per Death",
-					"width=11&align=right"
-				),
-				new TableColumn(
-					"playerId",
-					"ID",
-					"width=5&align=right&sort=no"
-				)
-			),
-			"playerId",
-			"skill",
-			"kpd",
-			true
-		);
-
-		$queryPlayersStr = "SELECT
-				t1.playerId,
-				t1.lastName,
-				t1.skill,
-				t1.oldSkill,
-				t1.kills,
-				t1.deaths,
-				t1.active,
-				IFNULL(t1.kills/t1.deaths, '-') AS kpd
-			FROM
-				".DB_PREFIX."_Players as t1";
-		if(defined('HIDE_BOTS') && HIDE_BOTS == "1") {
-			$queryPlayersStr .= " INNER JOIN ".DB_PREFIX."_PlayerUniqueIds as t2 ON t1.playerId = t2.playerId";
-		}
-		$queryPlayersStr .= " WHERE
-				t1.game='".mysql_escape_string($game)."'
-				AND t1.hideranking=0
-				AND t1.kills >= '".mysql_escape_string($minkills)."'";
-		if(isset($_GET['showall']) && $_GET['showall'] === "1") {
-			$queryPlayersStr .= " ";
-		}
-		else {
-			$queryPlayersStr .= " AND t1.active = '1'";
-		}
-		if(defined('HIDE_BOTS') && HIDE_BOTS == "1") {
-			$queryPlayersStr .= " AND t2.uniqueID not like 'BOT:%'";
-		}
-		$queryPlayersStr .= " ORDER BY
-				$table->sort $table->sortorder,
-				$table->sort2 $table->sortorder,
-				lastName ASC
-			LIMIT $table->startitem,$table->numperpage";
-
-		$queryPlayers = mysql_query($queryPlayersStr);
-
-		// the count
-		$queryStr = "SELECT COUNT(*) as pc
-					FROM `".DB_PREFIX."_Players`
-					WHERE game='".mysql_escape_string($game)."'
-						AND hideranking=0";
-		if(isset($_GET['showall']) && $_GET['showall'] === "1") {
-			$queryStr .= " ";
-		}
-		else {
-			$queryStr .= " AND active = '1'";
-		}
-		$queryStr .= " AND kills >= ".mysql_escape_string($minkills)."";
-
-		$query = mysql_query($queryStr);
-		$resultCount = mysql_fetch_assoc($query);
-		$numitems = $resultCount['pc'];
-	}
-	// output
-	//$table->draw($queryPlayers, $numitems, 90);
-
 	// get the players
 	$pData = $playersObj->getPlayersOveriew();
 
@@ -590,7 +392,7 @@ pageHeader(
 		<tr>
 			<th class="<?php echo toggleRowClass($rcol); ?>"><?php echo l('Rank'); ?></th>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
-				<a href="index.php?mode=players&amp;game=<?php echo $game; ?>&amp;sort=lastName&amp;sortorder=<?php echo $newSort; ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'lastName','sortorder'=>$newSort)); ?>">
 					<?php echo l('Name'); ?>
 				</a>
 				<?php if($playersObj->getOption('sort') == "lastName") { ?>
@@ -598,7 +400,7 @@ pageHeader(
 				<?php } ?>
 			</th>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
-				<a href="index.php?mode=players&amp;game=<?php echo $game; ?>&amp;sort=skill&amp;sortorder=<?php echo $newSort; ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'skill','sortorder'=>$newSort)); ?>">
 					<?php echo l('Points'); ?>
 				</a>
 				<?php if($playersObj->getOption('sort') == "skill") { ?>
@@ -606,7 +408,7 @@ pageHeader(
 				<?php } ?>
 			</th>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
-				<a href="index.php?mode=players&amp;game=<?php echo $game; ?>&amp;sort=kills&amp;sortorder=<?php echo $newSort; ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'kills','sortorder'=>$newSort)); ?>">
 					<?php echo l('Kills'); ?>
 				</a>
 				<?php if($playersObj->getOption('sort') == "kills") { ?>
@@ -614,7 +416,7 @@ pageHeader(
 				<?php } ?>
 			</th>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
-				<a href="index.php?mode=players&amp;game=<?php echo $game; ?>&amp;sort=deaths&amp;sortorder=<?php echo $newSort; ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'deaths','sortorder'=>$newSort)); ?>">
 					<?php echo l('Deaths'); ?>
 				</a>
 				<?php if($playersObj->getOption('sort') == "deaths") { ?>
@@ -622,7 +424,7 @@ pageHeader(
 				<?php } ?>
 			</th>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
-				<a href="index.php?mode=players&amp;game=<?php echo $game; ?>&amp;sort=kpd&amp;sortorder=<?php echo $newSort; ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'kpd','sortorder'=>$newSort)); ?>">
 					<?php echo l('Kills per Death'); ?>
 				</a>
 				<?php if($playersObj->getOption('sort') == "kpd") { ?>
@@ -687,7 +489,7 @@ pageHeader(
 							echo "[",$i,"]";
 						}
 						else {
-							echo "<a href='index.php?",makeQueryString('page',$i),"'>[",$i,"]</a>";
+							echo "<a href='index.php?",makeQueryString(array('page'=>$i)),"'>[",$i,"]</a>";
 						}
 					}
 				}
