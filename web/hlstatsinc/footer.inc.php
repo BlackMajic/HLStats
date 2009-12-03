@@ -47,6 +47,7 @@
  */
 ?>
 </div> <!-- end main -->
+<br style="clear: both;" />
 <div class="footer">
 	<p>
 		<?php echo l('Generated in real-time by'); ?> <a href="http://www.hlstats-community.org">HLStats</a> <?php echo VERSION; ?> &nbsp;&nbsp;&nbsp; [<a href="index.php?mode=admin">Admin</a>]

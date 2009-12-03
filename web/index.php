@@ -39,8 +39,8 @@
  */
 
 // Check PHP configuration
-if (version_compare(phpversion(), "5.0.0", "<")) {
-	die("HLStats requires PHP version 5.0.0 or newer (you are running PHP version " . phpversion() . ").");
+if (version_compare(phpversion(), "5.2.0", "<")) {
+	die("HLStats requires PHP version 5.2.0 or newer (you are running PHP version " . phpversion() . ").");
 }
 
 date_default_timezone_set('Europe/Berlin');

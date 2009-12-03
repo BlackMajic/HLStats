@@ -151,6 +151,16 @@ pageHeader(
     // if so show a timeline of player count
     if($g_options['useFlash'] == "1") {
 
+		require('class/chart.class.php');
+		$chartObj = new Chart($game);
+
+		// set the mode
+		$chartObj->setOption('q','activity');
+
+		echo $chartObj->getHtmlCode();
+		echo $chartObj->getData('playerActivity');
+
+/*
     	// we use flash
     	echo '<script type="text/javascript" src="hlstatsinc/amcharts/swfobject.js"></script>';
 
@@ -381,6 +391,7 @@ pageHeader(
 	    	<p>&nbsp;</p>
 	        <?php
 		}
+ */
     }
 
 	// get the players
