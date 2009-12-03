@@ -44,7 +44,7 @@
 	$id = sanitize($_GET['id']);
 ?>
 
-&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=toolsEditdetails">Edit Player or Clan Details</a></b><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="index.php?mode=admin&task=toolsEditdetails">Edit Player or Clan Details</a></b><br>
 
 <img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="8" border="0"><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo "Edit Clan #$id"; ?></b><p>
@@ -77,11 +77,11 @@
 
 	echo $g_options["font_normal"];
 	echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-		. "<a href=\"" . $g_options["scripturl"] . "?mode=claninfo&clan=$id&" . strip_tags(SID) . "\">"
+		. "<a href=\"index.php?mode=claninfo&clan=$id&" . strip_tags(SID) . "\">"
 		. "(View Clan Details)</a>";
 	echo $g_options["fontend_normal"];
 ?><p>
-<form method="POST" action="<?php echo $g_options["scripturl"] . "?mode=admin&task=$selTask&id=$id&" . strip_tags(SID); ?>">
+<form method="POST" action="<?php echo "index.php?mode=admin&task=$selTask&id=$id&" . strip_tags(SID); ?>">
 <table width="60%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td><?php

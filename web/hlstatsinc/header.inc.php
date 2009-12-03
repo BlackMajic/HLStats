@@ -62,20 +62,20 @@
 	<div id="header">
 		<span id="slogan">Home</span>
 		<ul>
-			<li id="current"><a href="hlstats.php"><span>Content</span></a></li>
-			<li id="current"><a href="hlstats.php?mode=search"><span>Search</span></a></li>
-			<li id="current"><a href="hlstats.php?mode=help"><span>Help</span></a></li>
+			<li id="current"><a href="index.php"><span>Content</span></a></li>
+			<li id="current"><a href="index.php?mode=search"><span>Search</span></a></li>
+			<li id="current"><a href="index.php?mode=help"><span>Help</span></a></li>
 		</ul>
 	</div>
 	<div id="header-logo">
 		<div id="logo">HL<span class="red">Stats</span></div>
 		<div id="breadcrumb">
 			<a href="<?php echo $g_options["siteurl"]; ?>"><?php echo $g_options["sitename"]; ?></a>:
-			<a href="hlstats.php">HLStats</a>
+			<a href="index.php">HLStats</a>
 			<?php
 			$i=0;
 			foreach ($location as $l=>$url) {
-				$url = ereg_replace("%s", $g_options["scripturl"], $url);
+				$url = ereg_replace("%s", 'index.php', $url);
 				echo ": ";
 				if ($url) {
 					echo "<a href=\"$url\" style=\"color: " . $g_options["location_link"] . "\">$l</a>";

@@ -94,8 +94,8 @@ else {
 pageHeader(
 	array($gamename, l("Clan Details"), $cl_full),
 	array(
-		$gamename=>$g_options["scripturl"] . "?game=$game",
-		l("Clan Rankings")=>$g_options["scripturl"] . "?mode=clans&amp;game=$game",
+		$gamename => "index.php?game=$game",
+		l("Clan Rankings") => "index.php?mode=clans&amp;game=$game",
 		l("Clan Details")=>""
 	),
 	$clandata["name"]
@@ -329,7 +329,7 @@ pageHeader(
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td width="100%" align="right"><br><br>
-	<?php echo $g_options["font_small"]; ?><b><?php echo l('Admin Options'); ?></b>: <a href="<?php echo $g_options["scripturl"] . "?mode=admin&amp;task=toolsEditdetailsClan&amp;id=$clan"; ?>"><?php echo l('Edit Clan Details'); ?></a><?php echo $g_options["fontend_small"]; ?></td>
+	<?php echo $g_options["font_small"]; ?><b><?php echo l('Admin Options'); ?></b>: <a href="<?php echo "index.php?mode=admin&amp;task=toolsEditdetailsClan&amp;id=$clan"; ?>"><?php echo l('Edit Clan Details'); ?></a><?php echo $g_options["fontend_small"]; ?></td>
 </tr>
 </table><p>
 <?php

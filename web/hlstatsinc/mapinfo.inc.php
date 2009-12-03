@@ -53,8 +53,8 @@ if(!empty($_GET["map"])) {
 pageHeader(
 	array($gamename, l("Map Details"), $map),
 	array(
-		$gamename=>$g_options["scripturl"] . "?game=$game",
-		l("Map Statistics")=>$g_options["scripturl"] . "?mode=maps&amp;game=$game",
+		$gamename => "index.php?game=$game",
+		l("Map Statistics") => "index.php?mode=maps&amp;game=$game",
 		l("Map Details")=>""
 	),
 	$map
@@ -124,7 +124,7 @@ $totalkills = $result['tc'];
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
 	<td width="50%"><?php echo $g_options["font_normal"]; ?><?php echo l('From a total of'); ?> <b><?php echo intval($totalkills); ?></b> <?php echo l('kills'); ?> (<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('days'); ?>)<?php echo $g_options["fontend_normal"]; ?></td>
-	<td width="50%" align="right"><?php echo $g_options["font_normal"]; ?><?php echo l('Back to'); ?> <a href="<?php echo $g_options["scripturl"] . "?mode=maps&amp;game=$game"; ?>"><?php echo l('Map Statistics'); ?></a><?php echo $g_options["fontend_normal"]; ?></td>
+	<td width="50%" align="right"><?php echo $g_options["font_normal"]; ?><?php echo l('Back to'); ?> <a href="<?php echo "index.php?mode=maps&amp;game=$game"; ?>"><?php echo l('Map Statistics'); ?></a><?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
 </table><p>
 <?php // figure out URL and absolute path of image

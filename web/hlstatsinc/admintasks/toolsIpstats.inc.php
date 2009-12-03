@@ -48,7 +48,7 @@
 
 &nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php
 	if ($hostgroup) {
-?><a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=<?php echo $selTask; ?>"><?php
+?><a href="index.php?mode=admin&task=<?php echo $selTask; ?>"><?php
 	}
 	echo $task->title;
 	if ($hostgroup) {

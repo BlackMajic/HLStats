@@ -937,7 +937,7 @@
 		$task = $admintasks[$selTask];
 		$code = $selTask;
 ?>
-&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin"><?php echo l('Tools'); ?></a></b><br>
+&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="index.php?mode=admin"><?php echo l('Tools'); ?></a></b><br>
 <img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="8" border="0"><br>
 
 <?php
@@ -957,10 +957,10 @@
 				if ($selTask == $code)
 				{
 ?>
-&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin" name="<?php echo $code; ?>"><?php echo
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="index.php?mode=admin" name="<?php echo $code; ?>"><?php echo
 $task->title; ?></a></b><p>
 
-<form method="POST" action="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=<?php echo $code; ?>#<?php echo $code; ?>">
+<form method="POST" action="index.php?mode=admin&task=<?php echo $code; ?>#<?php echo $code; ?>">
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 
@@ -981,7 +981,7 @@ $task->title; ?></a></b><p>
 				{
 ?>
 &nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/rightarrow.gif" width="6" height="9" border="0" align="middle"
-alt="rightarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=<?php echo $code; ?>#<?php echo $code;
+alt="rightarrow.gif"><b>&nbsp;<a href="index.php?mode=admin&task=<?php echo $code; ?>#<?php echo $code;
 ?>"><?php echo $task->title; ?></a></b><p> <?php
 				}
 			}
@@ -1008,7 +1008,7 @@ alt="rightarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mo
 			if ($gamecode == $selGame)
 			{
 ?>
-&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin" name="game_<?php echo $gamecode; ?>"><?php echo $gamename;?></a></b> (<?php echo $gamecode; ?>)<p> <?php
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="index.php?mode=admin" name="game_<?php echo $gamecode; ?>"><?php echo $gamename;?></a></b> (<?php echo $gamecode; ?>)<p> <?php
 				foreach ($admintasks as $code=>$task)
 				{
 					if ($auth->userdata["acclevel"] >= $task->acclevel && $task->type == "game")
@@ -1016,9 +1016,9 @@ alt="rightarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mo
 						if ($selTask == $code)
 						{
 ?>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&admingame=<?php echo $gamecode; ?>" name="<?php echo $code; ?>"><?php echo $task->title; ?></a></b><p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="index.php?mode=admin&admingame=<?php echo $gamecode; ?>" name="<?php echo $code; ?>"><?php echo $task->title; ?></a></b><p>
 
-<form method="POST" action="<?php echo $g_options["scripturl"]; ?>?mode=admin&admingame=<?php echo $gamecode; ?>&task=<?php echo $code; if(!empty($_GET['advanced'])) { echo "&advanced=1"; } ?>#<?php echo $code; ?>">
+<form method="POST" action="index.php?mode=admin&admingame=<?php echo $gamecode; ?>&task=<?php echo $code; if(!empty($_GET['advanced'])) { echo "&advanced=1"; } ?>#<?php echo $code; ?>">
 
 <table width="100%" border="0" cellspacing="0" cellpadding="0">
 
@@ -1038,7 +1038,7 @@ alt="rightarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mo
 						else
 						{
 ?>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/rightarrow.gif" width="6" height="9" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&admingame=<?php echo $gamecode; ?>&task=<?php echo $code; ?>#<?php echo $code; ?>"><?php echo $task->title; ?></a></b><p> <?php
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/rightarrow.gif" width="6" height="9" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="index.php?mode=admin&admingame=<?php echo $gamecode; ?>&task=<?php echo $code; ?>#<?php echo $code; ?>"><?php echo $task->title; ?></a></b><p> <?php
 						}
 					}
 				}
@@ -1046,7 +1046,7 @@ alt="rightarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mo
 			else
 			{
 ?>
-&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/rightarrow.gif" width="6" height="9" border="0" align="middle" alt="rightarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&admingame=<?php echo $gamecode; ?>#game_<?php echo $gamecode; ?>"><?php echo $gamename;?></a></b> (<?php echo $gamecode; ?>)<p> <?php
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/rightarrow.gif" width="6" height="9" border="0" align="middle" alt="rightarrow.gif"><b>&nbsp;<a href="index.php?mode=admin&admingame=<?php echo $gamecode; ?>#game_<?php echo $gamecode; ?>"><?php echo $gamename;?></a></b> (<?php echo $gamecode; ?>)<p> <?php
 			}
 		}
 	}
@@ -1065,7 +1065,7 @@ alt="rightarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mo
 	{
 		if ($auth->userdata["acclevel"] >= $task->acclevel && $task->type == "tool")
 		{
-?>	<li><b><a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=<?php echo $code; ?>"><?php echo $task->title; ?></a></b><br>
+?>	<li><b><a href="index.php?mode=admin&task=<?php echo $code; ?>"><?php echo $task->title; ?></a></b><br>
 		<?php echo $task->description; ?><p>
 <?php
 		}

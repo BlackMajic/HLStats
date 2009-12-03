@@ -43,7 +43,7 @@
 	$id = sanitize($_GET['id']);
 ?>
 
-&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=toolsEditdetails"><?php echo l('Edit Player or Clan Details'); ?></a></b><br>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<a href="index.php?mode=admin&task=toolsEditdetails"><?php echo l('Edit Player or Clan Details'); ?></a></b><br>
 
 <img src="<?php echo $g_options["imgdir"]; ?>/spacer.gif" width="1" height="8" border="0"><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo l("Edit Player")," #$id"; ?></b><p>
@@ -93,7 +93,7 @@
 
 	echo $g_options["font_normal"];
 	echo "&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"
-		. "<a href=\"" . $g_options["scripturl"] . "?mode=playerinfo&player=$id\">"
+		. "<a href=\"index.php?mode=playerinfo&player=$id\">"
 		. l("(View Player Details)"),"</a>";
 	echo $g_options["fontend_normal"];
 ?><p>

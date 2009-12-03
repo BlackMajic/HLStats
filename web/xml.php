@@ -107,7 +107,7 @@ if($g_options['allowXML'] == "1") {
 					$xmlBody .="<player>";
 					$xmlBody .="<name><![CDATA[".htmlentities($playerData['lastName'],ENT_COMPAT,"UTF-8")."]]></name>";
 					$xmlBody .="<skill>".$playerData['skill']."</skill>";
-					$xmlBody .="<profile><![CDATA[".$hlsUrl."hlstats.php&mode=playerinfo&player=".$playerData['playerId']."]]></profile>";
+					$xmlBody .="<profile><![CDATA[".$hlsUrl."index.php&mode=playerinfo&player=".$playerData['playerId']."]]></profile>";
 					$xmlBody .="</player>";
 				}
 				$xmlBody .= "</players>";

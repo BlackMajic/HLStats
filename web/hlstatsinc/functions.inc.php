@@ -142,7 +142,7 @@ function getSortArrow ($sort, $sortorder, $name, $longname,
 	}
 
 	$arrowstring = $g_options["font_small"]
-			. "<a href=\"" . $g_options["scripturl"] . "?"
+			. "<a href=\"index.php?"
 			. makeQueryString($var_sort, $name, array($var_sortorder));
 
 	if ($sort == $name) {

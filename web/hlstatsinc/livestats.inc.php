@@ -90,8 +90,8 @@ else {
 
 pageHeader(
 	array('Server Statistics', $server['name']),
-	array($server['gamename'] => $g_options['scripturl'] . '?game=' . $server['game'],
-		l('Server Statistics') => $g_options['scripturl'] . '?game=' . $server['game'],
+	array($server['gamename'] => 'index.php?game=' . $server['game'],
+		l('Server Statistics') => 'index.php?game=' . $server['game'],
 		$server['name'] => ''
 	)
 );
@@ -207,7 +207,7 @@ else {
 ?>" width="218" height="164" alt="<?php echo $server_details['map']; ?>"></td>
 					<td rowspan="2" valign="top" align="center" class="fontNormal">
 						<b><?php echo htmlentities($server_details['hostname'], ENT_COMPAT, "UTF-8"); ?></b><br>
-						<a href="<?php echo $g_options['scripturl']; ?>?game=<?php echo $server['game']; ?>"><?php echo $server_details['gamedesc'];?></a><br><br>
+						<a href="index.php?game=<?php echo $server['game']; ?>"><?php echo $server_details['gamedesc'];?></a><br><br>
 <?php
 # Ok we have an array of players
 # and we have an array of columns
@@ -288,7 +288,7 @@ if (count($server_players) > 0)
 				# Loss = add a %
 				# Connected = Format it
 				if ('name' == $column['column'])
-					$temp = '<a href="'.$g_options['scripturl'].'?mode=search&amp;q='.HTMLEntities(URLEncode($searchFor), ENT_QUOTES, 'UTF-8').'&amp;st='.$searchType.'&amp;game='.$server['game'].'">'.str_replace(' ', '&nbsp;', HTMLEntities($player['name'], ENT_QUOTES, 'UTF-8')).'</a>';
+					$temp = '<a href="index.php?mode=search&amp;q='.HTMLEntities(URLEncode($searchFor), ENT_QUOTES, 'UTF-8').'&amp;st='.$searchType.'&amp;game='.$server['game'].'">'.str_replace(' ', '&nbsp;', HTMLEntities($player['name'], ENT_QUOTES, 'UTF-8')).'</a>';
 				elseif ('loss' == $column['column'])
 					$temp = $player['loss'].'%';
 				elseif ('time' == $column['column'])
@@ -419,10 +419,10 @@ elseif (isset($server_rules['mp_timeleft']))
 ?>
 						<?php echo l('Address'); ?>: <?php echo $server_details['address']; ?><br>
 						<?php echo l('Server Type'); ?>: <?php echo $server_details['serveros']; ?>, <?php echo $server_details['servertype']; ?><br>
-						<?php echo l('Map'); ?>: <a href="<?php echo $g_options['scripturl']; ?>?mode=mapinfo&amp;map=<?php echo $server_details['map']; ?>&amp;game=<?php echo $server['game']; ?>"><?php echo $server_details['map']; ?></a><br>
+						<?php echo l('Map'); ?>: <a href="index.php?mode=mapinfo&amp;map=<?php echo $server_details['map']; ?>&amp;game=<?php echo $server['game']; ?>"><?php echo $server_details['map']; ?></a><br>
 <?php
 if (isset($server_details['nextmap']))
-	echo l('Nextmap'),': <a href="'.$g_options['scripturl'].'?mode=mapinfo&amp;map='.$server_details['nextmap'].'&amp;game='.$server['game'].'">'.$server_details['nextmap'].'</a><br>';
+	echo l('Nextmap'),': <a href="index.php?mode=mapinfo&amp;map='.$server_details['nextmap'].'&amp;game='.$server['game'].'">'.$server_details['nextmap'].'</a><br>';
 
 # Are there any time limits or frag limits?
 if (isset($server_details['timeleft']))

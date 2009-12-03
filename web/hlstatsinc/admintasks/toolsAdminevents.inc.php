@@ -167,7 +167,7 @@
 	$result = mysql_fetch_assoc($resultCount);
 	$numitems = $result['ac'];
 ?>
-<form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
+<form method="GET" action="index.php">
 <input type="hidden" name="mode" value="admin">
 <input type="hidden" name="task" value="<?php if(!empty($code)) echo $code; ?>">
 <input type="hidden" name="sort" value="<?php if(!empty($sort)) echo $sort; ?>">

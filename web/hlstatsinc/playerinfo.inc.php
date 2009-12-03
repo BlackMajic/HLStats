@@ -62,7 +62,7 @@ if(!empty($_GET['killLimit'])) {
 
 if (!$player && $uniqueid) {
 	if (!$game) {
-		header("Location: " . $g_options["scripturl"] . "?mode=search&st=uniqueid&q=$uniqueid");
+		header("Location: index.php?mode=search&st=uniqueid&q=$uniqueid");
 		exit;
 	}
 
@@ -72,7 +72,7 @@ if (!$player && $uniqueid) {
 	");
 
 	if (mysql_num_rows($query) > 1) {
-		header("Location: " . $g_options["scripturl"] . "?mode=search&st=uniqueid&q=$uniqueid&game=$game");
+		header("Location: index.php?mode=search&st=uniqueid&q=$uniqueid&game=$game");
 		exit;
 	}
 	elseif (mysql_num_rows($query) < 1) {
@@ -178,8 +178,8 @@ mysql_free_result($query);
 pageHeader(
 	array($gamename, l("Player Details"), $pl_name),
 	array(
-		$gamename=>$g_options["scripturl"] . "?game=$game",
-		l("Player Rankings")=>$g_options["scripturl"] . "?mode=players&game=$game",
+		$gamename => "index.php?game=$game",
+		l("Player Rankings") => "index.php?mode=players&game=$game",
 		l("Player Details")=>""
 	),
 	$pl_name
@@ -216,8 +216,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
         					   <?php
         						echo $g_options["font_normal"];
         						if ($playerdata["clan"]) {
-        							echo "&nbsp;<a href=\"" . $g_options["scripturl"]
-        								. "?mode=claninfo&clan=" . $playerdata["clan"]
+        							echo "&nbsp;<a href=\"index.php?mode=claninfo&clan=" . $playerdata["clan"]
         								. "\"><img src=\"" . $g_options["imgdir"]
         								. "/clan.gif\" width='16' height='16' hspace='4' "
         								. "border='0' align=\"middle\" alt=\"clan.gif\">"
@@ -721,9 +720,9 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 		</tr>
 		</table><br>
 		<?php echo  $g_options["font_normal"]; ?>
-		&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=playerhistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo('Event History'); ?></a><br />
-		&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=playerchathistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo l('Chat History'); ?></a><br />
-		&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=search&st=player&q=<?php echo $pl_urlname; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/search.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="search.gif"><?php echo l('Find other players with the same name'); ?></a><?php echo $g_options["fontend_normal"]; ?></td>
+		&nbsp;<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo('Event History'); ?></a><br />
+		&nbsp;<a href="index.php?mode=playerchathistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo l('Chat History'); ?></a><br />
+		&nbsp;<a href="index.php?mode=search&st=player&q=<?php echo $pl_urlname; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/search.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="search.gif"><?php echo l('Find other players with the same name'); ?></a><?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
 </table>
 <p>&nbsp;</p>
@@ -1936,6 +1935,6 @@ if (mysql_num_rows($query) != 0) {
     </tr>
     <tr>
     	<td width="100%" align="right"><br><br>
-    	<?php echo $g_options["font_small"]; ?><b><?php echo l('Admin Options'); ?>:</b> <a href="<?php echo $g_options["scripturl"] . "?mode=admin&task=toolsEditdetailsPlayer&id=$player"; ?>"><?php echo l('Edit Player Details'); ?></a><?php echo $g_options["fontend_small"]; ?></td>
+    	<?php echo $g_options["font_small"]; ?><b><?php echo l('Admin Options'); ?>:</b> <a href="<?php echo "index.php?mode=admin&task=toolsEditdetailsPlayer&id=$player"; ?>"><?php echo l('Edit Player Details'); ?></a><?php echo $g_options["fontend_small"]; ?></td>
     </tr>
 </table>

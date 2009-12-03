@@ -58,7 +58,7 @@
 ?>
 
 <?php echo l('You can give each weapon a "points modifier", amultiplier which determines how many points will be gained or lost for killing with or being killed by that weapon'); ?>.
-<?php echo l('(Refer to'), ' <a href="',$g_options["scripturl"], '?mode=help#points">', l('Help'),'</a>' ?>
+<?php echo l('(Refer to'), ' <a href="index.php?mode=help#points">', l('Help'),'</a>' ?>
 <?php echo l("for a full description of how points ratings are calculated.) The baseline points modifier for weapons is 1.00. A points modifier of 0.00 will cause kills with that weapon to have no effect on players' points"); ?>.<p>
 
 <?php

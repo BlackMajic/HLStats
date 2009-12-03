@@ -90,9 +90,9 @@ else {
 pageHeader(
 	array($gamename, l("Chat History"), $pl_name),
 	array(
-		$gamename=>$g_options["scripturl"] . "?game=$game",
-		l("Player Rankings")=>$g_options["scripturl"] . "?mode=players&amp;game=$game",
-		l("Player Details")=>$g_options["scripturl"] . "?mode=playerinfo&amp;player=$player",
+		$gamename => "index.php?game=$game",
+		l("Player Rankings") => "index.php?mode=players&amp;game=$game",
+		l("Player Details") => "index.php?mode=playerinfo&amp;player=$player",
 		l("Chat History")=>""
 	),
 	$pl_name
@@ -139,7 +139,7 @@ $table = new Table(
 	"sortorder"
 );
 
-$surl = $g_options["scripturl"];
+$surl = 'index.php';
 
 
 // This would be better done with a UNION query, I think, but MySQL doesn't

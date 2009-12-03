@@ -82,7 +82,7 @@
 <tr valign="top">
 	<td width="100%"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo l('Find a Player or Clan'); ?></b><?php echo $g_options["fontend_normal"]; ?><p>
 
-		<form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
+		<form method="GET" action="index.php">
 <?php
 			foreach ($getvars as $var=>$value)
 			{

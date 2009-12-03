@@ -46,19 +46,19 @@ pageHeader(array($gamename), array($gamename=>""));
 	<div class="left-box">
 		<ul class="sidemenu">
 			<li>
-				<a href="<?php echo $g_options["scripturl"] . "?mode=players&amp;game=$game"; ?>"><?php echo l('Player Rankings'); ?></a>
+				<a href="<?php echo "index.php?mode=players&amp;game=$game"; ?>"><?php echo l('Player Rankings'); ?></a>
 			</li>
 			<li>
-				<a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"><?php echo l('Clan Rankings'); ?></a>
+				<a href="<?php echo "index.php?mode=clans&amp;game=$game"; ?>"><?php echo l('Clan Rankings'); ?></a>
 			</li>
 			<li>
-				<a href="<?php echo $g_options["scripturl"] . "?mode=weapons&amp;game=$game"; ?>"><?php echo l('Weapon Statistics'); ?></a>
+				<a href="<?php echo "index.php?mode=weapons&amp;game=$game"; ?>"><?php echo l('Weapon Statistics'); ?></a>
 			</li>
 			<li>
-				<a href="<?php echo $g_options["scripturl"] . "?mode=actions&amp;game=$game"; ?>"><?php echo l('Action Statistics'); ?></a>
+				<a href="<?php echo "index.php?mode=actions&amp;game=$game"; ?>"><?php echo l('Action Statistics'); ?></a>
 			</li>
 			<li>
-				<a href="<?php echo $g_options["scripturl"] . "?mode=maps&amp;game=$game"; ?>"><?php echo l('Map Statistics'); ?></a>
+				<a href="<?php echo "index.php?mode=maps&amp;game=$game"; ?>"><?php echo l('Map Statistics'); ?></a>
 			</li>
 		</ul>
 	</div>
@@ -177,7 +177,7 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 			<td width="70%">
 			<?php
 				if ($awarddata["d_winner_id"]) {
-					echo "<a href=\"" . $g_options["scripturl"] . "?mode=playerinfo&amp;player="
+					echo "<a href=\"index.php?mode=playerinfo&amp;player="
 						. $awarddata["d_winner_id"] . "\"><img src=\""
 						. $g_options["imgdir"] . "/player.gif\" width=16 height=16 "
 						. "hspace='4' border='0' align=\"middle\" alt=\"player.gif\">&nbsp;<b>"
@@ -241,7 +241,7 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 				<?php echo $rowdata["name"]; ?>
 			</td>
 			<td align="left"><?php echo $addr; ?></td>
-			<td align="center"><?php echo "<a href=\"$g_options[scripturl]?mode=livestats&amp;server=$rowdata[serverId]\">",l('View'),"</a>"; ?></td>
+			<td align="center"><?php echo "<a href=\"index.php?mode=livestats&amp;server=$rowdata[serverId]\">",l('View'),"</a>"; ?></td>
 		</tr>
 <?php
 		$i++;

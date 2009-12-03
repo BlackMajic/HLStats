@@ -231,7 +231,7 @@ class Table
 				if ($col->link)
 				{
 					$link = ereg_replace("%k", urlencode($rowdata[$this->keycol]), $col->link);
-					$cellbody .= "<a href=\"" . $g_options["scripturl"] . "?$link\">";
+					$cellbody .= "<a href=\"index.php?$link\">";
 				}
 
 				if ($col->icon) {
@@ -418,7 +418,7 @@ class Table
 	{
 		global $g_options;
 
-		echo "$prefix<a href=\"" . $g_options["scripturl"] . "?"
+		echo "$prefix<a href=\"index.php?"
 			. makeQueryString($this->var_page, $number);
 		if ($this->sorthash)
 			echo "#$this->sorthash";

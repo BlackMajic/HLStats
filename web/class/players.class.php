@@ -96,6 +96,7 @@ class Players {
 	 * get the players for the current game
 	 */
 	public function getPlayersOveriew() {
+		$ret = array();
 
 		// construct the query with the given options
 		$queryStr = "SELECT
@@ -133,14 +134,22 @@ class Players {
 			$queryStr .= " AND t2.uniqueID not like 'BOT:%'";
 		}
 
-var_dump($this->_option);
-		$queryStr .= " ORDER BY
-				".$this->_option['sort']." ".$this->_option['sortorder'].",
-				t1.lastName ASC
-			LIMIT ".$this->_option['page'].",50";
+		$queryStr .= " ORDER BY ";
+		if(!empty($this->_option['sort']) && !empty($this->_option['sortorder'])) {
+			$queryStr .= " ".$this->_option['sort']." ".$this->_option['sortorder']."";
+		}
+		$queryStr .=" ,t1.lastName ASC
+						LIMIT ".$this->_option['page'].",50";
 
-		var_dump($queryStr);
+		$query = mysql_query($queryStr);
+		if(mysql_num_rows($query) > 0) {
+			while($result = mysql_fetch_assoc($query)) {
+				$result['kpd'] = number_format($result['kpd'],1,'.','');
+				$ret[] = $result;
+			}
+		}
 
+		return $ret;
 	}
 }
 

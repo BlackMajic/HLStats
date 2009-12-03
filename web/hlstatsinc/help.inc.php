@@ -126,7 +126,7 @@ pageHeader(array(l("Help")), array(l("Help")=>""));
 
 	Your name may be listed more than once if somebody else (with a different <?php echo $uniqueid; ?>) uses the same name.<p>
 
-	You can use the <a href="<?php echo $g_options["scripturl"]; ?>?mode=search">Search</a> function to find a player by name or <?php echo $uniqueid; ?>.<p>
+	You can use the <a href="index.php?mode=search">Search</a> function to find a player by name or <?php echo $uniqueid; ?>.<p>
 <?php
 	}
 ?>
@@ -348,7 +348,7 @@ pageHeader(array(l("Help")), array(l("Help")=>""));
 
 	Say <b>/hls_hideranking</b> while playing on a participating game server. This will toggle you between being visible on the Player Rankings and being invisible.<p>
 
-	<b>Note</b> You will still be tracked and you can still view your Player Details page. Use the <a href="<?php echo $g_options["scripturl"]; ?>?mode=search">Search</a> page to find yourself.<p>
+	<b>Note</b> You will still be tracked and you can still view your Player Details page. Use the <a href="index.php?mode=search">Search</a> page to find yourself.<p>
 	<?php echo $g_options["fontend_normal"]; ?></td>
 </tr>
 </table>

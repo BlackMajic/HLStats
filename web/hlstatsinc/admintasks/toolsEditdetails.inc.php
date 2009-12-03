@@ -51,7 +51,7 @@
 <tr valign="top">
 	<td width="100%"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo l('Jump Direct'); ?></b><?php echo $g_options["fontend_normal"]; ?><p>
 
-		<form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
+		<form method="GET" action="index.php">
 		<input type="hidden" name="mode" value="admin">
 		<table width="100%" border="0" cellspacing="0" cellpadding="0">
 		<tr>

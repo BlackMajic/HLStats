@@ -93,7 +93,7 @@
 ?>
 
 &nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif">
-	<b>&nbsp;<a href="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=toolsNews"><?php echo $task->title; ?></a></b>
+	<b>&nbsp;<a href="index.php?mode=admin&task=toolsNews"><?php echo $task->title; ?></a></b>
 
 <p><?php echo l('Here you can write and edit the news which are displayed at the front page'); ?></p>
 
@@ -108,11 +108,11 @@ if(!empty($_GET['editpost'])) {
 	$post = mysql_fetch_array($result);
 ?>
 
-<form method="post" action="<?php echo $g_options["scripturl"]; ?>?mode=admin&amp;task=toolsNews&amp;saveEdit=<?php echo $postnr; ?>">
+<form method="post" action="index.php?mode=admin&amp;task=toolsNews&amp;saveEdit=<?php echo $postnr; ?>">
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 	<tr valign="top">
 		<td width="100%">
-			<form method="post" action="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=toolsNews">
+			<form method="post" action="index.php?mode=admin&task=toolsNews">
 				<table border="0" cellpadding="2" cellspacing="0">
 					<tr>
 						<td width="100px"><?php echo $g_options["font_normal"]; ?><b><?php echo l('Author'); ?>:</b><?php echo $g_options["fontend_normal"]; ?></td>
@@ -151,11 +151,11 @@ if(!empty($_GET['editpost'])) {
 else {
 ?>
 
-<form method="post" action="<?php echo $g_options["scripturl"]; ?>?mode=admin&amp;task=toolsNews">
+<form method="post" action="index.php?mode=admin&amp;task=toolsNews">
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 	<tr valign="top">
 		<td width="100%">
-			<form method="post" action="<?php echo $g_options["scripturl"]; ?>?mode=admin&task=toolsNews">
+			<form method="post" action="index.php?mode=admin&task=toolsNews">
 				<table border="0" cellpadding="2" cellspacing="0">
 					<tr>
 						<td width="100px"><?php echo $g_options["font_normal"]; ?><b><?php echo l('Author'); ?>:</b><?php echo $g_options["fontend_normal"]; ?></td>

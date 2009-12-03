@@ -73,11 +73,17 @@ if (isset($_GET["sort"])) {
 		$playersObj->setOption("sort",$_GET['sort']);
 	}
 }
+else {
+	$playersObj->setOption("sort",'skill');
+}
 if (isset($_GET["sortorder"])) {
 	$check = validateInput($_GET['sortorder'],'nospace');
 	if($check === true) {
 		$playersObj->setOption("sortorder",$_GET['sortorder']);
 	}
+}
+else {
+	$playersObj->setOption("sortorder",'desc');
 }
 
 // the rating system @todo remove
@@ -108,16 +114,16 @@ pageHeader(
 		?>
 			</li>
 			<li>
-				<a href="<?php echo $g_options["scripturl"] . "?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="clan.gif">&nbsp;<?php echo l('Clan Rankings'); ?></a>
+				<a href="<?php echo "index.php?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="clan.gif">&nbsp;<?php echo l('Clan Rankings'); ?></a>
 			</li>
-			<form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
+			<form method="GET" action="index.php">
 				<input type="hidden" name="mode" value="search">
 				<input type="hidden" name="game" value="<?php echo $game; ?>">
 				<input type="hidden" name="st" value="player">
 				<input type="text" name="q" size="20" maxlength="64">
 				<input type="submit" value="<?php echo l('Find a player'); ?>">
 			</form>
-			<form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
+			<form method="GET" action="index.php">
 				<input type="hidden" name="game" value="<?php echo $game; ?>" />
 				<input type="hidden" name="mode" value="players" />
 				<?php if (defined('ELORATING') && (ELORATING === "1" || ELORATING === "2")) { ?>
@@ -326,7 +332,7 @@ pageHeader(
 	            	$value = $minutes."m ".$seconds."s";
 	            }
 
-	        	$timeLineData['xml'] .= "<value xid='".makeXMLSave($val['name'])."' description='".$value."' url='".urlencode('hlstats.php?mode=playerinfo&player='.$pId)."'>".$totalTime."</value>";
+	        	$timeLineData['xml'] .= "<value xid='".makeXMLSave($val['name'])."' description='".$value."' url='".urlencode('index.php?mode=playerinfo&player='.$pId)."'>".$totalTime."</value>";
 	        	$timeLineData['xml'] .= "</graph>";
 	        }
 
@@ -570,20 +576,36 @@ pageHeader(
 	$table->draw($queryPlayers, $numitems, 90);
 
 	// get the players
-	$playersObj->getPlayersOveriew();
+	$pData = $playersObj->getPlayersOveriew();
 
 ?>
-	<table cellpadding="2" cellspacing="0" border="0">
+	<table cellpadding="2" cellspacing="0" border="0" width="100%">
 		<tr>
 			<th><?php echo l('Rank'); ?></th>
-			<th><?php echo l('Name'); ?></th>
+			<th><a href="hlstats.php<?php echo l('Name'); ?></th>
 			<th><?php echo l('Points'); ?></th>
 			<th><?php echo l('Kills'); ?></th>
 			<th><?php echo l('Deaths'); ?></th>
 			<th><?php echo l('Kills per Death'); ?></th>
 		</tr>
 		<?php
+			if(!empty($pData)) {
+				foreach($pData as $k=>$entry) {
+					echo '<tr>';
 
+					echo '<td>',$k+1,'</td>';
+					echo '<td>',$entry['lastName'],'</td>';
+					echo '<td>',$entry['skill'],'</td>';
+					echo '<td>',$entry['kills'],'</td>';
+					echo '<td>',$entry['deaths'],'</td>';
+					echo '<td>',$entry['kpd'],'</td>';
+
+					echo '</tr>';
+				}
+			}
+			else {
+				echo '<tr><td colspan="6">',l('No players recorded'),'</td></tr>';
+			}
 		?>
 	</table>
 </div>

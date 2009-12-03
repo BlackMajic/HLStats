@@ -51,7 +51,7 @@ pageHeader(
 );
 ?>
 <p>
-<form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
+<form method="GET" action="index.php">
 	<input type="hidden" name="mode" value="search">
 	<input type="hidden" name="game" value="<?php echo $game; ?>">
 	<input type="hidden" name="st" value="clan">
@@ -59,7 +59,7 @@ pageHeader(
 	<table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
 		<tr valign="bottom">
 			<td width="75%"><?php echo $g_options["font_normal"]; ?><b>&#149;</b> <?php echo l('Find a clan'); ?>: <input type="text" name="q" size=20 maxlength=64 class="textbox"> <input type="submit" value="<?php echo l('Search'); ?>" class="smallsubmit"><?php echo $g_options["fontend_normal"]; ?></td>
-			<td width="25%" align="right" nowrap><?php echo $g_options["font_normal"]; ?><?php echo l('Go to'); ?> <a href="<?php echo $g_options["scripturl"] . "?mode=players&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="player.gif"><?php echo l('Player Rankings'); ?></a><?php echo $g_options["fontend_normal"]; ?></td>
+			<td width="25%" align="right" nowrap><?php echo $g_options["font_normal"]; ?><?php echo l('Go to'); ?> <a href="<?php echo "index.php?mode=players&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="player.gif"><?php echo l('Player Rankings'); ?></a><?php echo $g_options["fontend_normal"]; ?></td>
 		</tr>
 	</table>
 </form>
@@ -157,7 +157,7 @@ pageHeader(
 	$table->draw($queryClans, $resultCount, 90);
 ?>
 <p>
-<form method="GET" action="<?php echo $g_options["scripturl"]; ?>">
+<form method="GET" action="index.php">
 <input type="hidden" name="game" value="<?php echo $game; ?>" />
 <input type="hidden" name="mode" value="clans" />
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="2">
