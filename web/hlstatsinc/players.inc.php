@@ -76,10 +76,16 @@ if (isset($_GET["sort"])) {
 else {
 	$playersObj->setOption("sort",'skill');
 }
+
+$newSort = "DESC";
 if (isset($_GET["sortorder"])) {
 	$check = validateInput($_GET['sortorder'],'nospace');
 	if($check === true) {
 		$playersObj->setOption("sortorder",$_GET['sortorder']);
+	}
+
+	if($_GET["sortorder"] == "DESC") {
+		$newSort = "ASC";
 	}
 }
 else {
@@ -582,7 +588,12 @@ pageHeader(
 	<table cellpadding="2" cellspacing="0" border="0" width="100%">
 		<tr>
 			<th><?php echo l('Rank'); ?></th>
-			<th><a href="hlstats.php<?php echo l('Name'); ?></th>
+			<th>
+				<a href="index.php?mode=players&amp;game=<?php echo $game; ?>&amp;sort=lastName&amp;sortorder=<?php echo $newSort; ?>">
+					<?php echo l('Name'); ?>
+				</a>
+				<img src="hlstatsimg/<?php echo $_GET['sortorder']; ?>.gif" alt="Sorting" width="7" height="7" />
+			</th>
 			<th><?php echo l('Points'); ?></th>
 			<th><?php echo l('Kills'); ?></th>
 			<th><?php echo l('Deaths'); ?></th>

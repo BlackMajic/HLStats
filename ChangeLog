@@ -3,6 +3,9 @@ HLStats ChangeLog
 
 1.52 (TBA)
 *) Changed: Constant INCLUDE_PATH removed.
+*) Changed: hlstats.php file renamed to index.php
+				scripturl option has been removed.
+*) Changed: sorting pictures renamed
 
 1.51 (2009-11-23)
 *) New: HLStats can now be translated via ini files. The default language
