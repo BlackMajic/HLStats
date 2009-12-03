@@ -68,7 +68,7 @@ class Players {
 		}
 
 		// set default values
-		$this->setOption('page','0');
+		$this->setOption('page',1);
 		$this->setOption('minkills','1');
 	}
 
@@ -96,10 +96,11 @@ class Players {
 	 * get the players for the current game
 	 */
 	public function getPlayersOveriew() {
-		$ret = array();
+		$ret['data'] = array();
+		$ret['pages'] = false;
 
 		// construct the query with the given options
-		$queryStr = "SELECT
+		$queryStr = "SELECT SQL_CALC_FOUND_ROWS
 				t1.playerId,
 				t1.lastName,
 				t1.skill,
@@ -138,17 +139,31 @@ class Players {
 		if(!empty($this->_option['sort']) && !empty($this->_option['sortorder'])) {
 			$queryStr .= " ".$this->_option['sort']." ".$this->_option['sortorder']."";
 		}
-		$queryStr .=" ,t1.lastName ASC
-						LIMIT ".$this->_option['page'].",50";
+		$queryStr .=" ,t1.lastName ASC";
+
+		// calculate the limit
+		if($this->_option['page'] === 1) {
+			$queryStr .=" LIMIT 0,50";
+		}
+		else {
+			$start = 50*($this->_option['page']-1);
+			$queryStr .=" LIMIT ".$start.",50";
+		}
 
 		$query = mysql_query($queryStr);
 		if(mysql_num_rows($query) > 0) {
 			while($result = mysql_fetch_assoc($query)) {
 				$result['kpd'] = number_format($result['kpd'],1,'.','');
 				$result['lastName'] = sanitize($result['lastName']);
-				$ret[] = $result;
+				$pl[] = $result;
 			}
+			$ret['data'] = $pl;
 		}
+
+		// get the max count for pagination
+		$query = mysql_query("SELECT FOUND_ROWS() AS 'rows'");
+		$result = mysql_fetch_assoc($query);
+		$ret['pages'] = (int)ceil($result['rows']/50);
 
 		return $ret;
 	}

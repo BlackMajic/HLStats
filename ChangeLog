@@ -2,10 +2,12 @@ HLStats ChangeLog
 ==============
 
 1.52 (TBA)
+*) New: HLStats needs MySQL 4.1 and MySQL is the only supported DB yet.
 *) Changed: Constant INCLUDE_PATH removed.
 *) Changed: hlstats.php file renamed to index.php
 				scripturl option has been removed.
 *) Changed: sorting pictures renamed
+
 
 1.51 (2009-11-23)
 *) New: HLStats can now be translated via ini files. The default language

@@ -632,14 +632,32 @@ pageHeader(
 		</tr>
 		<?php
 
-			if(!empty($pData)) {
-				foreach($pData as $k=>$entry) {
+			if(!empty($pData['data'])) {
+				if($playersObj->getOption('page') > 1) {
+					$rank = ($playersObj->getOption('page') - 1) * (50 + 1);
+				}
+				else {
+					$rank = 1;
+				}
+
+				foreach($pData['data'] as $k=>$entry) {
 					$rcol = "row-dark";
 
 					echo '<tr>',"\n";
 
-					echo '<td class="',toggleRowClass($rcol),'">',$k+1,'</td>',"\n";
-					echo '<td class="',toggleRowClass($rcol),'"><a href="index.php?mode=playerinfo&amp;player=',$entry['playerId'],'">',$entry['lastName'],'</a></td>',"\n";
+					echo '<td class="',toggleRowClass($rcol),'">';
+					echo $rank+$k;
+					echo '</td>',"\n";
+
+					echo '<td class="',toggleRowClass($rcol),'">';
+					if($entry['active'] === "1") {
+						echo '<img src="hlstatsimg/player.gif" alt="active Player" title="active Player" width="16" height="16" />';
+					}
+					else {
+						echo '<img src="hlstatsimg/player_inactive.gif" alt="inactive Player" title="inactive Player" width="16" height="16" />';
+					}
+
+					echo '<a href="index.php?mode=playerinfo&amp;player=',$entry['playerId'],'">',$entry['lastName'],'</a></td>',"\n";
 
 					echo '<td class="',toggleRowClass($rcol),'">';
 					echo '<img width="16" height="16" ';
@@ -661,6 +679,23 @@ pageHeader(
 
 					echo '</tr>',"\n";
 				}
+
+				echo '<tr><td colspan="6" align="right">';
+				if($pData['pages'] > 1) {
+					for($i=1;$i<=$pData['pages'];$i++) {
+						if($playersObj->getOption('page') == ($i)) {
+							echo "[",$i,"]";
+						}
+						else {
+							echo "<a href='index.php?",makeQueryString('page',$i),"'>[",$i,"]</a>";
+						}
+					}
+				}
+				else {
+					echo "[1]";
+				}
+
+				echo '</td></tr>',"\n";
 			}
 			else {
 				echo '<tr><td colspan="6">',l('No players recorded'),'</td></tr>',"\n";
