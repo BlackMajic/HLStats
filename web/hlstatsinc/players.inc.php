@@ -579,16 +579,17 @@ pageHeader(
 		$numitems = $resultCount['pc'];
 	}
 	// output
-	$table->draw($queryPlayers, $numitems, 90);
+	//$table->draw($queryPlayers, $numitems, 90);
 
 	// get the players
 	$pData = $playersObj->getPlayersOveriew();
 
+	$rcol = "row-dark";
 ?>
-	<table cellpadding="2" cellspacing="0" border="0" width="100%">
+	<table cellpadding="0" cellspacing="0" border="1" width="100%">
 		<tr>
-			<th><?php echo l('Rank'); ?></th>
-			<th>
+			<th class="<?php echo toggleRowClass($rcol); ?>"><?php echo l('Rank'); ?></th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
 				<a href="index.php?mode=players&amp;game=<?php echo $game; ?>&amp;sort=lastName&amp;sortorder=<?php echo $newSort; ?>">
 					<?php echo l('Name'); ?>
 				</a>
@@ -596,7 +597,7 @@ pageHeader(
 				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
-			<th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
 				<a href="index.php?mode=players&amp;game=<?php echo $game; ?>&amp;sort=skill&amp;sortorder=<?php echo $newSort; ?>">
 					<?php echo l('Points'); ?>
 				</a>
@@ -604,7 +605,7 @@ pageHeader(
 				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
-			<th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
 				<a href="index.php?mode=players&amp;game=<?php echo $game; ?>&amp;sort=kills&amp;sortorder=<?php echo $newSort; ?>">
 					<?php echo l('Kills'); ?>
 				</a>
@@ -612,7 +613,7 @@ pageHeader(
 				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
-			<th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
 				<a href="index.php?mode=players&amp;game=<?php echo $game; ?>&amp;sort=deaths&amp;sortorder=<?php echo $newSort; ?>">
 					<?php echo l('Deaths'); ?>
 				</a>
@@ -620,7 +621,7 @@ pageHeader(
 				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
-			<th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
 				<a href="index.php?mode=players&amp;game=<?php echo $game; ?>&amp;sort=kpd&amp;sortorder=<?php echo $newSort; ?>">
 					<?php echo l('Kills per Death'); ?>
 				</a>
@@ -630,22 +631,39 @@ pageHeader(
 			</th>
 		</tr>
 		<?php
+
 			if(!empty($pData)) {
 				foreach($pData as $k=>$entry) {
-					echo '<tr>';
+					$rcol = "row-dark";
 
-					echo '<td>',$k+1,'</td>';
-					echo '<td>',$entry['lastName'],'</td>';
-					echo '<td>',$entry['skill'],'</td>';
-					echo '<td>',$entry['kills'],'</td>';
-					echo '<td>',$entry['deaths'],'</td>';
-					echo '<td>',$entry['kpd'],'</td>';
+					echo '<tr>',"\n";
 
-					echo '</tr>';
+					echo '<td class="',toggleRowClass($rcol),'">',$k+1,'</td>',"\n";
+					echo '<td class="',toggleRowClass($rcol),'"><a href="index.php?mode=playerinfo&amp;player=',$entry['playerId'],'">',$entry['lastName'],'</a></td>',"\n";
+
+					echo '<td class="',toggleRowClass($rcol),'">';
+					echo '<img width="16" height="16" ';
+					if($entry['skill'] > $entry['oldSkill']) {
+						echo 'src="hlstatsimg/skill_up.gif" alt="Up" title="Up"';
+					}
+					elseif($entry['skill'] < $entry['oldSkill']) {
+						echo 'src="hlstatsimg/skill_down.gif" alt="Down" title="Down"';
+					}
+					else {
+						echo 'src="hlstatsimg/skill_stay.gif" alt="Stay" title="Stay"';
+					}
+					echo ' />';
+					echo $entry['skill'],'</td>',"\n";
+
+					echo '<td class="',toggleRowClass($rcol),'">',$entry['kills'],'</td>',"\n";
+					echo '<td class="',toggleRowClass($rcol),'">',$entry['deaths'],'</td>',"\n";
+					echo '<td class="',toggleRowClass($rcol),'">',$entry['kpd'],'</td>',"\n";
+
+					echo '</tr>',"\n";
 				}
 			}
 			else {
-				echo '<tr><td colspan="6">',l('No players recorded'),'</td></tr>';
+				echo '<tr><td colspan="6">',l('No players recorded'),'</td></tr>',"\n";
 			}
 		?>
 	</table>

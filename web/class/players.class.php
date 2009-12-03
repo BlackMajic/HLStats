@@ -145,6 +145,7 @@ class Players {
 		if(mysql_num_rows($query) > 0) {
 			while($result = mysql_fetch_assoc($query)) {
 				$result['kpd'] = number_format($result['kpd'],1,'.','');
+				$result['lastName'] = sanitize($result['lastName']);
 				$ret[] = $result;
 			}
 		}

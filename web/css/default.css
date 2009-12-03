@@ -13,6 +13,25 @@ table,td,input,button,th {
 	color: #333;
 }
 
+/** table **/
+table {
+	border-collapse: collapse;
+	border-color: #333;
+}
+th,td {
+	padding: 2px;
+}
+th {
+	text-align: left;
+	font-weight: bold;
+}
+.row-light {
+	background-color: #fff;
+}
+.row-dark {
+	background-color: #eee;
+}
+
 /* links */
 a {
 	color: #003366;
@@ -152,10 +171,6 @@ form.search input.searchbutton {
 	width: 60px;
 }
 
-th {
-	text-align: left;
-	font-weight: bold;
-}
 
 /**********************************
   LAYOUT
