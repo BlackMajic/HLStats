@@ -77,19 +77,19 @@ else {
 	$playersObj->setOption("sort",'skill');
 }
 
-$newSort = "DESC";
+$newSort = "ASC";
 if (isset($_GET["sortorder"])) {
 	$check = validateInput($_GET['sortorder'],'nospace');
 	if($check === true) {
 		$playersObj->setOption("sortorder",$_GET['sortorder']);
 	}
 
-	if($_GET["sortorder"] == "DESC") {
-		$newSort = "ASC";
+	if($_GET["sortorder"] == "ASC") {
+		$newSort = "DESC";
 	}
 }
 else {
-	$playersObj->setOption("sortorder",'desc');
+	$playersObj->setOption("sortorder",'DESC');
 }
 
 // the rating system @todo remove
@@ -592,12 +592,42 @@ pageHeader(
 				<a href="index.php?mode=players&amp;game=<?php echo $game; ?>&amp;sort=lastName&amp;sortorder=<?php echo $newSort; ?>">
 					<?php echo l('Name'); ?>
 				</a>
-				<img src="hlstatsimg/<?php echo $_GET['sortorder']; ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php if($playersObj->getOption('sort') == "lastName") { ?>
+				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
 			</th>
-			<th><?php echo l('Points'); ?></th>
-			<th><?php echo l('Kills'); ?></th>
-			<th><?php echo l('Deaths'); ?></th>
-			<th><?php echo l('Kills per Death'); ?></th>
+			<th>
+				<a href="index.php?mode=players&amp;game=<?php echo $game; ?>&amp;sort=skill&amp;sortorder=<?php echo $newSort; ?>">
+					<?php echo l('Points'); ?>
+				</a>
+				<?php if($playersObj->getOption('sort') == "skill") { ?>
+				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th>
+				<a href="index.php?mode=players&amp;game=<?php echo $game; ?>&amp;sort=kills&amp;sortorder=<?php echo $newSort; ?>">
+					<?php echo l('Kills'); ?>
+				</a>
+				<?php if($playersObj->getOption('sort') == "kills") { ?>
+				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th>
+				<a href="index.php?mode=players&amp;game=<?php echo $game; ?>&amp;sort=deaths&amp;sortorder=<?php echo $newSort; ?>">
+					<?php echo l('Deaths'); ?>
+				</a>
+				<?php if($playersObj->getOption('sort') == "deaths") { ?>
+				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th>
+				<a href="index.php?mode=players&amp;game=<?php echo $game; ?>&amp;sort=kpd&amp;sortorder=<?php echo $newSort; ?>">
+					<?php echo l('Kills per Death'); ?>
+				</a>
+				<?php if($playersObj->getOption('sort') == "kpd") { ?>
+				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
 		</tr>
 		<?php
 			if(!empty($pData)) {
