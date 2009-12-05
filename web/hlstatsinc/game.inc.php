@@ -157,20 +157,20 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 		if (mysql_num_rows($queryAwards) > 0 && $awards_d_date) {
 ?>
 <h1><?php
-	if ($awards_numdays == 1) {
-		echo l("Daily Awards")," ",l("for")," ",$awards_s_date;
-	}
-	else {
-		echo $awards_numdays," ",l('Day Awards'),": ",$awards_s_date," ",l('to')," ",$awards_d_date;
-	}
+			if ($awards_numdays == 1) {
+				echo l("Daily Awards")," ",l("for")," ",$awards_s_date;
+			}
+			else {
+				echo $awards_numdays," ",l('Day Awards'),": ",$awards_s_date," ",l('to')," ",$awards_d_date;
+			}
 ?></h1>
-<div class="content">
+	<div class="content">
 	<table width="100%" border="0" cellspacing="0" cellpadding="4">
 <?php
-	$c = 0;
-	while ($awarddata = mysql_fetch_assoc($queryAwards)) {
-		$colour = ($c % 2) + 1;
-		$c++;
+			$c = 0;
+			while ($awarddata = mysql_fetch_assoc($queryAwards)) {
+				$colour = ($c % 2) + 1;
+				$c++;
 ?>
 		<tr>
 			<th width="30%"><?php echo htmlspecialchars($awarddata["name"]);?></th>
@@ -191,15 +191,17 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 			</td>
 		</tr>
 <?php
-		}
+			}
 ?>
 	</table>
+	</div>
 <?php
+		}
+		else {
+			// awards not created yet
 		}
 	}
 ?>
-</div>
-
 <h1><?php echo l('Participating Servers'); ?></h1>
 <div class="content">
 	<table width="100%" border="0" cellspacing="1" cellpadding="4">
