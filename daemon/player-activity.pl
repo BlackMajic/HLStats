@@ -20,7 +20,7 @@
 # +
 # + Johannes 'Banana' Keßler
 # + http://hlstats.sourceforge.net
-# + 2007 - 2008
+# + 2007 - 2010
 # +
 #
 # HLStats - Real-time player and clan rankings and statistics for Half-Life
