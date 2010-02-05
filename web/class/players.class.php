@@ -199,7 +199,7 @@ class Players {
         while ($result = mysql_fetch_assoc($query)) {
             // we group by day
             //$dataArr = explode(" ",$result['eventTime']);
-        	$data['disonnect'][$result['eventTime']][] = $result['playerId'];
+        	$data['disconnect'][$result['eventTime']][] = $result['playerId'];
         }
         mysql_free_result($query);
 

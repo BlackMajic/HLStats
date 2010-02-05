@@ -149,7 +149,7 @@ pageHeader(
 <div id="main">
 <?php
     // if so show a timeline of player count
-    if($g_options['useFlash'] == "1") {
+    if($g_options['showChart'] == "1") {
 
 		require('class/chart.class.php');
 		$chartObj = new Chart($game);

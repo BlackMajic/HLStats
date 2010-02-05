@@ -136,26 +136,42 @@ class Chart {
 		}
 		$playersObj = new Players($this->_game);
 		$data = $playersObj->getPlayerCountPerDay();
-		$c = 0;
-		foreach($data['connect'] as $d=>$e) {
-			$line[] = count($e);
-			if($c % 5 == 0) {
-				$x[] = $d;
-			}
-			else {
-				$x[] = '';
-			}
 
+		$c = 0;
+		$xLine = array();
+		$connects = array();
+		$disconnects = array();
+
+		// we need only the count for each day
+		foreach($data['connect'] as $d=>$e) {
+			$connects[] = count($e);
+
+			// this shows the date only every 5 days
+			if($c % 5 == 0) { $xLine[] = $d; }
+			else { $xLine[] = ''; }
 			$c++;
 		}
 
-		$this->_pData->AddPoint($line,'1');
-		$this->_pData->AddPoint($x,'x');
-		$this->_pData->AddSerie('1');
+		// we need only the count for each day
+		foreach($data['disconnect'] as $d=>$e) {
+			$disconnects[] = count($e);
+		}
 
+		// add the connects
+		$this->_pData->AddPoint($connects,'1');
+		$this->_pData->AddSerie('1');
+		$this->_pData->SetSerieName(l("Connects"),'1');
+
+		// the dates for x axe
+		$this->_pData->AddPoint($xLine,'x');
 		$this->_pData->SetAbsciseLabelSerie("x");
 
-		$this->_pData->SetSerieName(l("Connects"),'1');
+		// add the disconnects
+		$this->_pData->AddPoint($disconnects,'2');
+		$this->_pData->AddSerie('2');
+		$this->_pData->SetSerieName(l("Disconnects"),'2');
+
+
 
 		$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",8);
 		$this->_pChart->setGraphArea(50,30,$this->_option['width']-10,$this->_option['height']-70);
