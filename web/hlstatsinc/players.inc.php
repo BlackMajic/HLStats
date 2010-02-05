@@ -154,11 +154,7 @@ pageHeader(
 		require('class/chart.class.php');
 		$chartObj = new Chart($game);
 
-		// set the mode
-		$chartObj->setOption('q','activity');
-
-		echo $chartObj->getHtmlCode();
-		echo $chartObj->getData('playerActivity');
+		echo $chartObj->getChart('playerActivity');
 
 /*
     	// we use flash

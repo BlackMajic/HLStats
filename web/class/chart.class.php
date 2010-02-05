@@ -41,7 +41,7 @@
 /**
  * Chart
  *
- * run and display open flash charts
+ * run and display pchart
  */
 class Chart {
 
@@ -90,28 +90,7 @@ class Chart {
 		}
 	}
 
-	/**
-	 * getHtmlCode
-	 *
-	 * return the html code with the correct parameters
-	 *
-	 * @return string $code The complete ready to use HTML code
-     */
-	public function getHtmlCode() {
-		$code = '<script type="text/javascript" src="hlstatsinc/openflashchart/swfobject.js"></script>
-<script type="text/javascript">
-swfobject.embedSWF("hlstatsinc/openflashchart/open-flash-chart.swf",
-		"'.$this->_option['chartId'].'",
-		"'.$this->_option['width'].'",
-		"'.$this->_option['height'].'",
-		"9.0.0");
-</script>
-<div id="'.$this->_option['chartId'].'"></div>';
-
-		return $code;
-	}
-
-	public function getData($mode) {
+	public function getChart($mode) {
 		require ('class/php5-ofc-library/open-flash-chart-object.php');
 
 		switch($mode) {
