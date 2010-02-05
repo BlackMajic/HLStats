@@ -205,6 +205,34 @@ class Players {
 
 		return $data;
 	}
+
+	/**
+	 * get the most time online
+	 *
+	 * @return array The data
+	 */
+	public function getMostTimeOnline() {
+		exit();
+		$data = array();
+
+		$query = mysql_query("SELECT ".DB_PREFIX."_Events_StatsmeTime.*,
+					TIME_TO_SEC(".DB_PREFIX."_Events_StatsmeTime.time) as tTime
+					FROM ".DB_PREFIX."_Events_StatsmeTime
+					LEFT JOIN ".DB_PREFIX."_Servers
+						ON ".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_StatsmeTime.serverId
+					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'");
+		var_dump("SELECT ".DB_PREFIX."_Events_StatsmeTime.*,
+					TIME_TO_SEC(".DB_PREFIX."_Events_StatsmeTime.time) as tTime
+					FROM ".DB_PREFIX."_Events_StatsmeTime
+					LEFT JOIN ".DB_PREFIX."_Servers
+						ON ".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_StatsmeTime.serverId
+					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'");
+
+		while($result = mysql_fetch_assoc($query)) {
+			$onlineArr[$result['playerId']][] = $result;
+		}
+		mysql_free_result($query);
+	}
 }
 
 
