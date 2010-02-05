@@ -154,7 +154,8 @@ pageHeader(
 		require('class/chart.class.php');
 		$chartObj = new Chart($game);
 
-		echo $chartObj->getChart('playerActivity');
+		$chart = $chartObj->getChart('playerActivity');
+		echo '<img src="',$chart,'" />';
 
 /*
     	// we use flash

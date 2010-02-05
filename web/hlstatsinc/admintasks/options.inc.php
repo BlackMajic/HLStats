@@ -230,7 +230,7 @@
 	$optiongroups[1]->options[] = new Option("contact", l("Contact URL"), "text");
 	$optiongroups[1]->options[] = new Option("hideAwards", l("Hide Daily Awards"), "bool");
 	$optiongroups[1]->options[] = new Option("hideNews", l("Hide News"), "bool");
-	$optiongroups[1]->options[] = new Option("useFlash", l("Use flash graphics"), "bool");
+	$optiongroups[1]->options[] = new Option("showChart", l("Show chart graphics"), "bool");
 	$optiongroups[1]->options[] = new Option("allowSig", l("Allow the use of signatures"), "bool");
 	$optiongroups[1]->options[] = new Option("allowXML", l("Allow XML interface"), "bool");
 

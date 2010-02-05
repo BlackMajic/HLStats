@@ -123,8 +123,10 @@
       $Value = $Value[0];
 
      $ID = 0;
+	 if(!empty($this->Data)) {
      for($i=0;$i<=count($this->Data);$i++)
       { if(isset($this->Data[$i][$Serie])) { $ID = $i+1; } }
+	 }
 
      if ( count($Value) == 1 )
       {

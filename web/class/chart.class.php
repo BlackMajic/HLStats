@@ -58,6 +58,16 @@ class Chart {
 	private $_option = array();
 
 	/**
+	 * the data object of pChart
+	 */
+	private $_pData = false;
+
+	/**
+	 * the pChart object
+	 */
+	private $_pChart = false;
+
+	/**
 	 * load up and set default values
 	 */
 	public function __construct($game) {
@@ -69,11 +79,11 @@ class Chart {
 			new Exception("Game is missing for Players.class");
 		}
 
-		$this->setOption('width',500);
-		$this->setOption('height',250);
-		$this->setOption('bgcolor','#ffffff');
+		$this->setOption('width',660);
+		$this->setOption('height',300);
+		//$this->setOption('bgcolor','#ffffff');
 
-		$this->setOption('chartId','chart-'.time());
+		$this->setOption('chartId',$this->_game.'-playeractivity');
 	}
 
 	/**
@@ -90,26 +100,101 @@ class Chart {
 		}
 	}
 
+	/**
+	 * either return the value or false
+	 * @param string $key The param to get
+	 * @return mixed The value or false
+	 */
+	public function getOption($key) {
+		if(isset($this->_option[$key])) {
+			return $this->_option[$key];
+		}
+
+		return false;
+	}
+
 	public function getChart($mode) {
-		require ('class/php5-ofc-library/open-flash-chart-object.php');
+		$this->_loadClasses();
+
+		$chart = false;
 
 		switch($mode) {
 			case 'playerActivity':
-				$this->_getPlayerActivity();
+				$chart = $this->_getPlayerActivity();
 			break;
 
 			default:
 			//nothing
 		}
 
+		return $chart;
 	}
 
 	private function _getPlayerActivity() {
-		$title = new title( 'Player activity' );
+		if(!in_array('Players',get_declared_classes())) {
+			require 'players.class.php';
+		}
+		$playersObj = new Players($this->_game);
+		$data = $playersObj->getPlayerCountPerDay();
+		$c = 0;
+		foreach($data['connect'] as $d=>$e) {
+			$line[] = count($e);
+			if($c % 5 == 0) {
+				$x[] = $d;
+			}
+			else {
+				$x[] = '';
+			}
 
-		$dataStr = '<script type="text/javascript">';
-		$dataStr .= 'var data';
-		$dataStr .= '</script>';
+			$c++;
+		}
+
+		$this->_pData->AddPoint($line,'1');
+		$this->_pData->AddPoint($x,'x');
+		$this->_pData->AddSerie('1');
+
+		$this->_pData->SetAbsciseLabelSerie("x");
+
+		$this->_pData->SetSerieName(l("Connects"),'1');
+
+		$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",8);
+		$this->_pChart->setGraphArea(50,30,$this->_option['width']-10,$this->_option['height']-70);
+		$this->_pChart->drawFilledRoundedRectangle(3,3,$this->_option['width']-3,$this->_option['height']-3,5,240,240,240);
+		$this->_pChart->drawGraphArea(255,255,255,TRUE);
+		$this->_pChart->drawScale($this->_pData->GetData(),$this->_pData->GetDataDescription(),SCALE_NORMAL,150,150,150,TRUE,0,2);
+		$this->_pChart->drawGrid(4,TRUE,230,230,230,50);
+
+		#  // Draw the cubic curve graph
+		$this->_pChart->drawCubicCurve($this->_pData->GetData(),$this->_pData->GetDataDescription());
+		#
+		#  // Finish the graph
+		//$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",8);
+		$this->_pChart->drawLegend(10,$this->_option['height']-40,$this->_pData->GetDataDescription(),255,255,255);
+		$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",10);
+		$this->_pChart->drawTitle(0,20,l("Player activity"),50,50,50,$this->_option['width']);
+
+
+		$this->_pChart->Render("tmp/".$this->_option['chartId'].".png");
+
+		return "tmp/".$this->_option['chartId'].".png";
 	}
+
+	/**
+	 * load the required pChart classes
+	 */
+	private function _loadClasses() {
+		require_once('class/pchart/pData.class.php');
+		require_once('class/pchart/pChart.class.php');
+
+		if($this->_pData == false) {
+			$this->_pData = new pData();
+		}
+
+		if($this->_pChart == false) {
+			$this->_pChart = new pChart($this->_option['width'],$this->_option['height']);
+		}
+	}
+
+
 }
 ?>

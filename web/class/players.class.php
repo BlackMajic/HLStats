@@ -94,6 +94,7 @@ class Players {
 
 	/**
 	 * get the players for the current game
+	 * for the players overview page
 	 */
 	public function getPlayersOveriew() {
 		$ret['data'] = array();
@@ -166,6 +167,43 @@ class Players {
 		$ret['pages'] = (int)ceil($result['rows']/50);
 
 		return $ret;
+	}
+
+	/**
+	 * get the player count per day
+	 *
+	 * @return array An array with connect and disconnect data
+	 */
+	public function getPlayerCountPerDay() {
+		$data = array();
+
+		$query = mysql_query("SELECT DATE_FORMAT(`".DB_PREFIX."_Events_Connects`.`eventTime`,'%Y-%m-%d') AS eventTime,
+        				`".DB_PREFIX."_Events_Connects`.`playerId`
+						FROM `".DB_PREFIX."_Events_Connects`
+						LEFT JOIN `".DB_PREFIX."_Players`
+							ON `".DB_PREFIX."_Events_Connects`.`playerId` = `".DB_PREFIX."_Players`.`playerId`
+						WHERE `".DB_PREFIX."_Players`.`game` = '".mysql_escape_string($this->_game)."'");
+		while ($result = mysql_fetch_assoc($query)) {
+            // we group by day
+            //$dataArr = explode(" ",$result['eventTime']);
+        	$data['connect'][$result['eventTime']][] = $result['playerId'];
+        }
+        mysql_free_result($query);
+
+		$query = mysql_query("SELECT DATE_FORMAT(`".DB_PREFIX."_Events_Disconnects`.`eventTime`,'%Y-%m-%d') AS eventTime,
+						`".DB_PREFIX."_Events_Disconnects`.`playerId`
+		                FROM `".DB_PREFIX."_Events_Disconnects`
+		                LEFT JOIN `".DB_PREFIX."_Players`
+		                	ON `".DB_PREFIX."_Events_Disconnects`.`playerId` = `".DB_PREFIX."_Players`.`playerId`
+		                WHERE `".DB_PREFIX."_Players`.`game` = '".mysql_escape_string($this->_game)."'");
+        while ($result = mysql_fetch_assoc($query)) {
+            // we group by day
+            //$dataArr = explode(" ",$result['eventTime']);
+        	$data['disonnect'][$result['eventTime']][] = $result['playerId'];
+        }
+        mysql_free_result($query);
+
+		return $data;
 	}
 }
 
