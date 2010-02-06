@@ -185,7 +185,7 @@ pageHeader(
 	$pl_name
 );
 
-if($g_options['useFlash'] == "1") { // we want use the flash graphics
+if($g_options['showChart'] == "1") { // we want use the flash graphics
 ?>
     <script type="text/javascript" src="hlstatsinc/amcharts/swfobject.js"></script>
 <?php
@@ -727,7 +727,7 @@ if($g_options['useFlash'] == "1") { // we want use the flash graphics
 </table>
 <p>&nbsp;</p>
 <?php
-	if($g_options['useFlash'] == "1") {
+	if($g_options['showChart'] == "1") {
 		$query = mysql_query("SELECT
 				".DB_PREFIX."_Events_StatsmeTime.*,
 				TIME_TO_SEC(".DB_PREFIX."_Events_StatsmeTime.time) as tTime
@@ -1844,7 +1844,7 @@ if (mysql_num_rows($query) != 0) {
 </table><br />
 
 <?php
-	if($g_options['useFlash'] == "1") {
+	if($g_options['showChart'] == "1") {
 		// get the kills
 		$query = mysql_query("SELECT `eventTime` FROM `".DB_PREFIX."_Events_Frags` WHERE `killerId` = '".mysql_escape_string($player)."'");
 		$killsArr = array();

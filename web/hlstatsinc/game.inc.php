@@ -283,7 +283,7 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 <p>
 	<ul>
 		<li>
-			<?php echo "<b>$num_players</b> ",l('players'),"  <b>$num_clans</b> ",l('and clans ranked on')," <b>$num_servers</b> ",l('servers'),"."; ?>
+			<?php echo "<b>$num_players</b> ",l('players'),"  <b>$num_clans</b> ",l('clans ranked on')," <b>$num_servers</b> ",l('servers'),"."; ?>
 		</li>
 <?php
 	if ($lastevent) {

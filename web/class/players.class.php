@@ -94,6 +94,7 @@ class Players {
 
 	/**
 	 * get the players for the current game
+	 * for the players overview page
 	 */
 	public function getPlayersOveriew() {
 		$ret['data'] = array();
@@ -166,6 +167,71 @@ class Players {
 		$ret['pages'] = (int)ceil($result['rows']/50);
 
 		return $ret;
+	}
+
+	/**
+	 * get the player count per day
+	 *
+	 * @return array An array with connect and disconnect data
+	 */
+	public function getPlayerCountPerDay() {
+		$data = array();
+
+		$query = mysql_query("SELECT DATE_FORMAT(`".DB_PREFIX."_Events_Connects`.`eventTime`,'%Y-%m-%d') AS eventTime,
+        				`".DB_PREFIX."_Events_Connects`.`playerId`
+						FROM `".DB_PREFIX."_Events_Connects`
+						LEFT JOIN `".DB_PREFIX."_Players`
+							ON `".DB_PREFIX."_Events_Connects`.`playerId` = `".DB_PREFIX."_Players`.`playerId`
+						WHERE `".DB_PREFIX."_Players`.`game` = '".mysql_escape_string($this->_game)."'");
+		while ($result = mysql_fetch_assoc($query)) {
+            // we group by day
+            //$dataArr = explode(" ",$result['eventTime']);
+        	$data['connect'][$result['eventTime']][] = $result['playerId'];
+        }
+        mysql_free_result($query);
+
+		$query = mysql_query("SELECT DATE_FORMAT(`".DB_PREFIX."_Events_Disconnects`.`eventTime`,'%Y-%m-%d') AS eventTime,
+						`".DB_PREFIX."_Events_Disconnects`.`playerId`
+		                FROM `".DB_PREFIX."_Events_Disconnects`
+		                LEFT JOIN `".DB_PREFIX."_Players`
+		                	ON `".DB_PREFIX."_Events_Disconnects`.`playerId` = `".DB_PREFIX."_Players`.`playerId`
+		                WHERE `".DB_PREFIX."_Players`.`game` = '".mysql_escape_string($this->_game)."'");
+        while ($result = mysql_fetch_assoc($query)) {
+            // we group by day
+            //$dataArr = explode(" ",$result['eventTime']);
+        	$data['disconnect'][$result['eventTime']][] = $result['playerId'];
+        }
+        mysql_free_result($query);
+
+		return $data;
+	}
+
+	/**
+	 * get the most time online
+	 *
+	 * @return array The data
+	 */
+	public function getMostTimeOnline() {
+		exit();
+		$data = array();
+
+		$query = mysql_query("SELECT ".DB_PREFIX."_Events_StatsmeTime.*,
+					TIME_TO_SEC(".DB_PREFIX."_Events_StatsmeTime.time) as tTime
+					FROM ".DB_PREFIX."_Events_StatsmeTime
+					LEFT JOIN ".DB_PREFIX."_Servers
+						ON ".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_StatsmeTime.serverId
+					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'");
+		var_dump("SELECT ".DB_PREFIX."_Events_StatsmeTime.*,
+					TIME_TO_SEC(".DB_PREFIX."_Events_StatsmeTime.time) as tTime
+					FROM ".DB_PREFIX."_Events_StatsmeTime
+					LEFT JOIN ".DB_PREFIX."_Servers
+						ON ".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_StatsmeTime.serverId
+					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'");
+
+		while($result = mysql_fetch_assoc($query)) {
+			$onlineArr[$result['playerId']][] = $result;
+		}
+		mysql_free_result($query);
 	}
 }
 

@@ -9,6 +9,7 @@ HLStats ChangeLog
 				scripturl option has been removed.
 *) Changed: sorting pictures renamed
 *) Changed: replaced AMCharts with open flash chart
+*) Fixed: type in lang (thx to LuBJe)
 
 
 1.51 (2009-11-23)
