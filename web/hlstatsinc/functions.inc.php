@@ -247,7 +247,8 @@ function getInterval($timestamp, $granularity = 2) {
 function parse_custom_lang_file($file) {
 	$ret = array();
 
-	$lines = file($file, FILE_SKIP_EMPTY_LINES | FILE_TEXT);
+	#$lines = file($file, FILE_SKIP_EMPTY_LINES | FILE_TEXT);
+	$lines = file($file, FILE_SKIP_EMPTY_LINES);
 	foreach($lines as $line) {
 		$line = trim($line);
 		if(!empty($line)) {
