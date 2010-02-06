@@ -442,6 +442,7 @@ Death = Tot
 killed me with = tötete mich mit
 with = mit
 Disconnect = Verlassen
+Disconnects = Trennungen
 I left the game = Ich verließ das Spiel
 I entered the game = Ich betrat das Spiel
 I killed = Ich tötete
@@ -506,3 +507,5 @@ In = In
 Search Results = Suchergebnisse
 
 Show only events of type = Zeige nur Events von dem Typ
+
+Player activity = Spieler aktivität
