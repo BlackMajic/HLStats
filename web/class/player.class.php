@@ -133,6 +133,11 @@ class Player {
 				$this->_playerData = $result;
 			}
 		}
+
+		$this->_getUniqueIds();
+		$this->_getLastConnect();
+		$this->_getMaxConnectTime();
+		$this->_getAvgPing();
 	}
 
 	/**
@@ -154,6 +159,69 @@ class Player {
 		}
 				
 		return $ret;
+	}
+
+	/**
+	 * get the playr uniqueids if any
+	 */
+	private function _getUniqueIds() {
+		$this->_playerData['uniqueIds'] = '-';
+		$query = mysql_query("SELECT uniqueId
+						FROM ".DB_PREFIX."_PlayerUniqueIds
+						WHERE playerId='".mysql_escape_string($this->playerId)."'");
+		if(mysql_num_rows($query) > 1) {
+			while ($result = mysql_fetch_assoc($query)) {
+				$ret = $result['uniqueId'].",";
+			}
+			$this->_playerData['uniqueIds'] = trim($ret,',');
+			mysql_free_result($query);
+		}
+	}
+
+	/**
+	 * get the last connect from connect table
+	 */
+	private function _getLastConnect() {
+		$this->_playerData['lastConnect'] = l('No info');
+		$query = mysql_query("SELECT MAX(eventTime) AS eventTime
+					FROM ".DB_PREFIX."_Events_Connects
+					WHERE playerId='".mysql_escape_string($this->playerId)."'");
+		if(mysql_num_rows($query) > 1) {
+			$result = mysql_fetch_assoc($query);
+			$this->_playerData['lastConnect'] = $result['eventTime'];
+			mysql_free_result($query);
+		}
+	}
+
+	/**
+	 * get the max connection time
+	 * if we have the information
+	 */
+	private function _getMaxConnectTime() {
+		$this->_playerData['maxTime'] = l('No info');
+		$query = mysql_query("SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(time))) AS tTime
+					FROM ".DB_PREFIX."_Events_StatsmeTime
+					WHERE playerId='".mysql_escape_string($this->playerId)."'");
+		if(mysql_num_rows($query) > 1) {
+			$result = mysql_fetch_assoc($query);
+			$this->_playerData['maxTime'] = $result['tTime'];
+			mysql_free_result($query);
+		}
+	}
+
+	/**
+	 * get the average ping if we have the information
+	 */
+	private function _getAvgPing() {
+		$this->_playerData['avgPing'] = l('No info');
+		$query = mysql_query("SELECT ROUND(SUM(ping) / COUNT(ping), 1) AS av_ping
+					FROM ".DB_PREFIX."_Events_StatsmeLatency
+					WHERE playerId='".mysql_escape_string($this->playerId)."'");
+		if(mysql_num_rows($query) > 1) {
+			$result = mysql_fetch_assoc($query);
+			$this->_playerData['avgPing'] = $result['av_ping'];
+			mysql_free_result($query);
+		}		
 	}
 }
 

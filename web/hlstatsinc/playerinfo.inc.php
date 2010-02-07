@@ -216,7 +216,7 @@ $rcol = "row-dark";
 	</div>
 </div>
 <div id="main">
-	<h1><?php echo l('Player Profile'); ?></h1>
+	<h1><?php echo l('Player Profile'); ?> / <?php echo l('Statistics Summary'); ?></h1>
 	<table border="1" cellspacing="0" cellpadding="4">
 		<tr>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
@@ -273,186 +273,58 @@ $rcol = "row-dark";
 			   ?>
 			</td>
 		</tr>
-		<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
+		<tr>
+			<th><?php echo l("ICQ Number"); ?></th>
 			<td>
 			   <?php
-				echo $g_options["font_normal"];
-				echo l("ICQ Number");
-				echo $g_options["fontend_normal"];
-			   ?>
-			</td>
-			<td>
-			   <?php
-				echo $g_options["font_normal"];
-				if ($playerdata["icq"]) {
+				if ($playerObj->getParam("icq")) {
 					echo "<a href=\"http://www.icq.com/"
-						. urlencode($playerdata["icq"]) . "\" target=\"_blank\">"
-						. htmlspecialchars($playerdata["icq"]) . "</a>";
-				}
-				else {
+						. urlencode($playerObj->getParam("icq")) . "\" target=\"_blank\">"
+						. htmlspecialchars($playerObj->getParam("icq")) . "</a>";
+				} else {
 					echo l("Not specified");
 				}
-				echo $g_options["fontend_normal"];
 			   ?>
 			</td>
 		</tr>
-		<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
-			<td>
-			   <?php
-				echo $g_options["font_normal"];
-				echo l("Player ID");
-				echo $g_options["fontend_normal"];
-			   ?>
-			</td>
-			<td>
-			   <?php
-				echo $g_options["font_normal"];
-				echo $player;
-				echo $g_options["fontend_normal"];
-			   ?>
-			</td>
+		<tr>
+			<th><?php echo l("Player ID"); ?></th>
+			<td><?php echo $player; ?></td>
 		</tr>
-		<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-			<td>
-			   <?php
-				echo $g_options["font_normal"];
-				if (MODE == "LAN") {
+		<tr>
+			<th>
+			   <?php if (MODE == "LAN") {
 					echo l("IP Addresses");
-				}
-				else {
+				} else {
 					echo l("Unique ID(s)");
 				}
-				echo $g_options["fontend_normal"];
 			   ?>
-			</td>
+			</th>
 			<td>
 			   <?php
-				echo $g_options["font_normal"];
 				if (MODE == "NameTrack") {
 					echo l("Unknown");
+				} else {
+					echo $playerObj->getParam('uniqueIds');
 				}
-				else {
-					$query = mysql_query("
-						SELECT uniqueId
-						FROM ".DB_PREFIX."_PlayerUniqueIds
-						WHERE playerId='".mysql_escape_string($player)."'
-					");
-
-					while ($result = mysql_fetch_assoc($query)) {
-						$ustr = $result['uniqueId'].",";
-					}
-					$ustr = trim($ustr,',');
-					echo $ustr;
-					mysql_free_result($query);
-				}
-				echo $g_options["fontend_normal"];
 			   ?>
 			</td>
 		</tr>
-
-		<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
-			<td>
-			   <?php
-				echo $g_options["font_normal"];
-				echo l("Last Connect"),"*";
-				echo $g_options["fontend_normal"];
-			   ?>
-			   </td>
-			<td>
-			   <?php
-				echo $g_options["font_normal"];
-				$query = mysql_query("
-					SELECT DATE_FORMAT(eventTime, '%r, %a. %D %b.') AS eventTime
-					FROM ".DB_PREFIX."_Events_Connects
-					LEFT JOIN ".DB_PREFIX."_Servers ON
-						".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_Connects.serverId
-					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
-						AND playerId='".mysql_escape_string($player)."'
-					ORDER BY eventTime DESC
-					LIMIT 1");
-				$result = mysql_fetch_assoc($query);
-				$lastevent = $result['eventTime'];
-
-				if (!empty($lastevent)) {
-					echo $lastevent;
-				}
-				else {
-					echo l("No info");
-				}
-				echo $g_options["fontend_normal"];
-				mysql_free_result($query);
-			 ?>
-		   </td>
+		<tr>
+			<th><?php echo l("Last Connect"); ?>*</th>
+			<td><?php echo $playerObj->getParam('lastConnect'); ?></td>
 		</tr>
-		<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-			<td>
-			   <?php
-				echo $g_options["font_normal"];
-				echo l("Total Connection Time"),"*";
-				echo $g_options["fontend_normal"];
-			   ?>
-			   </td>
-			<td>
-			   <?php
-				echo $g_options["font_normal"];
-				$query = mysql_query("
-					SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(time))) AS tTime
-					FROM ".DB_PREFIX."_Events_StatsmeTime
-					LEFT JOIN ".DB_PREFIX."_Servers ON
-						".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_StatsmeTime.serverId
-					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
-							AND playerId='".mysql_escape_string($player)."'
-				");
-				$result = mysql_fetch_assoc($query);
-				$tTime = $result['tTime'];
-
-				if (!empty($tTime)) {
-					echo $tTime;
-				}
-				else {
-					echo l("No info");
-				}
-				echo $g_options["fontend_normal"];
-				mysql_free_result($query);
-				?>
-			</td>
+		<tr>
+			<th><?php echo l("Total Connection Time"); ?>*</th>
+			<td><?php echo $playerObj->getParam('maxTime'); ?></td>
 		</tr>
 
-		<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
-			<td>
-			   <?php
-				echo $g_options["font_normal"];
-				echo l("Average Ping");
-				echo $g_options["fontend_normal"];
-			   ?>
-			</td>
-			<td>
-			   <?php
-				echo $g_options["font_normal"];
-				$query = mysql_query("
-					SELECT ROUND(SUM(ping) / COUNT(ping), 1) AS av_ping
-					FROM ".DB_PREFIX."_Events_StatsmeLatency
-					LEFT JOIN ".DB_PREFIX."_Servers ON
-						".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_StatsmeLatency.serverId
-					WHERE
-						".DB_PREFIX."_Servers.game='$game' AND playerId='$player'
-				");
-				$result = mysql_fetch_assoc($query);
-				$av_ping = $result['av_ping'];
-
-				if (!empty($av_ping)) {
-					echo $av_ping;
-				}
-				else {
-					echo l("No info");
-				}
-				echo $g_options["fontend_normal"];
-				mysql_free_result($query);
-				?>
-		   </td>
+		<tr>
+			<th><?php echo l("Average Ping"); ?></th>
+			<td><?php echo $playerObj->getParam('avgPing'); ?></td>
 		</tr>
 	</table>
-	<h1><?php echo l('Statistics Summary'); ?></h1>
+	<h1></h1>
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr valign="top">
