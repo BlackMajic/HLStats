@@ -44,6 +44,8 @@ $player = '';
 $uniqueid = '';
 $killLimit = 5;
 $mode = false;
+$pl_name = '';
+$pl_urlname = '';
 
 if(!empty($_GET["player"])) {
 	if(validateInput($_GET["player"],'digit') === true) {
@@ -164,7 +166,7 @@ $queryPlayer = mysql_query("
 $playerdata = mysql_fetch_assoc($queryPlayer);
 mysql_free_result($queryPlayer);
 */
-
+/*
 $pl_name = $playerdata["lastName"];
 if (strlen($pl_name) > 10) {
 	$pl_shortname = substr($pl_name, 0, 8) . "...";
@@ -172,12 +174,15 @@ if (strlen($pl_name) > 10) {
 else {
 	$pl_shortname = $pl_name;
 }
-$pl_name = ereg_replace(" ", "&nbsp;", htmlspecialchars($pl_name));
-$pl_shortname = ereg_replace(" ", "&nbsp;", htmlspecialchars($pl_shortname));
-$pl_urlname = urlencode($playerdata["lastName"]);
+*/
+$pl_name = ereg_replace(" ", "&nbsp;", htmlspecialchars($playerObj->getParam('name')));
+//$pl_shortname = ereg_replace(" ", "&nbsp;", htmlspecialchars($pl_shortname));
+$pl_urlname = urlencode($playerObj->getParam('lastName'));
 
 
-$game = $playerdata["game"];
+// get the game name
+// if it fails we use the game code which is stored in the player table
+$game = $playerObj->getParam("game");
 $query = mysql_query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='".mysql_escape_string($game)."'");
 if (mysql_num_rows($query) != 1) {
 	$gamename = ucfirst($game);
@@ -199,294 +204,264 @@ pageHeader(
 	$pl_name
 );
 
-if($g_options['showChart'] == "1") { // we want use the flash graphics
-?>
-    <script type="text/javascript" src="hlstatsinc/amcharts/swfobject.js"></script>
-<?php
-}
+$rcol = "row-dark";
 ?>
 
+<div id="sidebar">
+	<h1><?php echo l('Options'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>dsss</li>
+		</ul>
+	</div>
+</div>
+<div id="main">
+	<h1><?php echo l('Player Profile'); ?></h1>
+	<table border="1" cellspacing="0" cellpadding="4">
+		<tr>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
+			   <?php echo l("Member of Clan"); ?>
+			</th>
+			<td>
+				<?php if ($playerObj->getParam("clan")) { ?>
+					<a href="index.php?mode=claninfo&clan=<?php echo $playerObj->getParam("clan"); ?>">
+					<img src="<?php echo $g_options['imgdir']; ?>/clan.gif" width="16" height="16" hspace="4"
+							border="0" align="middle" alt="clan.gif"> />
+					<?php echo htmlspecialchars($playerObj->getParam("clan_name")); ?>
+					</a>
+				<?php }	else {
+					echo l('None');
+				}
+				?>
+			</td>
+		</tr>
+		<tr>
+			<th><?php echo l("Real Name"); ?></th>
+			<td>
+			   <?php
+				if ($playerObj->getParam("fullName")) {
+					echo "<b>" . htmlspecialchars($playerObj->getParam("fullName")) . "</b>";
+				} else {
+					echo l("Unknown");
+				}
+			   ?>
+			</td>
+		</tr>
+		<tr>
+			<th><?php echo l("E-mail Address"); ?></th>
+			<td>
+			   <?php
+				$email = getEmailLink($playerObj->getParam("email"));
+				if (!empty($email)) {
+					echo $email;
+				} else {
+					echo l("Unknown");
+				}
+			   ?>
+			</td>
+		</tr>
+		<tr>
+			<th><?php echo l("Home Page"); ?></th>
+			<td>
+				<?php
+				$url = getLink($playerObj->getParam("homepage"));
+				if (!empty($url)) {
+					echo $url;
+				} else {
+					echo l("Not specified");
+				}
+			   ?>
+			</td>
+		</tr>
+		<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
+			<td>
+			   <?php
+				echo $g_options["font_normal"];
+				echo l("ICQ Number");
+				echo $g_options["fontend_normal"];
+			   ?>
+			</td>
+			<td>
+			   <?php
+				echo $g_options["font_normal"];
+				if ($playerdata["icq"]) {
+					echo "<a href=\"http://www.icq.com/"
+						. urlencode($playerdata["icq"]) . "\" target=\"_blank\">"
+						. htmlspecialchars($playerdata["icq"]) . "</a>";
+				}
+				else {
+					echo l("Not specified");
+				}
+				echo $g_options["fontend_normal"];
+			   ?>
+			</td>
+		</tr>
+		<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
+			<td>
+			   <?php
+				echo $g_options["font_normal"];
+				echo l("Player ID");
+				echo $g_options["fontend_normal"];
+			   ?>
+			</td>
+			<td>
+			   <?php
+				echo $g_options["font_normal"];
+				echo $player;
+				echo $g_options["fontend_normal"];
+			   ?>
+			</td>
+		</tr>
+		<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
+			<td>
+			   <?php
+				echo $g_options["font_normal"];
+				if (MODE == "LAN") {
+					echo l("IP Addresses");
+				}
+				else {
+					echo l("Unique ID(s)");
+				}
+				echo $g_options["fontend_normal"];
+			   ?>
+			</td>
+			<td>
+			   <?php
+				echo $g_options["font_normal"];
+				if (MODE == "NameTrack") {
+					echo l("Unknown");
+				}
+				else {
+					$query = mysql_query("
+						SELECT uniqueId
+						FROM ".DB_PREFIX."_PlayerUniqueIds
+						WHERE playerId='".mysql_escape_string($player)."'
+					");
+
+					while ($result = mysql_fetch_assoc($query)) {
+						$ustr = $result['uniqueId'].",";
+					}
+					$ustr = trim($ustr,',');
+					echo $ustr;
+					mysql_free_result($query);
+				}
+				echo $g_options["fontend_normal"];
+			   ?>
+			</td>
+		</tr>
+
+		<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
+			<td>
+			   <?php
+				echo $g_options["font_normal"];
+				echo l("Last Connect"),"*";
+				echo $g_options["fontend_normal"];
+			   ?>
+			   </td>
+			<td>
+			   <?php
+				echo $g_options["font_normal"];
+				$query = mysql_query("
+					SELECT DATE_FORMAT(eventTime, '%r, %a. %D %b.') AS eventTime
+					FROM ".DB_PREFIX."_Events_Connects
+					LEFT JOIN ".DB_PREFIX."_Servers ON
+						".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_Connects.serverId
+					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
+						AND playerId='".mysql_escape_string($player)."'
+					ORDER BY eventTime DESC
+					LIMIT 1");
+				$result = mysql_fetch_assoc($query);
+				$lastevent = $result['eventTime'];
+
+				if (!empty($lastevent)) {
+					echo $lastevent;
+				}
+				else {
+					echo l("No info");
+				}
+				echo $g_options["fontend_normal"];
+				mysql_free_result($query);
+			 ?>
+		   </td>
+		</tr>
+		<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
+			<td>
+			   <?php
+				echo $g_options["font_normal"];
+				echo l("Total Connection Time"),"*";
+				echo $g_options["fontend_normal"];
+			   ?>
+			   </td>
+			<td>
+			   <?php
+				echo $g_options["font_normal"];
+				$query = mysql_query("
+					SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(time))) AS tTime
+					FROM ".DB_PREFIX."_Events_StatsmeTime
+					LEFT JOIN ".DB_PREFIX."_Servers ON
+						".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_StatsmeTime.serverId
+					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
+							AND playerId='".mysql_escape_string($player)."'
+				");
+				$result = mysql_fetch_assoc($query);
+				$tTime = $result['tTime'];
+
+				if (!empty($tTime)) {
+					echo $tTime;
+				}
+				else {
+					echo l("No info");
+				}
+				echo $g_options["fontend_normal"];
+				mysql_free_result($query);
+				?>
+			</td>
+		</tr>
+
+		<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
+			<td>
+			   <?php
+				echo $g_options["font_normal"];
+				echo l("Average Ping");
+				echo $g_options["fontend_normal"];
+			   ?>
+			</td>
+			<td>
+			   <?php
+				echo $g_options["font_normal"];
+				$query = mysql_query("
+					SELECT ROUND(SUM(ping) / COUNT(ping), 1) AS av_ping
+					FROM ".DB_PREFIX."_Events_StatsmeLatency
+					LEFT JOIN ".DB_PREFIX."_Servers ON
+						".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_StatsmeLatency.serverId
+					WHERE
+						".DB_PREFIX."_Servers.game='$game' AND playerId='$player'
+				");
+				$result = mysql_fetch_assoc($query);
+				$av_ping = $result['av_ping'];
+
+				if (!empty($av_ping)) {
+					echo $av_ping;
+				}
+				else {
+					echo l("No info");
+				}
+				echo $g_options["fontend_normal"];
+				mysql_free_result($query);
+				?>
+		   </td>
+		</tr>
+	</table>
+	<h1><?php echo l('Statistics Summary'); ?></h1>
+
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td width="60%" colspan="2"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo l('Player Profile'); ?></b><?php echo $g_options["fontend_normal"];?></td>
-	<td width="40%" colspan="2"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo l('Statistics Summary'); ?></b><?php echo $g_options["fontend_normal"];?></td>
-</tr>
 <tr valign="top">
 	<td width="5%">&nbsp;</td>
 	<td width="50%">&nbsp;<br>
 		<table width="95%" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options["table_border"]; ?>">
     		<tr>
     			<td>
-    				<table width="100%" border="0" cellspacing="1" cellpadding="4">
-        				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-        					<td>
-        					   <?php
-                                echo $g_options["font_normal"];
-                                echo l("Member of Clan");
-                                echo $g_options["fontend_normal"];
-        					   ?>
-        					</td>
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						if ($playerdata["clan"]) {
-        							echo "&nbsp;<a href=\"index.php?mode=claninfo&clan=" . $playerdata["clan"]
-        								. "\"><img src=\"" . $g_options["imgdir"]
-        								. "/clan.gif\" width='16' height='16' hspace='4' "
-        								. "border='0' align=\"middle\" alt=\"clan.gif\">"
-        								. htmlspecialchars($playerdata["clan_name"]) . "</a>";
-        						}
-        						else {
-        							echo l('None');
-        						}
-        						echo $g_options["fontend_normal"];
-        					   ?>
-        					</td>
-        				</tr>
-        				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						echo l("Real Name");
-        						echo $g_options["fontend_normal"];
-        					   ?>
-        					</td>
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						if ($playerdata["fullName"]) {
-        							echo "<b>" . htmlspecialchars($playerdata["fullName"]) . "</b>";
-        						}
-        						else {
-        							echo l("Unknown");
-        						}
-        						echo $g_options["fontend_normal"];
-        					   ?>
-                            </td>
-        				</tr>
-        				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						echo l("E-mail Address");
-        						echo $g_options["fontend_normal"];
-        					   ?>
-        					</td>
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						$email = getEmailLink($playerdata["email"]);
-        						if (!empty($email)) {
-        							echo $email;
-        						}
-        						else {
-        							echo l("Unknown");
-        						}
-        						echo $g_options["fontend_normal"];
-        					   ?>
-                            </td>
-        				</tr>
-        				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						echo l("Home Page");
-        						echo $g_options["fontend_normal"];
-        					   ?>
-        					</td>
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						$url = getLink($playerdata["homepage"]);
-        						if (!empty($url)) {
-        							echo $url;
-        						}
-        						else {
-        							echo l("Not specified");
-        						}
-        						echo $g_options["fontend_normal"];
-        					   ?>
-        					</td>
-        				</tr>
-        				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						echo l("ICQ Number");
-        						echo $g_options["fontend_normal"];
-        					   ?>
-        					</td>
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						if ($playerdata["icq"]) {
-        							echo "<a href=\"http://www.icq.com/"
-        								. urlencode($playerdata["icq"]) . "\" target=\"_blank\">"
-        								. htmlspecialchars($playerdata["icq"]) . "</a>";
-        						}
-        						else {
-        							echo l("Not specified");
-        						}
-        						echo $g_options["fontend_normal"];
-        					   ?>
-        					</td>
-        				</tr>
-        				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						echo l("Player ID");
-        						echo $g_options["fontend_normal"];
-        					   ?>
-        					</td>
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						echo $player;
-        						echo $g_options["fontend_normal"];
-        					   ?>
-        					</td>
-        				</tr>
-        				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						if (MODE == "LAN") {
-        							echo l("IP Addresses");
-        						}
-        						else {
-        							echo l("Unique ID(s)");
-        						}
-        						echo $g_options["fontend_normal"];
-        					   ?>
-        					</td>
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						if (MODE == "NameTrack") {
-        						    echo l("Unknown");
-        						}
-        						else {
-        							$query = mysql_query("
-        								SELECT uniqueId
-        								FROM ".DB_PREFIX."_PlayerUniqueIds
-        								WHERE playerId='".mysql_escape_string($player)."'
-        							");
-
-        							while ($result = mysql_fetch_assoc($query)) {
-        								$ustr = $result['uniqueId'].",";
-        							}
-        							$ustr = trim($ustr,',');
-        							echo $ustr;
-        							mysql_free_result($query);
-        						}
-        						echo $g_options["fontend_normal"];
-        					   ?>
-        					</td>
-        				</tr>
-
-        				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						echo l("Last Connect"),"*";
-        						echo $g_options["fontend_normal"];
-        					   ?>
-        					   </td>
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						$query = mysql_query("
-        							SELECT DATE_FORMAT(eventTime, '%r, %a. %D %b.') AS eventTime
-        							FROM ".DB_PREFIX."_Events_Connects
-        							LEFT JOIN ".DB_PREFIX."_Servers ON
-        								".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_Connects.serverId
-        							WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
-        								AND playerId='".mysql_escape_string($player)."'
-        							ORDER BY eventTime DESC
-        							LIMIT 1");
-        						$result = mysql_fetch_assoc($query);
-        						$lastevent = $result['eventTime'];
-
-        						if (!empty($lastevent)) {
-        							echo $lastevent;
-        						}
-        						else {
-        							echo l("No info");
-        						}
-        				        echo $g_options["fontend_normal"];
-        				        mysql_free_result($query);
-        				     ?>
-        				   </td>
-        				</tr>
-        				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						echo l("Total Connection Time"),"*";
-        						echo $g_options["fontend_normal"];
-        					   ?>
-        					   </td>
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						$query = mysql_query("
-        							SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(time))) AS tTime
-        							FROM ".DB_PREFIX."_Events_StatsmeTime
-        							LEFT JOIN ".DB_PREFIX."_Servers ON
-        								".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_StatsmeTime.serverId
-        							WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
-        									AND playerId='".mysql_escape_string($player)."'
-        						");
-        						$result = mysql_fetch_assoc($query);
-        						$tTime = $result['tTime'];
-
-        						if (!empty($tTime)) {
-        							echo $tTime;
-        						}
-        						else {
-        							echo l("No info");
-        						}
-        				        echo $g_options["fontend_normal"];
-        				        mysql_free_result($query);
-        				        ?>
-        				    </td>
-        				</tr>
-
-        				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						echo l("Average Ping");
-        						echo $g_options["fontend_normal"];
-        					   ?>
-        					</td>
-        					<td>
-        					   <?php
-        						echo $g_options["font_normal"];
-        						$query = mysql_query("
-        							SELECT ROUND(SUM(ping) / COUNT(ping), 1) AS av_ping
-        							FROM ".DB_PREFIX."_Events_StatsmeLatency
-        							LEFT JOIN ".DB_PREFIX."_Servers ON
-        								".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_StatsmeLatency.serverId
-        							WHERE
-        								".DB_PREFIX."_Servers.game='$game' AND playerId='$player'
-        						");
-        						$result = mysql_fetch_assoc($query);
-        						$av_ping = $result['av_ping'];
-
-        						if (!empty($av_ping)) {
-        							echo $av_ping;
-        						}
-        						else {
-        							echo l("No info");
-        						}
-        				        echo $g_options["fontend_normal"];
-        				        mysql_free_result($query);
-        				       	?>
-        				   </td>
-        				</tr>
-    				</table>
+    				
     			</td>
     		</tr>
 		</table>
@@ -1952,3 +1927,5 @@ if (mysql_num_rows($query) != 0) {
     	<?php echo $g_options["font_small"]; ?><b><?php echo l('Admin Options'); ?>:</b> <a href="<?php echo "index.php?mode=admin&task=toolsEditdetailsPlayer&id=$player"; ?>"><?php echo l('Edit Player Details'); ?></a><?php echo $g_options["fontend_small"]; ?></td>
     </tr>
 </table>
+
+</div>

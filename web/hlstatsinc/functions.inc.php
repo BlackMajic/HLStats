@@ -302,6 +302,68 @@ function pageHeader($title, $location) {
 	include("hlstatsinc/header.inc.php");
 }
 
+/**
+ * get the formated email link
+ * @param string $email
+ * @param [int $maxlenght]
+ * @return string
+ */
+function getEmailLink ($email, $maxlength=40) {
+	$regs = "";
+	if (ereg("(.+)@(.+)", $email, $regs)) {
+		if (strlen($email) > $maxlength) {
+			$email_title = substr($email, 0, $maxlength-3) . "...";
+		} else {
+			$email_title = $email;
+		}
+
+		$email = str_replace("\"", urlencode("\""), $email);
+		$email = str_replace("<",  urlencode("<"),  $email);
+		$email = str_replace(">",  urlencode(">"),  $email);
+
+		return "<a href=\"mailto:$email\">"
+			. htmlentities($email_title, ENT_COMPAT, "UTF-8") . "</a>";
+	}
+	else{
+		return "";
+	}
+}
+
+/**
+ * return formatted link
+ * @param string url
+ * @param int $maxlength
+ * @param string $type
+ * @param string $target
+ * @return string
+ */
+function getLink ($url, $maxlength=40, $type="http://", $target="_blank") {
+	$ret = '';
+	$regs = "";
+	if (!empty($url) && $url != $type) {
+		if (ereg("^$type(.+)", $url, $regs)) {
+			$url = $type . $regs[1];
+		} else {
+			$url = $type . $url;
+		}
+
+		if (strlen($url) > $maxlength) {
+			$url_title = substr($url, 0, $maxlength-3) . "...";
+		} else {
+			$url_title = $url;
+		}
+
+		$url = str_replace("\"", urlencode("\""), $url);
+		$url = str_replace("<",  urlencode("<"),  $url);
+		$url = str_replace(">",  urlencode(">"),  $url);
+
+		$ret = "<a href=\"$url\" target=\"$target\">"
+			. htmlentities($url_title, ENT_COMPAT, "UTF-8") . "</a>";
+	}
+
+	return $ret;
+}
+
 ######## THOSE FUNCTIONS BELOW SHOULD BE CHECKED ############
 
 //
@@ -448,77 +510,10 @@ function getSelect ($name, $values, $currentvalue="",$trans=true)
 }
 
 
-//
-// string getLink (string url[, int maxlength[, string type[, string target]]])
-//
-
-function getLink ($url, $maxlength=40, $type="http://", $target="_blank")
-{
-	$regs = "";
-	if ($url && $url != $type)
-	{
-		if (ereg("^$type(.+)", $url, $regs))
-		{
-			$url = $type . $regs[1];
-		}
-		else
-		{
-			$url = $type . $url;
-		}
-
-		if (strlen($url) > $maxlength)
-		{
-			$url_title = substr($url, 0, $maxlength-3) . "...";
-		}
-		else
-		{
-			$url_title = $url;
-		}
-
-		$url = str_replace("\"", urlencode("\""), $url);
-		$url = str_replace("<",  urlencode("<"),  $url);
-		$url = str_replace(">",  urlencode(">"),  $url);
-
-		return "<a href=\"$url\" target=\"$target\">"
-			. htmlentities($url_title, ENT_COMPAT, "UTF-8") . "</a>";
-	}
-	else
-	{
-		return "";
-	}
-}
 
 
-//
-// string getEmailLink (string email[, int maxlength])
-//
 
-function getEmailLink ($email, $maxlength=40)
-{
-	$regs = "";
-	if (ereg("(.+)@(.+)", $email, $regs))
-	{
-		if (strlen($email) > $maxlength)
-		{
-			$email_title = substr($email, 0, $maxlength-3) . "...";
-		}
-		else
-		{
-			$email_title = $email;
-		}
 
-		$email = str_replace("\"", urlencode("\""), $email);
-		$email = str_replace("<",  urlencode("<"),  $email);
-		$email = str_replace(">",  urlencode(">"),  $email);
-
-		return "<a href=\"mailto:$email\">"
-			. htmlentities($email_title, ENT_COMPAT, "UTF-8") . "</a>";
-	}
-	else
-	{
-		return "";
-	}
-}
 
 
 //

@@ -126,13 +126,6 @@ if(empty($g_options)) {
 	error('Failed to load options.');
 }
 
-// set scripturl if not set in options
-//@todo remove
-if(empty($g_options['scripturl'])) {
-	$g_options["scripturl"] = 'hlstats.php';
-}
-
-
 ////
 //// Main
 ////
