@@ -78,7 +78,8 @@ class Chart {
 		$this->setOption('height',300);
 		//$this->setOption('bgcolor','#ffffff');
 
-		$this->setOption('chartId',$this->_game.'-playeractivity');
+		// set the current day value
+		$this->setOption('curDate',date("Ymd"));
 	}
 
 	/**
@@ -115,7 +116,19 @@ class Chart {
 
 		switch($mode) {
 			case 'playerActivity':
-				$chart = $this->_getPlayerActivity();
+				$this->setOption('chartFile',"tmp/".$this->_game.'-playeractivity'."-".$this->_option['curDate'].".png");
+				
+				// check if we have already a picture
+				// create one only once a day
+				if(file_exists($this->_option['chartFile'])
+					&& SHOW_DEBUG === false) {
+					$chart = $this->_option['chartFile'];
+				}
+				else {
+					// remove old charts
+					$this->_cleanOldCharts($this->_game.'-playeractivity');
+					$chart = $this->_getPlayerActivity();
+				}
 			break;
 
 			case 'mostTimeOnline':
@@ -176,7 +189,6 @@ class Chart {
 		$this->_pData->SetSerieName(l("Disconnects"),'2');
 
 
-
 		$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",8);
 		$this->_pChart->setGraphArea(50,30,$this->_option['width']-10,$this->_option['height']-70);
 		$this->_pChart->drawFilledRoundedRectangle(3,3,$this->_option['width']-3,$this->_option['height']-3,5,240,240,240);
@@ -184,19 +196,26 @@ class Chart {
 		$this->_pChart->drawScale($this->_pData->GetData(),$this->_pData->GetDataDescription(),SCALE_NORMAL,150,150,150,TRUE,0,2);
 		$this->_pChart->drawGrid(4,TRUE,230,230,230,50);
 
-		#  // Draw the cubic curve graph
-		$this->_pChart->drawCubicCurve($this->_pData->GetData(),$this->_pData->GetDataDescription());
-		#
-		#  // Finish the graph
+		// display only more the 3 days as a curve, otherwise as a bar
+		if(count($xLine) >= 4) {
+			// Draw the cubic curve graph
+			$this->_pChart->drawCubicCurve($this->_pData->GetData(),$this->_pData->GetDataDescription());
+		}
+		else {
+			// draw the bar graph
+			$this->_pChart->drawBarGraph($this->_pData->GetData(),$this->_pData->GetDataDescription(),TRUE);
+		}
+		
+		// Finish the graph
 		//$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",8);
 		$this->_pChart->drawLegend(10,$this->_option['height']-40,$this->_pData->GetDataDescription(),255,255,255);
 		$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",10);
 		$this->_pChart->drawTitle(0,20,l("Player activity"),50,50,50,$this->_option['width']);
 
 
-		$this->_pChart->Render("tmp/".$this->_option['chartId'].".png");
+		$this->_pChart->Render($this->_option['chartFile']);
 
-		return "tmp/".$this->_option['chartId'].".png";
+		return $this->_option['chartFile'];
 	}
 
 	/**
@@ -281,6 +300,18 @@ class Chart {
 
 		if($this->_pChart == false) {
 			$this->_pChart = new pChart($this->_option['width'],$this->_option['height']);
+		}
+	}
+
+	/**
+	 * cleans old chart data to avoid data waste
+	 */
+	private function _cleanOldCharts($name) {
+		$data = glob('tmp/'.$name.'/*');
+		if(!empty($data)) {
+			foreach($data as $c) {
+				unlink($c);
+			}
 		}
 	}
 
