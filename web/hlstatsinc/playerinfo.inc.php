@@ -43,6 +43,7 @@
 $player = '';
 $uniqueid = '';
 $killLimit = 5;
+$mode = false;
 
 if(!empty($_GET["player"])) {
 	if(validateInput($_GET["player"],'digit') === true) {
@@ -52,6 +53,7 @@ if(!empty($_GET["player"])) {
 if(!empty($_GET["uniqueid"])) {
 	if(validateInput($_GET["uniqueid"],'digit') === true) {
 		$uniqueid  = $_GET["uniqueid"];
+		$mode = true;
 	}
 }
 if(!empty($_GET['killLimit'])) {
@@ -59,7 +61,8 @@ if(!empty($_GET['killLimit'])) {
 		$killLimit = $_GET['killLimit'];
 	}
 }
-
+/*
+@todo: remove
 if (!$player && $uniqueid) {
 	if (!$game) {
 		header("Location: index.php?mode=search&st=uniqueid&q=$uniqueid");
@@ -87,7 +90,14 @@ if (!$player && $uniqueid) {
 elseif (!$player && !$uniqueid) {
 	error("No player ID specified.");
 }
+*/
 
+require('class/player.class.php');
+$playerObj = new Player($player,$mode,$game);
+if($playerObj === false) {
+	die('No such player');
+}
+/*
 if(defined('ELORATING') && ELORATING === "1") {
 	$queryPlayer = mysql_query("
 		SELECT
@@ -121,7 +131,10 @@ elseif(defined('ELORATING') && ELORATING === "2") {
 	//@todo
 }
 else {
-	$queryPlayer = mysql_query("
+*/
+
+/*
+$queryPlayer = mysql_query("
 		SELECT
 			".DB_PREFIX."_Players.lastName,
 			".DB_PREFIX."_Players.clan,
@@ -146,10 +159,11 @@ else {
 	");
 	if (mysql_num_rows($queryPlayer) != 1)
 		error("No such player '$player'.");
-}
+//}
 
 $playerdata = mysql_fetch_assoc($queryPlayer);
 mysql_free_result($queryPlayer);
+*/
 
 $pl_name = $playerdata["lastName"];
 if (strlen($pl_name) > 10) {
