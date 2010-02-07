@@ -309,7 +309,9 @@ function pageHeader($title, $location) {
  * @return string
  */
 function getEmailLink ($email, $maxlength=40) {
-	$regs = "";
+	$ret = '';
+	$regs = '';
+	
 	if (ereg("(.+)@(.+)", $email, $regs)) {
 		if (strlen($email) > $maxlength) {
 			$email_title = substr($email, 0, $maxlength-3) . "...";
@@ -321,12 +323,11 @@ function getEmailLink ($email, $maxlength=40) {
 		$email = str_replace("<",  urlencode("<"),  $email);
 		$email = str_replace(">",  urlencode(">"),  $email);
 
-		return "<a href=\"mailto:$email\">"
+		$ret =  "<a href=\"mailto:$email\">"
 			. htmlentities($email_title, ENT_COMPAT, "UTF-8") . "</a>";
 	}
-	else{
-		return "";
-	}
+
+	return $ret;
 }
 
 /**
