@@ -11,4 +11,4 @@
 #
 
 UPDATE #DB_PREFIX#_Options SET `keyname` = 'showChart' WHERE `keyname` = 'useFlash';
-DELETE FROM `#DB_PREFIX#_Options` WHERE `#DB_PREFIX#_Options`.`keyname` = 'scripturl';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'scripturl';
