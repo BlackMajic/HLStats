@@ -211,15 +211,23 @@ $rcol = "row-dark";
 	<h1><?php echo l('Options'); ?></h1>
 	<div class="left-box">
 		<ul class="sidemenu">
-			<li>dsss</li>
+			<li>
+				<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo('Event History'); ?></a>
+			</li>
+			<li>
+				<a href="index.php?mode=playerchathistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo l('Chat History'); ?></a>
+			</li>
+			<li>
+				<a href="index.php?mode=search&st=player&q=<?php echo $pl_urlname; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/search.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="search.gif"><?php echo l('Find other players with the same name'); ?></a>
+			</li>
 		</ul>
 	</div>
 </div>
 <div id="main">
 	<h1><?php echo l('Player Profile'); ?> / <?php echo l('Statistics Summary'); ?></h1>
 	<table border="1" cellspacing="0" cellpadding="4" width="100%">
-		<tr>
-			<th class="<?php echo toggleRowClass($rcol); ?>">
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
+			<th>
 			   <?php echo l("Member of Clan"); ?>
 			</th>
 			<td>
@@ -250,7 +258,7 @@ $rcol = "row-dark";
 				<?php } ?>
 			 </td>
 		</tr>
-		<tr>
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l("Real Name"); ?></th>
 			<td>
 			   <?php
@@ -267,7 +275,7 @@ $rcol = "row-dark";
 				(<?php echo l('ordered by Points'); ?>)
 			</td>
 		</tr>
-		<tr>
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l("E-mail Address"); ?></th>
 			<td>
 			   <?php
@@ -282,7 +290,7 @@ $rcol = "row-dark";
 			<th><?php echo l("Kills"); ?></th>
 			<td><?php echo $playerObj->getParam("kills"); ?></td>
 		</tr>
-		<tr>
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l("Home Page"); ?></th>
 			<td>
 				<?php
@@ -297,7 +305,7 @@ $rcol = "row-dark";
 			<th><?php echo l("Deaths"); ?></th>
 			<td><?php echo $playerObj->getParam("deaths"); ?></td>
 		</tr>
-		<tr>
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l("ICQ Number"); ?></th>
 			<td>
 			   <?php
@@ -313,13 +321,13 @@ $rcol = "row-dark";
 			<th><?php echo l("Suicides"); ?></th>
 			<td><?php echo $playerObj->getParam("suicides"); ?></td>
 		</tr>
-		<tr>
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l("Player ID"); ?></th>
 			<td><?php echo $player; ?></td>
 			<th><?php echo l("Kills per Death"); ?></th>
 			<td><?php echo $playerObj->getParam("kpd"); ?></t>
 		</tr>
-		<tr>
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th>
 			   <?php if (MODE == "LAN") {
 					echo l("IP Addresses");
@@ -340,97 +348,25 @@ $rcol = "row-dark";
 			<th><?php echo l("Teammate Kills"); ?>*</th>
 			<td><?php echo $playerObj->getParam("teamkills"); ?></td>
 		</tr>
-		<tr>
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l("Last Connect"); ?>*</th>
 			<td><?php echo $playerObj->getParam('lastConnect'); ?></td>
 			<th><?php echo l("Weapon Accuracy"); ?></th>
 			<td><?php echo $playerObj->getParam("accuracy"); ?>%</td>
 		</tr>
-		<tr>
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l("Total Connection Time"); ?>*</th>
 			<td><?php echo $playerObj->getParam('maxTime'); ?></td>
 			<td colspan="2">&nbsp;</td>
 		</tr>
 
-		<tr>
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l("Average Ping"); ?></th>
 			<td><?php echo $playerObj->getParam('avgPing'); ?></td>
 			<td colspan="2">&nbsp;</td>
 		</tr>
 	</table>
 	<h1></h1>
-
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr valign="top">
-	<td width="5%">&nbsp;</td>
-	<td width="50%">&nbsp;<br>
-	</td>
-	<td width="5%">&nbsp;</td>
-	<td width="40%">&nbsp;<br>
-		<table width="100%" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options["table_border"]; ?>">
-		<tr>
-			<td>
-				<table width="100%" border="0" cellspacing="1" cellpadding="4">
-
-				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-
-				</tr>
-
-				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
-
-				</tr>
-<?php if(defined('ELORATING') && (ELORATING === "1" || ELORATING === "2")) { ?>
-				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-					<td width="45%">
-					   <?php
-						echo $g_options["font_normal"];
-						echo l("Rating (RD)");
-						echo $g_options["fontend_normal"];
-					   ?>
-					</td>
-					<td width="55%">
-					   <?php
-						echo $g_options["font_normal"];
-						echo "<b>".$playerdata["rating"]."</b>";
-						echo " (".$playerdata["rd"].")";
-						echo $g_options["fontend_normal"];
-					   ?>
-					</td>
-				</tr>
-<?php } ?>
-				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-
-				</tr>
-
-				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
-
-				</tr>
-
-				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-
-				</tr>
-
-				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
-
-				</tr>
-
-				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-
-				</tr>
-
-				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
-
-				</tr>
-				</table>
-			</td>
-		</tr>
-		</table><br>
-		<?php echo  $g_options["font_normal"]; ?>
-		&nbsp;<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo('Event History'); ?></a><br />
-		&nbsp;<a href="index.php?mode=playerchathistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo l('Chat History'); ?></a><br />
-		&nbsp;<a href="index.php?mode=search&st=player&q=<?php echo $pl_urlname; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/search.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="search.gif"><?php echo l('Find other players with the same name'); ?></a><?php echo $g_options["fontend_normal"]; ?></td>
-</tr>
-</table>
 <p>&nbsp;</p>
 <?php
 	if($g_options['showChart'] == "1") {
