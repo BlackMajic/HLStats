@@ -99,6 +99,8 @@ $playerObj = new Player($player,$mode,$game);
 if($playerObj === false) {
 	die('No such player');
 }
+$playerObj->loadFullInformation();
+
 /*
 if(defined('ELORATING') && ELORATING === "1") {
 	$queryPlayer = mysql_query("
@@ -176,7 +178,8 @@ else {
 }
 */
 
-$pl_name = ereg_replace(" ", "&nbsp;", htmlspecialchars($playerObj->getParam('name')));
+//$pl_name = ereg_replace(" ", "&nbsp;", htmlspecialchars($playerObj->getParam('name')));
+$pl_name = makeSavePlayerName($playerObj->getParam('name'));
 $pl_urlname = urlencode($playerObj->getParam('lastName'));
 
 
@@ -366,8 +369,40 @@ $rcol = "row-dark";
 			<td colspan="2">&nbsp;</td>
 		</tr>
 	</table>
-	<h1></h1>
-<p>&nbsp;</p>
+	<a name="aliases"></a>
+	<h1>
+		<?php echo l('Aliases'); ?>
+		<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>#aliases"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" /></a>
+	</h1>
+	<?php
+	$aliases = $playerObj->getParam('aliases');
+	if(!empty($aliases)) { ?>
+	<table cellpadding="2" cellspacing="0" border="1" width="100%">
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
+			<th><?php echo l('Name'); ?></th>
+			<th><?php echo l('Used'); ?></th>
+			<th><?php echo l('Kills'); ?></th>
+			<th><?php echo l('Deaths'); ?></th>
+			<th><?php echo l('Kills per Death'); ?></th>
+			<th><?php echo l('Suicides'); ?></th>
+		</tr>
+		<?php
+		foreach ($aliases as $entry) {
+			echo '<tr class="',toggleRowClass($rcol),'">';
+			echo '<td>',makeSavePlayerName($entry['name']),'</td>';
+			echo '<td>',$entry['lastuse'],'</td>';
+			echo '<td>',$entry['numuses'],'</td>';
+			echo '<td>',$entry['kills'],'</td>';
+			echo '<td>',$entry['deaths'],'</td>';
+			echo '<td>',$entry['kpd'],'</td>';
+			echo '<td>',$entry['suicides'],'</td>';
+			echo '</tr>';
+		}
+		?>
+	</table>
+
+	<?php } ?>
+
 <?php
 	if($g_options['showChart'] == "1") {
 		$query = mysql_query("SELECT
@@ -473,7 +508,6 @@ $rcol = "row-dark";
 	</td>
 </tr>
 </table>
-<p>&nbsp;</p>
 <?php
 		}
 	}
@@ -557,7 +591,7 @@ $rcol = "row-dark";
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
-	<td width="100%"><a name="aliases"></a>
+	<td width="100%"></a>
 <?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b><?php echo l('Aliases'); ?></b><?php echo $g_options["fontend_normal"];?></td>
 </tr>
 <tr>

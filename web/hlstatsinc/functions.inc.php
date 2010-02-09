@@ -66,6 +66,13 @@ function sanitize($text) {
 }
 
 /**
+ * make a save player name and keeping the special tags and stuff
+ */
+function makeSavePlayerName($name) {
+	return htmlentities($name, ENT_QUOTES, "UTF-8");
+}
+
+/**
  * check if we have a correct ip
  *
  * @param string $ip
@@ -311,7 +318,7 @@ function pageHeader($title, $location) {
 function getEmailLink ($email, $maxlength=40) {
 	$ret = '';
 	$regs = '';
-	
+
 	if (ereg("(.+)@(.+)", $email, $regs)) {
 		if (strlen($email) > $maxlength) {
 			$email_title = substr($email, 0, $maxlength-3) . "...";

@@ -133,7 +133,12 @@ class Player {
 				$this->_playerData = $result;
 			}
 		}
+	}
 
+	/**
+	 * load the full information needed for player info page
+	 */
+	public function loadFullInformation() {
 		// load additional stuff and save it into the _playerData array
 		$this->_getUniqueIds();
 		$this->_getLastConnect();
@@ -141,6 +146,7 @@ class Player {
 		$this->_getAvgPing();
 		$this->_getTeamkills();
 		$this->_getWeaponaccuracy();
+		$this->_getAliasTable();
 
 		$this->_getRank('rankPoints');
 	}
@@ -286,6 +292,24 @@ class Player {
 			$result = mysql_fetch_assoc($query);
 			$this->_playerData['accuracy'] = $result['accuracy'];
 			mysql_free_result($query);
+		}
+	}
+
+	/**
+	 * get the last 10 aliases
+	 */
+	private function _getAliasTable() {
+		$this->_playerData['aliases'] = array();
+		$query = mysql_query("SELECT name, lastuse, numuses, kills,
+								  deaths, IFNULL(kills / deaths,'-') AS kpd,suicides
+							  FROM ".DB_PREFIX."_PlayerNames
+							  WHERE playerId='".mysql_escape_string($this->playerId)."'
+							  ORDER BY lastuse DESC
+							  LIMIT 10");
+		if(mysql_num_rows($query) > 0) {
+			while($result = mysql_fetch_assoc($query)) {
+				$this->_playerData['aliases'][] = $result;
+			}
 		}
 	}
 }

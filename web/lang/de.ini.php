@@ -509,3 +509,5 @@ Search Results = Suchergebnisse
 Show only events of type = Zeige nur Events von dem Typ
 
 Player activity = Spieler aktivität
+
+Direct Link = Direktlink
