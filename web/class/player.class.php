@@ -61,10 +61,10 @@ class Player {
 	 */
 	public function __construct($id,$mode,$game) {
 		$ret = false;
-		
+
 		if(!empty($id)) {
 			$this->_game = $game;
-			
+
 			if($mode === false) {
 				$this->playerId = $id;
 			}
@@ -92,7 +92,7 @@ class Player {
 	 */
 	public function getParam($param) {
 		$ret = false;
-		
+
 		if(!empty($param)) {
 			if(isset($this->_playerData[$param])) {
 				$ret = $this->_playerData[$param];
@@ -134,10 +134,15 @@ class Player {
 			}
 		}
 
+		// load additional stuff and save it into the _playerData array
 		$this->_getUniqueIds();
 		$this->_getLastConnect();
 		$this->_getMaxConnectTime();
 		$this->_getAvgPing();
+		$this->_getTeamkills();
+		$this->_getWeaponaccuracy();
+
+		$this->_getRank('rankPoints');
 	}
 
 	/**
@@ -146,18 +151,18 @@ class Player {
 	 */
 	private function _lookupPlayerIdFromUniqeId($id) {
 		$ret = false;
-		
+
 		$query = mysql_query("SELECT playerId FROM ".DB_PREFIX."_PlayerUniqueIds
 					WHERE uniqueId='".mysql_escape_string($id)."'
 						AND game='".mysql_escape_string($this->_game)."'");
 
-		if(mysql_num_rows($query) > 1) {
+		if(mysql_num_rows($query) > 0) {
 			$result = mysql_fetch_assoc($query);
 			$this->playerId = $result['playerId'];
 
 			$ret = true;
 		}
-				
+
 		return $ret;
 	}
 
@@ -169,7 +174,7 @@ class Player {
 		$query = mysql_query("SELECT uniqueId
 						FROM ".DB_PREFIX."_PlayerUniqueIds
 						WHERE playerId='".mysql_escape_string($this->playerId)."'");
-		if(mysql_num_rows($query) > 1) {
+		if(mysql_num_rows($query) > 0) {
 			while ($result = mysql_fetch_assoc($query)) {
 				$ret = $result['uniqueId'].",";
 			}
@@ -186,7 +191,7 @@ class Player {
 		$query = mysql_query("SELECT MAX(eventTime) AS eventTime
 					FROM ".DB_PREFIX."_Events_Connects
 					WHERE playerId='".mysql_escape_string($this->playerId)."'");
-		if(mysql_num_rows($query) > 1) {
+		if(mysql_num_rows($query) > 0) {
 			$result = mysql_fetch_assoc($query);
 			$this->_playerData['lastConnect'] = $result['eventTime'];
 			mysql_free_result($query);
@@ -202,7 +207,7 @@ class Player {
 		$query = mysql_query("SELECT SEC_TO_TIME(SUM(TIME_TO_SEC(time))) AS tTime
 					FROM ".DB_PREFIX."_Events_StatsmeTime
 					WHERE playerId='".mysql_escape_string($this->playerId)."'");
-		if(mysql_num_rows($query) > 1) {
+		if(mysql_num_rows($query) > 0) {
 			$result = mysql_fetch_assoc($query);
 			$this->_playerData['maxTime'] = $result['tTime'];
 			mysql_free_result($query);
@@ -217,11 +222,71 @@ class Player {
 		$query = mysql_query("SELECT ROUND(SUM(ping) / COUNT(ping), 1) AS av_ping
 					FROM ".DB_PREFIX."_Events_StatsmeLatency
 					WHERE playerId='".mysql_escape_string($this->playerId)."'");
-		if(mysql_num_rows($query) > 1) {
+		if(mysql_num_rows($query) > 0) {
 			$result = mysql_fetch_assoc($query);
 			$this->_playerData['avgPing'] = $result['av_ping'];
 			mysql_free_result($query);
-		}		
+		}
+	}
+
+	/**
+	 * get the rank by given ORDER
+	 * @param $mode string The mode on which order the rank is based
+	 */
+	private function _getRank($mode) {
+		switch($mode) {
+			case 'rankPoints':
+			default:
+				$query = mysql_query("SELECT count(*) AS rank
+							FROM ".DB_PREFIX."_Players
+							WHERE active = 1
+								AND skill >
+							(SELECT skill FROM ".DB_PREFIX."_Players
+								WHERE playerId = '".mysql_escape_string($this->playerId)."')");
+		}
+		if(mysql_num_rows($query) > 0) {
+			$result = mysql_fetch_assoc($query);
+			// the result gives the rows which are "above" the searched row
+			// we have to add 1 to get the position
+			$this->_playerData[$mode] = $result['rank']+1;
+			mysql_free_result($query);
+		}
+	}
+
+	/**
+	 * get the teamkills for this player and game
+	 */
+	private function _getTeamkills() {
+		$this->_playerData['teamkills'] = l('No info');
+		$query = mysql_query("SELECT COUNT(*) tk
+				FROM ".DB_PREFIX."_Events_Teamkills
+				LEFT JOIN ".DB_PREFIX."_Servers ON ".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Teamkills.serverId
+				WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'
+					AND killerId='".mysql_escape_string($this->playerId)."'");
+		if(mysql_num_rows($query) > 0) {
+			$result = mysql_fetch_assoc($query);
+			$this->_playerData['teamkills'] = $result['tk'];
+		}
+	}
+
+	/**
+	 * get the weapon accuracy
+	 * if we have the info
+	 */
+	private function _getWeaponaccuracy() {
+		$this->_playerData['accuracy'] = l('No info');
+		$query = mysql_query("SELECT
+					IFNULL(ROUND((SUM(".DB_PREFIX."_Events_Statsme.hits)
+						/ SUM(".DB_PREFIX."_Events_Statsme.shots) * 100), 1), 0.0) AS accuracy
+					FROM ".DB_PREFIX."_Events_Statsme
+				LEFT JOIN ".DB_PREFIX."_Servers ON ".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Statsme.serverId
+				WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'
+					AND playerId='".mysql_escape_string($this->playerId)."'");
+		if(mysql_num_rows($query) > 0) {
+			$result = mysql_fetch_assoc($query);
+			$this->_playerData['accuracy'] = $result['accuracy'];
+			mysql_free_result($query);
+		}
 	}
 }
 

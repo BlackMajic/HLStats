@@ -175,8 +175,8 @@ else {
 	$pl_shortname = $pl_name;
 }
 */
+
 $pl_name = ereg_replace(" ", "&nbsp;", htmlspecialchars($playerObj->getParam('name')));
-//$pl_shortname = ereg_replace(" ", "&nbsp;", htmlspecialchars($pl_shortname));
 $pl_urlname = urlencode($playerObj->getParam('lastName'));
 
 
@@ -217,7 +217,7 @@ $rcol = "row-dark";
 </div>
 <div id="main">
 	<h1><?php echo l('Player Profile'); ?> / <?php echo l('Statistics Summary'); ?></h1>
-	<table border="1" cellspacing="0" cellpadding="4">
+	<table border="1" cellspacing="0" cellpadding="4" width="100%">
 		<tr>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
 			   <?php echo l("Member of Clan"); ?>
@@ -234,6 +234,21 @@ $rcol = "row-dark";
 				}
 				?>
 			</td>
+			<th align="right"><?php	echo l("Points"); ?></th>
+			<td>
+				<?php echo $playerObj->getParam("skill");?>
+
+				<?php if($playerObj->getParam('skill') > $playerObj->getParam('oldSkill')) { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/skill_up.gif" width='16' height='16' hspace='4'
+					border='0' align="middle" alt="skill_up.gif" />
+				<?php } elseif ($playerObj->getParam('skill') < $playerObj->getParam('oldSkill')) { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/skill_down.gif" width='16' height='16' hspace='4'
+					border='0' align="middle" alt="skill_down" />
+				<?php } else { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/skill_stay.gif" width='16' height='16' hspace='4'
+					border='0' align="middle" alt="skill_stay.gif" />
+				<?php } ?>
+			 </td>
 		</tr>
 		<tr>
 			<th><?php echo l("Real Name"); ?></th>
@@ -245,6 +260,11 @@ $rcol = "row-dark";
 					echo l("Unknown");
 				}
 			   ?>
+			</td>
+			<th align="right"><?php echo l("Rank"); ?></th>
+			<td>
+				<b><?php echo $playerObj->getParam('rankPoints'); ?></b>
+				(<?php echo l('ordered by Points'); ?>)
 			</td>
 		</tr>
 		<tr>
@@ -259,6 +279,8 @@ $rcol = "row-dark";
 				}
 			   ?>
 			</td>
+			<th><?php echo l("Kills"); ?></th>
+			<td><?php echo $playerObj->getParam("kills"); ?></td>
 		</tr>
 		<tr>
 			<th><?php echo l("Home Page"); ?></th>
@@ -272,6 +294,8 @@ $rcol = "row-dark";
 				}
 			   ?>
 			</td>
+			<th><?php echo l("Deaths"); ?></th>
+			<td><?php echo $playerObj->getParam("deaths"); ?></td>
 		</tr>
 		<tr>
 			<th><?php echo l("ICQ Number"); ?></th>
@@ -286,10 +310,14 @@ $rcol = "row-dark";
 				}
 			   ?>
 			</td>
+			<th><?php echo l("Suicides"); ?></th>
+			<td><?php echo $playerObj->getParam("suicides"); ?></td>
 		</tr>
 		<tr>
 			<th><?php echo l("Player ID"); ?></th>
 			<td><?php echo $player; ?></td>
+			<th><?php echo l("Kills per Death"); ?></th>
+			<td><?php echo $playerObj->getParam("kpd"); ?></t>
 		</tr>
 		<tr>
 			<th>
@@ -309,19 +337,25 @@ $rcol = "row-dark";
 				}
 			   ?>
 			</td>
+			<th><?php echo l("Teammate Kills"); ?>*</th>
+			<td><?php echo $playerObj->getParam("teamkills"); ?></td>
 		</tr>
 		<tr>
 			<th><?php echo l("Last Connect"); ?>*</th>
 			<td><?php echo $playerObj->getParam('lastConnect'); ?></td>
+			<th><?php echo l("Weapon Accuracy"); ?></th>
+			<td><?php echo $playerObj->getParam("accuracy"); ?>%</td>
 		</tr>
 		<tr>
 			<th><?php echo l("Total Connection Time"); ?>*</th>
 			<td><?php echo $playerObj->getParam('maxTime'); ?></td>
+			<td colspan="2">&nbsp;</td>
 		</tr>
 
 		<tr>
 			<th><?php echo l("Average Ping"); ?></th>
 			<td><?php echo $playerObj->getParam('avgPing'); ?></td>
+			<td colspan="2">&nbsp;</td>
 		</tr>
 	</table>
 	<h1></h1>
@@ -330,13 +364,6 @@ $rcol = "row-dark";
 <tr valign="top">
 	<td width="5%">&nbsp;</td>
 	<td width="50%">&nbsp;<br>
-		<table width="95%" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options["table_border"]; ?>">
-    		<tr>
-    			<td>
-    				
-    			</td>
-    		</tr>
-		</table>
 	</td>
 	<td width="5%">&nbsp;</td>
 	<td width="40%">&nbsp;<br>
@@ -346,69 +373,11 @@ $rcol = "row-dark";
 				<table width="100%" border="0" cellspacing="1" cellpadding="4">
 
 				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-					<td width="45%">
-					   <?php
-						echo $g_options["font_normal"];
-						echo l("Points");
-						echo $g_options["fontend_normal"];
-					   ?>
-					</td>
-					<td width="55%">
-					   <?php
-						echo $g_options["font_normal"];
-						echo "<b>" . $playerdata["skill"] . "</b>";
 
-						// check if we have a top or flop
-						if($playerdata['skill'] > $playerdata['oldSkill']) {
-							echo "<img src=\"" . $g_options["imgdir"]
-							. "/skill_up.gif\" width='16' height='16' hspace='4' "
-							. "border='0' align=\"middle\" alt=\"skill_up.gif\">";
-						}
-						elseif ($playerdata['skill'] < $playerdata['oldSkill']) {
-							echo "<img src=\"" . $g_options["imgdir"]
-							. "/skill_down.gif\" width='16' height='16' hspace='4' "
-							. "border='0' align=\"middle\" alt=\"skill_down\">";
-						}
-						else {
-							echo "<img src=\"" . $g_options["imgdir"]
-							. "/skill_stay.gif\" width='16' height='16' hspace='4' "
-							. "border='0' align=\"middle\" alt=\"skill_stay.gif\">";
-						}
-
-						echo $g_options["fontend_normal"];
-					   ?>
-					</td>
 				</tr>
 
 				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
-					<td width="45%">
-					   <?php
-						echo $g_options["font_normal"];
-						echo l("Rank");
-						echo $g_options["fontend_normal"];
-					   ?>
-					</td>
-					<td width="55%">
-					   <?php
-						echo $g_options["font_normal"];
 
-						$query = mysql_query("
-							SELECT skill,playerId
-							FROM ".DB_PREFIX."_Players
-							WHERE game='".mysql_escape_string($game)."'
-							ORDER BY skill DESC
-						");
-						$ranKnum = 1;
-						$row = '';
-						while ($row = mysql_fetch_assoc($query)) {
-							$statsArr[$row['playerId']] = $ranKnum;
-							$ranKnum++;
-						}
-						mysql_free_result($query);
-						echo "<b>" . $statsArr[$player] . "</b> (".l('ordered by Points').")";
-						echo $g_options["fontend_normal"];
-					   ?>
-					</td>
 				</tr>
 <?php if(defined('ELORATING') && (ELORATING === "1" || ELORATING === "2")) { ?>
 				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
@@ -430,151 +399,27 @@ $rcol = "row-dark";
 				</tr>
 <?php } ?>
 				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-					<td width="45%">
-					   <?php
-						echo $g_options["font_normal"];
-						echo l("Kills");
-						echo $g_options["fontend_normal"];
-					   ?>
-					</td>
-					<td width="55%">
-					   <?php
-						echo $g_options["font_normal"];
-						echo $playerdata["kills"];
-						$query = mysql_query("
-							SELECT COUNT(*) as kc
-							FROM ".DB_PREFIX."_Events_Frags
-							LEFT JOIN ".DB_PREFIX."_Servers ON
-								".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Frags.serverId
-							WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
-								AND killerId='".mysql_escape_string($player)."'");
-						$result = mysql_fetch_assoc($query);
-						$realkills = $result['kc'];
-						echo " ($realkills)";
-						echo $g_options["fontend_normal"];
-						mysql_free_result($query);
-					   ?>
-					</td>
+
 				</tr>
 
 				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
-					<td width="45%">
-					   <?php
-						echo $g_options["font_normal"];
-						echo l("Deaths");
-						echo $g_options["fontend_normal"];
-					   ?>
-					</td>
-					<td width="55%">
-					   <?php
-						echo $g_options["font_normal"];
-						echo $playerdata["deaths"];
-						echo $g_options["fontend_normal"];
-					   ?>
-					</td>
+
 				</tr>
 
 				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-					<td width="45%">
-					   <?php
-						echo $g_options["font_normal"];
-						echo l("Suicides");
-						echo $g_options["fontend_normal"];
-					   ?>
-					</td>
-					<td width="55%">
-					   <?php
-						echo $g_options["font_normal"];
-						echo $playerdata["suicides"];
-						echo $g_options["fontend_normal"];
-					   ?>
-					</td>
+
 				</tr>
 
 				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
-					<td width="45%">
-					   <?php
-						echo $g_options["font_normal"];
-						echo l("Kills per Death");
-						echo $g_options["fontend_normal"];
-					   ?>
-					</td>
-					<td width="55%">
-					   <?php
-						echo $g_options["font_normal"];
-						echo $playerdata["kpd"];
-						echo $g_options["fontend_normal"];
-					   ?>
-					</td>
+
 				</tr>
 
 				<tr bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-					<td width="45%">
-					   <?php
-						echo $g_options["font_normal"];
-						echo l("Teammate Kills"),"*";
-						echo $g_options["fontend_normal"];
-					   ?>
-					</td>
-					<td width="55%">
-					   <?php
-						echo $g_options["font_normal"];
 
-						$query = mysql_query("
-							SELECT COUNT(*) tk
-							FROM ".DB_PREFIX."_Events_Teamkills
-							LEFT JOIN ".DB_PREFIX."_Servers ON
-								".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Teamkills.serverId
-							WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
-								AND killerId='".mysql_escape_string($player)."'
-						");
-						$result = mysql_fetch_assoc($query);
-						$playerdata["teamkills"] = $result['tk'];
-
-						echo $playerdata["teamkills"];
-						echo $g_options["fontend_normal"];
-						mysql_free_result($query);
-					   ?>
-					</td>
 				</tr>
 
 				<tr bgcolor="<?php echo $g_options["table_bgcolor2"]; ?>">
-					<td width="45%">
-					   <?php
-						echo $g_options["font_normal"];
-						echo l("Weapon Accuracy");
-						echo $g_options["fontend_normal"];
-					   ?>
-					</td>
-					<td width="55%">
-					   <?php
-						echo $g_options["font_normal"];
 
-						$query = mysql_query("
-							SELECT
-								IFNULL(ROUND((SUM(".DB_PREFIX."_Events_Statsme.hits)
-									/ SUM(".DB_PREFIX."_Events_Statsme.shots) * 100), 1), 0.0) AS accuracy
-							FROM
-								".DB_PREFIX."_Events_Statsme
-							LEFT JOIN ".DB_PREFIX."_Servers ON
-								".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Statsme.serverId
-							WHERE
-								".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
-								AND playerId='".mysql_escape_string($player)."'
-						");
-						$result = mysql_fetch_assoc($query);
-						$playerdata["accuracy"] = $result['accuracy'];
-
-						if (empty($playerdata["accuracy"])){
-							echo l("Unknown");
-						}
-						else {
-							echo $playerdata["accuracy"] . "%";
-						}
-						echo $g_options["fontend_normal"];
-						mysql_free_result($query);
-					   ?>
-					</td>
 				</tr>
 				</table>
 			</td>
