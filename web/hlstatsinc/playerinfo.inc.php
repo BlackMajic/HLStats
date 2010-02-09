@@ -381,6 +381,7 @@ $rcol = "row-dark";
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l('Name'); ?></th>
 			<th><?php echo l('Used'); ?></th>
+			<th><?php echo l('Last Use'); ?></th>
 			<th><?php echo l('Kills'); ?></th>
 			<th><?php echo l('Deaths'); ?></th>
 			<th><?php echo l('Kills per Death'); ?></th>
@@ -390,8 +391,8 @@ $rcol = "row-dark";
 		foreach ($aliases as $entry) {
 			echo '<tr class="',toggleRowClass($rcol),'">';
 			echo '<td>',makeSavePlayerName($entry['name']),'</td>';
-			echo '<td>',$entry['lastuse'],'</td>';
 			echo '<td>',$entry['numuses'],'</td>';
+			echo '<td>',$entry['lastuse'],'</td>';
 			echo '<td>',$entry['kills'],'</td>';
 			echo '<td>',$entry['deaths'],'</td>';
 			echo '<td>',$entry['kpd'],'</td>';
