@@ -99,6 +99,7 @@ $playerObj = new Player($player,$mode,$game);
 if($playerObj === false) {
 	die('No such player');
 }
+$playerObj->setOption('killLimit',$killLimit);
 $playerObj->loadFullInformation();
 
 /*
@@ -227,6 +228,7 @@ $rcol = "row-dark";
 	</div>
 </div>
 <div id="main">
+	<h2><?php echo $pl_name; ?></h2>
 	<h1><?php echo l('Player Profile'); ?> / <?php echo l('Statistics Summary'); ?></h1>
 	<table border="1" cellspacing="0" cellpadding="4" width="100%">
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
@@ -500,7 +502,7 @@ $rcol = "row-dark";
 		<?php
 		foreach ($weaponUsage as $entry) {
 			echo '<tr class="',toggleRowClass($rcol),'">';
-			echo '<td align="center"><img src="hlstatsimg/weapons/',$game,'/',$entry['weapon'],'.png" alt="',$entry['weapon'],'" title="',$entry['weapon'],'" /></td>';
+			echo '<td align="center"><img src="',$g_options["imgdir"],'/weapons/',$game,'/',$entry['weapon'],'.png" alt="',$entry['weapon'],'" title="',$entry['weapon'],'" /></td>';
 			echo '<td>',$entry['modifier'],'</td>';
 			echo '<td>',$entry['kills'],'</td>';
 			echo '<td>',number_format($entry['percent'],2),'%</td>';
@@ -535,7 +537,7 @@ $rcol = "row-dark";
 		<?php
 		foreach ($weaponStats as $entry) {
 			echo '<tr class="',toggleRowClass($rcol),'">';
-			echo '<td align="center"><img src="hlstatsimg/weapons/',$game,'/',$entry['smweapon'],'.png" alt="',$entry['smweapon'],'" title="',$entry['smweapon'],'" /></td>';
+			echo '<td align="center"><img src="',$g_options["imgdir"],'/weapons/',$game,'/',$entry['smweapon'],'.png" alt="',$entry['smweapon'],'" title="',$entry['smweapon'],'" /></td>';
 			echo '<td>',$entry['smshots'],'</td>';
 			echo '<td>',$entry['smhits'],'</td>';
 			echo '<td>',$entry['smdamage'],'</td>';
@@ -574,7 +576,7 @@ $rcol = "row-dark";
 		<?php
 		foreach ($weaponTarget as $entry) {
 			echo '<tr class="',toggleRowClass($rcol),'">';
-			echo '<td align="center"><img src="hlstatsimg/weapons/',$game,'/',$entry['smweapon'],'.png" alt="',$entry['smweapon'],'" title="',$entry['smweapon'],'" /></td>';
+			echo '<td align="center"><img src="',$g_options["imgdir"],'/weapons/',$game,'/',$entry['smweapon'],'.png" alt="',$entry['smweapon'],'" title="',$entry['smweapon'],'" /></td>';
 			echo '<td>',$entry['smhead'],'</td>';
 			echo '<td>',$entry['smchest'],'</td>';
 			echo '<td>',$entry['smstomach'],'</td>';
@@ -616,6 +618,61 @@ $rcol = "row-dark";
 		}
 		?>
 	</table>
+	<?php }
+
+	$playerKillStats = $playerObj->getParam('killstats');
+	if(!empty($playerKillStats)) { ?>
+	<a name="killstats"></a>
+	<h1>
+		<?php echo l('Player Kill Statistics'); ?>
+		<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>#killstats"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+		<?php echo $killLimit ?> <?php echo l('or more kills'); ?>
+		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
+	</h1>
+	<table cellpadding="2" cellspacing="0" border="1" width="100%">
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
+			<th><?php echo l('Victim'); ?></th>
+			<th><?php echo l('Times killed'); ?></th>
+			<th><?php echo l('Deaths by'); ?></th>
+			<th><?php echo l('Kills per Death'); ?></th>
+		</tr>
+		<?php
+		foreach ($playerKillStats as $entry) {
+			echo '<tr class="',toggleRowClass($rcol),'">';
+			echo '<td>';
+				if($entry['active'] == "1") {
+					echo '<img src="',$g_options["imgdir"],'/player.gif" width="16" height="16" alt="',l('Player'),'" alt="',l('Player'),'" />';
+				}
+				else {
+					echo '<img src="',$g_options["imgdir"],'/player_inactive.gif" width="16" height="16" alt="',l('Player'),'" alt="',l('Player'),'" />';
+				}
+				echo '<a href="index.php?mode=playerinfo&player=',$entry['playerId'],'">',makeSavePlayerName($entry['name']),'</a>';
+			echo '</td>';
+			echo '<td>',$entry['kills'],'</td>';
+			echo '<td>',$entry['deaths'],'</td>';
+			echo '<td>',number_format($entry['kpd'],1),'</td>';
+			echo '</tr>';
+		}
+		?>
+	</table>
+	<script type="text/javascript" language="javascript">
+	<!--
+	function changeLimit(num) {
+		location = "index.php?mode=playerinfo&player=<?php echo $player ?>&killLimit=" + num + "#killstats";
+	}
+	-->
+	</script>
+	<?php echo l('Show people this person has killed'); ?>
+		<select onchange='changeLimit(this.options[this.selectedIndex].value)'>
+	<?php
+	  for($j = 1; $j < 16; $j++) {
+			echo "<option value=$j";
+			if($killLimit == $j) { echo " selected"; }
+			echo ">$j</option>";
+		}
+	?>
+	</select>
+	<?php echo l('or more times in the last'),' ',DELETEDAYS,' ',l('days'); ?>
 	<?php }
 
 
@@ -818,174 +875,6 @@ $rcol = "row-dark";
 <?php
 	}
 
-
-	
-	$tblPlayerKillStats = new Table(
-		array(
-			new TableColumn(
-				"name",
-				"Victim",
-        "width=35&icon=player&link=" . urlencode("mode=playerinfo&player=%k")
-			),
-			new TableColumn(
-				"kills",
-				"Times Killed",
-        "width=20&align=right"
-			),
-			new TableColumn(
-				"deaths",
-				"Deaths by",
-        "width=20&align=right"
-			),
-			new TableColumn(
-				"kpd",
-				"Kills per Death",
-        "width=20&align=right"
-			)
-		),
-		"victimId",
-		"kills",
-		"deaths",
-		true,
-		9999,
-		"playerkills_page",
-		"playerkills_sort",
-		"playerkills_sortorder",
-		"playerkills"
-	);
-
-
-	//there might be a better way to do this, but I could not figure one out.
-	 mysql_query("DROP TABLE IF EXISTS ".DB_PREFIX."_Frags_Kills");
-	 mysql_query("
-		CREATE TEMPORARY TABLE ".DB_PREFIX."_Frags_Kills
-		(
-			playerId INT(10),
-			kills INT(10),
-			deaths INT(10)
-		) DEFAULT CHARSET=utf8
-	");
-	 mysql_query("
-			INSERT INTO
-				".DB_PREFIX."_Frags_Kills
-				(
-					playerId,
-					kills
-				)
-					SELECT
-						victimId,
-						killerId
-					FROM
-						".DB_PREFIX."_Events_Frags
-					LEFT JOIN ".DB_PREFIX."_Servers ON
-						".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Frags.serverId
-					WHERE
-						".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."' AND killerId = ".mysql_escape_string($player)."
-	");
-
-	 mysql_query("
-			INSERT INTO
-				".DB_PREFIX."_Frags_Kills
-				(
-					playerId,
-					deaths
-				)
-					SELECT
-						killerId,
-						victimId
-					FROM
-						".DB_PREFIX."_Events_Frags
-					LEFT JOIN ".DB_PREFIX."_Servers ON
-						".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Frags.serverId
-					WHERE
-						".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
-						AND victimId = ".mysql_escape_string($player)."
-		");
-
-		$query = mysql_query("
-				SELECT
-					".DB_PREFIX."_Players.lastName AS name,
-					".DB_PREFIX."_Players.active,
-					Count(".DB_PREFIX."_Frags_Kills.kills) AS kills,
-					Count(".DB_PREFIX."_Frags_Kills.deaths) AS deaths,
-					".DB_PREFIX."_Frags_Kills.playerId as victimId,
-					IFNULL(Count(".DB_PREFIX."_Frags_Kills.kills)/Count(".DB_PREFIX."_Frags_Kills.deaths),
-						IFNULL(FORMAT(Count(".DB_PREFIX."_Frags_Kills.kills), 2), '-')) AS kpd
-				FROM
-					".DB_PREFIX."_Frags_Kills
-				INNER JOIN
-					".DB_PREFIX."_Players
-				ON
-					".DB_PREFIX."_Frags_Kills.playerId = ".DB_PREFIX."_Players.playerId
-				WHERE
-					".DB_PREFIX."_Players.hideranking = 0
-				GROUP BY
-					".DB_PREFIX."_Frags_Kills.playerId
-				HAVING
-					Count(".DB_PREFIX."_Frags_Kills.kills) >= ".mysql_escape_string($killLimit)."
-				ORDER BY
-	            ".$tblPlayerKillStats->sort." ".$tblPlayerKillStats->sortorder.",
-	            ".$tblPlayerKillStats->sort2." ".$tblPlayerKillStats->sortorder."
-				LIMIT 10
-		");
-
-	$numitems = mysql_num_rows($query);
-
-
-?>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-  <td width="50%">
-  	<a name="playerkills"></a>
-	<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Player Kill Statistics'); ?> (<?php echo $killLimit ?> <?php echo l('or more kills'); ?>)</b><?php echo $g_options["fontend_normal"];?>
- </td>
-	<td width="50%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
-	</td>
-</tr>
-<tr>
-	<td colspan="2">
-	<div style="margin-top: 10px; margin-left: 40px;">
-	<?php
-	if ($numitems > 0) {
-    	$tblPlayerKillStats->draw($query, $numitems, 100);
-  	}
-  	else {
-  		echo $g_options["font_normal"].l("Data out of selected range").$g_options["fontend_normal"];
-  	}
-  	?>
-  	</div>
-  	</td>
-</tr>
-<tr>
-	<td>&nbsp;</td>
-	<td colspan="2">
-	<form method="GET" action="">
-	<?php echo $g_options["font_normal"]; ?>
-	<?php echo l('Show people this person has killed'); ?>
-	<SELECT name="killLimit" onchange='changeLimit(this.options[this.selectedIndex].value)'>
-<?php
-  for($j = 1; $j < 16; $j++) {
-		echo "<option value=$j";
-		if($killLimit == $j) { echo " selected"; }
-		echo ">$j</option>";
-	}
-?>
-	</select>
-	<?php echo l('or more times in the last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('days'); ?><?php echo $g_options["fontend_normal"];?>
-	<script type="text/javascript" language="javascript">
-	<!--
-	function changeLimit(num) {
-		location = "http://<?php echo $_SERVER['HTTP_HOST'] . $_SERVER['PHP_SELF'] ?>?mode=playerinfo&player=<?php echo $player ?>&killLimit=" + num + "#playerkills";
-	}
-	-->
-	</script>
-	</form>
-	</td>
-</tr>
-</table><br />
-
-<?php
 	if($g_options['showChart'] == "1") {
 		// get the kills
 		$query = mysql_query("SELECT `eventTime` FROM `".DB_PREFIX."_Events_Frags` WHERE `killerId` = '".mysql_escape_string($player)."'");

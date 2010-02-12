@@ -57,6 +57,12 @@ class Player {
 	private $_playerData = false;
 
 	/**
+	 * the options
+	 * @var array
+	 */
+	private $_option = array();
+
+	/**
 	 * load the player id
 	 */
 	public function __construct($id,$mode,$game) {
@@ -100,6 +106,15 @@ class Player {
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * set the given option to the given value
+	 */
+	public function setOption($key,$value) {
+		if(!empty($key)) {
+			$this->_option[$key] = $value;
+		}
 	}
 
 	/**
@@ -154,6 +169,7 @@ class Player {
 		$this->_getWeaponStats();
 		$this->_getWeaponTarget();
 		$this->_getMaps();
+		$this->_getPlayerKillStats();
 
 		$this->_getRank('rankPoints');
 	}
@@ -513,6 +529,56 @@ class Player {
 		if(mysql_num_rows($query) > 0) {
 			while($result = mysql_fetch_assoc($query)) {
 				$this->_playerData['maps'][] = $result;
+			}
+			mysql_free_result($query);
+		}
+	}
+
+	/**
+	 * get the kill stats table
+	 */
+	private function _getPlayerKillStats() {
+		$this->_playerData['killstats'] = array();
+
+		//there might be a better way to do this, but I could not figure one out.
+		mysql_query("DROP TABLE IF EXISTS ".DB_PREFIX."_".$this->playerId."_Frags_Kills");
+		mysql_query("CREATE TEMPORARY TABLE ".DB_PREFIX."_".$this->playerId."_Frags_Kills
+						(playerId INT(10),kills INT(10),deaths INT(10)) DEFAULT CHARSET=utf8");
+		mysql_query("INSERT INTO ".DB_PREFIX."_".$this->playerId."_Frags_Kills
+						(playerId,kills)
+					   SELECT victimId, killerId
+					   FROM ".DB_PREFIX."_Events_Frags
+					   LEFT JOIN ".DB_PREFIX."_Servers ON ".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Frags.serverId
+					   WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'
+						   AND killerId = ".mysql_escape_string($this->playerId)."");
+
+		mysql_query("INSERT INTO ".DB_PREFIX."_".$this->playerId."_Frags_Kills (playerId,deaths)
+						SELECT killerId,victimId
+						FROM ".DB_PREFIX."_Events_Frags
+						LEFT JOIN ".DB_PREFIX."_Servers ON ".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Frags.serverId
+					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'
+						AND victimId = ".mysql_escape_string($this->playerId)."
+		");
+
+		$query = mysql_query("SELECT ".DB_PREFIX."_Players.lastName AS name,
+					".DB_PREFIX."_Players.active,
+					".DB_PREFIX."_Players.playerId,
+					Count(".DB_PREFIX."_".$this->playerId."_Frags_Kills.kills) AS kills,
+					Count(".DB_PREFIX."_".$this->playerId."_Frags_Kills.deaths) AS deaths,
+					".DB_PREFIX."_".$this->playerId."_Frags_Kills.playerId as victimId,
+					IFNULL(Count(".DB_PREFIX."_".$this->playerId."_Frags_Kills.kills)/Count(".DB_PREFIX."_".$this->playerId."_Frags_Kills.deaths),
+					IFNULL(FORMAT(Count(".DB_PREFIX."_".$this->playerId."_Frags_Kills.kills), 2), '-')) AS kpd
+				FROM ".DB_PREFIX."_".$this->playerId."_Frags_Kills
+					INNER JOIN ".DB_PREFIX."_Players ON ".DB_PREFIX."_".$this->playerId."_Frags_Kills.playerId = ".DB_PREFIX."_Players.playerId
+				WHERE ".DB_PREFIX."_Players.hideranking = 0
+				GROUP BY ".DB_PREFIX."_".$this->playerId."_Frags_Kills.playerId
+				HAVING Count(".DB_PREFIX."_".$this->playerId."_Frags_Kills.kills) >= ".mysql_escape_string($this->_option['killLimit'])."
+				ORDER BY kills DESC, deaths DESC
+				LIMIT 10");
+
+		if(mysql_num_rows($query) > 0) {
+			while($result = mysql_fetch_assoc($query)) {
+				$this->_playerData['killstats'][] = $result;
 			}
 			mysql_free_result($query);
 		}
