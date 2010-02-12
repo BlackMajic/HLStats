@@ -430,6 +430,58 @@ $rcol = "row-dark";
 	</table>
 	<?php }
 
+	$playerPlayerActions = $playerObj->getParam('playerPlayerActions');
+	if(!empty($playerPlayerActions)) { ?>
+	<a name="playerplayeractions"></a>
+	<h1>
+		<?php echo l('Player-Player Actions'); ?>
+		<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>#playerplayeractions"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
+	</h1>
+	<table cellpadding="2" cellspacing="0" border="1" width="100%">
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
+			<th><?php echo l('Action'); ?></th>
+			<th><?php echo l('Achieved'); ?></th>
+			<th><?php echo l('Points Bonus'); ?></th>
+		</tr>
+		<?php
+		foreach ($playerPlayerActions as $entry) {
+			echo '<tr class="',toggleRowClass($rcol),'">';
+			echo '<td>',$entry['description'],'</td>';
+			echo '<td>',$entry['obj_count'],'</td>';
+			echo '<td>',$entry['obj_bonus'],'</td>';
+			echo '</tr>';
+		}
+		?>
+	</table>
+	<?php }
+
+	$teamSelection = $playerObj->getParam('teamSelection');
+	if(!empty($teamSelection)) { ?>
+	<a name="teams"></a>
+	<h1>
+		<?php echo l('Team Selection'); ?>
+		<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>#teams"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
+	</h1>
+	<table cellpadding="2" cellspacing="0" border="1" width="100%">
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
+			<th><?php echo l('Team'); ?></th>
+			<th><?php echo l('Joined'); ?></th>
+			<th><?php echo l('Percentage of times'); ?></th>
+		</tr>
+		<?php
+		foreach ($teamSelection as $entry) {
+			echo '<tr class="',toggleRowClass($rcol),'">';
+			echo '<td>',$entry['name'],'</td>';
+			echo '<td>',$entry['teamcount'],'</td>';
+			echo '<td>',number_format($entry['percent'],2),'%</td>';
+			echo '</tr>';
+		}
+		?>
+	</table>
+	<?php }
+
 	if($g_options['showChart'] == "1") {
 		$query = mysql_query("SELECT
 				".DB_PREFIX."_Events_StatsmeTime.*,
@@ -538,246 +590,6 @@ $rcol = "row-dark";
 		}
 	}
 
-	flush();
-	$tblPlayerActions = new Table(
-		array(
-			new TableColumn(
-				"description",
-				"Action",
-				"width=45"
-			),
-			new TableColumn(
-				"obj_count",
-				"Achieved",
-				"width=25&align=right&append=+times"
-			),
-			new TableColumn(
-				"obj_bonus",
-				"Points Bonus",
-				"width=25&align=right"
-			)
-		),
-		"id",
-		"obj_count",
-		"description",
-		true,
-		9999,
-		"obj_page",
-		"obj_sort",
-		"obj_sortorder",
-		"playeractions"
-	);
-
-	$query = mysql_query("
-		SELECT
-			".DB_PREFIX."_Actions.description,
-			COUNT(".DB_PREFIX."_Events_PlayerActions.id) AS obj_count,
-			COUNT(".DB_PREFIX."_Events_PlayerActions.id) * ".DB_PREFIX."_Actions.reward_player AS obj_bonus
-		FROM
-			".DB_PREFIX."_Actions
-		LEFT JOIN ".DB_PREFIX."_Events_PlayerActions ON
-			".DB_PREFIX."_Events_PlayerActions.actionId = ".DB_PREFIX."_Actions.id
-		LEFT JOIN ".DB_PREFIX."_Servers ON
-			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_PlayerActions.serverId
-		WHERE
-			".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
-			AND ".DB_PREFIX."_Events_PlayerActions.playerId=".mysql_escape_string($player)."
-		GROUP BY
-			".DB_PREFIX."_Actions.id
-		ORDER BY
-			".$tblPlayerActions->sort." ".$tblPlayerActions->sortorder.",
-			".$tblPlayerActions->sort2." ".$tblPlayerActions->sortorder."
-	");
-
-	$numitems = mysql_num_fields($query);
-
-	if ($numitems > 0) {
-?>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td width="50%">
-		<a name="playeractions"></a>
-	<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Player Actions'); ?></b><?php echo $g_options["fontend_normal"];?>
-	<td width="50%" align="right"><?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?></td>
-</tr>
-<tr>
-	<td colspan="2">
-	<div style="margin-top: 10px; margin-left: 40px;">
-		<?php
-			$tblPlayerActions->draw($query, $numitems, 100);
-		?>
-	</div>
-	</td>
-</tr>
-</table>
-<p>
-<?php
-	}
-	$tblPlayerPlayerActions = new Table(
-		array(
-			new TableColumn(
-				"description",
-				"Action",
-				"width=45"
-			),
-			new TableColumn(
-				"obj_count",
-				"Achieved",
-				"width=25&align=right&append=+times"
-			),
-			new TableColumn(
-				"obj_bonus",
-				"Points Bonus",
-				"width=25&align=right"
-			)
-		),
-		"id",
-		"obj_count",
-		"description",
-		true,
-		9999,
-		"ppa_page",
-		"ppa_sort",
-		"ppa_sortorder",
-		"playerplayeractions"
-	);
-
-	$query = mysql_query("
-		SELECT
-			".DB_PREFIX."_Actions.description,
-			COUNT(".DB_PREFIX."_Events_PlayerPlayerActions.id) AS obj_count,
-			COUNT(".DB_PREFIX."_Events_PlayerPlayerActions.id) * ".DB_PREFIX."_Actions.reward_player AS obj_bonus
-		FROM
-			".DB_PREFIX."_Actions
-		LEFT JOIN ".DB_PREFIX."_Events_PlayerPlayerActions ON
-			".DB_PREFIX."_Events_PlayerPlayerActions.actionId = ".DB_PREFIX."_Actions.id
-		LEFT JOIN ".DB_PREFIX."_Servers ON
-			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_PlayerPlayerActions.serverId
-		WHERE
-			".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
-			AND ".DB_PREFIX."_Events_PlayerPlayerActions.playerId=".mysql_escape_string($player)."
-		GROUP BY
-			".DB_PREFIX."_Actions.id
-		ORDER BY
-			".$tblPlayerPlayerActions->sort." ".$tblPlayerPlayerActions->sortorder.",
-			".$tblPlayerPlayerActions->sort2." ".$tblPlayerPlayerActions->sortorder."
-	");
-
-	$numitems = mysql_num_rows($query);
-
-	if ($numitems > 0) {
-?>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td width="50%">
-		<a name="playerplayeractions"></a>
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Player-Player Actions'); ?></b><?php echo $g_options["fontend_normal"];?>
-	</td>
-	<td width="50%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
-	</td>
-</tr>
-<tr>
-	<td colspan="2">
-	<div style="margin-top: 10px; margin-left: 40px;">
-		<?php
-			$tblPlayerPlayerActions->draw($query, $numitems, 100);
-		?>
-	</div>
-	</td>
-</tr>
-</table>
-<p>
-<?php
-	}
-	flush();
-	$tblTeams = new Table(
-		array(
-			new TableColumn(
-				"name",
-				"Team",
-				"width=35"
-			),
-			new TableColumn(
-				"teamcount",
-				"Joined",
-				"width=10&align=right&append=+times"
-			),
-			new TableColumn(
-				"percent",
-				"Percentage of Times",
-				"width=40&sort=no&type=bargraph"
-			),
-			new TableColumn(
-				"percent",
-				"%",
-				"width=10&sort=no&align=right&append=" . urlencode("%")
-			)
-		),
-		"name",
-		"teamcount",
-		"name",
-		true,
-		9999,
-		"teams_page",
-		"teams_sort",
-		"teams_sortorder",
-		"teams"
-	);
-
-	$queryTjoins = mysql_query("SELECT COUNT(*) AS tj FROM ".DB_PREFIX."_Events_ChangeTeam WHERE playerId=".mysql_escape_string($player)."");
-	$result = mysql_fetch_assoc($queryTjoins);
-	$numteamjoins = $result['tj'];
-
-	$query = mysql_query("
-		SELECT
-			IFNULL(".DB_PREFIX."_Teams.name, ".DB_PREFIX."_Events_ChangeTeam.team) AS name,
-			COUNT(".DB_PREFIX."_Events_ChangeTeam.id) AS teamcount,
-			COUNT(".DB_PREFIX."_Events_ChangeTeam.id) / $numteamjoins * 100 AS percent
-		FROM
-			".DB_PREFIX."_Events_ChangeTeam
-		LEFT JOIN ".DB_PREFIX."_Teams ON
-			".DB_PREFIX."_Events_ChangeTeam.team=".DB_PREFIX."_Teams.code
-		LEFT JOIN ".DB_PREFIX."_Servers ON
-			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_ChangeTeam.serverId
-		WHERE
-			".DB_PREFIX."_Teams.game='".mysql_escape_string($game)."'
-		AND ".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
-		AND ".DB_PREFIX."_Events_ChangeTeam.playerId=".mysql_escape_string($player)."
-		AND (hidden <>'1' OR hidden IS NULL)
-		GROUP BY
-			".DB_PREFIX."_Events_ChangeTeam.team
-		ORDER BY
-			".$tblTeams->sort." ".$tblTeams->sortorder.",
-			".$tblTeams->sort2." ".$tblTeams->sortorder."
-	");
-
-	$numitems = mysql_num_rows($query);
-
-	if ($numitems > 0) {
-?>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td width="50%">
-		<a name="teams"></a>
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Team Selection'); ?></b><?php echo $g_options["fontend_normal"];?>
-	</td>
-	<td width="50%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
-	</td>
-</tr>
-<tr>
-	<td colspan="2">
-	<div style="margin-top: 10px; margin-left: 40px;">
-	<?php
-		$tblTeams->draw($query, $numitems, 100);
-	?>
-	</div>
-	</td>
-</tr>
-</table><p>
-<?php
-	}
 	flush();
 	$tblRoles = new Table(
 		array(

@@ -148,6 +148,8 @@ class Player {
 		$this->_getWeaponaccuracy();
 		$this->_getAliasTable();
 		$this->_getActions();
+		$this->_getPlayerPlayerActions();
+		$this->_getTeamSelection();
 
 		$this->_getRank('rankPoints');
 	}
@@ -323,21 +325,74 @@ class Player {
 		$query = mysql_query("SELECT ".DB_PREFIX."_Actions.description,
 						COUNT(".DB_PREFIX."_Events_PlayerActions.id) AS obj_count,
 						COUNT(".DB_PREFIX."_Events_PlayerActions.id) * ".DB_PREFIX."_Actions.reward_player AS obj_bonus
-					FROM
-						".DB_PREFIX."_Actions
+					FROM ".DB_PREFIX."_Actions
 					LEFT JOIN ".DB_PREFIX."_Events_PlayerActions ON
 						".DB_PREFIX."_Events_PlayerActions.actionId = ".DB_PREFIX."_Actions.id
 					LEFT JOIN ".DB_PREFIX."_Servers ON
 						".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_PlayerActions.serverId
-					WHERE
-						".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'
+					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'
 						AND ".DB_PREFIX."_Events_PlayerActions.playerId=".mysql_escape_string($this->playerId)."
-					GROUP BY
-						".DB_PREFIX."_Actions.id
+					GROUP BY ".DB_PREFIX."_Actions.id
 					ORDER BY obj_count DESC");
 		if(mysql_num_rows($query) > 0) {
 			while($result = mysql_fetch_assoc($query)) {
 				$this->_playerData['actions'][] = $result;
+			}
+			mysql_free_result($query);
+		}
+	}
+
+	private function _getPlayerPlayerActions() {
+		$this->_playerData['playerPlayerActions'] = array();
+		$query = mysql_query("SELECT ".DB_PREFIX."_Actions.description,
+						COUNT(".DB_PREFIX."_Events_PlayerPlayerActions.id) AS obj_count,
+						COUNT(".DB_PREFIX."_Events_PlayerPlayerActions.id) * ".DB_PREFIX."_Actions.reward_player AS obj_bonus
+					FROM ".DB_PREFIX."_Actions
+					LEFT JOIN ".DB_PREFIX."_Events_PlayerPlayerActions ON
+						".DB_PREFIX."_Events_PlayerPlayerActions.actionId = ".DB_PREFIX."_Actions.id
+					LEFT JOIN ".DB_PREFIX."_Servers ON
+						".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_PlayerPlayerActions.serverId
+					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'
+						AND ".DB_PREFIX."_Events_PlayerPlayerActions.playerId=".mysql_escape_string($this->playerId)."
+					GROUP BY ".DB_PREFIX."_Actions.id
+					ORDER BY obj_count DESC");
+		if(mysql_num_rows($query) > 0) {
+			while($result = mysql_fetch_assoc($query)) {
+				$this->_playerData['playerPlayerActions'][] = $result;
+			}
+			mysql_free_result($query);
+		}
+	}
+
+	/**
+	 * get how much and which team the player was in
+	 */
+	private function _getTeamSelection() {
+		$this->_playerData['teamSelection'] = array();
+
+		$queryTjoins = mysql_query("SELECT COUNT(*) AS tj
+							FROM ".DB_PREFIX."_Events_ChangeTeam
+							WHERE playerId=".mysql_escape_string($this->playerId)."");
+		$result = mysql_fetch_assoc($queryTjoins);
+		$numteamjoins = $result['tj'];
+
+		$query = mysql_query("SELECT IFNULL(".DB_PREFIX."_Teams.name, ".DB_PREFIX."_Events_ChangeTeam.team) AS name,
+					COUNT(".DB_PREFIX."_Events_ChangeTeam.id) AS teamcount,
+					COUNT(".DB_PREFIX."_Events_ChangeTeam.id) / $numteamjoins * 100 AS percent
+				FROM ".DB_PREFIX."_Events_ChangeTeam
+				LEFT JOIN ".DB_PREFIX."_Teams ON
+					".DB_PREFIX."_Events_ChangeTeam.team=".DB_PREFIX."_Teams.code
+				LEFT JOIN ".DB_PREFIX."_Servers ON
+					".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_ChangeTeam.serverId
+				WHERE ".DB_PREFIX."_Teams.game='".mysql_escape_string($this->_game)."'
+					AND ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'
+					AND ".DB_PREFIX."_Events_ChangeTeam.playerId=".mysql_escape_string($this->playerId)."
+					AND (hidden <>'1' OR hidden IS NULL)
+				GROUP BY ".DB_PREFIX."_Events_ChangeTeam.team
+				ORDER BY teamcount DESC");
+		if(mysql_num_rows($query) > 0) {
+			while($result = mysql_fetch_assoc($query)) {
+				$this->_playerData['teamSelection'][] = $result;
 			}
 			mysql_free_result($query);
 		}
