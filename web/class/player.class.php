@@ -152,6 +152,7 @@ class Player {
 		$this->_getTeamSelection();
 		$this->_getWeaponUsage();
 		$this->_getWeaponStats();
+		$this->_getWeaponTarget();
 
 		$this->_getRank('rankPoints');
 	}
@@ -455,6 +456,32 @@ class Player {
 		if(mysql_num_rows($query) > 0) {
 			while($result = mysql_fetch_assoc($query)) {
 				$this->_playerData['weaponStats'][] = $result;
+			}
+			mysql_free_result($query);
+		}
+	}
+
+	private function _getWeaponTarget() {
+		$this->_playerData['weaponTarget'] = array();
+		$query = mysql_query("SELECT ".DB_PREFIX."_Events_Statsme2.weapon AS smweapon,
+					".DB_PREFIX."_Weapons.name,
+					SUM(".DB_PREFIX."_Events_Statsme2.head) AS smhead,
+					SUM(".DB_PREFIX."_Events_Statsme2.chest) AS smchest,
+					SUM(".DB_PREFIX."_Events_Statsme2.stomach) AS smstomach,
+					SUM(".DB_PREFIX."_Events_Statsme2.leftarm) AS smleftarm,
+					SUM(".DB_PREFIX."_Events_Statsme2.rightarm) AS smrightarm,
+					SUM(".DB_PREFIX."_Events_Statsme2.leftleg) AS smleftleg,
+					SUM(".DB_PREFIX."_Events_Statsme2.rightleg) AS smrightleg
+				FROM ".DB_PREFIX."_Events_Statsme2
+				LEFT JOIN ".DB_PREFIX."_Servers ON ".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Statsme2.serverId
+				LEFT JOIN ".DB_PREFIX."_Weapons ON ".DB_PREFIX."_Weapons.code = ".DB_PREFIX."_Events_Statsme2.weapon
+				WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'
+					AND ".DB_PREFIX."_Events_Statsme2.PlayerId=".mysql_escape_string($this->playerId)."
+				GROUP BY ".DB_PREFIX."_Events_Statsme2.weapon
+				ORDER BY smhead DESC, smweapon DESC");
+		if(mysql_num_rows($query) > 0) {
+			while($result = mysql_fetch_assoc($query)) {
+				$this->_playerData['weaponTarget'][] = $result;
 			}
 			mysql_free_result($query);
 		}

@@ -552,6 +552,41 @@ $rcol = "row-dark";
 	</table>
 	<?php }
 
+	$weaponTarget = $playerObj->getParam('weaponTarget');
+	if(!empty($weaponTarget)) { ?>
+	<a name="weapontarget"></a>
+	<h1>
+		<?php echo l('Weapon Target'); ?>
+		<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>#weapontarget"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
+	</h1>
+	<table cellpadding="2" cellspacing="0" border="1" width="100%">
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
+			<th><?php echo l('Weapon'); ?></th>
+			<th><?php echo l('Head'); ?></th>
+			<th><?php echo l('Chest'); ?></th>
+			<th><?php echo l('Stomach'); ?></th>
+			<th><?php echo l('Left Arm'); ?></th>
+			<th><?php echo l('Right Arm'); ?></th>
+			<th><?php echo l('Left Leg'); ?></th>
+			<th><?php echo l('Right Leg'); ?></th>
+		</tr>
+		<?php
+		foreach ($weaponTarget as $entry) {
+			echo '<tr class="',toggleRowClass($rcol),'">';
+			echo '<td align="center"><img src="hlstatsimg/weapons/',$game,'/',$entry['smweapon'],'.png" alt="',$entry['smweapon'],'" title="',$entry['smweapon'],'" /></td>';
+			echo '<td>',$entry['smhead'],'</td>';
+			echo '<td>',$entry['smchest'],'</td>';
+			echo '<td>',$entry['smstomach'],'</td>';
+			echo '<td>',$entry['smleftarm'],'</td>';
+			echo '<td>',$entry['smrightarm'],'</td>';
+			echo '<td>',$entry['smleftleg'],'</td>';
+			echo '<td>',$entry['smrightleg'],'</td>';
+			echo '</tr>';
+		}
+		?>
+	</table>
+	<?php }
 
 
 
@@ -753,130 +788,7 @@ $rcol = "row-dark";
 <?php
 	}
 
-	
-	$tblWeaponstats2 = new Table(
-		array(
-			new TableColumn(
-				"smweapon",
-				"Weapon",
-				"width=21&type=weaponimg&align=center&link=" . urlencode("mode=weaponinfo&weapon=%k&game=$game")
-			),
-			new TableColumn(
-				"smhead",
-				"Head",
-				"width=7&align=right"
-			),
-			new TableColumn(
-				"smchest",
-				"Chest",
-				"width=7&align=right"
-			),
-			new TableColumn(
-				"smstomach",
-				"Stomach",
-				"width=7&align=right"
-			),
-			new TableColumn(
-				"smleftarm",
-				"Left Arm",
-				"width=7&align=right"
-			),
-			new TableColumn(
-				"smrightarm",
-				"Right Arm",
-				"width=7&align=right"
-			),
-			new TableColumn(
-				"smleftleg",
-				"Left Leg",
-				"width=7&align=right"
-			),
-			new TableColumn(
-				"smrightleg",
-				"Right Leg",
-				"width=7&align=right"
-			),
-			new TableColumn(
-				"smleft",
-				"Left",
-				"width=8&align=right&append=" . urlencode("%")
-			),
-			new TableColumn(
-				"smmiddle",
-				"Middle",
-				"width=9&align=right&append=" . urlencode("%")
-			),
-			new TableColumn(
-				"smright",
-				"Right",
-				"width=8&align=right&append=" . urlencode("%")
-			)
-		),
-		"smweapon",
-		"smhead",
-		"smweapon",
-		true,
-		9999,
-		"weap_page",
-		"weap_sort",
-		"weap_sortorder",
-		"weaponstats2"
-	);
 
-	$query = mysql_query("
-		SELECT
-			".DB_PREFIX."_Events_Statsme2.weapon AS smweapon,
-			".DB_PREFIX."_Weapons.name,
-			SUM(".DB_PREFIX."_Events_Statsme2.head) AS smhead,
-			SUM(".DB_PREFIX."_Events_Statsme2.chest) AS smchest,
-			SUM(".DB_PREFIX."_Events_Statsme2.stomach) AS smstomach,
-			SUM(".DB_PREFIX."_Events_Statsme2.leftarm) AS smleftarm,
-			SUM(".DB_PREFIX."_Events_Statsme2.rightarm) AS smrightarm,
-			SUM(".DB_PREFIX."_Events_Statsme2.leftleg) AS smleftleg,
-			SUM(".DB_PREFIX."_Events_Statsme2.rightleg) AS smrightleg,
-			IFNULL(ROUND((SUM(".DB_PREFIX."_Events_Statsme2.leftarm) + SUM(".DB_PREFIX."_Events_Statsme2.leftleg)) / (SUM(".DB_PREFIX."_Events_Statsme2.head) + SUM(".DB_PREFIX."_Events_Statsme2.chest) + SUM(".DB_PREFIX."_Events_Statsme2.stomach) + SUM(".DB_PREFIX."_Events_Statsme2.leftarm ) + SUM(".DB_PREFIX."_Events_Statsme2.rightarm) + SUM(".DB_PREFIX."_Events_Statsme2.leftleg) + SUM(".DB_PREFIX."_Events_Statsme2.rightleg)) * 100, 1), 0.0) AS smleft,
-			IFNULL(ROUND((SUM(".DB_PREFIX."_Events_Statsme2.rightarm) + SUM(".DB_PREFIX."_Events_Statsme2.rightleg)) / (SUM(".DB_PREFIX."_Events_Statsme2.head) + SUM(".DB_PREFIX."_Events_Statsme2.chest) + SUM(".DB_PREFIX."_Events_Statsme2.stomach) + SUM(".DB_PREFIX."_Events_Statsme2.leftarm ) + SUM(".DB_PREFIX."_Events_Statsme2.rightarm) + SUM(".DB_PREFIX."_Events_Statsme2.leftleg) + SUM(".DB_PREFIX."_Events_Statsme2.rightleg)) * 100, 1), 0.0) AS smright,
-			IFNULL(ROUND((SUM(".DB_PREFIX."_Events_Statsme2.head) + SUM(".DB_PREFIX."_Events_Statsme2.chest) + SUM(".DB_PREFIX."_Events_Statsme2.stomach)) / (SUM(".DB_PREFIX."_Events_Statsme2.head) + SUM(".DB_PREFIX."_Events_Statsme2.chest) + SUM(".DB_PREFIX."_Events_Statsme2.stomach) + SUM(".DB_PREFIX."_Events_Statsme2.leftarm ) + SUM(".DB_PREFIX."_Events_Statsme2.rightarm) + SUM(".DB_PREFIX."_Events_Statsme2.leftleg) + SUM(".DB_PREFIX."_Events_Statsme2.rightleg)) * 100, 1), 0.0) AS smmiddle
-		FROM
-			".DB_PREFIX."_Events_Statsme2
-		LEFT JOIN ".DB_PREFIX."_Servers ON
-			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Statsme2.serverId
-		LEFT JOIN ".DB_PREFIX."_Weapons ON
-			".DB_PREFIX."_Weapons.code = ".DB_PREFIX."_Events_Statsme2.weapon
-		WHERE
-			".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
-			AND ".DB_PREFIX."_Events_Statsme2.PlayerId=".mysql_escape_string($player)."
-		GROUP BY
-			".DB_PREFIX."_Events_Statsme2.weapon
-		ORDER BY
-			".$tblWeaponstats2->sort." ".$tblWeaponstats2->sortorder.",
-			".$tblWeaponstats2->sort2." ".$tblWeaponstats2->sortorder."
-	");
-
-if (mysql_num_rows($query) != 0) {
-?>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td width="50%">
-		<a name="weaponstats2"></a>
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Weapon Target'); ?></b><?php echo $g_options["fontend_normal"];?>
-	</td>
-	<td width="50%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
-	</td>
-</tr>
-<tr>
-	<td colspan="2">
-	<div style="margin-top: 10px; margin-left: 40px;">
-	<?php
-		$tblWeaponstats2->draw($query, mysql_num_rows($query), 100);
-	?>
-	</div>
-	</td>
-</tr>
-</table><p>
-<?php
-}
 	flush();
 	$tblMaps = new Table(
 		array(
