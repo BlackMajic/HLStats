@@ -482,6 +482,38 @@ $rcol = "row-dark";
 	</table>
 	<?php }
 
+	$weaponUsage = $playerObj->getParam('weaponUsage');
+	if(!empty($weaponUsage)) { ?>
+	<a name="weaponusage"></a>
+	<h1>
+		<?php echo l('Weapon Usage'); ?>
+		<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>#weaponusage"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
+	</h1>
+	<table cellpadding="2" cellspacing="0" border="1" width="100%">
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
+			<th><?php echo l('Weapon'); ?></th>
+			<th><?php echo l('Points Modifier'); ?></th>
+			<th><?php echo l('Kills'); ?></th>
+			<th><?php echo l('Percentage of Kills'); ?></th>
+		</tr>
+		<?php
+		foreach ($weaponUsage as $entry) {
+			echo '<tr class="',toggleRowClass($rcol),'">';
+			echo '<td align="center"><img src="hlstatsimg/weapons/',$game,'/',$entry['weapon'],'.png" /></td>';
+			echo '<td>',$entry['modifier'],'</td>';
+			echo '<td>',$entry['kills'],'</td>';
+			echo '<td>',number_format($entry['percent'],2),'%</td>';
+			echo '</tr>';
+		}
+		?>
+	</table>
+	<?php }
+
+
+
+
+
 	if($g_options['showChart'] == "1") {
 		$query = mysql_query("SELECT
 				".DB_PREFIX."_Events_StatsmeTime.*,

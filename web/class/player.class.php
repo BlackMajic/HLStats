@@ -150,6 +150,7 @@ class Player {
 		$this->_getActions();
 		$this->_getPlayerPlayerActions();
 		$this->_getTeamSelection();
+		$this->_getWeaponUsage();
 
 		$this->_getRank('rankPoints');
 	}
@@ -393,6 +394,34 @@ class Player {
 		if(mysql_num_rows($query) > 0) {
 			while($result = mysql_fetch_assoc($query)) {
 				$this->_playerData['teamSelection'][] = $result;
+			}
+			mysql_free_result($query);
+		}
+	}
+
+	/**
+	 * get the weapon usage for the current player
+	 */
+	private function _getweaponUsage() {
+		$this->_playerData['weaponUsage'] = array();
+		$query = mysql_query("SELECT ".DB_PREFIX."_Events_Frags.weapon,
+						".DB_PREFIX."_Weapons.name,
+						IFNULL(".DB_PREFIX."_Weapons.modifier, 1.00) AS modifier,
+						COUNT(".DB_PREFIX."_Events_Frags.weapon) AS kills,
+						COUNT(".DB_PREFIX."_Events_Frags.weapon) / ".$this->_playerData['kills']." * 100 AS percent
+					FROM ".DB_PREFIX."_Events_Frags
+						LEFT JOIN ".DB_PREFIX."_Weapons ON
+							".DB_PREFIX."_Weapons.code = ".DB_PREFIX."_Events_Frags.weapon
+						LEFT JOIN ".DB_PREFIX."_Servers ON
+							".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Frags.serverId
+					WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'
+						AND ".DB_PREFIX."_Events_Frags.killerId='".mysql_escape_string($this->playerId)."'
+						AND (".DB_PREFIX."_Weapons.game='".mysql_escape_string($this->_game)."' OR ".DB_PREFIX."_Weapons.weaponId IS NULL)
+					GROUP BY ".DB_PREFIX."_Events_Frags.weapon
+					ORDER BY kills DESC");
+		if(mysql_num_rows($query) > 0) {
+			while($result = mysql_fetch_assoc($query)) {
+				$this->_playerData['weaponUsage'][] = $result;
 			}
 			mysql_free_result($query);
 		}
