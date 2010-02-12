@@ -588,6 +588,36 @@ $rcol = "row-dark";
 	</table>
 	<?php }
 
+	$maps = $playerObj->getParam('maps');
+	if(!empty($maps)) { ?>
+	<a name="maps"></a>
+	<h1>
+		<?php echo l('Map Performance'); ?>
+		<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>#maps"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
+	</h1>
+	<table cellpadding="2" cellspacing="0" border="1" width="100%">
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
+			<th><?php echo l('Map Name'); ?></th>
+			<th><?php echo l('Kills'); ?></th>
+			<th><?php echo l('Percentage of Kills'); ?></th>
+			<th><?php echo l('Deaths'); ?></th>
+			<th><?php echo l('Kills per Death'); ?></th>
+		</tr>
+		<?php
+		foreach ($maps as $entry) {
+			echo '<tr class="',toggleRowClass($rcol),'">';
+			echo '<td><a href="index.php?mode=mapinfo&game=',$game,'&map=',$entry['map'],'">',$entry['map'],'</a></td>';
+			echo '<td>',$entry['kills'],'</td>';
+			echo '<td>',number_format($entry['percentage'],2),'%</td>';
+			echo '<td>',$entry['deaths'],'</td>';
+			echo '<td>',number_format($entry['kpd'],1),'</td>';
+			echo '</tr>';
+		}
+		?>
+	</table>
+	<?php }
+
 
 
 	if($g_options['showChart'] == "1") {
@@ -789,93 +819,7 @@ $rcol = "row-dark";
 	}
 
 
-	flush();
-	$tblMaps = new Table(
-		array(
-			new TableColumn(
-				"map",
-				"Map Name",
-				"width=25&align=center&link=" . urlencode("mode=mapinfo&map=%k&game=$game")
-			),
-			new TableColumn(
-				"kpd",
-				"Kills per Death",
-				"width=10&align=right"
-			),
-			new TableColumn(
-				"kills",
-				"Kills",
-				"width=10&align=right"
-			),
-			new TableColumn(
-				"percentage",
-				"Percentage of Kills",
-				"width=30&sort=no&type=bargraph"
-			),
-			new TableColumn(
-				"percentage",
-				"%",
-				"width=10&sort=no&align=right&append=" . urlencode("%")
-			),
-			new TableColumn(
-				"deaths",
-				"Deaths",
-				"width=10&align=right"
-			)
-		),
-		"map",
-		"kpd",
-		"kills",
-		true,
-		9999,
-		"maps_page",
-		"maps_sort",
-		"maps_sortorder",
-		"maps"
-	);
-
-	$query = mysql_query("
-		SELECT
-			IF(map='', '(Unaccounted)', map) AS map,
-			SUM(killerId=".mysql_escape_string($player).") AS kills,
-			SUM(victimId=".mysql_escape_string($player).") AS deaths,
-			IFNULL(SUM(killerId=".mysql_escape_string($player).") / SUM(victimId=".mysql_escape_string($player)."), '-') AS kpd,
-			ROUND(CONCAT(SUM(killerId=".mysql_escape_string($player).")) / ".mysql_escape_string($realkills)." * 100, 2) AS percentage
-		FROM
-			".DB_PREFIX."_Events_Frags
-		LEFT JOIN ".DB_PREFIX."_Servers ON
-			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Frags.serverId
-		WHERE
-			".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."' AND killerId='".mysql_escape_string($player)."'
-			OR victimId='".mysql_escape_string($player)."'
-		GROUP BY
-			map
-		ORDER BY
-			".$tblMaps->sort." ".$tblMaps->sortorder.",
-			".$tblMaps->sort2." ".$tblMaps->sortorder."
-	");
-?>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td width="50%">
-		<a name="maps"></a>
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Map Performance'); ?></b><?php echo $g_options["fontend_normal"];?>
-	</td>
-	<td width="50%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last') ;?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
-	</td>
-</tr>
-<tr>
-	<td colspan="2">
-	<div style="margin-top: 10px; margin-left: 40px;">
-	<?php
-		$tblMaps->draw($query, mysql_num_rows($query), 100);
-	?>
-	</div></td>
-</tr>
-</table><p>
-<?php
-	flush();
+	
 	$tblPlayerKillStats = new Table(
 		array(
 			new TableColumn(

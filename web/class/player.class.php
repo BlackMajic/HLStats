@@ -153,6 +153,7 @@ class Player {
 		$this->_getWeaponUsage();
 		$this->_getWeaponStats();
 		$this->_getWeaponTarget();
+		$this->_getMaps();
 
 		$this->_getRank('rankPoints');
 	}
@@ -461,6 +462,9 @@ class Player {
 		}
 	}
 
+	/**
+	 * get the weapon target if we have the information in db
+	 */
 	private function _getWeaponTarget() {
 		$this->_playerData['weaponTarget'] = array();
 		$query = mysql_query("SELECT ".DB_PREFIX."_Events_Statsme2.weapon AS smweapon,
@@ -482,6 +486,33 @@ class Player {
 		if(mysql_num_rows($query) > 0) {
 			while($result = mysql_fetch_assoc($query)) {
 				$this->_playerData['weaponTarget'][] = $result;
+			}
+			mysql_free_result($query);
+		}
+	}
+
+	/**
+	 * get the map performance
+	 */
+	private function _getMaps() {
+		$this->_playerData['maps'] = array();
+
+		$query = mysql_query("SELECT IF(map='', '(Unaccounted)', map) AS map,
+			SUM(killerId=".mysql_escape_string($this->playerId).") AS kills,
+			SUM(victimId=".mysql_escape_string($this->playerId).") AS deaths,
+			IFNULL(SUM(killerId=".mysql_escape_string($this->playerId).") / SUM(victimId=".mysql_escape_string($this->playerId)."), '-') AS kpd,
+			ROUND(CONCAT(SUM(killerId=".mysql_escape_string($this->playerId).")) / ".mysql_escape_string($this->_playerData['kills'])." * 100, 2) AS percentage
+		FROM ".DB_PREFIX."_Events_Frags
+		LEFT JOIN ".DB_PREFIX."_Servers ON
+			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Frags.serverId
+		WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."' AND killerId='".mysql_escape_string($this->playerId)."'
+			OR victimId='".mysql_escape_string($this->playerId)."'
+		GROUP BY map
+		ORDER BY kills DESC, percentage DESC");
+
+		if(mysql_num_rows($query) > 0) {
+			while($result = mysql_fetch_assoc($query)) {
+				$this->_playerData['maps'][] = $result;
 			}
 			mysql_free_result($query);
 		}
