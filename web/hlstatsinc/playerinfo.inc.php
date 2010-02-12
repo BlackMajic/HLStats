@@ -376,7 +376,7 @@ $rcol = "row-dark";
 	<a name="aliases"></a>
 	<h1>
 		<?php echo l('Aliases'); ?>
-		<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>#aliases"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+		<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>#aliases"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
 	</h1>
 	<table cellpadding="2" cellspacing="0" border="1" width="100%">
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
@@ -409,7 +409,7 @@ $rcol = "row-dark";
 	<a name="playeractions"></a>
 	<h1>
 		<?php echo l('Player Actions'); ?>
-		<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>#playeractions"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+		<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>#playeractions"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
 		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
 	</h1>
 	<table cellpadding="2" cellspacing="0" border="1" width="100%">
@@ -435,7 +435,7 @@ $rcol = "row-dark";
 	<a name="playerplayeractions"></a>
 	<h1>
 		<?php echo l('Player-Player Actions'); ?>
-		<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>#playerplayeractions"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+		<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>#playerplayeractions"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
 		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
 	</h1>
 	<table cellpadding="2" cellspacing="0" border="1" width="100%">
@@ -461,7 +461,7 @@ $rcol = "row-dark";
 	<a name="teams"></a>
 	<h1>
 		<?php echo l('Team Selection'); ?>
-		<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>#teams"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+		<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>#teams"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
 		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
 	</h1>
 	<table cellpadding="2" cellspacing="0" border="1" width="100%">
@@ -487,7 +487,7 @@ $rcol = "row-dark";
 	<a name="weaponusage"></a>
 	<h1>
 		<?php echo l('Weapon Usage'); ?>
-		<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>#weaponusage"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+		<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>#weaponusage"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
 		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
 	</h1>
 	<table cellpadding="2" cellspacing="0" border="1" width="100%">
@@ -515,7 +515,7 @@ $rcol = "row-dark";
 	<a name="weaponstats"></a>
 	<h1>
 		<?php echo l('Weapon Stats'); ?>
-		<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>#weaponstats"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+		<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>#weaponstats"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
 		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
 	</h1>
 	<table cellpadding="2" cellspacing="0" border="1" width="100%">
@@ -557,7 +557,7 @@ $rcol = "row-dark";
 	<a name="weapontarget"></a>
 	<h1>
 		<?php echo l('Weapon Target'); ?>
-		<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>#weapontarget"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+		<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>#weapontarget"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
 		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
 	</h1>
 	<table cellpadding="2" cellspacing="0" border="1" width="100%">
