@@ -151,6 +151,7 @@ class Player {
 		$this->_getPlayerPlayerActions();
 		$this->_getTeamSelection();
 		$this->_getWeaponUsage();
+		$this->_getWeaponStats();
 
 		$this->_getRank('rankPoints');
 	}
@@ -422,6 +423,38 @@ class Player {
 		if(mysql_num_rows($query) > 0) {
 			while($result = mysql_fetch_assoc($query)) {
 				$this->_playerData['weaponUsage'][] = $result;
+			}
+			mysql_free_result($query);
+		}
+	}
+
+	/**
+	 * get the weapon stats if we have the info in the db
+	 */
+	private function _getWeaponStats() {
+		$this->_playerData['weaponStats'] = array();
+		$query = mysql_query("SELECT ".DB_PREFIX."_Events_Statsme.weapon AS smweapon,
+					".DB_PREFIX."_Weapons.name,
+					SUM(".DB_PREFIX."_Events_Statsme.kills) AS smkills,
+					SUM(".DB_PREFIX."_Events_Statsme.hits) AS smhits,
+					SUM(".DB_PREFIX."_Events_Statsme.shots) AS smshots,
+					SUM(".DB_PREFIX."_Events_Statsme.headshots) AS smheadshots,
+					SUM(".DB_PREFIX."_Events_Statsme.deaths) AS smdeaths,
+					SUM(".DB_PREFIX."_Events_Statsme.damage) AS smdamage,
+					IFNULL((ROUND((SUM(".DB_PREFIX."_Events_Statsme.damage) / SUM(".DB_PREFIX."_Events_Statsme.hits)), 1)), '-') as smdhr,
+					SUM(".DB_PREFIX."_Events_Statsme.kills) / IF((SUM(".DB_PREFIX."_Events_Statsme.deaths)=0), 1, (SUM(".DB_PREFIX."_Events_Statsme.deaths))) as smkdr,
+					ROUND((SUM(".DB_PREFIX."_Events_Statsme.hits) / SUM(".DB_PREFIX."_Events_Statsme.shots) * 100), 1) as smaccuracy,
+					IFNULL((ROUND((SUM(".DB_PREFIX."_Events_Statsme.shots) / SUM(".DB_PREFIX."_Events_Statsme.kills)), 1)), '-') as smspk
+				FROM ".DB_PREFIX."_Events_Statsme
+					LEFT JOIN ".DB_PREFIX."_Servers ON ".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Statsme.serverId
+					LEFT JOIN ".DB_PREFIX."_Weapons ON ".DB_PREFIX."_Weapons.code = ".DB_PREFIX."_Events_Statsme.weapon
+				WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'
+					AND ".DB_PREFIX."_Events_Statsme.PlayerId=".mysql_escape_string($this->playerId)."
+				GROUP BY ".DB_PREFIX."_Events_Statsme.weapon
+				ORDER BY smkdr DESC, smweapon DESC");
+		if(mysql_num_rows($query) > 0) {
+			while($result = mysql_fetch_assoc($query)) {
+				$this->_playerData['weaponStats'][] = $result;
 			}
 			mysql_free_result($query);
 		}
