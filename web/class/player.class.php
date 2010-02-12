@@ -147,6 +147,7 @@ class Player {
 		$this->_getTeamkills();
 		$this->_getWeaponaccuracy();
 		$this->_getAliasTable();
+		$this->_getActions();
 
 		$this->_getRank('rankPoints');
 	}
@@ -310,6 +311,35 @@ class Player {
 			while($result = mysql_fetch_assoc($query)) {
 				$this->_playerData['aliases'][] = $result;
 			}
+			mysql_free_result($query);
+		}
+	}
+
+	/**
+	 * get the player action table
+	 */
+	private function _getActions() {
+		$this->_playerData['actions'] = array();
+		$query = mysql_query("SELECT ".DB_PREFIX."_Actions.description,
+						COUNT(".DB_PREFIX."_Events_PlayerActions.id) AS obj_count,
+						COUNT(".DB_PREFIX."_Events_PlayerActions.id) * ".DB_PREFIX."_Actions.reward_player AS obj_bonus
+					FROM
+						".DB_PREFIX."_Actions
+					LEFT JOIN ".DB_PREFIX."_Events_PlayerActions ON
+						".DB_PREFIX."_Events_PlayerActions.actionId = ".DB_PREFIX."_Actions.id
+					LEFT JOIN ".DB_PREFIX."_Servers ON
+						".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_PlayerActions.serverId
+					WHERE
+						".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'
+						AND ".DB_PREFIX."_Events_PlayerActions.playerId=".mysql_escape_string($this->playerId)."
+					GROUP BY
+						".DB_PREFIX."_Actions.id
+					ORDER BY obj_count DESC");
+		if(mysql_num_rows($query) > 0) {
+			while($result = mysql_fetch_assoc($query)) {
+				$this->_playerData['actions'][] = $result;
+			}
+			mysql_free_result($query);
 		}
 	}
 }

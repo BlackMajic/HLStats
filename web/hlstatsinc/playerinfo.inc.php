@@ -369,14 +369,15 @@ $rcol = "row-dark";
 			<td colspan="2">&nbsp;</td>
 		</tr>
 	</table>
-	<a name="aliases"></a>
-	<h1>
-		<?php echo l('Aliases'); ?>
-		<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>#aliases"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" /></a>
-	</h1>
+
 	<?php
 	$aliases = $playerObj->getParam('aliases');
 	if(!empty($aliases)) { ?>
+	<a name="aliases"></a>
+	<h1>
+		<?php echo l('Aliases'); ?>
+		<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>#aliases"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+	</h1>
 	<table cellpadding="2" cellspacing="0" border="1" width="100%">
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l('Name'); ?></th>
@@ -401,10 +402,34 @@ $rcol = "row-dark";
 		}
 		?>
 	</table>
+	<?php }
 
-	<?php } ?>
+	$actions = $playerObj->getParam('actions');
+	if(!empty($actions)) { ?>
+	<a name="playeractions"></a>
+	<h1>
+		<?php echo l('Player Actions'); ?>
+		<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>#playeractions"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
+	</h1>
+	<table cellpadding="2" cellspacing="0" border="1" width="100%">
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
+			<th><?php echo l('Action'); ?></th>
+			<th><?php echo l('Achieved'); ?></th>
+			<th><?php echo l('Points Bonus'); ?></th>
+		</tr>
+		<?php
+		foreach ($actions as $entry) {
+			echo '<tr class="',toggleRowClass($rcol),'">';
+			echo '<td>',$entry['description'],'</td>';
+			echo '<td>',$entry['obj_count'],'</td>';
+			echo '<td>',$entry['obj_bonus'],'</td>';
+			echo '</tr>';
+		}
+		?>
+	</table>
+	<?php }
 
-<?php
 	if($g_options['showChart'] == "1") {
 		$query = mysql_query("SELECT
 				".DB_PREFIX."_Events_StatsmeTime.*,
@@ -512,102 +537,7 @@ $rcol = "row-dark";
 <?php
 		}
 	}
-	flush();
-	$tblAliases = new Table(
-		array(
-			new TableColumn(
-				"name",
-				"Name",
-				"width=25"
-			),
-			new TableColumn(
-				"numuses",
-				"Used",
-				"width=10&align=right&append=+times"
-			),
-			new TableColumn(
-				"lastuse",
-				"Last Use",
-				"width=20"
-			),
-			new TableColumn(
-				"kills",
-				"Kills",
-				"width=10&align=right"
-			),
-			new TableColumn(
-				"deaths",
-				"Deaths",
-				"width=10&align=right"
-			),
-			new TableColumn(
-				"kpd",
-				"Kills per Death",
-				"width=10&align=right"
-			),
-			new TableColumn(
-				"suicides",
-				"Suicides",
-				"width=10&align=right"
-			)
-		),
-		"name",
-		"lastuse",
-		"name",
-		true,
-		20,
-		"aliases_page",
-		"aliases_sort",
-		"aliases_sortorder",
-		"aliases"
-	);
 
-	$queryAlias = mysql_query("
-		SELECT
-			name,
-			lastuse,
-			numuses,
-			kills,
-			deaths,
-			IFNULL(
-				kills / deaths,
-				'-'
-			) AS kpd,
-			suicides
-		FROM
-			".DB_PREFIX."_PlayerNames
-		WHERE
-			playerId='".mysql_escape_string($player)."'
-		ORDER BY
-			".$tblAliases->sort." ".$tblAliases->sortorder."
-		LIMIT ".$tblAliases->startitem.",".$tblAliases->numperpage."
-	");
-
-	$resultCount = mysql_query("SELECT COUNT(*) pl FROM ".DB_PREFIX."_PlayerNames WHERE playerId=".mysql_escape_string($player)."");
-	$result = mysql_fetch_assoc($resultCount);
-	$numitems = $result['pl'];
-
-	if ($numitems > 1) {
-?>
-
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td width="100%"></a>
-<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b><?php echo l('Aliases'); ?></b><?php echo $g_options["fontend_normal"];?></td>
-</tr>
-<tr>
-	<td>
-	<div style="margin-top: 10px; margin-left: 40px;">
-	<?php
-		$tblAliases->draw($queryAlias, $numitems, 100);
-	?>
-	</div>
-	</td>
-</tr>
-</table>
-<p>&nbsp;</p>
-<?php
-	}
 	flush();
 	$tblPlayerActions = new Table(
 		array(
