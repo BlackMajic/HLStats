@@ -174,6 +174,24 @@ class Player {
 		$this->_getRank('rankPoints');
 	}
 
+	public function getPlaytimePerDayData() {
+		exit('todo');
+		$ret = false;
+		$query = mysql_query("SELECT ".DB_PREFIX."_Events_StatsmeTime.*,
+				TIME_TO_SEC(".DB_PREFIX."_Events_StatsmeTime.time) as tTime
+			FROM ".DB_PREFIX."_Events_StatsmeTime
+			LEFT JOIN ".DB_PREFIX."_Servers ON
+				".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_StatsmeTime.serverId
+			WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'
+				AND playerId='".mysql_escape_string($this->playerId)."'");
+		while($result = mysql_fetch_assoc($query)) {
+			$ret[] = $result;
+		}
+
+
+		return $ret;
+	}
+
 	/**
 	 * get the playerId via the player uniqueid
 	 * the game is also needed !

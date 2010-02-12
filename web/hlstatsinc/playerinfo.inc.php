@@ -676,114 +676,27 @@ $rcol = "row-dark";
 	<?php }
 
 
+//---------------------------------------
+
 
 	if($g_options['showChart'] == "1") {
-		$query = mysql_query("SELECT
-				".DB_PREFIX."_Events_StatsmeTime.*,
-				TIME_TO_SEC(".DB_PREFIX."_Events_StatsmeTime.time) as tTime
-			FROM
-				".DB_PREFIX."_Events_StatsmeTime
-			LEFT JOIN ".DB_PREFIX."_Servers ON
-				".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_StatsmeTime.serverId
-			WHERE
-				".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
-				AND playerId='".mysql_escape_string($player)."'");
-		$eventsArr = array();
-		while($result = mysql_fetch_assoc($query)) {
-			$eventsArr[] = $result;
-		}
-		if(!empty($eventsArr)) {
-		    // group by day
-		    foreach ($eventsArr as $entry) {
-		    	$dateArr = explode(" ",$entry['eventTime']);
-				$eventsGruped[$dateArr[0]][] = $entry;
-		    }
+		?>
+		<a name="playtime"></a>
+		<h1>
+			<?php echo l('Playtime per day'); ?>
+			<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>#playtime"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+			(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
+		</h1>
+		<?php
+		//@todo
+		/*
+		require('class/chart.class.php');
+		$chartObj = new Chart($game);
 
-		    // create the xml data for the flash
-	        $timeLineData['xml'] = "<?xml version='1.0' encoding='UTF-8'?>";
-	        $timeLineData['xml'] .= "<chart>";
+		$chart = $chartObj->getChart('playTimePerDay',$player);
+		echo '<img src="',$chart,'" />';
+		*/
 
-	        // first we create the data for x
-	        $timeLineData['xml'] .= "<series>";
-	        foreach ($eventsGruped as $day=>$val) {
-	        	$timeLineData['xml'] .= "<value xid='".$day."'>".$day."</value>";
-	        }
-	        $timeLineData['xml'] .= "</series>";
-
-	        // now we create the graphs
-	        $timeLineData['xml'] .= "<graphs>";
-
-	        foreach ($eventsGruped as $day=>$events) {
-	        	$totalTime = 0;
-	            foreach ($events as $eventArr) {
-					$totalTime += $eventArr['tTime']; // seconds
-	            }
-	            if($totalTime >= 3600) {
-	            	$hours = intval($totalTime / 3600);
-
-	            	$secondsLeft = $totalTime - ($hours * 3600);
-	            	$minutes = intval($secondsLeft / 60);
-
-	            	$seconds = $secondsLeft - ($minutes * 60);
-
-	            	$value = $hours."h ".$minutes."m ".$seconds."s";
-	            }
-	            else {
-	            	$minutes = intval($totalTime / 60);
-	            	$seconds = $totalTime - ($minutes * 60);
-
-	            	$value = $minutes."m ".$seconds."s";
-	            }
-	        	$timeLineData['xml'] .= "<graph gid='".$day."' title='".$value."'>";
-	        	$timeLineData['xml'] .= "<value xid='".$day."' description='Playertime'>".$totalTime."</value>";
-	        	$timeLineData['xml'] .= "</graph>";
-	        }
-
-	        $timeLineData['xml'] .= "</graphs>";
-
-	        $timeLineData['xml'] .= "</chart>";
-
-	        $timeLineData['height'] = 250;
-?>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td width="50%" align="left">
-		<a name="aliases"></a>
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b> <?php echo l('Playtime per day'); ?></b> (<?php echo l('hover over the bars to get more information'); ?>)<?php echo $g_options["fontend_normal"];?>
-	</td>
-	<td width="50%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
-	</td>
-</tr>
-<tr>
-	<td colspan="2">
-	<div style="margin-top: 10px; margin-left: 40px;">
-		<div style="text-align: center; display: block;" id="flash_timeline">
-	        <div id="playerTimeline">
-				<?php echo $g_options["font_normal"]; ?>
-				<b><?php echo l('You need to upgrade your flash player'); ?></b><br />
-				<a href="http://www.adobe.com/go/getflashplayer" target="_blank"><?php echo l('Get Flashplayer'); ?></a>
-				<?php echo $g_options["fontend_normal"];?>
-			</div>
-			<script type="text/javascript">
-				// <![CDATA]
-				var so = new SWFObject("hlstatsinc/amcharts/column/amcolumn.swf?<?php echo time(); ?>", "playerTimeline", "600", "<?php echo $timeLineData["height"]; ?>", "8", "<?php echo $g_options['body_bgcolor']; ?>");
-				so.addVariable("path", "hlstatsinc/amcharts/column/");
-				so.addVariable("settings_file", escape("hlstatsinc/amcharts/column/settings_playertime.xml"));
-				so.addVariable("chart_data", "<?php echo $timeLineData['xml']; ?>");
-				so.addVariable("additional_chart_settings", "<settings><text_color><?php echo $g_options["body_text"]; ?></text_color></settings>");
-				so.addVariable("preloader_color", "<?php echo $g_options["body_text"]; ?>");
-				so.write("playerTimeline");
-				// ]]
-			</script>
-		</div>
-	</div>
-	</td>
-</tr>
-</table>
-<?php
-		}
-	}
 
 	flush();
 	$tblRoles = new Table(

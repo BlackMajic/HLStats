@@ -109,7 +109,10 @@ class Chart {
 		return false;
 	}
 
-	public function getChart($mode) {
+	/**
+	 * create the given chart
+	 */
+	public function getChart($mode,$extra=false) {
 		$this->_loadClasses();
 
 		$chart = false;
@@ -117,7 +120,7 @@ class Chart {
 		switch($mode) {
 			case 'playerActivity':
 				$this->setOption('chartFile',"tmp/".$this->_game.'-playeractivity'."-".$this->_option['curDate'].".png");
-				
+
 				// check if we have already a picture
 				// create one only once a day
 				if(file_exists($this->_option['chartFile'])
@@ -135,11 +138,37 @@ class Chart {
 				$chart = $this->_mostTimeOnline();
 			break;
 
+			case 'playTimePerDay':
+				if(empty($extra)) { return false; }
+				$this->setOption('chartFile',"tmp/".$this->_game.'-playTimePerDay'.'-'.$extra.'-'.$this->_option['curDate'].".png");
+
+				// check if we have already a picture
+				// create one only once a day
+				if(file_exists($this->_option['chartFile'])
+					&& SHOW_DEBUG === false) {
+					$chart = $this->_option['chartFile'];
+				}
+				else {
+					// remove old charts
+					$this->_cleanOldCharts($this->_game.'-playTimePerDay');
+					$chart = $this->_getPlayerTimePerDay($extra);
+				}
+			break;
+
 			default:
 			//nothing
 		}
 
 		return $chart;
+	}
+
+	private function _getPlayerTimePerDay($playerId) {
+		if(!in_array('Player',get_declared_classes())) {
+			require 'player.class.php';
+		}
+		$playerObj = new Player($playerId,false,$this->_game);
+		$data = $playerObj->getPlaytimePerDayData();
+		var_dump($data);
 	}
 
 	/**
@@ -205,7 +234,7 @@ class Chart {
 			// draw the bar graph
 			$this->_pChart->drawBarGraph($this->_pData->GetData(),$this->_pData->GetDataDescription(),TRUE);
 		}
-		
+
 		// Finish the graph
 		//$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",8);
 		$this->_pChart->drawLegend(10,$this->_option['height']-40,$this->_pData->GetDataDescription(),255,255,255);

@@ -234,6 +234,4 @@ class Players {
 		mysql_free_result($query);
 	}
 }
-
-
 ?>
