@@ -175,7 +175,7 @@ class Player {
 	}
 
 	public function getPlaytimePerDayData() {
-		exit('todo');
+		//exit('todo');
 		$ret = false;
 		$query = mysql_query("SELECT ".DB_PREFIX."_Events_StatsmeTime.*,
 				TIME_TO_SEC(".DB_PREFIX."_Events_StatsmeTime.time) as tTime
@@ -187,7 +187,6 @@ class Player {
 		while($result = mysql_fetch_assoc($query)) {
 			$ret[] = $result;
 		}
-
 
 		return $ret;
 	}

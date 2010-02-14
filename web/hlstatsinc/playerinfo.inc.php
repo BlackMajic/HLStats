@@ -330,7 +330,7 @@ $rcol = "row-dark";
 			<th><?php echo l("Player ID"); ?></th>
 			<td><?php echo $player; ?></td>
 			<th><?php echo l("Kills per Death"); ?></th>
-			<td><?php echo $playerObj->getParam("kpd"); ?></t>
+			<td><?php echo number_format($playerObj->getParam("kpd"),1); ?></t>
 		</tr>
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th>
@@ -357,7 +357,7 @@ $rcol = "row-dark";
 			<th><?php echo l("Last Connect"); ?>*</th>
 			<td><?php echo $playerObj->getParam('lastConnect'); ?></td>
 			<th><?php echo l("Weapon Accuracy"); ?></th>
-			<td><?php echo $playerObj->getParam("accuracy"); ?>%</td>
+			<td><?php echo number_format($playerObj->getParam("accuracy"),1); ?>%</td>
 		</tr>
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l("Total Connection Time"); ?>*</th>
@@ -689,13 +689,13 @@ $rcol = "row-dark";
 		</h1>
 		<?php
 		//@todo
-		/*
+		
 		require('class/chart.class.php');
 		$chartObj = new Chart($game);
 
 		$chart = $chartObj->getChart('playTimePerDay',$player);
 		echo '<img src="',$chart,'" />';
-		*/
+		
 
 
 	flush();
@@ -786,6 +786,7 @@ $rcol = "row-dark";
 </table><p>
 
 <?php
+}
 	}
 
 	if($g_options['showChart'] == "1") {
