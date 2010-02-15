@@ -372,9 +372,9 @@ $rcol = "row-dark";
 		</tr>
 	</table>
 
-	<?php
-	$aliases = $playerObj->getParam('aliases');
-	if(!empty($aliases)) { ?>
+<?php
+$aliases = $playerObj->getParam('aliases');
+if(!empty($aliases)) { ?>
 	<a name="aliases"></a>
 	<h1>
 		<?php echo l('Aliases'); ?>
@@ -404,10 +404,10 @@ $rcol = "row-dark";
 		}
 		?>
 	</table>
-	<?php }
+<?php }
 
-	$actions = $playerObj->getParam('actions');
-	if(!empty($actions)) { ?>
+$actions = $playerObj->getParam('actions');
+if(!empty($actions)) { ?>
 	<a name="playeractions"></a>
 	<h1>
 		<?php echo l('Player Actions'); ?>
@@ -430,10 +430,10 @@ $rcol = "row-dark";
 		}
 		?>
 	</table>
-	<?php }
+<?php }
 
-	$playerPlayerActions = $playerObj->getParam('playerPlayerActions');
-	if(!empty($playerPlayerActions)) { ?>
+$playerPlayerActions = $playerObj->getParam('playerPlayerActions');
+if(!empty($playerPlayerActions)) { ?>
 	<a name="playerplayeractions"></a>
 	<h1>
 		<?php echo l('Player-Player Actions'); ?>
@@ -456,10 +456,10 @@ $rcol = "row-dark";
 		}
 		?>
 	</table>
-	<?php }
+<?php }
 
-	$teamSelection = $playerObj->getParam('teamSelection');
-	if(!empty($teamSelection)) { ?>
+$teamSelection = $playerObj->getParam('teamSelection');
+if(!empty($teamSelection)) { ?>
 	<a name="teams"></a>
 	<h1>
 		<?php echo l('Team Selection'); ?>
@@ -482,10 +482,10 @@ $rcol = "row-dark";
 		}
 		?>
 	</table>
-	<?php }
+<?php }
 
-	$weaponUsage = $playerObj->getParam('weaponUsage');
-	if(!empty($weaponUsage)) { ?>
+$weaponUsage = $playerObj->getParam('weaponUsage');
+if(!empty($weaponUsage)) { ?>
 	<a name="weaponusage"></a>
 	<h1>
 		<?php echo l('Weapon Usage'); ?>
@@ -510,10 +510,10 @@ $rcol = "row-dark";
 		}
 		?>
 	</table>
-	<?php }
+<?php }
 
-	$weaponStats = $playerObj->getParam('weaponStats');
-	if(!empty($weaponStats)) { ?>
+$weaponStats = $playerObj->getParam('weaponStats');
+if(!empty($weaponStats)) { ?>
 	<a name="weaponstats"></a>
 	<h1>
 		<?php echo l('Weapon Stats'); ?>
@@ -552,10 +552,10 @@ $rcol = "row-dark";
 		}
 		?>
 	</table>
-	<?php }
+<?php }
 
-	$weaponTarget = $playerObj->getParam('weaponTarget');
-	if(!empty($weaponTarget)) { ?>
+$weaponTarget = $playerObj->getParam('weaponTarget');
+if(!empty($weaponTarget)) { ?>
 	<a name="weapontarget"></a>
 	<h1>
 		<?php echo l('Weapon Target'); ?>
@@ -588,10 +588,10 @@ $rcol = "row-dark";
 		}
 		?>
 	</table>
-	<?php }
+<?php }
 
-	$maps = $playerObj->getParam('maps');
-	if(!empty($maps)) { ?>
+$maps = $playerObj->getParam('maps');
+if(!empty($maps)) { ?>
 	<a name="maps"></a>
 	<h1>
 		<?php echo l('Map Performance'); ?>
@@ -618,10 +618,10 @@ $rcol = "row-dark";
 		}
 		?>
 	</table>
-	<?php }
+<?php }
 
-	$playerKillStats = $playerObj->getParam('killstats');
-	if(!empty($playerKillStats)) { ?>
+$playerKillStats = $playerObj->getParam('killstats');
+if(!empty($playerKillStats)) { ?>
 	<a name="killstats"></a>
 	<h1>
 		<?php echo l('Player Kill Statistics'); ?>
@@ -673,7 +673,7 @@ $rcol = "row-dark";
 	?>
 	</select>
 	<?php echo l('or more times in the last'),' ',DELETEDAYS,' ',l('days'); ?>
-	<?php }
+<?php }
 
 
 //---------------------------------------
@@ -689,13 +689,13 @@ $rcol = "row-dark";
 		</h1>
 		<?php
 		//@todo
-		
+
 		require('class/chart.class.php');
 		$chartObj = new Chart($game);
 
 		$chart = $chartObj->getChart('playTimePerDay',$player);
 		echo '<img src="',$chart,'" />';
-		
+
 
 
 	flush();
