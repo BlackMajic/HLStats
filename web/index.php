@@ -1,27 +1,27 @@
 <?php
 /**
  * Original development:
- * +
+ *
  * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
- * +
+ *
  * + Copyright (C) 2001  Simon Garner
- * +
+ *
  *
  * Additional development:
- * +
+ *
  * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
- * +
+ *
  *
  *
  * Current development:
- * +
+ *
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
  * + 2007 - 2010
- * +
+ *
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,17 +36,23 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
+ * @package HLStats
  */
 
-// Check PHP configuration
+/**
+ * Check PHP configuration
+ */
 if (version_compare(phpversion(), "5.2.0", "<")) {
 	die("HLStats requires PHP version 5.2.0 or newer (you are running PHP version " . phpversion() . ").");
 }
 
 date_default_timezone_set('Europe/Berlin');
 
-// if you have problems with your installation
-// activate this paramter by setting it to true
+/**
+ * if you have problems with your installation
+ * activate this paramter by setting it to true
+ */
 define('SHOW_DEBUG',true);
 
 // do not display errors in live version
@@ -59,14 +65,19 @@ else {
 	ini_set('display_errors',false);
 }
 
-// load config
+/**
+ * load the config
+ */
 require('hlstatsinc/hlstats.conf.php');
 
 /**
- * load required stuff
- * general classes like tablle class
+ * load the global functions
  */
 require("hlstatsinc/functions.inc.php");
+/**
+ * the old class system
+ * @todo remove
+ */
 require("hlstatsinc/classes.inc.php");
 
 /**
@@ -109,6 +120,9 @@ header("Content-type: text/html; charset=UTF-8");
 //// Initialisation
 ////
 
+/**
+ * the release version
+ */
 define("VERSION", "development version");
 
 $db_con = mysql_connect(DB_ADDR,DB_USER,DB_PASS);
@@ -208,8 +222,15 @@ else {
 	}
 }
 
+/**
+ * include the requested page
+ * the $mode is checked above
+ */
 include("hlstatsinc/".$mode.".inc.php");
 
+/**
+ * include the global footer
+ */
 include("hlstatsinc/footer.inc.php");
 mysql_close($db_con);
 ?>

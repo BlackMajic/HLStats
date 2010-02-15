@@ -174,8 +174,11 @@ class Player {
 		$this->_getRank('rankPoints');
 	}
 
+	/**
+	 * get the playe time for this player per day
+	 * @todo
+	 */
 	public function getPlaytimePerDayData() {
-		//exit('todo');
 		$ret = false;
 		$query = mysql_query("SELECT ".DB_PREFIX."_Events_StatsmeTime.*,
 				TIME_TO_SEC(".DB_PREFIX."_Events_StatsmeTime.time) as tTime

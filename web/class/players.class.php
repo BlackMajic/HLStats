@@ -212,7 +212,7 @@ class Players {
 	 * @return array The data
 	 */
 	public function getMostTimeOnline() {
-		exit();
+		exit('not wroking yet');
 		$data = array();
 
 		$query = mysql_query("SELECT ".DB_PREFIX."_Events_StatsmeTime.*,

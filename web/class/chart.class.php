@@ -162,13 +162,16 @@ class Chart {
 		return $chart;
 	}
 
+	/**
+	 * create the player time per day chart
+	 * @todo
+	 */
 	private function _getPlayerTimePerDay($playerId) {
 		if(!in_array('Player',get_declared_classes())) {
 			require 'player.class.php';
 		}
 		$playerObj = new Player($playerId,false,$this->_game);
 		$data = $playerObj->getPlaytimePerDayData();
-		var_dump($data);
 	}
 
 	/**

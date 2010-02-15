@@ -676,26 +676,20 @@ if(!empty($playerKillStats)) { ?>
 <?php }
 
 
-//---------------------------------------
-
-
-	if($g_options['showChart'] == "1") {
-		?>
+if($g_options['showChart'] == "1") {
+	require('class/chart.class.php');
+	$chartObj = new Chart($game);
+	$chart = $chartObj->getChart('playTimePerDay',$player);
+	if(!empty($chart)) {
+?>
 		<a name="playtime"></a>
 		<h1>
 			<?php echo l('Playtime per day'); ?>
 			<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>#playtime"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
 			(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
 		</h1>
-		<?php
-		//@todo
-
-		require('class/chart.class.php');
-		$chartObj = new Chart($game);
-
-		$chart = $chartObj->getChart('playTimePerDay',$player);
-		echo '<img src="',$chart,'" />';
-
+		<img src="<?php echo $chart; ?>" />
+<?php }
 
 
 	flush();
