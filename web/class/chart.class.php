@@ -1,5 +1,11 @@
 <?php
 /**
+ * chart class file. uses the pChart library
+ * @package HLStats
+ */
+
+
+/**
  * Original development:
  * +
  * + HLStats - Real-time player and clan rankings and statistics for Half-Life
@@ -38,6 +44,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/**
+ * the chart class to build the chrats with the pChart library
+ * @package HLStats
+ */
 class Chart {
 
 	/**
@@ -49,21 +59,29 @@ class Chart {
 
 	/**
 	 * the options for this class
+	 *
+	 * @var array The options
 	 */
 	private $_option = array();
 
 	/**
 	 * the data object of pChart
+	 *
+	 * @var object The pChart data library
 	 */
 	private $_pData = false;
 
 	/**
 	 * the pChart object
+	 *
+	 * @var object The pChart pchart library
 	 */
 	private $_pChart = false;
 
 	/**
 	 * load up and set default values
+	 *
+	 * @param string $game The game code
 	 */
 	public function __construct($game) {
 
@@ -98,7 +116,9 @@ class Chart {
 
 	/**
 	 * either return the value or false
+	 *
 	 * @param string $key The param to get
+	 *
 	 * @return mixed The value or false
 	 */
 	public function getOption($key) {
@@ -111,6 +131,11 @@ class Chart {
 
 	/**
 	 * create the given chart
+	 *
+	 * @param string $mode The chart to create
+	 * @param string $extra Extra parameter to creat the chart eg. playerid
+	 *
+	 * @return string The path to the created chart image
 	 */
 	public function getChart($mode,$extra=false) {
 		$this->_loadClasses();
@@ -232,6 +257,7 @@ class Chart {
 
 	/**
 	 * create the player time per day chart
+	 *
 	 * @todo to complete
 	 */
 	private function _getPlayerTimePerDay($playerId) {
@@ -327,6 +353,7 @@ class Chart {
 
 	/**
 	 * create the image for player activity
+	 * @todo To complete
 	 * @return array The path to the image
 	 */
 	private function _mostTimeOnline() {
@@ -396,6 +423,8 @@ class Chart {
 
 	/**
 	 * load the required pChart classes
+	 *
+	 * @return void
 	 */
 	private function _loadClasses() {
 		require_once('class/pchart/pData.class.php');
@@ -412,6 +441,8 @@ class Chart {
 
 	/**
 	 * cleans old chart data to avoid data waste
+	 *
+	 * @return void
 	 */
 	private function _cleanOldCharts($name) {
 		$data = glob('tmp/'.$name.'/*');
