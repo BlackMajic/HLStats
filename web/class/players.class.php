@@ -1,27 +1,31 @@
 <?php
 /**
+ * players class file
+ * @package HLStats
+ */
+
+/**
  * Original development:
- * +
+ *
  * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
- * +
  * + Copyright (C) 2001  Simon Garner
- * +
+ *
  *
  * Additional development:
- * +
+ *
  * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
- * +
+ *
  *
  *
  * Current development:
- * +
+ *
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
  * + 2007 - 2010
- * +
+ *
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -38,6 +42,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/**
+ * all information about the players for a given game
+ * @package HLStats
+ */
 class Players {
 
 	/**
@@ -49,13 +57,13 @@ class Players {
 
 	/**
 	 * the options for queries
+	 *
 	 * @var array The options
 	 */
 	private $_option = array();
 
 	/**
-	 * set some vars and the game
-	 * game check is already done
+	 * set some vars and the game. Game code check is already done
 	 *
 	 * @param string $game The current game
 	 */
@@ -82,6 +90,13 @@ class Players {
 		$this->_option[$key] = $value;
 	}
 
+	/**
+	 * return for the given key the value
+	 *
+	 * @param string $key The key for the wanted value
+	 *
+	 * @return string The valuefor given key
+	 */
 	public function getOption($key) {
 		$ret = false;
 
@@ -95,6 +110,8 @@ class Players {
 	/**
 	 * get the players for the current game
 	 * for the players overview page
+	 *
+	 * @return array The players
 	 */
 	public function getPlayersOveriew() {
 		$ret['data'] = array();
@@ -208,6 +225,8 @@ class Players {
 
 	/**
 	 * get the most time online
+	 *
+	 * @todo To complete
 	 *
 	 * @return array The data
 	 */

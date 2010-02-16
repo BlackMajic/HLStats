@@ -1,27 +1,31 @@
 <?php
 /**
+ * player class file
+ * @package HLStats
+ */
+
+/**
  * Original development:
- * +
+ *
  * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
- * +
  * + Copyright (C) 2001  Simon Garner
- * +
+ *
  *
  * Additional development:
- * +
+ *
  * + UA HLStats Team
  * + http://www.unitedadmins.com
  * + 2004 - 2007
- * +
+ *
  *
  *
  * Current development:
- * +
+ *
  * + Johannes 'Banana' Keßler
  * + http://hlstats.sourceforge.net
  * + 2007 - 2010
- * +
+ *
  *
  * This program is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License
@@ -36,34 +40,51 @@
  * You should have received a copy of the GNU General Public License
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ *
  */
 
+/**
+ * all information about a player is handled with this class
+ * @package HLStats
+ */
 class Player {
 	/**
 	 * the player id
+	 * @var int The player id
 	 */
-	public $playerId = false;
+	public $playerId = 0;
 
 	/**
 	 * the game
 	 * need for player lookup via uniqueid
+	 *
+	 * @var string The game code
 	 */
 	private $_game = false;
 
 	/**
 	 * the player data
 	 * non empty if successfull
+	 * @var array The playerData
+	 *
 	 */
 	private $_playerData = false;
 
 	/**
 	 * the options
-	 * @var array
+	 *
+	 * @var array The options needed for this class
 	 */
 	private $_option = array();
 
 	/**
 	 * load the player id
+	 *
+	 * @param int $id The player id
+	 * @param string $mode If the player lookup is via playerId oder uniqueId
+	 * @param string $game The game code
+	 *
+	 * @return boolean $ret Either true or false
 	 */
 	public function __construct($id,$mode,$game) {
 		$ret = false;
@@ -95,6 +116,10 @@ class Player {
 
 	/**
 	 * return given param from player
+	 *
+	 * @param string $param The information key to get
+	 *
+	 * @return mixed Either false or the value for the given key
 	 */
 	public function getParam($param) {
 		$ret = false;
@@ -110,6 +135,11 @@ class Player {
 
 	/**
 	 * set the given option to the given value
+	 *
+	 * @param string $key The key for this option
+	 * @param string $value The value for the given key
+	 *
+	 * @return void
 	 */
 	public function setOption($key,$value) {
 		if(!empty($key)) {
@@ -119,6 +149,8 @@ class Player {
 
 	/**
 	 * load the player data from db
+	 *
+	 * @return void
 	 */
 	private function _load() {
 		if(!empty($this->playerId)) {
@@ -152,6 +184,8 @@ class Player {
 
 	/**
 	 * load the full information needed for player info page
+	 *
+	 * @return void
 	 */
 	public function loadFullInformation() {
 		// load additional stuff and save it into the _playerData array
@@ -176,7 +210,9 @@ class Player {
 
 	/**
 	 * get the playe time for this player per day
-	 * @todo
+	 * @todo: to complete
+	 *
+	 * @return array The playerTime data for the chart
 	 */
 	public function getPlaytimePerDayData() {
 		$ret = false;
@@ -187,8 +223,29 @@ class Player {
 				".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_StatsmeTime.serverId
 			WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'
 				AND playerId='".mysql_escape_string($this->playerId)."'");
-		while($result = mysql_fetch_assoc($query)) {
-			$ret[] = $result;
+		if(mysql_num_rows($query) > 0) {
+			while($result = mysql_fetch_assoc($query)) {
+				$ret[] = $result;
+			}
+		}
+
+		return $ret;
+	}
+
+	public function getKillsPerDay() {
+		$ret = false;
+
+		// the extract function does not support year_month_day.....
+		$query = mysql_query("SELECT COUNT(*) AS dayEvents,
+							 CONCAT(EXTRACT(YEAR FROM `eventTime`),'-',EXTRACT(MONTH FROM `eventTime`),'-',EXTRACT(DAY FROM `eventTime`)) AS eventDay
+							 FROM `".DB_PREFIX."_Events_Frags`
+							 WHERE `killerId` = '".mysql_escape_string($this->playerId)."'
+							 GROUP BY eventDay
+							 ORDER BY eventTime");
+		if(mysql_num_rows($query) > 0) {
+			while($result = mysql_fetch_assoc($query)) {
+				$ret[] = $result;
+			}
 		}
 
 		return $ret;
@@ -197,6 +254,10 @@ class Player {
 	/**
 	 * get the playerId via the player uniqueid
 	 * the game is also needed !
+	 *
+	 * @param string $id The player unique id string
+	 *
+	 * @return boolean true or false
 	 */
 	private function _lookupPlayerIdFromUniqeId($id) {
 		$ret = false;
@@ -216,7 +277,9 @@ class Player {
 	}
 
 	/**
-	 * get the playr uniqueids if any
+	 * get the player uniqueids if any
+	 *
+	 * @return void
 	 */
 	private function _getUniqueIds() {
 		$this->_playerData['uniqueIds'] = '-';
@@ -234,6 +297,8 @@ class Player {
 
 	/**
 	 * get the last connect from connect table
+	 *
+	 * @return void
 	 */
 	private function _getLastConnect() {
 		$this->_playerData['lastConnect'] = l('No info');
@@ -250,6 +315,8 @@ class Player {
 	/**
 	 * get the max connection time
 	 * if we have the information
+	 *
+	 * @return void
 	 */
 	private function _getMaxConnectTime() {
 		$this->_playerData['maxTime'] = l('No info');
@@ -264,7 +331,10 @@ class Player {
 	}
 
 	/**
-	 * get the average ping if we have the information
+	 * get the average ping
+	 * if we have the information
+	 *
+	 * @return void
 	 */
 	private function _getAvgPing() {
 		$this->_playerData['avgPing'] = l('No info');
@@ -280,7 +350,10 @@ class Player {
 
 	/**
 	 * get the rank by given ORDER
+	 *
 	 * @param $mode string The mode on which order the rank is based
+	 *
+	 * @return void
 	 */
 	private function _getRank($mode) {
 		switch($mode) {
@@ -304,6 +377,8 @@ class Player {
 
 	/**
 	 * get the teamkills for this player and game
+	 *
+	 * @return void
 	 */
 	private function _getTeamkills() {
 		$this->_playerData['teamkills'] = l('No info');
@@ -321,6 +396,8 @@ class Player {
 	/**
 	 * get the weapon accuracy
 	 * if we have the info
+	 *
+	 * @return void
 	 */
 	private function _getWeaponaccuracy() {
 		$this->_playerData['accuracy'] = l('No info');
@@ -340,6 +417,8 @@ class Player {
 
 	/**
 	 * get the last 10 aliases
+	 *
+	 * @return void
 	 */
 	private function _getAliasTable() {
 		$this->_playerData['aliases'] = array();
@@ -359,6 +438,8 @@ class Player {
 
 	/**
 	 * get the player action table
+	 *
+	 * @return void
 	 */
 	private function _getActions() {
 		$this->_playerData['actions'] = array();
@@ -382,6 +463,11 @@ class Player {
 		}
 	}
 
+	/**
+	 * get the player player actions
+	 *
+	 * @return void
+	 */
 	private function _getPlayerPlayerActions() {
 		$this->_playerData['playerPlayerActions'] = array();
 		$query = mysql_query("SELECT ".DB_PREFIX."_Actions.description,
@@ -406,6 +492,8 @@ class Player {
 
 	/**
 	 * get how much and which team the player was in
+	 *
+	 * @return void
 	 */
 	private function _getTeamSelection() {
 		$this->_playerData['teamSelection'] = array();
@@ -440,6 +528,8 @@ class Player {
 
 	/**
 	 * get the weapon usage for the current player
+	 *
+	 * @return void
 	 */
 	private function _getweaponUsage() {
 		$this->_playerData['weaponUsage'] = array();
@@ -467,7 +557,10 @@ class Player {
 	}
 
 	/**
-	 * get the weapon stats if we have the info in the db
+	 * get the weapon stats
+	 * if we have the info in the db
+	 *
+	 * @return void
 	 */
 	private function _getWeaponStats() {
 		$this->_playerData['weaponStats'] = array();
@@ -499,7 +592,10 @@ class Player {
 	}
 
 	/**
-	 * get the weapon target if we have the information in db
+	 * get the weapon target
+	 * if we have the information in db
+	 *
+	 * @return void
 	 */
 	private function _getWeaponTarget() {
 		$this->_playerData['weaponTarget'] = array();
@@ -529,6 +625,8 @@ class Player {
 
 	/**
 	 * get the map performance
+	 *
+	 * @return void
 	 */
 	private function _getMaps() {
 		$this->_playerData['maps'] = array();
@@ -556,6 +654,8 @@ class Player {
 
 	/**
 	 * get the kill stats table
+	 *
+	 * @return void
 	 */
 	private function _getPlayerKillStats() {
 		$this->_playerData['killstats'] = array();

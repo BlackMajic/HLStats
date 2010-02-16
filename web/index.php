@@ -1,10 +1,14 @@
 <?php
 /**
+ * the main file. Handles all the requests for the interface
+ * @package HLStats
+ */
+
+/**
  * Original development:
  *
  * + HLStats - Real-time player and clan rankings and statistics for Half-Life
  * + http://sourceforge.net/projects/hlstats/
- *
  * + Copyright (C) 2001  Simon Garner
  *
  *
@@ -37,7 +41,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  *
- * @package HLStats
+ *
  */
 
 /**

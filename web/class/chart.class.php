@@ -116,55 +116,123 @@ class Chart {
 		$this->_loadClasses();
 
 		$chart = false;
+		$modeString = '';
 
 		switch($mode) {
 			case 'playerActivity':
-				$this->setOption('chartFile',"tmp/".$this->_game.'-playeractivity'."-".$this->_option['curDate'].".png");
-
-				// check if we have already a picture
-				// create one only once a day
-				if(file_exists($this->_option['chartFile'])
-					&& SHOW_DEBUG === false) {
-					$chart = $this->_option['chartFile'];
-				}
-				else {
-					// remove old charts
-					$this->_cleanOldCharts($this->_game.'-playeractivity');
-					$chart = $this->_getPlayerActivity();
-				}
+				$modeString = 'playerActivity';
+				$methodName = '_getPlayerActivity';
 			break;
 
 			case 'mostTimeOnline':
-				$chart = $this->_mostTimeOnline();
+				//$chart = $this->_mostTimeOnline();
 			break;
 
 			case 'playTimePerDay':
 				if(empty($extra)) { return false; }
-				$this->setOption('chartFile',"tmp/".$this->_game.'-playTimePerDay'.'-'.$extra.'-'.$this->_option['curDate'].".png");
+				$modeString = 'playTimePerDay';
+				$methodName = '_getPlayerTimePerDay';
+			break;
 
-				// check if we have already a picture
-				// create one only once a day
-				if(file_exists($this->_option['chartFile'])
-					&& SHOW_DEBUG === false) {
-					$chart = $this->_option['chartFile'];
-				}
-				else {
-					// remove old charts
-					$this->_cleanOldCharts($this->_game.'-playTimePerDay');
-					$chart = $this->_getPlayerTimePerDay($extra);
-				}
+			case 'killsPerDay':
+				if(empty($extra)) { return false; }
+				$modeString = 'killsPerDay';
+				$methodName = '_getKillsPerDay';
 			break;
 
 			default:
 			//nothing
 		}
 
+		$this->setOption('chartFile','tmp/'.$this->_game.'-'.$modeString.'-'.$this->_option['curDate'].".png");
+
+		// check if we have already a picture
+		// create one only once a day
+		if(file_exists($this->_option['chartFile'])
+			&& SHOW_DEBUG === false) {
+			$chart = $this->_option['chartFile'];
+		}
+		else {
+			// remove old charts
+			$this->_cleanOldCharts($this->_game.'-'.$modeString);
+			// create the chart
+			$chart = $this->$methodName($extra);
+		}
+
 		return $chart;
 	}
 
 	/**
+	 * create the kills per day chart for the given player
+	 *
+	 * @param int $playerId The player ID
+	 *
+	 * @return string Path to the created image chart
+	 */
+	private function _getKillsPerDay($playerId) {
+		$ret = false;
+
+		if(!in_array('Player',get_declared_classes())) {
+			require 'player.class.php';
+		}
+		$playerObj = new Player($playerId,false,$this->_game);
+		$data = $playerObj->getKillsPerDay();
+		if(!empty($data)) {
+
+			$c = 0;
+			$kills = array();
+			$xLine = array();
+
+			foreach($data as $entry) {
+				$kills[] = $entry['dayEvents'];
+
+				// this shows the date only every 5 days
+				$xLine[] = $entry['eventDay'];
+				/*
+				if($c % 4 == 0) { $xLine[] = $entry['eventDay']; }
+				else { $xLine[] = ''; }
+				$c++;
+			*/
+			}
+
+			// add the kills
+			$this->_pData->AddPoint($kills,'1');
+			$this->_pData->AddSerie('1');
+			$this->_pData->SetSerieName(l("Kills"),'1');
+
+			// the dates for x axe
+			$this->_pData->AddPoint($xLine,'x');
+			$this->_pData->SetAbsciseLabelSerie("x");
+
+			// create the canvas
+			$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",8);
+			$this->_pChart->setGraphArea(50,30,$this->_option['width']-10,$this->_option['height']-80);
+			$this->_pChart->drawFilledRoundedRectangle(3,3,$this->_option['width']-3,$this->_option['height']-3,5,240,240,240);
+			$this->_pChart->drawGraphArea(255,255,255,TRUE);
+			$this->_pChart->drawScale($this->_pData->GetData(),$this->_pData->GetDataDescription(),SCALE_NORMAL,150,150,150,true,30,2,true);
+			$this->_pChart->drawGrid(4,TRUE,230,230,230,50);
+
+			// draw the bar graph
+			$this->_pChart->drawBarGraph($this->_pData->GetData(),$this->_pData->GetDataDescription(),TRUE);
+
+
+			// Finish the graph
+			//$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",8);
+			$this->_pChart->drawLegend(10,$this->_option['height']-40,$this->_pData->GetDataDescription(),255,255,255);
+			$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",10);
+			$this->_pChart->drawTitle(0,20,l("Player kills per day"),50,50,50,$this->_option['width']);
+
+			$this->_pChart->Render($this->_option['chartFile']);
+
+			$ret =  $this->_option['chartFile'];
+		}
+
+		return $ret;
+	}
+
+	/**
 	 * create the player time per day chart
-	 * @todo
+	 * @todo to complete
 	 */
 	private function _getPlayerTimePerDay($playerId) {
 		if(!in_array('Player',get_declared_classes())) {
@@ -180,74 +248,81 @@ class Chart {
 	 * @return the path to the image
 	 */
 	private function _getPlayerActivity() {
+		$ret = false;
+
 		if(!in_array('Players',get_declared_classes())) {
 			require 'players.class.php';
 		}
 		$playersObj = new Players($this->_game);
 		$data = $playersObj->getPlayerCountPerDay();
 
-		$c = 0;
-		$xLine = array();
-		$connects = array();
-		$disconnects = array();
+		if(!empty($data)) {
 
-		// we need only the count for each day
-		foreach($data['connect'] as $d=>$e) {
-			$connects[] = count($e);
+			$c = 0;
+			$xLine = array();
+			$connects = array();
+			$disconnects = array();
 
-			// this shows the date only every 5 days
-			if($c % 5 == 0) { $xLine[] = $d; }
-			else { $xLine[] = ''; }
-			$c++;
+			// we need only the count for each day
+			foreach($data['connect'] as $d=>$e) {
+				$connects[] = count($e);
+
+				// this shows the date only every 5 days
+				if($c % 4 == 0) { $xLine[] = $d; }
+				else { $xLine[] = ''; }
+				$c++;
+			}
+
+			// we need only the count for each day
+			foreach($data['disconnect'] as $d=>$e) {
+				$disconnects[] = count($e);
+			}
+
+			// add the connects
+			$this->_pData->AddPoint($connects,'1');
+			$this->_pData->AddSerie('1');
+			$this->_pData->SetSerieName(l("Connects"),'1');
+
+			// the dates for x axe
+			$this->_pData->AddPoint($xLine,'x');
+			$this->_pData->SetAbsciseLabelSerie("x");
+
+			// add the disconnects
+			$this->_pData->AddPoint($disconnects,'2');
+			$this->_pData->AddSerie('2');
+			$this->_pData->SetSerieName(l("Disconnects"),'2');
+
+			// create the canvas
+			$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",8);
+			$this->_pChart->setGraphArea(50,30,$this->_option['width']-10,$this->_option['height']-80);
+			$this->_pChart->drawFilledRoundedRectangle(3,3,$this->_option['width']-3,$this->_option['height']-3,5,240,240,240);
+			$this->_pChart->drawGraphArea(255,255,255,TRUE);
+			$this->_pChart->drawScale($this->_pData->GetData(),$this->_pData->GetDataDescription(),SCALE_NORMAL,150,150,150,TRUE,30,2,true);
+			$this->_pChart->drawGrid(4,TRUE,230,230,230,50);
+
+			// display only more the 3 days as a curve, otherwise as a bar
+			if(count($xLine) >= 4) {
+				// Draw the cubic curve graph
+				$this->_pChart->drawCubicCurve($this->_pData->GetData(),$this->_pData->GetDataDescription());
+			}
+			else {
+				// draw the bar graph
+				$this->_pChart->drawBarGraph($this->_pData->GetData(),$this->_pData->GetDataDescription(),TRUE);
+			}
+
+			// Finish the graph
+			//$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",8);
+			$this->_pChart->drawLegend(10,$this->_option['height']-40,$this->_pData->GetDataDescription(),255,255,255);
+			$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",10);
+			$this->_pChart->drawTitle(0,20,l("Player activity"),50,50,50,$this->_option['width']);
+
+
+			$this->_pChart->Render($this->_option['chartFile']);
+
+			$ret =  $this->_option['chartFile'];
 		}
 
-		// we need only the count for each day
-		foreach($data['disconnect'] as $d=>$e) {
-			$disconnects[] = count($e);
-		}
-
-		// add the connects
-		$this->_pData->AddPoint($connects,'1');
-		$this->_pData->AddSerie('1');
-		$this->_pData->SetSerieName(l("Connects"),'1');
-
-		// the dates for x axe
-		$this->_pData->AddPoint($xLine,'x');
-		$this->_pData->SetAbsciseLabelSerie("x");
-
-		// add the disconnects
-		$this->_pData->AddPoint($disconnects,'2');
-		$this->_pData->AddSerie('2');
-		$this->_pData->SetSerieName(l("Disconnects"),'2');
-
-
-		$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",8);
-		$this->_pChart->setGraphArea(50,30,$this->_option['width']-10,$this->_option['height']-70);
-		$this->_pChart->drawFilledRoundedRectangle(3,3,$this->_option['width']-3,$this->_option['height']-3,5,240,240,240);
-		$this->_pChart->drawGraphArea(255,255,255,TRUE);
-		$this->_pChart->drawScale($this->_pData->GetData(),$this->_pData->GetDataDescription(),SCALE_NORMAL,150,150,150,TRUE,0,2);
-		$this->_pChart->drawGrid(4,TRUE,230,230,230,50);
-
-		// display only more the 3 days as a curve, otherwise as a bar
-		if(count($xLine) >= 4) {
-			// Draw the cubic curve graph
-			$this->_pChart->drawCubicCurve($this->_pData->GetData(),$this->_pData->GetDataDescription());
-		}
-		else {
-			// draw the bar graph
-			$this->_pChart->drawBarGraph($this->_pData->GetData(),$this->_pData->GetDataDescription(),TRUE);
-		}
-
-		// Finish the graph
-		//$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",8);
-		$this->_pChart->drawLegend(10,$this->_option['height']-40,$this->_pData->GetDataDescription(),255,255,255);
-		$this->_pChart->setFontProperties("class/pchart/Fonts/tahoma.ttf",10);
-		$this->_pChart->drawTitle(0,20,l("Player activity"),50,50,50,$this->_option['width']);
-
-
-		$this->_pChart->Render($this->_option['chartFile']);
-
-		return $this->_option['chartFile'];
+		return $ret;
 	}
 
 	/**
