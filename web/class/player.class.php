@@ -178,6 +178,9 @@ class Player {
 			if(mysql_num_rows($query)) {
 				$result = mysql_fetch_assoc($query);
 				$this->_playerData = $result;
+				if(empty($this->_game)) {
+					$this->_game = $result['game'];
+				}
 			}
 		}
 	}
@@ -232,6 +235,11 @@ class Player {
 		return $ret;
 	}
 
+	/**
+	 * get the kills per day
+	 *
+	 * @return $ret array
+	 */
 	public function getKillsPerDay() {
 		$ret = false;
 
@@ -361,7 +369,10 @@ class Player {
 			default:
 				$query = mysql_query("SELECT count(*) AS rank
 							FROM ".DB_PREFIX."_Players
-							WHERE active = 1
+							WHERE active = '1'
+								AND hideranking = '0'
+								AND kills >= '1'
+								AND game = '".mysql_escape_string($this->_game)."'
 								AND skill >
 							(SELECT skill FROM ".DB_PREFIX."_Players
 								WHERE playerId = '".mysql_escape_string($this->playerId)."')");

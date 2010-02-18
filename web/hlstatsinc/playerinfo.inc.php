@@ -93,7 +93,6 @@ elseif (!$player && !$uniqueid) {
 	error("No player ID specified.");
 }
 */
-
 require('class/player.class.php');
 $playerObj = new Player($player,$mode,$game);
 if($playerObj === false) {
