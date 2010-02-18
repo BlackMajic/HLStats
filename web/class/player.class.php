@@ -86,7 +86,7 @@ class Player {
 	 *
 	 * @return boolean $ret Either true or false
 	 */
-	public function __construct($id,$mode,$game) {
+	public function __construct($id,$mode,$game=false) {
 		$ret = false;
 
 		if(!empty($id)) {

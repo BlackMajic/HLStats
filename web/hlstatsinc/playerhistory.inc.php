@@ -40,6 +40,8 @@
  */
 
 $player = '';
+$pl_name = '';
+
 if(!empty($_GET["player"])) {
 	if(validateInput($_GET["player"],'digit') === true) {
 		$player = $_GET["player"];
@@ -48,56 +50,25 @@ if(!empty($_GET["player"])) {
 		error("No player ID specified.");
 	}
 }
-
-$query = mysql_query("
-	SELECT
-		".DB_PREFIX."_Players.lastName,
-		".DB_PREFIX."_Players.game
-	FROM
-		".DB_PREFIX."_Players
-	WHERE
-		playerId=".mysql_escape_string($player)."
-");
-if (mysql_num_rows($query) != 1)
-	error("No such player '$player'.");
-
-$playerdata = mysql_fetch_assoc($query);
-mysql_free_result($query);
-
-$pl_name = $playerdata["lastName"];
-if (strlen($pl_name) > 10) {
-	$pl_shortname = substr($pl_name, 0, 8) . "...";
-}
-else {
-	$pl_shortname = $pl_name;
-}
-$pl_name = ereg_replace(" ", "&nbsp;", htmlspecialchars($pl_name));
-$pl_shortname = ereg_replace(" ", "&nbsp;", htmlspecialchars($pl_shortname));
-
-
-$game = $playerdata["game"];
-$query = mysql_query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='".mysql_escape_string($game)."'");
-if (mysql_num_rows($query) != 1)
-	$gamename = ucfirst($game);
-else {
-	$result = mysql_fetch_assoc($query);
-	$gamename = $result['name'];
+// load the player
+require('class/player.class.php');
+$playerObj = new Player($player,false);
+if($playerObj === false) {
+	die('No such player');
 }
 
-
+$gamename = getGameName($playerObj->getParam("game"));
+$pl_name = makeSavePlayerName($playerObj->getParam('name'));
 pageHeader(
 	array($gamename, l("Event History"), $pl_name),
 	array(
-		$gamename => "index.php?game=$game",
-		l("Player Rankings") => "index.php?mode=players&amp;game=$game",
+		$gamename => "index.php?game=".$playerObj->getParam("game"),
+		l("Player Rankings") => "index.php?mode=players&amp;game=".$playerObj->getParam("game"),
 		l("Player Details") => "index.php?mode=playerinfo&amp;player=$player",
 		l("Event History")=>""
 	),
 	$pl_name
 );
-
-flush();
-
 
 $table = new Table(
 	array(
