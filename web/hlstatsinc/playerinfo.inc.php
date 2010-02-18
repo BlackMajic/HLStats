@@ -469,7 +469,7 @@ if(!empty($teamSelection)) { ?>
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l('Team'); ?></th>
 			<th><?php echo l('Joined'); ?></th>
-			<th><?php echo l('Percentage of times'); ?></th>
+			<th><?php echo l('Percentage of Times'); ?></th>
 		</tr>
 		<?php
 		foreach ($teamSelection as $entry) {
