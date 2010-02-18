@@ -511,3 +511,4 @@ Show only events of type = Zeige nur Events von dem Typ
 Player activity = Spieler aktivität
 
 Direct Link = Direktlink
+Player kills per day = Spieler Frags pro Tag

@@ -239,8 +239,8 @@ $rcol = "row-dark";
 				<?php if ($playerObj->getParam("clan")) { ?>
 					<a href="index.php?mode=claninfo&clan=<?php echo $playerObj->getParam("clan"); ?>">
 					<img src="<?php echo $g_options['imgdir']; ?>/clan.gif" width="16" height="16" hspace="4"
-							border="0" align="middle" alt="clan.gif"> />
-					<?php echo htmlspecialchars($playerObj->getParam("clan_name")); ?>
+							border="0" align="middle" alt="clan.gif" />
+					<?php echo makeSavePlayerName($playerObj->getParam("clan_name")); ?>
 					</a>
 				<?php }	else {
 					echo l('None');
