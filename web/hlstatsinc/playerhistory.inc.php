@@ -105,7 +105,7 @@ pageHeader(
 
 
 
-$playerObj->getEventHistory();
+
 
 /*
 $table = new Table(
@@ -422,7 +422,7 @@ insertEvents("ChangeTeam", "
 		".DB_PREFIX."_Teams.code = <table>.team
 	WHERE
 		<table>.playerId=".mysql_escape_string($player)."");
-*/
+
 
 $query = mysql_query("
 	SELECT
@@ -442,14 +442,91 @@ $query = mysql_query("
 $queryCount = mysql_query("SELECT COUNT(*) AS ec FROM ".DB_PREFIX."_EventHistory");
 $result = mysql_fetch_assoc($queryCount);
 $numitems = $result['ec'];
+*/
 ?>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="100%">
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Player Event History'); ?></b> (<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?><p>
-		<?php
-			$table->draw($query, $numitems, 100);
-		?>
-		</td>
-	</tr>
-</table>
+
+<div id="sidebar">
+	<h1><?php echo l('Options'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>
+				<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="player.gif"><?php echo('Back to Player page'); ?></a>
+			</li>
+			<li>
+				<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo('Event History'); ?></a>
+			</li>
+			<li>
+				<a href="index.php?mode=playerchathistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo l('Chat History'); ?></a>
+			</li>
+			<li>
+				<a href="index.php?mode=search&st=player&q=<?php echo $pl_urlname; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/search.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="search.gif"><?php echo l('Find other players with the same name'); ?></a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="main">
+	<h1>
+		<?php echo l('Player Event History'); ?>
+		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
+	</h1>
+<?php
+	$history = $playerObj->getEventHistory();
+	$rcol = "row-dark";
+	if(!empty($history)) {
+?>
+	<table cellpadding="0" cellspacing="0" border="1" width="100%">
+		<tr>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'eventTime','sortorder'=>$newSort)); ?>">
+					<?php echo l('Date'); ?>
+				</a>
+				<?php if($playerObj->getOption('sort') == "eventTime") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'eventType','sortorder'=>$newSort)); ?>">
+					<?php echo l('Type'); ?>
+				</a>
+				<?php if($playerObj->getOption('sort') == "eventType") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo toggleRowClass($rcol); ?>"><?php echo l('Description'); ?></th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'serverName','sortorder'=>$newSort)); ?>">
+					<?php echo l('Server'); ?>
+				</a>
+				<?php if($playerObj->getOption('sort') == "serverName") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'map','sortorder'=>$newSort)); ?>">
+					<?php echo l('Map'); ?>
+				</a>
+				<?php if($playerObj->getOption('sort') == "map") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+		</tr>
+<?php
+	foreach($history as $entry) {
+		$rcol = "row-dark";
+		echo '<tr>';
+		echo '<td class="',toggleRowClass($rcol),'">',$entry['eventTime'],'</td>';
+		echo '<td class="',toggleRowClass($rcol),'">',$entry['eventType'],'</td>';
+		echo '<td class="',toggleRowClass($rcol),'">',$entry['eventDesc'],'</td>';
+		echo '<td class="',toggleRowClass($rcol),'">',$entry['serverName'],'</td>';
+		echo '<td class="',toggleRowClass($rcol),'">',$entry['map'],'</td>';
+		echo '</tr>';
+	}
+?>
+	</table>
+<?php
+	}
+	else {
+		echo l('No Data');
+	}
+?>
+</div>

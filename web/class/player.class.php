@@ -152,12 +152,31 @@ class Player {
 	}
 
 	/**
+	 * return for the given key the value
+	 *
+	 * @param string $key The key for the wanted value
+	 *
+	 * @return string The valuefor given key
+	 */
+	public function getOption($key) {
+		$ret = false;
+
+		if(isset($this->_option[$key])) {
+			$ret = $this->_option[$key];
+		}
+
+		return $ret;
+	}
+
+	/**
 	 * get the player history for the events
 	 * I know this is big, but I don't think there is a better way.
 	 *
 	 * @return array The history
 	 */
 	public function getEventHistory() {
+		$ret = false;
+		
 		$queryStr = "( SELECT '".l('Team Bonus')."' AS eventType,
 					eventTime,
 					CONCAT('".l('My team received a points bonus of')." ', bonus, ' ".l('for triggering')." \"', ".DB_PREFIX."_Actions.description, '\"') AS eventDesc,
@@ -366,8 +385,15 @@ class Player {
 		if(!empty($this->_option['sort']) && !empty($this->_option['sortorder'])) {
 			$queryStr .= " ".$this->_option['sort']." ".$this->_option['sortorder']."";
 		}
-		var_dump($this->_option);
-		var_dump($queryStr);
+
+		$query = mysql_query($queryStr);
+		if(mysql_num_rows($query) > 0) {
+			while($result = mysql_fetch_assoc($query)) {
+				$ret[] = $result;
+			}
+		}
+
+		return $ret;
 	}
 
 	/**

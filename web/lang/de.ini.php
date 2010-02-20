@@ -14,6 +14,7 @@ Help = Hilfe
 No = Nein
 Yes = Ja
 None = Kein
+No Data = Keine Daten
 
 Contents = Übersicht
 Games = Spiele
@@ -460,6 +461,7 @@ against me = gegen mich
 Suicide = Selbstmord
 I committed suicide with = Ich beging Selbstmord mit
 I joined team = Ich bin nun
+Back to Player page = Zurück zur Spilerseite
 
 Weapon Details = Waffendetails
 
