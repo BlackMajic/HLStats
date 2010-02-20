@@ -72,7 +72,7 @@ class Players {
 			$this->_game = $game;
 		}
 		else {
-			new Exception("Game is missing for Players.class");
+			throw new Exception("Game is missing for Players.class");
 		}
 
 		// set default values

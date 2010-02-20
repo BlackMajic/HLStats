@@ -91,25 +91,29 @@ class Player {
 
 		if(!empty($id)) {
 			$this->_game = $game;
-
+			
 			if($mode === false) {
 				$this->playerId = $id;
 			}
 			elseif($mode === true && !empty($game)) {
+				
 				$this->_lookupPlayerIdFromUniqeId($id);
 				if(empty($this->playerId)) {
-					new Exception("PlayerID can't be looked up via uniqueid in Player.class");
+					throw new Exception("PlayerID can't be looked up via uniqueid in Player.class");
 				}
 			}
 			else {
-				new Exception("Player mode is missing for Player.class");
+				throw new Exception("Player mode is missing for Player.class");
 			}
 		}
 		else {
-			new Exception("Player ID or game is missing for Player.class");
+			throw new Exception("Player ID or game is missing for Player.class");
 		}
 
 		$ret = $this->_load();
+
+		// set some default values
+		$this->setOption('page',1);
 
 		return $ret;
 	}
@@ -145,6 +149,225 @@ class Player {
 		if(!empty($key)) {
 			$this->_option[$key] = $value;
 		}
+	}
+
+	/**
+	 * get the player history for the events
+	 * I know this is big, but I don't think there is a better way.
+	 *
+	 * @return array The history
+	 */
+	public function getEventHistory() {
+		$queryStr = "( SELECT '".l('Team Bonus')."' AS eventType,
+					eventTime,
+					CONCAT('".l('My team received a points bonus of')." ', bonus, ' ".l('for triggering')." \"', ".DB_PREFIX."_Actions.description, '\"') AS eventDesc,
+					".DB_PREFIX."_Servers.name AS serverName,
+					map
+					FROM ".DB_PREFIX."_Events_TeamBonuses AS t
+					LEFT JOIN ".DB_PREFIX."_Actions ON
+						t.actionId = ".DB_PREFIX."_Actions.id
+					LEFT JOIN ".DB_PREFIX."_Servers ON
+						".DB_PREFIX."_Servers.serverId = t.serverId
+					WHERE
+						t.playerId=".mysql_escape_string($this->playerId)." )";
+		$queryStr .= "UNION (
+			SELECT '".l('Connect')."' AS eventType,
+				eventTime,
+				CONCAT('".l('I connected to the server')."') AS eventDesc,
+				".DB_PREFIX."_Servers.name AS serverName,
+				map
+			FROM ".DB_PREFIX."_Events_Connects AS t
+			LEFT JOIN ".DB_PREFIX."_Servers ON
+				".DB_PREFIX."_Servers.serverId = t.serverId
+			WHERE
+				t.playerId=".mysql_escape_string($this->playerId)."
+		)";
+		$queryStr .= "UNION (
+			SELECT '".l('Disconnect')."' AS eventType,
+				eventTime,
+				'".l('I left the game')."' AS eventDesc,
+				".DB_PREFIX."_Servers.name AS serverName,
+				map
+			FROM ".DB_PREFIX."_Events_Disconnects AS t
+			LEFT JOIN ".DB_PREFIX."_Servers ON
+				".DB_PREFIX."_Servers.serverId = t.serverId
+			WHERE
+				t.playerId=".mysql_escape_string($this->playerId)."
+		)";
+		$queryStr .= "UNION (
+			SELECT 'Entry' AS eventType,
+				eventTime,
+				'".l('I entered the game')."' AS eventDesc,
+				".DB_PREFIX."_Servers.name AS serverName,
+				map
+			FROM ".DB_PREFIX."_Events_Entries AS t
+			LEFT JOIN ".DB_PREFIX."_Servers ON
+				".DB_PREFIX."_Servers.serverId = t.serverId
+			WHERE
+				t.playerId=".mysql_escape_string($this->playerId)."
+		)";
+		$queryStr .= "UNION (
+			SELECT '".l('Kill')."' As eventType,
+			eventTime,
+			CONCAT('".l('I killed')." %A%index.php?mode=playerinfo&player=', victimId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' ".l('with')." ', weapon) AS eventDesc,
+			".DB_PREFIX."_Servers.name AS serverName,
+			map
+		FROM ".DB_PREFIX."_Events_Frags AS t
+		LEFT JOIN ".DB_PREFIX."_Servers ON
+			".DB_PREFIX."_Servers.serverId = t.serverId
+		LEFT JOIN ".DB_PREFIX."_Players ON
+			".DB_PREFIX."_Players.playerId = t.victimId
+		WHERE
+			t.killerId=".mysql_escape_string($this->playerId)."
+		)";
+		$queryStr .= "UNION (
+			SELECT '".l('Death')."' AS eventType,
+				eventTime,
+				CONCAT('%A%index.php?mode=playerinfo&player=', killerId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' ".l('killed me with')." ', weapon) AS eventDesc,
+				".DB_PREFIX."_Servers.name AS serverName,
+				map
+			FROM ".DB_PREFIX."_Events_Frags AS t
+			LEFT JOIN ".DB_PREFIX."_Servers ON
+				".DB_PREFIX."_Servers.serverId = t.serverId
+			LEFT JOIN ".DB_PREFIX."_Players On
+				".DB_PREFIX."_Players.playerId = t.killerId
+			WHERE
+				t.victimId=".mysql_escape_string($this->playerId)."
+		)";
+		$queryStr .= "UNION (
+			SELECT '".l('Team Kill')."' AS eventType,
+				eventTime,
+				CONCAT('".l('I killed teammate')." %A%index.php?mode=playerinfo&player=', victimId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' ".l('with')." ', weapon) AS eventDesc,
+				".DB_PREFIX."_Servers.name AS serverName,
+				map
+			FROM ".DB_PREFIX."_Events_Teamkills AS t
+			LEFT JOIN ".DB_PREFIX."_Servers ON
+				".DB_PREFIX."_Servers.serverId = t.serverId
+			LEFT JOIN ".DB_PREFIX."_Players On
+				".DB_PREFIX."_Players.playerId = t.victimId
+			WHERE
+				t.killerId=".mysql_escape_string($this->playerId)."
+		)";
+		$queryStr .= "UNION (
+			SELECT '".l('Friendly Fire')."' AS eventType,
+				eventTime,
+				CONCAT('".l('My teammate')." %A%index.php?mode=playerinfo&player=', killerId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' ".l('killed me with')." ', weapon) AS eventDesc,
+				".DB_PREFIX."_Servers.name AS serverName,
+				map
+			FROM ".DB_PREFIX."_Events_Teamkills AS t
+			LEFT JOIN ".DB_PREFIX."_Servers ON
+				".DB_PREFIX."_Servers.serverId = t.serverId
+			LEFT JOIN ".DB_PREFIX."_Players On
+				".DB_PREFIX."_Players.playerId = t.killerId
+			WHERE
+				t.victimId=".mysql_escape_string($this->playerId)."
+		)";
+		$queryStr .= "UNION (
+			SELECT '".l('Role')."' AS eventType,
+				eventTime,
+				CONCAT('".l("I changed role to")." ', role) AS eventDesc,
+				".DB_PREFIX."_Servers.name AS serverName,
+				map
+			FROM ".DB_PREFIX."_Events_ChangeRole AS t
+			LEFT JOIN ".DB_PREFIX."_Servers ON
+				".DB_PREFIX."_Servers.serverId = t.serverId
+			WHERE
+				t.playerId=".mysql_escape_string($this->playerId)."
+		)";
+		$queryStr .= "UNION (
+			SELECT '".l('Name')."' AS eventTpe,
+				eventTime,
+				CONCAT('".l('I changed my name from')." \"', oldName, '\" ".l('to')." \"', newName, '\"') AS eventDesc,
+				".DB_PREFIX."_Servers.name AS serverName,
+				map
+			FROM ".DB_PREFIX."_Events_ChangeName AS t
+			LEFT JOIN ".DB_PREFIX."_Servers ON
+				".DB_PREFIX."_Servers.serverId = t.serverId
+			WHERE
+				t.playerId=".mysql_escape_string($this->playerId)."
+		)";
+		$queryStr .= "UNION (
+			SELECT '".l('Action')."' AS eventType,
+				eventTime,
+				CONCAT('".l('I received a points bonus of')." ', bonus, ' ".l('for triggering')." \"', ".DB_PREFIX."_Actions.description, '\"') AS eventDesc,
+				".DB_PREFIX."_Servers.name AS serverName,
+				map
+			FROM ".DB_PREFIX."_Events_PlayerActions AS t
+			LEFT JOIN ".DB_PREFIX."_Servers ON
+				".DB_PREFIX."_Servers.serverId = t.serverId
+			LEFT JOIN ".DB_PREFIX."_Actions ON
+				".DB_PREFIX."_Actions.id = t.actionId
+			WHERE
+				t.playerId=".mysql_escape_string($this->playerId)."
+		)";
+		$queryStr .= "UNION (
+			SELECT '".l('Action')."' AS eventType,
+				eventTime,
+				CONCAT('".l('I received a points bonus of')." ', bonus, ' ".l('for triggering')." \"', ".DB_PREFIX."_Actions.description, '\" ".l('against')." %A%index.php?mode=playerinfo&player=', victimId, '%', ".DB_PREFIX."_Players.lastName, '%/A%') AS eventDesc,
+				".DB_PREFIX."_Servers.name AS serverName,
+				map
+			FROM ".DB_PREFIX."_Events_PlayerPlayerActions AS t
+			LEFT JOIN ".DB_PREFIX."_Servers ON
+				".DB_PREFIX."_Servers.serverId = t.serverId
+			LEFT JOIN ".DB_PREFIX."_Actions ON
+				".DB_PREFIX."_Actions.id = t.actionId
+			LEFT JOIN ".DB_PREFIX."_Players ON
+				".DB_PREFIX."_Players.playerId = t.victimId
+			WHERE
+				t.playerId=".mysql_escape_string($this->playerId)."
+		)";
+		$queryStr .= "UNION (
+			SELECT '".l('Action')."' AS eventType,
+				eventTime,
+				CONCAT('%A%index.php?mode=playerinfo&player=', t.playerId, '%', ".DB_PREFIX."_Players.lastName, '%/A% ".l('triggered')." \"', ".DB_PREFIX."_Actions.description, '\" ".l('against me')."') AS eventDesc,
+				".DB_PREFIX."_Servers.name AS serverName,
+				map
+			FROM ".DB_PREFIX."_Events_PlayerPlayerActions AS t
+			LEFT JOIN ".DB_PREFIX."_Servers ON
+				".DB_PREFIX."_Servers.serverId = t.serverId
+			LEFT JOIN ".DB_PREFIX."_Actions ON
+				".DB_PREFIX."_Actions.id = t.actionId
+			LEFT JOIN ".DB_PREFIX."_Players ON
+				".DB_PREFIX."_Players.playerId = t.playerId
+			WHERE
+				t.victimId=".mysql_escape_string($this->playerId)."
+		)";
+		$queryStr .= "UNION (
+			SELECT '".l('Suicide')."' AS eventType,
+				eventTime,
+				CONCAT('".l('I committed suicide with')." \"', weapon, '\"') AS eventDesc,
+				".DB_PREFIX."_Servers.name AS servername,
+				map
+			FROM ".DB_PREFIX."_Events_Suicides AS t
+			LEFT JOIN ".DB_PREFIX."_Servers ON
+				".DB_PREFIX."_Servers.serverId = t.serverId
+			WHERE
+				t.playerId=".mysql_escape_string($this->playerId)."
+		)";
+		$queryStr .= "UNION (
+			SELECT '".l('Team')."' AS eventType,
+				eventTime,
+				IF(".DB_PREFIX."_Teams.name IS NULL,
+					CONCAT('".l('I joined team')." \"', team, '\"'),
+					CONCAT('".l('I joined team')." \"', team, '\" (', ".DB_PREFIX."_Teams.name, ')')
+				) AS eventDesc,
+				".DB_PREFIX."_Servers.name AS serverName,
+				map
+			FROM ".DB_PREFIX."_Events_ChangeTeam AS t
+			LEFT JOIN ".DB_PREFIX."_Servers ON
+				".DB_PREFIX."_Servers.serverId = t.serverId
+			LEFT JOIN ".DB_PREFIX."_Teams ON
+				".DB_PREFIX."_Teams.code = t.team
+			WHERE
+				t.playerId=".mysql_escape_string($this->playerId)."
+		)";
+
+		$queryStr .= " ORDER BY ";
+		if(!empty($this->_option['sort']) && !empty($this->_option['sortorder'])) {
+			$queryStr .= " ".$this->_option['sort']." ".$this->_option['sortorder']."";
+		}
+		var_dump($this->_option);
+		var_dump($queryStr);
 	}
 
 	/**

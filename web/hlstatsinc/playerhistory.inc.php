@@ -50,12 +50,45 @@ if(!empty($_GET["player"])) {
 		error("No player ID specified.");
 	}
 }
+
 // load the player
 require('class/player.class.php');
 $playerObj = new Player($player,false);
 if($playerObj === false) {
 	die('No such player');
 }
+
+if (isset($_GET["page"])) {
+	$check = validateInput($_GET['page'],'digit');
+	if($check === true) {
+		$playerObj->setOption("page",$_GET['page']);
+	}
+}
+if (isset($_GET["sort"])) {
+	$check = validateInput($_GET['sort'],'nospace');
+	if($check === true) {
+		$playerObj->setOption("sort",$_GET['sort']);
+	}
+}
+else {
+	$playerObj->setOption("sort",'eventTime');
+}
+$newSort = "ASC";
+if (isset($_GET["sortorder"])) {
+	$check = validateInput($_GET['sortorder'],'nospace');
+	if($check === true) {
+		$playerObj->setOption("sortorder",$_GET['sortorder']);
+	}
+
+	if($_GET["sortorder"] == "ASC") {
+		$newSort = "DESC";
+	}
+}
+else {
+	$playerObj->setOption("sortorder",'DESC');
+}
+
+
 
 $gamename = getGameName($playerObj->getParam("game"));
 $pl_name = makeSavePlayerName($playerObj->getParam('name'));
@@ -70,6 +103,11 @@ pageHeader(
 	$pl_name
 );
 
+
+
+$playerObj->getEventHistory();
+
+/*
 $table = new Table(
 	array(
 		new TableColumn(
@@ -108,7 +146,7 @@ $table = new Table(
 	"sortorder"
 );
 
-$surl = 'index.php';
+//$surl = 'index.php';
 
 
 // This would be better done with a UNION query, I think, but MySQL doesn't
@@ -141,7 +179,8 @@ function insertEvents ($table, $select) {
 		$select
 	");
 }
-
+*/
+/*
 insertEvents("TeamBonuses", "
 	SELECT
 		'".l('Team Bonus')."',
@@ -383,6 +422,7 @@ insertEvents("ChangeTeam", "
 		".DB_PREFIX."_Teams.code = <table>.team
 	WHERE
 		<table>.playerId=".mysql_escape_string($player)."");
+*/
 
 $query = mysql_query("
 	SELECT
