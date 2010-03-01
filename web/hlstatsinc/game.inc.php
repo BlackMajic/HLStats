@@ -265,20 +265,16 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 	$result = mysql_fetch_assoc($query);
 	$num_servers = $result['sc'];
 
-	$query = mysql_query("
-		SELECT
-			DATE_FORMAT(eventTime, '%r, %a. %e %b.') as lastEvent
-		FROM
-			".DB_PREFIX."_Events_Frags
+	$query = mysql_query("SELECT MAX(eventTime) as lastEvent
+		FROM ".DB_PREFIX."_Events_Frags
 		LEFT JOIN ".DB_PREFIX."_Servers ON
 			".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_Frags.serverId
-		WHERE
-			".DB_PREFIX."_Servers.game='$game'
-		ORDER BY eventTime DESC
-		LIMIT 1
-	");
+		WHERE ".DB_PREFIX."_Servers.game='$game'");
 	$result = mysql_fetch_assoc($query);
 	$lastevent = $result['lastEvent'];
+	$lastevent = date("d.m.Y",strtotime($lastevent));
+	mysql_free_result($query);
+	exit("last event to do");
 ?>
 <p>
 	<ul>
