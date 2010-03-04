@@ -272,9 +272,8 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 		WHERE ".DB_PREFIX."_Servers.game='$game'");
 	$result = mysql_fetch_assoc($query);
 	$lastevent = $result['lastEvent'];
-	$lastevent = date("d.m.Y",strtotime($lastevent));
+	$lastevent = date("D d. M. Y H:i:s",strtotime($lastevent));
 	mysql_free_result($query);
-	exit("last event to do");
 ?>
 <p>
 	<ul>
