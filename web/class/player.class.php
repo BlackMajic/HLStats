@@ -849,6 +849,7 @@ class Player {
 			}
 			mysql_free_result($query);
 		}
+		exit('weapon accuracy in prozent in player class');
 	}
 
 	/**
