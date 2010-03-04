@@ -397,7 +397,7 @@ if(!empty($aliases)) { ?>
 			echo '<td>',$entry['lastuse'],'</td>';
 			echo '<td>',$entry['kills'],'</td>';
 			echo '<td>',$entry['deaths'],'</td>';
-			echo '<td>',$entry['kpd'],'</td>';
+			echo '<td>',number_format($entry['kpd'],1),'</td>';
 			echo '<td>',$entry['suicides'],'</td>';
 			echo '</tr>';
 		}

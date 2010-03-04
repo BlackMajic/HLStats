@@ -842,7 +842,7 @@ class Player {
 				WHERE ".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'
 					AND ".DB_PREFIX."_Events_Statsme.PlayerId=".mysql_escape_string($this->playerId)."
 				GROUP BY ".DB_PREFIX."_Events_Statsme.weapon
-				ORDER BY smkdr DESC, smweapon DESC");
+				ORDER BY smaccuracy DESC");
 		if(mysql_num_rows($query) > 0) {
 			while($result = mysql_fetch_assoc($query)) {
 				$this->_playerData['weaponStats'][] = $result;
