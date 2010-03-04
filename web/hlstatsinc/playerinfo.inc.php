@@ -476,7 +476,9 @@ if(!empty($teamSelection)) { ?>
 			echo '<tr class="',toggleRowClass($rcol),'">';
 			echo '<td>',$entry['name'],'</td>';
 			echo '<td>',$entry['teamcount'],'</td>';
-			echo '<td>',number_format($entry['percent'],2),'%</td>';
+			echo '<td>';
+			echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percent'],0),'px"></div></div>',"\n";
+			echo '</td>';
 			echo '</tr>';
 		}
 		?>
@@ -500,12 +502,16 @@ if(!empty($weaponUsage)) { ?>
 		</tr>
 		<?php
 		foreach ($weaponUsage as $entry) {
-			echo '<tr class="',toggleRowClass($rcol),'">';
-			echo '<td align="center"><img src="',$g_options["imgdir"],'/weapons/',$game,'/',$entry['weapon'],'.png" alt="',$entry['weapon'],'" title="',$entry['weapon'],'" /></td>';
-			echo '<td>',$entry['modifier'],'</td>';
-			echo '<td>',$entry['kills'],'</td>';
-			echo '<td>',number_format($entry['percent'],2),'%</td>';
-			echo '</tr>';
+			echo '<tr class="',toggleRowClass($rcol),'">',"\n";
+			echo '<td align="center">',"\n";
+			echo '<a href="index.php?mode=weaponinfo&amp;weapon='.$entry['weapon'].'&amp;game='.$game.'"><img src="',$g_options["imgdir"],'/weapons/',$game,'/',$entry['weapon'],'.png" alt="',$entry['weapon'],'" title="',$entry['weapon'],'" /></a>',"\n";
+			echo '</td>',"\n";
+			echo '<td>',$entry['modifier'],'</td>',"\n";
+			echo '<td>',$entry['kills'],'</td>',"\n";
+			echo '<td>',"\n";
+			echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percent'],0),'px"></div></div>',"\n";
+			echo '</td>',"\n";
+			echo '</tr>',"\n";
 		}
 		?>
 	</table>
@@ -610,7 +616,9 @@ if(!empty($maps)) { ?>
 			echo '<tr class="',toggleRowClass($rcol),'">';
 			echo '<td><a href="index.php?mode=mapinfo&game=',$game,'&map=',$entry['map'],'">',$entry['map'],'</a></td>';
 			echo '<td>',$entry['kills'],'</td>';
-			echo '<td>',number_format($entry['percentage'],2),'%</td>';
+			echo '<td>';
+			echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percent'],0),'px"></div></div>',"\n";
+			echo '</td>';
 			echo '<td>',$entry['deaths'],'</td>';
 			echo '<td>',number_format($entry['kpd'],1),'</td>';
 			echo '</tr>';
