@@ -541,6 +541,13 @@ if(!empty($weaponStats)) { ?>
 		</tr>
 		<?php
 		foreach ($weaponStats as $entry) {
+			if(empty($entry['smshots']) && empty($entry['smhits']) && empty($entry['smdamage'])
+				&& empty($entry['smheadshots']) && empty($entry['smkills']) && empty($entry['smdeaths'])
+			) {
+				continue;
+			}
+			exit('check the empty ones. those are strings 0');
+			var_dump($entry['smshots']);
 			echo '<tr class="',toggleRowClass($rcol),'">';
 			echo '<td align="center"><img src="',$g_options["imgdir"],'/weapons/',$game,'/',$entry['smweapon'],'.png" alt="',$entry['smweapon'],'" title="',$entry['smweapon'],'" /></td>';
 			echo '<td>',$entry['smshots'],'</td>';
