@@ -834,10 +834,8 @@ class Player {
 					SUM(".DB_PREFIX."_Events_Statsme.damage) AS smdamage,
 					IFNULL(
 						(
-							ROUND(
-								(
-									SUM(".DB_PREFIX."_Events_Statsme.damage) / SUM(".DB_PREFIX."_Events_Statsme.hits)
-								), 1
+							(
+								SUM(".DB_PREFIX."_Events_Statsme.damage) / SUM(".DB_PREFIX."_Events_Statsme.hits)
 							)
 						), '-'
 					) as smdhr,
@@ -850,7 +848,7 @@ class Player {
 							(SUM(".DB_PREFIX."_Events_Statsme.deaths))
 						) as smkdr,
 					(SUM(".DB_PREFIX."_Events_Statsme.hits) / SUM(".DB_PREFIX."_Events_Statsme.shots) * 100) as smaccuracy,
-					IFNULL((ROUND((SUM(".DB_PREFIX."_Events_Statsme.shots) / SUM(".DB_PREFIX."_Events_Statsme.kills)), 1)), '-') as smspk
+					IFNULL(((SUM(".DB_PREFIX."_Events_Statsme.shots) / SUM(".DB_PREFIX."_Events_Statsme.kills))), '-') as smspk
 				FROM ".DB_PREFIX."_Events_Statsme
 					LEFT JOIN ".DB_PREFIX."_Servers ON ".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Statsme.serverId
 					LEFT JOIN ".DB_PREFIX."_Weapons ON ".DB_PREFIX."_Weapons.code = ".DB_PREFIX."_Events_Statsme.weapon
@@ -910,7 +908,7 @@ class Player {
 			SUM(killerId=".mysql_escape_string($this->playerId).") AS kills,
 			SUM(victimId=".mysql_escape_string($this->playerId).") AS deaths,
 			IFNULL(SUM(killerId=".mysql_escape_string($this->playerId).") / SUM(victimId=".mysql_escape_string($this->playerId)."), '-') AS kpd,
-			ROUND(CONCAT(SUM(killerId=".mysql_escape_string($this->playerId).")) / ".mysql_escape_string($this->_playerData['kills'])." * 100, 2) AS percentage
+			CONCAT(SUM(killerId=".mysql_escape_string($this->playerId).")) / ".mysql_escape_string($this->_playerData['kills'])." * 100 AS percentage
 		FROM ".DB_PREFIX."_Events_Frags
 		LEFT JOIN ".DB_PREFIX."_Servers ON
 			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Frags.serverId

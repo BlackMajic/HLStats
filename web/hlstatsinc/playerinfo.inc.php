@@ -551,8 +551,8 @@ if(!empty($weaponStats)) { ?>
 			echo '<td>',$entry['smdeaths'],'</td>';
 			echo '<td>',number_format($entry['smkdr'],1),'</td>';
 			echo '<td>',number_format($entry['smaccuracy'],1),'%</td>';
-			echo '<td>',$entry['smdhr'],'</td>';
-			echo '<td>',$entry['smspk'],'</td>';
+			echo '<td>',number_format($entry['smdhr'],1),'</td>';
+			echo '<td>',number_format($entry['smspk'],1),'</td>';
 			echo '</tr>';
 		}
 		?>
@@ -617,7 +617,7 @@ if(!empty($maps)) { ?>
 			echo '<td><a href="index.php?mode=mapinfo&game=',$game,'&map=',$entry['map'],'">',$entry['map'],'</a></td>';
 			echo '<td>',$entry['kills'],'</td>';
 			echo '<td>';
-			echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percent'],0),'px"></div></div>',"\n";
+			echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percentage'],0),'px"></div></div>',"\n";
 			echo '</td>';
 			echo '<td>',$entry['deaths'],'</td>';
 			echo '<td>',number_format($entry['kpd'],1),'</td>';
