@@ -550,7 +550,7 @@ if(!empty($weaponStats)) { ?>
 			echo '<td>',$entry['smkills'],'</td>';
 			echo '<td>',$entry['smdeaths'],'</td>';
 			echo '<td>',number_format($entry['smkdr'],1),'</td>';
-			echo '<td>',$entry['smaccuracy'],'</td>';
+			echo '<td>',number_format($entry['smaccuracy'],1),'%</td>';
 			echo '<td>',$entry['smdhr'],'</td>';
 			echo '<td>',$entry['smspk'],'</td>';
 			echo '</tr>';

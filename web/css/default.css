@@ -24,6 +24,7 @@ th,td {
 th {
 	text-align: left;
 	font-weight: bold;
+	vertical-align: top;
 }
 .row-light {
 	background-color: #fff;

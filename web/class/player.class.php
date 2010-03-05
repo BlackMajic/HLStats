@@ -832,9 +832,24 @@ class Player {
 					SUM(".DB_PREFIX."_Events_Statsme.headshots) AS smheadshots,
 					SUM(".DB_PREFIX."_Events_Statsme.deaths) AS smdeaths,
 					SUM(".DB_PREFIX."_Events_Statsme.damage) AS smdamage,
-					IFNULL((ROUND((SUM(".DB_PREFIX."_Events_Statsme.damage) / SUM(".DB_PREFIX."_Events_Statsme.hits)), 1)), '-') as smdhr,
-					SUM(".DB_PREFIX."_Events_Statsme.kills) / IF((SUM(".DB_PREFIX."_Events_Statsme.deaths)=0), 1, (SUM(".DB_PREFIX."_Events_Statsme.deaths))) as smkdr,
-					ROUND((SUM(".DB_PREFIX."_Events_Statsme.hits) / SUM(".DB_PREFIX."_Events_Statsme.shots) * 100), 1) as smaccuracy,
+					IFNULL(
+						(
+							ROUND(
+								(
+									SUM(".DB_PREFIX."_Events_Statsme.damage) / SUM(".DB_PREFIX."_Events_Statsme.hits)
+								), 1
+							)
+						), '-'
+					) as smdhr,
+					SUM(".DB_PREFIX."_Events_Statsme.kills) 
+						/ 
+						IF(
+							(
+							SUM(".DB_PREFIX."_Events_Statsme.deaths)=0
+							), 1, 
+							(SUM(".DB_PREFIX."_Events_Statsme.deaths))
+						) as smkdr,
+					(SUM(".DB_PREFIX."_Events_Statsme.hits) / SUM(".DB_PREFIX."_Events_Statsme.shots) * 100) as smaccuracy,
 					IFNULL((ROUND((SUM(".DB_PREFIX."_Events_Statsme.shots) / SUM(".DB_PREFIX."_Events_Statsme.kills)), 1)), '-') as smspk
 				FROM ".DB_PREFIX."_Events_Statsme
 					LEFT JOIN ".DB_PREFIX."_Servers ON ".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_Statsme.serverId
@@ -849,7 +864,6 @@ class Player {
 			}
 			mysql_free_result($query);
 		}
-		exit('weapon accuracy in prozent in player class');
 	}
 
 	/**
