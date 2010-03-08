@@ -541,13 +541,11 @@ if(!empty($weaponStats)) { ?>
 		</tr>
 		<?php
 		foreach ($weaponStats as $entry) {
-			if(empty($entry['smshots']) && empty($entry['smhits']) && empty($entry['smdamage'])
-				&& empty($entry['smheadshots']) && empty($entry['smkills']) && empty($entry['smdeaths'])
+			if($entry['smshots'] == "0" && $entry['smhits'] == "0" && $entry['smdamage'] == "0"
+				&& $entry['smheadshots'] == "0" && $entry['smkills'] == "0" && $entry['smdeaths'] == "0"
 			) {
 				continue;
 			}
-			exit('check the empty ones. those are strings 0');
-			var_dump($entry['smshots']);
 			echo '<tr class="',toggleRowClass($rcol),'">';
 			echo '<td align="center"><img src="',$g_options["imgdir"],'/weapons/',$game,'/',$entry['smweapon'],'.png" alt="',$entry['smweapon'],'" title="',$entry['smweapon'],'" /></td>';
 			echo '<td>',$entry['smshots'],'</td>';
@@ -587,6 +585,12 @@ if(!empty($weaponTarget)) { ?>
 		</tr>
 		<?php
 		foreach ($weaponTarget as $entry) {
+			if($entry['smhead'] == "0" && $entry['smchest'] == "0" && $entry['smstomach'] == "0"
+				&& $entry['smleftarm'] == "0" && $entry['smrightarm'] == "0" && $entry['smleftleg'] == "0"
+				&& $entry['smrightleg'] == "0"
+			) {
+				continue;
+			}
 			echo '<tr class="',toggleRowClass($rcol),'">';
 			echo '<td align="center"><img src="',$g_options["imgdir"],'/weapons/',$game,'/',$entry['smweapon'],'.png" alt="',$entry['smweapon'],'" title="',$entry['smweapon'],'" /></td>';
 			echo '<td>',$entry['smhead'],'</td>';
