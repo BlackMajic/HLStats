@@ -39,10 +39,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
-
-// Player Chat History
 $player = '';
+
+
 if(!empty($_GET["player"])) {
 	if(validateInput($_GET["player"],'digit') === true) {
 		$player = $_GET["player"];
@@ -52,54 +51,67 @@ if(!empty($_GET["player"])) {
 	}
 }
 
-$query = mysql_query("
-SELECT
-	".DB_PREFIX."_Players.lastName,
-	".DB_PREFIX."_Players.game
-FROM
-	".DB_PREFIX."_Players
-WHERE
-	playerId=".mysql_escape_string($player)."
-");
-if (mysql_num_rows($query) != 1)
-	error("No such player '$player'.");
+// load the player
+require('class/player.class.php');
+$playerObj = new Player($player,false);
+if($playerObj === false) {
+	die('No such player');
+}
 
-$playerdata = mysql_fetch_assoc($query);
-mysql_free_result($query);
-
-$pl_name = $playerdata["lastName"];
-if (strlen($pl_name) > 10) {
-	$pl_shortname = substr($pl_name, 0, 8) . "...";
+if (isset($_GET["page"])) {
+	$check = validateInput($_GET['page'],'digit');
+	if($check === true) {
+		$playerObj->setOption("page",$_GET['page']);
+	}
+}
+if (isset($_GET["page"])) {
+	$check = validateInput($_GET['page'],'digit');
+	if($check === true) {
+		$playerObj->setOption("page",$_GET['page']);
+	}
+}
+if (isset($_GET["sort"])) {
+	$check = validateInput($_GET['sort'],'nospace');
+	if($check === true) {
+		$playerObj->setOption("sort",$_GET['sort']);
+	}
 }
 else {
-	$pl_shortname = $pl_name;
+	$playerObj->setOption("sort",'eventTime');
 }
-$pl_name = ereg_replace(" ", "&nbsp;", htmlspecialchars($pl_name));
-$pl_shortname = ereg_replace(" ", "&nbsp;", htmlspecialchars($pl_shortname));
+$newSort = "ASC";
+if (isset($_GET["sortorder"])) {
+	$check = validateInput($_GET['sortorder'],'nospace');
+	if($check === true) {
+		$playerObj->setOption("sortorder",$_GET['sortorder']);
+	}
 
-$game = $playerdata["game"];
-$query = mysql_query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='".mysql_escape_string($game)."'");
-if (mysql_num_rows($query) != 1)
-	$gamename = ucfirst($game);
+	if($_GET["sortorder"] == "ASC") {
+		$newSort = "DESC";
+	}
+}
 else {
-	$result = mysql_fetch_assoc($query);
-	$gamename = $result['name'];
+	$playerObj->setOption("sortorder",'DESC');
 }
 
+$gamename = getGameName($playerObj->getParam("game"));
+$pl_name = makeSavePlayerName($playerObj->getParam('name'));
 
 pageHeader(
 	array($gamename, l("Chat History"), $pl_name),
 	array(
-		$gamename => "index.php?game=$game",
-		l("Player Rankings") => "index.php?mode=players&amp;game=$game",
+		$gamename => "index.php?game=".$playerObj->getParam('game'),
+		l("Player Rankings") => "index.php?mode=players&amp;game=".$playerObj->getParam('game'),
 		l("Player Details") => "index.php?mode=playerinfo&amp;player=$player",
 		l("Chat History")=>""
 	),
 	$pl_name
 );
 
-flush();
+$history = $playerObj->getChatHistory();
+var_dump($history)
 
+/*
 
 $table = new Table(
 	array(
@@ -215,6 +227,7 @@ $query = mysql_query("
 $resultCount = mysql_query("SELECT COUNT(*) as hc FROM ".DB_PREFIX."_EventHistoryChat");
 $result = mysql_fetch_assoc($resultCount);
 $numitems = $result['hc'];
+*/
 ?>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>

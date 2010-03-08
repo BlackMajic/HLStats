@@ -386,12 +386,64 @@ class Player {
 			$queryStr .= " ".$this->_option['sort']." ".$this->_option['sortorder']."";
 		}
 
+		if($this->_option['page'] === 1) {
+			$queryStr .= " LIMIT 0,50";
+		}
+		else {
+			$start = 50*($this->_option['page']-1);
+			$queryStr .= " LIMIT ".$start.",50";
+		}
+
 		$query = mysql_query($queryStr);
 		if(mysql_num_rows($query) > 0) {
 			while($result = mysql_fetch_assoc($query)) {
 				$ret[] = $result;
 			}
 		}
+		exit('page function. see players gage');
+
+		return $ret;
+	}
+
+	/**
+	 * get the player Chat historydata if we have any
+	 *
+	 * @return array
+	 */
+	public function getChatHistory() {
+		$ret = array('data' => array(),
+					'pages' => false);
+
+		$queryStr = "SELECT SQL_CALC_FOUND_ROWS
+	 				'".l('Say')."',
+	 			".DB_PREFIX."_Events_Chat.eventTime,
+	 			CONCAT('".l('I said')." \"', message, '\"'),
+	 			".DB_PREFIX."_Servers.name,
+	 			".DB_PREFIX."_Events_Chat.map
+				FROM ".DB_PREFIX."_Events_Chat
+				LEFT JOIN ".DB_PREFIX."_Servers ON
+	 			".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_Chat.serverId
+			WHERE ".DB_PREFIX."_Events_Chat.playerId=".mysql_escape_string($this->playerId)."";
+
+		if($this->_option['page'] === 1) {
+			$queryStr .= " LIMIT 0,50";
+		}
+		else {
+			$start = 50*($this->_option['page']-1);
+			$queryStr .= " LIMIT ".$start.",50";
+		}
+		
+		$query = mysql_query($queryStr);
+		if(mysql_num_rows($query) > 0) {
+			while($result = mysql_fetch_assoc($query)) {
+				$ret['data'][] = $result;
+			}
+		}
+		
+		//get data for pagination
+		$query = mysql_query("SELECT FOUND_ROWS() AS 'rows'");
+		$result = mysql_fetch_assoc($query);
+		$ret['pages'] = (int)ceil($result['rows']/50);
 
 		return $ret;
 	}
