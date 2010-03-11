@@ -40,6 +40,8 @@
  */
 
 $player = '';
+$pl_name = '';
+
 if(!empty($_GET["player"])) {
 	if(validateInput($_GET["player"],'digit') === true) {
 		$player = $_GET["player"];
@@ -49,56 +51,62 @@ if(!empty($_GET["player"])) {
 	}
 }
 
-$query = mysql_query("
-	SELECT
-		".DB_PREFIX."_Players.lastName,
-		".DB_PREFIX."_Players.game
-	FROM
-		".DB_PREFIX."_Players
-	WHERE
-		playerId=".mysql_escape_string($player)."
-");
-if (mysql_num_rows($query) != 1)
-	error("No such player '$player'.");
+// load the player
+require('class/player.class.php');
+$playerObj = new Player($player,false);
+if($playerObj === false) {
+	die('No such player');
+}
 
-$playerdata = mysql_fetch_assoc($query);
-mysql_free_result($query);
-
-$pl_name = $playerdata["lastName"];
-if (strlen($pl_name) > 10) {
-	$pl_shortname = substr($pl_name, 0, 8) . "...";
+if (isset($_GET["page"])) {
+	$check = validateInput($_GET['page'],'digit');
+	if($check === true) {
+		$playerObj->setOption("page",$_GET['page']);
+	}
+}
+if (isset($_GET["sort"])) {
+	$check = validateInput($_GET['sort'],'nospace');
+	if($check === true) {
+		$playerObj->setOption("sort",$_GET['sort']);
+	}
 }
 else {
-	$pl_shortname = $pl_name;
+	$playerObj->setOption("sort",'eventTime');
 }
-$pl_name = ereg_replace(" ", "&nbsp;", htmlspecialchars($pl_name));
-$pl_shortname = ereg_replace(" ", "&nbsp;", htmlspecialchars($pl_shortname));
+$newSort = "ASC";
+if (isset($_GET["sortorder"])) {
+	$check = validateInput($_GET['sortorder'],'nospace');
+	if($check === true) {
+		$playerObj->setOption("sortorder",$_GET['sortorder']);
+	}
 
-
-$game = $playerdata["game"];
-$query = mysql_query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='".mysql_escape_string($game)."'");
-if (mysql_num_rows($query) != 1)
-	$gamename = ucfirst($game);
+	if($_GET["sortorder"] == "ASC") {
+		$newSort = "DESC";
+	}
+}
 else {
-	$result = mysql_fetch_assoc($query);
-	$gamename = $result['name'];
+	$playerObj->setOption("sortorder",'DESC');
 }
 
 
+
+$gamename = getGameName($playerObj->getParam("game"));
+$pl_name = makeSavePlayerName($playerObj->getParam('name'));
 pageHeader(
 	array($gamename, l("Event History"), $pl_name),
 	array(
-		$gamename => "index.php?game=$game",
-		l("Player Rankings") => "index.php?mode=players&amp;game=$game",
+		$gamename => "index.php?game=".$playerObj->getParam("game"),
+		l("Player Rankings") => "index.php?mode=players&amp;game=".$playerObj->getParam("game"),
 		l("Player Details") => "index.php?mode=playerinfo&amp;player=$player",
 		l("Event History")=>""
 	),
 	$pl_name
 );
 
-flush();
 
 
+
+/*
 $table = new Table(
 	array(
 		new TableColumn(
@@ -137,7 +145,7 @@ $table = new Table(
 	"sortorder"
 );
 
-$surl = 'index.php';
+//$surl = 'index.php';
 
 
 // This would be better done with a UNION query, I think, but MySQL doesn't
@@ -170,7 +178,8 @@ function insertEvents ($table, $select) {
 		$select
 	");
 }
-
+*/
+/*
 insertEvents("TeamBonuses", "
 	SELECT
 		'".l('Team Bonus')."',
@@ -413,6 +422,7 @@ insertEvents("ChangeTeam", "
 	WHERE
 		<table>.playerId=".mysql_escape_string($player)."");
 
+
 $query = mysql_query("
 	SELECT
 		eventTime,
@@ -431,14 +441,91 @@ $query = mysql_query("
 $queryCount = mysql_query("SELECT COUNT(*) AS ec FROM ".DB_PREFIX."_EventHistory");
 $result = mysql_fetch_assoc($queryCount);
 $numitems = $result['ec'];
+*/
 ?>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-	<tr>
-		<td width="100%">
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Player Event History'); ?></b> (<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?><p>
-		<?php
-			$table->draw($query, $numitems, 100);
-		?>
-		</td>
-	</tr>
-</table>
+
+<div id="sidebar">
+	<h1><?php echo l('Options'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>
+				<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="player.gif"><?php echo('Back to Player page'); ?></a>
+			</li>
+			<li>
+				<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo('Event History'); ?></a>
+			</li>
+			<li>
+				<a href="index.php?mode=playerchathistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo l('Chat History'); ?></a>
+			</li>
+			<li>
+				<a href="index.php?mode=search&st=player&q=<?php echo $pl_urlname; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/search.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="search.gif"><?php echo l('Find other players with the same name'); ?></a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="main">
+	<h1>
+		<?php echo l('Player Event History'); ?>
+		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
+	</h1>
+<?php
+	$history = $playerObj->getEventHistory();
+	$rcol = "row-dark";
+	if(!empty($history)) {
+?>
+	<table cellpadding="0" cellspacing="0" border="1" width="100%">
+		<tr>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'eventTime','sortorder'=>$newSort)); ?>">
+					<?php echo l('Date'); ?>
+				</a>
+				<?php if($playerObj->getOption('sort') == "eventTime") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'eventType','sortorder'=>$newSort)); ?>">
+					<?php echo l('Type'); ?>
+				</a>
+				<?php if($playerObj->getOption('sort') == "eventType") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo toggleRowClass($rcol); ?>"><?php echo l('Description'); ?></th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'serverName','sortorder'=>$newSort)); ?>">
+					<?php echo l('Server'); ?>
+				</a>
+				<?php if($playerObj->getOption('sort') == "serverName") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'map','sortorder'=>$newSort)); ?>">
+					<?php echo l('Map'); ?>
+				</a>
+				<?php if($playerObj->getOption('sort') == "map") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+		</tr>
+<?php
+	foreach($history as $entry) {
+		$rcol = "row-dark";
+		echo '<tr>';
+		echo '<td class="',toggleRowClass($rcol),'">',$entry['eventTime'],'</td>';
+		echo '<td class="',toggleRowClass($rcol),'">',$entry['eventType'],'</td>';
+		echo '<td class="',toggleRowClass($rcol),'">',$entry['eventDesc'],'</td>';
+		echo '<td class="',toggleRowClass($rcol),'">',$entry['serverName'],'</td>';
+		echo '<td class="',toggleRowClass($rcol),'">',$entry['map'],'</td>';
+		echo '</tr>';
+	}
+?>
+	</table>
+<?php
+	}
+	else {
+		echo l('No Data');
+	}
+?>
+</div>

@@ -24,6 +24,7 @@ th,td {
 th {
 	text-align: left;
 	font-weight: bold;
+	vertical-align: top;
 }
 .row-light {
 	background-color: #fff;
@@ -171,6 +172,21 @@ form.search input.searchbutton {
 	width: 60px;
 }
 
+/** percentage bar layout */
+.percentBar {
+	display: block;
+	height: 10px;
+	width: 100px;
+	border: 1px solid #000;
+	position: relative;
+	background-color: #fff;
+}
+.barContent {
+	height: 10px;
+	position: relative;
+	left: 0px;
+	background-color: orange;
+}
 
 /**********************************
   LAYOUT

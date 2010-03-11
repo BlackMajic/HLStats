@@ -92,7 +92,10 @@ else {
 	$playersObj->setOption("sortorder",'DESC');
 }
 
-// the rating system @todo remove
+/**
+ * the rating system
+ * @todo remove
+ */
 $rdlimit = 1000;
 if (isset($_GET["rdlimit"])) {
 	$check = validateInput($_GET['rdlimit'],'digit');
@@ -160,7 +163,7 @@ pageHeader(
 					<?php echo l('Name'); ?>
 				</a>
 				<?php if($playersObj->getOption('sort') == "lastName") { ?>
-				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
@@ -168,7 +171,7 @@ pageHeader(
 					<?php echo l('Points'); ?>
 				</a>
 				<?php if($playersObj->getOption('sort') == "skill") { ?>
-				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
@@ -176,7 +179,7 @@ pageHeader(
 					<?php echo l('Kills'); ?>
 				</a>
 				<?php if($playersObj->getOption('sort') == "kills") { ?>
-				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
@@ -184,7 +187,7 @@ pageHeader(
 					<?php echo l('Deaths'); ?>
 				</a>
 				<?php if($playersObj->getOption('sort') == "deaths") { ?>
-				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
@@ -192,7 +195,7 @@ pageHeader(
 					<?php echo l('Kills per Death'); ?>
 				</a>
 				<?php if($playersObj->getOption('sort') == "kpd") { ?>
-				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 		</tr>

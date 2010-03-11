@@ -93,7 +93,6 @@ elseif (!$player && !$uniqueid) {
 	error("No player ID specified.");
 }
 */
-
 require('class/player.class.php');
 $playerObj = new Player($player,$mode,$game);
 if($playerObj === false) {
@@ -239,8 +238,8 @@ $rcol = "row-dark";
 				<?php if ($playerObj->getParam("clan")) { ?>
 					<a href="index.php?mode=claninfo&clan=<?php echo $playerObj->getParam("clan"); ?>">
 					<img src="<?php echo $g_options['imgdir']; ?>/clan.gif" width="16" height="16" hspace="4"
-							border="0" align="middle" alt="clan.gif"> />
-					<?php echo htmlspecialchars($playerObj->getParam("clan_name")); ?>
+							border="0" align="middle" alt="clan.gif" />
+					<?php echo makeSavePlayerName($playerObj->getParam("clan_name")); ?>
 					</a>
 				<?php }	else {
 					echo l('None');
@@ -398,7 +397,7 @@ if(!empty($aliases)) { ?>
 			echo '<td>',$entry['lastuse'],'</td>';
 			echo '<td>',$entry['kills'],'</td>';
 			echo '<td>',$entry['deaths'],'</td>';
-			echo '<td>',$entry['kpd'],'</td>';
+			echo '<td>',number_format($entry['kpd'],1),'</td>';
 			echo '<td>',$entry['suicides'],'</td>';
 			echo '</tr>';
 		}
@@ -470,14 +469,16 @@ if(!empty($teamSelection)) { ?>
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l('Team'); ?></th>
 			<th><?php echo l('Joined'); ?></th>
-			<th><?php echo l('Percentage of times'); ?></th>
+			<th><?php echo l('Percentage of Times'); ?></th>
 		</tr>
 		<?php
 		foreach ($teamSelection as $entry) {
 			echo '<tr class="',toggleRowClass($rcol),'">';
 			echo '<td>',$entry['name'],'</td>';
 			echo '<td>',$entry['teamcount'],'</td>';
-			echo '<td>',number_format($entry['percent'],2),'%</td>';
+			echo '<td>';
+			echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percent'],0),'px"></div></div>',"\n";
+			echo '</td>';
 			echo '</tr>';
 		}
 		?>
@@ -501,12 +502,16 @@ if(!empty($weaponUsage)) { ?>
 		</tr>
 		<?php
 		foreach ($weaponUsage as $entry) {
-			echo '<tr class="',toggleRowClass($rcol),'">';
-			echo '<td align="center"><img src="',$g_options["imgdir"],'/weapons/',$game,'/',$entry['weapon'],'.png" alt="',$entry['weapon'],'" title="',$entry['weapon'],'" /></td>';
-			echo '<td>',$entry['modifier'],'</td>';
-			echo '<td>',$entry['kills'],'</td>';
-			echo '<td>',number_format($entry['percent'],2),'%</td>';
-			echo '</tr>';
+			echo '<tr class="',toggleRowClass($rcol),'">',"\n";
+			echo '<td align="center">',"\n";
+			echo '<a href="index.php?mode=weaponinfo&amp;weapon='.$entry['weapon'].'&amp;game='.$game.'"><img src="',$g_options["imgdir"],'/weapons/',$game,'/',$entry['weapon'],'.png" alt="',$entry['weapon'],'" title="',$entry['weapon'],'" /></a>',"\n";
+			echo '</td>',"\n";
+			echo '<td>',$entry['modifier'],'</td>',"\n";
+			echo '<td>',$entry['kills'],'</td>',"\n";
+			echo '<td>',"\n";
+			echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percent'],0),'px"></div></div>',"\n";
+			echo '</td>',"\n";
+			echo '</tr>',"\n";
 		}
 		?>
 	</table>
@@ -536,6 +541,11 @@ if(!empty($weaponStats)) { ?>
 		</tr>
 		<?php
 		foreach ($weaponStats as $entry) {
+			if($entry['smshots'] == "0" && $entry['smhits'] == "0" && $entry['smdamage'] == "0"
+				&& $entry['smheadshots'] == "0" && $entry['smkills'] == "0" && $entry['smdeaths'] == "0"
+			) {
+				continue;
+			}
 			echo '<tr class="',toggleRowClass($rcol),'">';
 			echo '<td align="center"><img src="',$g_options["imgdir"],'/weapons/',$game,'/',$entry['smweapon'],'.png" alt="',$entry['smweapon'],'" title="',$entry['smweapon'],'" /></td>';
 			echo '<td>',$entry['smshots'],'</td>';
@@ -545,9 +555,9 @@ if(!empty($weaponStats)) { ?>
 			echo '<td>',$entry['smkills'],'</td>';
 			echo '<td>',$entry['smdeaths'],'</td>';
 			echo '<td>',number_format($entry['smkdr'],1),'</td>';
-			echo '<td>',$entry['smaccuracy'],'</td>';
-			echo '<td>',$entry['smdhr'],'</td>';
-			echo '<td>',$entry['smspk'],'</td>';
+			echo '<td>',number_format($entry['smaccuracy'],1),'%</td>';
+			echo '<td>',number_format($entry['smdhr'],1),'</td>';
+			echo '<td>',number_format($entry['smspk'],1),'</td>';
 			echo '</tr>';
 		}
 		?>
@@ -575,6 +585,12 @@ if(!empty($weaponTarget)) { ?>
 		</tr>
 		<?php
 		foreach ($weaponTarget as $entry) {
+			if($entry['smhead'] == "0" && $entry['smchest'] == "0" && $entry['smstomach'] == "0"
+				&& $entry['smleftarm'] == "0" && $entry['smrightarm'] == "0" && $entry['smleftleg'] == "0"
+				&& $entry['smrightleg'] == "0"
+			) {
+				continue;
+			}
 			echo '<tr class="',toggleRowClass($rcol),'">';
 			echo '<td align="center"><img src="',$g_options["imgdir"],'/weapons/',$game,'/',$entry['smweapon'],'.png" alt="',$entry['smweapon'],'" title="',$entry['smweapon'],'" /></td>';
 			echo '<td>',$entry['smhead'],'</td>';
@@ -611,7 +627,9 @@ if(!empty($maps)) { ?>
 			echo '<tr class="',toggleRowClass($rcol),'">';
 			echo '<td><a href="index.php?mode=mapinfo&game=',$game,'&map=',$entry['map'],'">',$entry['map'],'</a></td>';
 			echo '<td>',$entry['kills'],'</td>';
-			echo '<td>',number_format($entry['percentage'],2),'%</td>';
+			echo '<td>';
+			echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percentage'],0),'px"></div></div>',"\n";
+			echo '</td>';
 			echo '<td>',$entry['deaths'],'</td>';
 			echo '<td>',number_format($entry['kpd'],1),'</td>';
 			echo '</tr>';

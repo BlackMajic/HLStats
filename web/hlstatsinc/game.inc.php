@@ -150,7 +150,7 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 
 				// awards_d_date - the days configured in $awards_numdays
 				$tmptime -= $awards_numdays*86400;
-				$awards_s_date = $awards_d_date = date('l d.m.',$tmptime);
+				$awards_s_date = $awards_d_date = date('l d. F Y',$tmptime);
 			}
 		}
 
@@ -158,7 +158,7 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 ?>
 <h1><?php
 			if ($awards_numdays == 1) {
-				echo l("Daily Awards")," ",l("for")," ",$awards_s_date;
+				echo l("Daily Awards")," ",l("for")," '",$awards_s_date,"'";
 			}
 			else {
 				echo $awards_numdays," ",l('Day Awards'),": ",$awards_s_date," ",l('to')," ",$awards_d_date;
@@ -265,20 +265,15 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 	$result = mysql_fetch_assoc($query);
 	$num_servers = $result['sc'];
 
-	$query = mysql_query("
-		SELECT
-			DATE_FORMAT(eventTime, '%r, %a. %e %b.') as lastEvent
-		FROM
-			".DB_PREFIX."_Events_Frags
+	$query = mysql_query("SELECT MAX(eventTime) as lastEvent
+		FROM ".DB_PREFIX."_Events_Frags
 		LEFT JOIN ".DB_PREFIX."_Servers ON
 			".DB_PREFIX."_Servers.serverId = ".DB_PREFIX."_Events_Frags.serverId
-		WHERE
-			".DB_PREFIX."_Servers.game='$game'
-		ORDER BY eventTime DESC
-		LIMIT 1
-	");
+		WHERE ".DB_PREFIX."_Servers.game='$game'");
 	$result = mysql_fetch_assoc($query);
 	$lastevent = $result['lastEvent'];
+	$lastevent = date("l d. F Y H:i:s T",strtotime($lastevent));
+	mysql_free_result($query);
 ?>
 <p>
 	<ul>

@@ -72,7 +72,7 @@ class Players {
 			$this->_game = $game;
 		}
 		else {
-			new Exception("Game is missing for Players.class");
+			throw new Exception("Game is missing for Players.class");
 		}
 
 		// set default values
@@ -157,7 +157,7 @@ class Players {
 		if(!empty($this->_option['sort']) && !empty($this->_option['sortorder'])) {
 			$queryStr .= " ".$this->_option['sort']." ".$this->_option['sortorder']."";
 		}
-		$queryStr .=" ,t1.lastName ASC";
+		//$queryStr .=" ,t1.lastName ASC";
 
 		// calculate the limit
 		if($this->_option['page'] === 1) {
