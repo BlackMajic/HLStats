@@ -11,6 +11,7 @@ HLStats ChangeLog
 *) Changed: replaced AMCharts with pChart
 *) Changed: Information about real kills removed
 *) Fixed: type in lang (thx to LuBJe)
+*) Fixed: bug in admin -> Tools -> Reset (thx to conan)
 
 
 1.51 (2009-11-23)
