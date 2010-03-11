@@ -107,10 +107,91 @@ pageHeader(
 	),
 	$pl_name
 );
+?>
 
-$history = $playerObj->getChatHistory();
-var_dump($history)
+<div id="sidebar">
+	<h1><?php echo l('Options'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>
+				<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="player.gif"><?php echo('Back to Player page'); ?></a>
+			</li>
+			<li>
+				<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo('Event History'); ?></a>
+			</li>
+			<li>
+				<a href="index.php?mode=playerchathistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo l('Chat History'); ?></a>
+			</li>
+			<li>
+				<a href="index.php?mode=search&st=player&q=<?php echo $pl_urlname; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/search.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="search.gif"><?php echo l('Find other players with the same name'); ?></a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="main">
+	<h1>
+		<?php echo l('Player Chat History'); ?>
+		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
+	</h1>
+<?php
+	$history = $playerObj->getChatHistory();
+	$rcol = "row-dark";
+	if(!empty($history)) {
+?>
+	<table cellpadding="0" cellspacing="0" border="1" width="100%">
+		<tr>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'eventTime','sortorder'=>$newSort)); ?>">
+					<?php echo l('Date'); ?>
+				</a>
+			</th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
+				<?php echo l('Type'); ?>
+			</th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
+				<?php echo l('Description'); ?>
+			</th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'serverName','sortorder'=>$newSort)); ?>">
+					<?php echo l('Server'); ?>
+				</a>
+				<?php if($playerObj->getOption('sort') == "serverName") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'map','sortorder'=>$newSort)); ?>">
+					<?php echo l('Map'); ?>
+				</a>
+				<?php if($playerObj->getOption('sort') == "map") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+		</tr>
+<?php
+	foreach($history as $entry) {
+		$rcol = "row-dark";
+		echo '<tr>';
+		echo '<td class="',toggleRowClass($rcol),'">',$entry['eventTime'],'</td>';
+		echo '<td class="',toggleRowClass($rcol),'">',$entry['eventType'],'</td>';
+		echo '<td class="',toggleRowClass($rcol),'">',$entry['eventDesc'],'</td>';
+		echo '<td class="',toggleRowClass($rcol),'">',$entry['serverName'],'</td>';
+		echo '<td class="',toggleRowClass($rcol),'">',$entry['map'],'</td>';
+		echo '</tr>';
+	}
+?>
+	</table>
+<?php
+	}
+	else {
+		echo l('No Data');
+	}
+?>
+</div>
 
+
+
+<?php
 /*
 
 $table = new Table(
