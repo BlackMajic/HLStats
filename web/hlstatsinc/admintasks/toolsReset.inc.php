@@ -51,7 +51,7 @@
 		$query = mysql_query($query);
 		if (mysql_num_rows($query) < 1) die("Fatal error: No events tables found with query:<p><pre>$query</pre><p>There may be something wrong with your hlstats database or your version of MySQL.");
 
-		while (list($table) = mysql_fetch_array($uery))
+		while (list($table) = mysql_fetch_array($query))
 		{
 			$dbtables[] = $table;
 		}
@@ -66,7 +66,7 @@
 		echo "<ul>\n";
 		foreach ($dbtables as $dbt) {
 			echo "<li>$dbt ... ";
-			if (mysql_query("TRUNCATE TABLE $dbt", false)) {
+			if (mysql_query("TRUNCATE TABLE $dbt")) {
 				echo "OK\n";
 			}
 			else {
