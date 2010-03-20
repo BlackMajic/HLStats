@@ -177,7 +177,8 @@ class Player {
 	public function getEventHistory() {
 		$ret = false;
 		
-		$queryStr = "( SELECT '".l('Team Bonus')."' AS eventType,
+		$queryStr = "SELECT SQL_CALC_FOUND_ROWS
+					'".l('Team Bonus')."' AS eventType,
 					eventTime,
 					CONCAT('".l('My team received a points bonus of')." ', bonus, ' ".l('for triggering')." \"', ".DB_PREFIX."_Actions.description, '\"') AS eventDesc,
 					".DB_PREFIX."_Servers.name AS serverName,
@@ -188,8 +189,8 @@ class Player {
 					LEFT JOIN ".DB_PREFIX."_Servers ON
 						".DB_PREFIX."_Servers.serverId = t.serverId
 					WHERE
-						t.playerId=".mysql_escape_string($this->playerId)." )";
-		$queryStr .= "UNION (
+						t.playerId=".mysql_escape_string($this->playerId)."";
+		$queryStr .= " UNION ALL
 			SELECT '".l('Connect')."' AS eventType,
 				eventTime,
 				CONCAT('".l('I connected to the server')."') AS eventDesc,
@@ -200,8 +201,8 @@ class Player {
 				".DB_PREFIX."_Servers.serverId = t.serverId
 			WHERE
 				t.playerId=".mysql_escape_string($this->playerId)."
-		)";
-		$queryStr .= "UNION (
+		";
+		$queryStr .= " UNION ALL
 			SELECT '".l('Disconnect')."' AS eventType,
 				eventTime,
 				'".l('I left the game')."' AS eventDesc,
@@ -212,8 +213,8 @@ class Player {
 				".DB_PREFIX."_Servers.serverId = t.serverId
 			WHERE
 				t.playerId=".mysql_escape_string($this->playerId)."
-		)";
-		$queryStr .= "UNION (
+		";
+		$queryStr .= " UNION ALL
 			SELECT 'Entry' AS eventType,
 				eventTime,
 				'".l('I entered the game')."' AS eventDesc,
@@ -224,11 +225,11 @@ class Player {
 				".DB_PREFIX."_Servers.serverId = t.serverId
 			WHERE
 				t.playerId=".mysql_escape_string($this->playerId)."
-		)";
-		$queryStr .= "UNION (
+		";
+		$queryStr .= " UNION ALL
 			SELECT '".l('Kill')."' As eventType,
 			eventTime,
-			CONCAT('".l('I killed')." %A%index.php?mode=playerinfo&player=', victimId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' ".l('with')." ', weapon) AS eventDesc,
+			CONCAT('".l('I killed')." <a href=\"index.php?mode=playerinfo&player=', victimId, '\">', ".DB_PREFIX."_Players.lastName, '</a>', ' ".l('with')." ', weapon) AS eventDesc,
 			".DB_PREFIX."_Servers.name AS serverName,
 			map
 		FROM ".DB_PREFIX."_Events_Frags AS t
@@ -238,11 +239,11 @@ class Player {
 			".DB_PREFIX."_Players.playerId = t.victimId
 		WHERE
 			t.killerId=".mysql_escape_string($this->playerId)."
-		)";
-		$queryStr .= "UNION (
+		";
+		$queryStr .= " UNION ALL 
 			SELECT '".l('Death')."' AS eventType,
 				eventTime,
-				CONCAT('%A%index.php?mode=playerinfo&player=', killerId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' ".l('killed me with')." ', weapon) AS eventDesc,
+				CONCAT('<a href=\"index.php?mode=playerinfo&player=', killerId, '\">', ".DB_PREFIX."_Players.lastName, '</a>', ' ".l('killed me with')." ', weapon) AS eventDesc,
 				".DB_PREFIX."_Servers.name AS serverName,
 				map
 			FROM ".DB_PREFIX."_Events_Frags AS t
@@ -252,11 +253,11 @@ class Player {
 				".DB_PREFIX."_Players.playerId = t.killerId
 			WHERE
 				t.victimId=".mysql_escape_string($this->playerId)."
-		)";
-		$queryStr .= "UNION (
+		";
+		$queryStr .= " UNION ALL 
 			SELECT '".l('Team Kill')."' AS eventType,
 				eventTime,
-				CONCAT('".l('I killed teammate')." %A%index.php?mode=playerinfo&player=', victimId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' ".l('with')." ', weapon) AS eventDesc,
+				CONCAT('".l('I killed teammate')." <a href=\"index.php?mode=playerinfo&player=', victimId, '\">', ".DB_PREFIX."_Players.lastName, '</a>', ' ".l('with')." ', weapon) AS eventDesc,
 				".DB_PREFIX."_Servers.name AS serverName,
 				map
 			FROM ".DB_PREFIX."_Events_Teamkills AS t
@@ -266,11 +267,11 @@ class Player {
 				".DB_PREFIX."_Players.playerId = t.victimId
 			WHERE
 				t.killerId=".mysql_escape_string($this->playerId)."
-		)";
-		$queryStr .= "UNION (
+		";
+		$queryStr .= " UNION ALL 
 			SELECT '".l('Friendly Fire')."' AS eventType,
 				eventTime,
-				CONCAT('".l('My teammate')." %A%index.php?mode=playerinfo&player=', killerId, '%', ".DB_PREFIX."_Players.lastName, '%/A%', ' ".l('killed me with')." ', weapon) AS eventDesc,
+				CONCAT('".l('My teammate')." <a href=\"index.php?mode=playerinfo&player=', killerId, '\">', ".DB_PREFIX."_Players.lastName, '</a>', ' ".l('killed me with')." ', weapon) AS eventDesc,
 				".DB_PREFIX."_Servers.name AS serverName,
 				map
 			FROM ".DB_PREFIX."_Events_Teamkills AS t
@@ -280,8 +281,8 @@ class Player {
 				".DB_PREFIX."_Players.playerId = t.killerId
 			WHERE
 				t.victimId=".mysql_escape_string($this->playerId)."
-		)";
-		$queryStr .= "UNION (
+		";
+		$queryStr .= " UNION ALL 
 			SELECT '".l('Role')."' AS eventType,
 				eventTime,
 				CONCAT('".l("I changed role to")." ', role) AS eventDesc,
@@ -292,8 +293,8 @@ class Player {
 				".DB_PREFIX."_Servers.serverId = t.serverId
 			WHERE
 				t.playerId=".mysql_escape_string($this->playerId)."
-		)";
-		$queryStr .= "UNION (
+		";
+		$queryStr .= " UNION ALL 
 			SELECT '".l('Name')."' AS eventTpe,
 				eventTime,
 				CONCAT('".l('I changed my name from')." \"', oldName, '\" ".l('to')." \"', newName, '\"') AS eventDesc,
@@ -304,8 +305,8 @@ class Player {
 				".DB_PREFIX."_Servers.serverId = t.serverId
 			WHERE
 				t.playerId=".mysql_escape_string($this->playerId)."
-		)";
-		$queryStr .= "UNION (
+		";
+		$queryStr .= " UNION ALL 
 			SELECT '".l('Action')."' AS eventType,
 				eventTime,
 				CONCAT('".l('I received a points bonus of')." ', bonus, ' ".l('for triggering')." \"', ".DB_PREFIX."_Actions.description, '\"') AS eventDesc,
@@ -318,11 +319,11 @@ class Player {
 				".DB_PREFIX."_Actions.id = t.actionId
 			WHERE
 				t.playerId=".mysql_escape_string($this->playerId)."
-		)";
-		$queryStr .= "UNION (
+		";
+		$queryStr .= " UNION ALL
 			SELECT '".l('Action')."' AS eventType,
 				eventTime,
-				CONCAT('".l('I received a points bonus of')." ', bonus, ' ".l('for triggering')." \"', ".DB_PREFIX."_Actions.description, '\" ".l('against')." %A%index.php?mode=playerinfo&player=', victimId, '%', ".DB_PREFIX."_Players.lastName, '%/A%') AS eventDesc,
+				CONCAT('".l('I received a points bonus of')." ', bonus, ' ".l('for triggering')." \"', ".DB_PREFIX."_Actions.description, '\" ".l('against')." <a href=\"index.php?mode=playerinfo&player=', victimId, '\">', ".DB_PREFIX."_Players.lastName, '</a>') AS eventDesc,
 				".DB_PREFIX."_Servers.name AS serverName,
 				map
 			FROM ".DB_PREFIX."_Events_PlayerPlayerActions AS t
@@ -334,11 +335,11 @@ class Player {
 				".DB_PREFIX."_Players.playerId = t.victimId
 			WHERE
 				t.playerId=".mysql_escape_string($this->playerId)."
-		)";
-		$queryStr .= "UNION (
+		";
+		$queryStr .= " UNION ALL
 			SELECT '".l('Action')."' AS eventType,
 				eventTime,
-				CONCAT('%A%index.php?mode=playerinfo&player=', t.playerId, '%', ".DB_PREFIX."_Players.lastName, '%/A% ".l('triggered')." \"', ".DB_PREFIX."_Actions.description, '\" ".l('against me')."') AS eventDesc,
+				CONCAT('<a href=\"index.php?mode=playerinfo&player=', t.playerId, '\">', ".DB_PREFIX."_Players.lastName, '</A> ".l('triggered')." \"', ".DB_PREFIX."_Actions.description, '\" ".l('against me')."') AS eventDesc,
 				".DB_PREFIX."_Servers.name AS serverName,
 				map
 			FROM ".DB_PREFIX."_Events_PlayerPlayerActions AS t
@@ -350,8 +351,8 @@ class Player {
 				".DB_PREFIX."_Players.playerId = t.playerId
 			WHERE
 				t.victimId=".mysql_escape_string($this->playerId)."
-		)";
-		$queryStr .= "UNION (
+		";
+		$queryStr .= " UNION ALL
 			SELECT '".l('Suicide')."' AS eventType,
 				eventTime,
 				CONCAT('".l('I committed suicide with')." \"', weapon, '\"') AS eventDesc,
@@ -362,8 +363,8 @@ class Player {
 				".DB_PREFIX."_Servers.serverId = t.serverId
 			WHERE
 				t.playerId=".mysql_escape_string($this->playerId)."
-		)";
-		$queryStr .= "UNION (
+		";
+		$queryStr .= " UNION ALL
 			SELECT '".l('Team')."' AS eventType,
 				eventTime,
 				IF(".DB_PREFIX."_Teams.name IS NULL,
@@ -379,7 +380,7 @@ class Player {
 				".DB_PREFIX."_Teams.code = t.team
 			WHERE
 				t.playerId=".mysql_escape_string($this->playerId)."
-		)";
+		";
 
 		$queryStr .= " ORDER BY ";
 		if(!empty($this->_option['sort']) && !empty($this->_option['sortorder'])) {
@@ -397,11 +398,14 @@ class Player {
 		$query = mysql_query($queryStr);
 		if(mysql_num_rows($query) > 0) {
 			while($result = mysql_fetch_assoc($query)) {
-				$ret[] = $result;
+				$ret['data'][] = $result;
 			}
 		}
-		exit('page function. see players gage');
 
+		// get the max count for pagination
+		$query = mysql_query("SELECT FOUND_ROWS() AS 'rows'");
+		$result = mysql_fetch_assoc($query);
+		$ret['pages'] = (int)ceil($result['rows']/50);
 		return $ret;
 	}
 
