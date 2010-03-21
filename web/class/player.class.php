@@ -419,9 +419,8 @@ class Player {
 					'pages' => false);
 
 		$queryStr = "SELECT SQL_CALC_FOUND_ROWS
-	 				'".l('Say')."',
 	 			".DB_PREFIX."_Events_Chat.eventTime,
-	 			CONCAT('".l('I said')." \"', message, '\"'),
+	 			CONCAT('".l('I said')." \"', ".DB_PREFIX."_Events_Chat.message, '\"') AS message,
 	 			".DB_PREFIX."_Servers.name,
 	 			".DB_PREFIX."_Events_Chat.map
 				FROM ".DB_PREFIX."_Events_Chat
