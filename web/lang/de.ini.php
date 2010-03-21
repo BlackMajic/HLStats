@@ -371,7 +371,6 @@ ordered by Points = Sortiert nach Punkten
 Suicides = Selbstmord
 Teammate Kills = Teamkills
 Weapon Accuracy = Waffengenauigkeit
-Find other players with the same name = Finde Spieler mit dem selben Namen
 Playtime per day = Spielzeit pro Tag
 hover over the bars to get more information = fahre über die Balken um mehr Informationen zu bekommen
 Aliases = Aliase
