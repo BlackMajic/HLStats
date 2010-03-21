@@ -371,7 +371,6 @@ ordered by Points = Sortiert nach Punkten
 Suicides = Selbstmord
 Teammate Kills = Teamkills
 Weapon Accuracy = Waffengenauigkeit
-Chat History = Chat Hisotry
 Find other players with the same name = Finde Spieler mit dem selben Namen
 Playtime per day = Spielzeit pro Tag
 hover over the bars to get more information = fahre über die Balken um mehr Informationen zu bekommen
@@ -461,7 +460,7 @@ against me = gegen mich
 Suicide = Selbstmord
 I committed suicide with = Ich beging Selbstmord mit
 I joined team = Ich bin nun
-Back to Player page = Zurück zur Spilerseite
+Back to Player page = Zurück zur Spielerseite
 
 Weapon Details = Waffendetails
 
@@ -492,6 +491,7 @@ Valve Anti-Cheat = Valve Anti-Cheat
 Rules = Regeln
 Server Addons = Serveraddons
 
+Player Chat History = Spieler Chat Historie
 Chat History = Chat Historie
 Say = Sprechen
 I said = Ich sagte
