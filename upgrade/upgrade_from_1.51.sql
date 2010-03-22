@@ -12,3 +12,5 @@
 
 UPDATE #DB_PREFIX#_Options SET `keyname` = 'showChart' WHERE `keyname` = 'useFlash';
 DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'scripturl';
+ALTER TABLE `#DB_PREFIX#_Events_ChangeRole` ADD INDEX ( `playerId` );
+ALTER TABLE `#DB_PREFIX#_Events_ChangeRole` ADD INDEX ( `serverId` );
