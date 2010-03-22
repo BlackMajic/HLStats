@@ -747,112 +747,14 @@ if($g_options['showChart'] == "1") {
 		</h1>
 		<img src="<?php echo $killDayChart; ?>" />
 <?php }
-
-
-//------------------------------------------------
-
-
-	flush();
-	$tblRoles = new Table(
-		array(
-			new TableColumn(
-				"name",
-				"Role",
-				"width=35&type=roleimg"
-			),
-			new TableColumn(
-				"rolecount",
-				"Joined",
-				"width=10&align=right&append=+times"
-			),
-			new TableColumn(
-				"percent",
-				"Percentage of Times",
-				"width=40&sort=no&type=bargraph"
-			),
-			new TableColumn(
-				"percent",
-				"%",
-				"width=10&sort=no&align=right&append=" . urlencode("%")
-			)
-		),
-		"name",
-		"rolecount",
-		"name",
-		true,
-		9999,
-		"roles_page",
-		"roles_sort",
-		"roles_sortorder",
-		"roles"
-	);
-
-	$queryRoles = mysql_query("SELECT COUNT(*) AS rj FROM ".DB_PREFIX."_Events_ChangeRole WHERE playerId=".mysql_escape_string($player)."");
-	$result = mysql_fetch_assoc($queryRoles);
-	$numrolejoins = $result['rj'];
-	mysql_free_result($queryRoles);
-
-	$query = mysql_query("
-		SELECT
-			IFNULL(".DB_PREFIX."_Roles.name, ".DB_PREFIX."_Events_ChangeRole.role) AS name,
-			COUNT(".DB_PREFIX."_Events_ChangeRole.id) AS rolecount,
-			COUNT(".DB_PREFIX."_Events_ChangeRole.id) / $numrolejoins * 100 AS percent,
-			".DB_PREFIX."_Roles.code AS rolecode
-		FROM
-			".DB_PREFIX."_Events_ChangeRole
-		LEFT JOIN ".DB_PREFIX."_Roles ON
-			".DB_PREFIX."_Events_ChangeRole.role=".DB_PREFIX."_Roles.code
-		LEFT JOIN ".DB_PREFIX."_Servers ON
-			".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_ChangeRole.serverId
-		WHERE
-			".DB_PREFIX."_Servers.game='".mysql_escape_string($game)."'
-			AND ".DB_PREFIX."_Events_ChangeRole.playerId=".mysql_escape_string($player)."
-			AND (hidden <>'1' OR hidden IS NULL)
-		GROUP BY
-			".DB_PREFIX."_Events_ChangeRole.role
-		ORDER BY
-			".$tblRoles->sort." ".$tblRoles->sortorder.",
-			".$tblRoles->sort2." ".$tblRoles->sortorder."
-	");
-
-	$numitems = mysql_num_rows($query);
-
-	if ($numitems > 0) {
-?>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td width="50%">
-		<a name="roles"></a>
-		<?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Role Selection'); ?></b><?php echo $g_options["fontend_normal"];?>
-	</td>
-	<td width="50%" align="right">
-		<?php echo $g_options["font_normal"]; ?>(<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?>
-	</td>
-</tr>
-<tr>
-	<td colspan="2">
-	<div style="margin-top: 10px; margin-left: 40px;">
-	<?php
-		$tblRoles->draw($query, $numitems, 100);
-	?>
-	</div></td>
-</tr>
-</table><p>
-
-<?php
-	}
 }
-
 ?>
-<p>&nbsp;</p>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-    <tr>
-    	<td width="100%"><?php echo $g_options["font_normal"]; ?><b><?php echo l('Note'); ?></b> <?php echo l('Player event histories cover only the last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('days'); ?>. <?php echo l('Items marked "Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days" or "*" above are generated from the player\'s Event History. Player kill, death and suicide totals and points ratings cover the entire recorded period'); ?>.<?php echo $g_options["fontend_normal"];?></td>
-    </tr>
-    <tr>
-    	<td width="100%" align="right"><br><br>
-    	<?php echo $g_options["font_small"]; ?><b><?php echo l('Admin Options'); ?>:</b> <a href="<?php echo "index.php?mode=admin&task=toolsEditdetailsPlayer&id=$player"; ?>"><?php echo l('Edit Player Details'); ?></a><?php echo $g_options["fontend_small"]; ?></td>
-    </tr>
-</table>
-
+<p><b><?php echo l('Note'); ?>:</b><br />
+<?php echo l('Player event histories cover only the last'); ?>&nbsp;
+<?php echo DELETEDAYS; ?> <?php echo l('days'); ?>. <?php echo l('Items marked "Last'); ?>&nbsp;
+<?php echo DELETEDAYS; ?> <?php echo l('Days" or "*" above are generated from the player\'s Event History. Player kill, death and suicide totals and points ratings cover the entire recorded period'); ?>.
+</p>
+<p style="text-align: right">
+    <b><?php echo l('Admin Options'); ?>:</b> <a href="<?php echo "index.php?mode=admin&task=toolsEditdetailsPlayer&id=$player"; ?>"><?php echo l('Edit Player Details'); ?></a>
+</p>
 </div>
