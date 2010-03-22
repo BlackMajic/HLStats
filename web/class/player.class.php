@@ -91,12 +91,12 @@ class Player {
 
 		if(!empty($id)) {
 			$this->_game = $game;
-			
+
 			if($mode === false) {
 				$this->playerId = $id;
 			}
 			elseif($mode === true && !empty($game)) {
-				
+
 				$this->_lookupPlayerIdFromUniqeId($id);
 				if(empty($this->playerId)) {
 					throw new Exception("PlayerID can't be looked up via uniqueid in Player.class");
@@ -176,7 +176,7 @@ class Player {
 	 */
 	public function getEventHistory() {
 		$ret = false;
-		
+
 		$queryStr = "SELECT SQL_CALC_FOUND_ROWS
 					'".l('Team Bonus')."' AS eventType,
 					eventTime,
@@ -240,7 +240,7 @@ class Player {
 		WHERE
 			t.killerId=".mysql_escape_string($this->playerId)."
 		";
-		$queryStr .= " UNION ALL 
+		$queryStr .= " UNION ALL
 			SELECT '".l('Death')."' AS eventType,
 				eventTime,
 				CONCAT('<a href=\"index.php?mode=playerinfo&player=', killerId, '\">', ".DB_PREFIX."_Players.lastName, '</a>', ' ".l('killed me with')." ', weapon) AS eventDesc,
@@ -254,7 +254,7 @@ class Player {
 			WHERE
 				t.victimId=".mysql_escape_string($this->playerId)."
 		";
-		$queryStr .= " UNION ALL 
+		$queryStr .= " UNION ALL
 			SELECT '".l('Team Kill')."' AS eventType,
 				eventTime,
 				CONCAT('".l('I killed teammate')." <a href=\"index.php?mode=playerinfo&player=', victimId, '\">', ".DB_PREFIX."_Players.lastName, '</a>', ' ".l('with')." ', weapon) AS eventDesc,
@@ -268,7 +268,7 @@ class Player {
 			WHERE
 				t.killerId=".mysql_escape_string($this->playerId)."
 		";
-		$queryStr .= " UNION ALL 
+		$queryStr .= " UNION ALL
 			SELECT '".l('Friendly Fire')."' AS eventType,
 				eventTime,
 				CONCAT('".l('My teammate')." <a href=\"index.php?mode=playerinfo&player=', killerId, '\">', ".DB_PREFIX."_Players.lastName, '</a>', ' ".l('killed me with')." ', weapon) AS eventDesc,
@@ -282,7 +282,7 @@ class Player {
 			WHERE
 				t.victimId=".mysql_escape_string($this->playerId)."
 		";
-		$queryStr .= " UNION ALL 
+		$queryStr .= " UNION ALL
 			SELECT '".l('Role')."' AS eventType,
 				eventTime,
 				CONCAT('".l("I changed role to")." ', role) AS eventDesc,
@@ -294,7 +294,7 @@ class Player {
 			WHERE
 				t.playerId=".mysql_escape_string($this->playerId)."
 		";
-		$queryStr .= " UNION ALL 
+		$queryStr .= " UNION ALL
 			SELECT '".l('Name')."' AS eventTpe,
 				eventTime,
 				CONCAT('".l('I changed my name from')." \"', oldName, '\" ".l('to')." \"', newName, '\"') AS eventDesc,
@@ -306,7 +306,7 @@ class Player {
 			WHERE
 				t.playerId=".mysql_escape_string($this->playerId)."
 		";
-		$queryStr .= " UNION ALL 
+		$queryStr .= " UNION ALL
 			SELECT '".l('Action')."' AS eventType,
 				eventTime,
 				CONCAT('".l('I received a points bonus of')." ', bonus, ' ".l('for triggering')." \"', ".DB_PREFIX."_Actions.description, '\"') AS eventDesc,
@@ -436,58 +436,20 @@ class Player {
 			$start = 50*($this->_option['page']-1);
 			$queryStr .= " LIMIT ".$start.",50";
 		}
-		
+
 		$query = mysql_query($queryStr);
 		if(mysql_num_rows($query) > 0) {
 			while($result = mysql_fetch_assoc($query)) {
 				$ret['data'][] = $result;
 			}
 		}
-		
+
 		//get data for pagination
 		$query = mysql_query("SELECT FOUND_ROWS() AS 'rows'");
 		$result = mysql_fetch_assoc($query);
 		$ret['pages'] = (int)ceil($result['rows']/50);
 
 		return $ret;
-	}
-
-	/**
-	 * load the player data from db
-	 *
-	 * @return void
-	 */
-	private function _load() {
-		if(!empty($this->playerId)) {
-			$query = mysql_query("SELECT
-					".DB_PREFIX."_Players.lastName AS name,
-					".DB_PREFIX."_Players.clan,
-					".DB_PREFIX."_Players.fullName,
-					".DB_PREFIX."_Players.email,
-					".DB_PREFIX."_Players.homepage,
-					".DB_PREFIX."_Players.icq,
-					".DB_PREFIX."_Players.game,
-					".DB_PREFIX."_Players.skill,
-					".DB_PREFIX."_Players.oldSkill,
-					".DB_PREFIX."_Players.kills,
-					".DB_PREFIX."_Players.deaths,
-					IFNULL(kills/deaths, '-') AS kpd,
-					".DB_PREFIX."_Players.suicides,
-					CONCAT(".DB_PREFIX."_Clans.tag, ' ', ".DB_PREFIX."_Clans.name) AS clan_name
-				FROM
-					".DB_PREFIX."_Players
-				LEFT JOIN ".DB_PREFIX."_Clans ON
-					".DB_PREFIX."_Clans.clanId = ".DB_PREFIX."_Players.clan
-				WHERE
-					playerId='".mysql_escape_string($this->playerId)."'");
-			if(mysql_num_rows($query)) {
-				$result = mysql_fetch_assoc($query);
-				$this->_playerData = $result;
-				if(empty($this->_game)) {
-					$this->_game = $result['game'];
-				}
-			}
-		}
 	}
 
 	/**
@@ -512,6 +474,7 @@ class Player {
 		$this->_getWeaponTarget();
 		$this->_getMaps();
 		$this->_getPlayerKillStats();
+		$this->_getRoleSelection();
 
 		$this->_getRank('rankPoints');
 	}
@@ -562,6 +525,44 @@ class Player {
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * load the player data from db
+	 *
+	 * @return void
+	 */
+	private function _load() {
+		if(!empty($this->playerId)) {
+			$query = mysql_query("SELECT
+					".DB_PREFIX."_Players.lastName AS name,
+					".DB_PREFIX."_Players.clan,
+					".DB_PREFIX."_Players.fullName,
+					".DB_PREFIX."_Players.email,
+					".DB_PREFIX."_Players.homepage,
+					".DB_PREFIX."_Players.icq,
+					".DB_PREFIX."_Players.game,
+					".DB_PREFIX."_Players.skill,
+					".DB_PREFIX."_Players.oldSkill,
+					".DB_PREFIX."_Players.kills,
+					".DB_PREFIX."_Players.deaths,
+					IFNULL(kills/deaths, '-') AS kpd,
+					".DB_PREFIX."_Players.suicides,
+					CONCAT(".DB_PREFIX."_Clans.tag, ' ', ".DB_PREFIX."_Clans.name) AS clan_name
+				FROM
+					".DB_PREFIX."_Players
+				LEFT JOIN ".DB_PREFIX."_Clans ON
+					".DB_PREFIX."_Clans.clanId = ".DB_PREFIX."_Players.clan
+				WHERE
+					playerId='".mysql_escape_string($this->playerId)."'");
+			if(mysql_num_rows($query)) {
+				$result = mysql_fetch_assoc($query);
+				$this->_playerData = $result;
+				if(empty($this->_game)) {
+					$this->_game = $result['game'];
+				}
+			}
+		}
 	}
 
 	/**
@@ -895,12 +896,12 @@ class Player {
 							)
 						), '-'
 					) as smdhr,
-					SUM(".DB_PREFIX."_Events_Statsme.kills) 
-						/ 
+					SUM(".DB_PREFIX."_Events_Statsme.kills)
+						/
 						IF(
 							(
 							SUM(".DB_PREFIX."_Events_Statsme.deaths)=0
-							), 1, 
+							), 1,
 							(SUM(".DB_PREFIX."_Events_Statsme.deaths))
 						) as smkdr,
 					(SUM(".DB_PREFIX."_Events_Statsme.hits) / SUM(".DB_PREFIX."_Events_Statsme.shots) * 100) as smaccuracy,
@@ -1031,6 +1032,45 @@ class Player {
 			}
 			mysql_free_result($query);
 		}
+	}
+
+	/**
+	 * get the rol selection data
+	 *
+	 * @return void
+	 */
+	private function _getRoleSelection() {
+		$this->_playerData['roleSelection'] = array();
+
+		$queryRoles = mysql_query("SELECT COUNT(*) AS rj FROM
+									".DB_PREFIX."_Events_ChangeRole
+									WHERE playerId=".mysql_escape_string($this->playerId)."");
+		$result = mysql_fetch_assoc($queryRoles);
+		$numrolejoins = $result['rj'];
+		mysql_free_result($queryRoles);
+		if(!empty($numrolejoins)) {
+			$query = mysql_query("
+					SELECT
+						IFNULL(".DB_PREFIX."_Roles.name, ".DB_PREFIX."_Events_ChangeRole.role) AS name,
+						COUNT(".DB_PREFIX."_Events_ChangeRole.id) AS rolecount,
+						COUNT(".DB_PREFIX."_Events_ChangeRole.id) / $numrolejoins * 100 AS percent,
+						".DB_PREFIX."_Roles.code AS rolecode
+					FROM
+						".DB_PREFIX."_Events_ChangeRole
+					LEFT JOIN ".DB_PREFIX."_Roles ON
+						".DB_PREFIX."_Events_ChangeRole.role=".DB_PREFIX."_Roles.code
+					LEFT JOIN ".DB_PREFIX."_Servers ON
+						".DB_PREFIX."_Servers.serverId=".DB_PREFIX."_Events_ChangeRole.serverId
+					WHERE
+						".DB_PREFIX."_Servers.game='".mysql_escape_string($this->_game)."'
+						AND ".DB_PREFIX."_Events_ChangeRole.playerId=".mysql_escape_string($this->playerId)."
+						AND (hidden <>'1' OR hidden IS NULL)
+					GROUP BY
+						".DB_PREFIX."_Events_ChangeRole.role
+					ORDER BY `name`
+					LIMIT 10");
+		}
+
 	}
 }
 

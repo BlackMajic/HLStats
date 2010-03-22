@@ -482,6 +482,35 @@ if(!empty($teamSelection)) { ?>
 	</table>
 <?php }
 
+$roleSelection = $playerObj->getParam('roleSelection');
+if(!empty($roleSelection)) { ?>
+	exit("role selection todo");
+	<a name="roles"></a>
+	<h1>
+		<?php echo l('Role Selection'); ?>
+		<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>#role"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+		(<?php echo l('Last'),' ',DELETEDAYS,' ',l('Days'); ?>)
+	</h1>
+	<table cellpadding="2" cellspacing="0" border="1" width="100%">
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
+			<th><?php echo l('Role'); ?></th>
+			<th><?php echo l('Joined'); ?></th>
+			<th><?php echo l('Percentage of Times'); ?></th>
+		</tr>
+		<?php
+		foreach ($teamSelection as $entry) {
+			echo '<tr class="',toggleRowClass($rcol),'">';
+			echo '<td>',$entry['name'],'</td>';
+			echo '<td>',$entry['rolecount'],'</td>';
+			echo '<td>';
+			echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percent'],0),'px"></div></div>',"\n";
+			echo '</td>';
+			echo '</tr>';
+		}
+		?>
+	</table>
+<?php }
+
 $weaponUsage = $playerObj->getParam('weaponUsage');
 if(!empty($weaponUsage)) { ?>
 	<a name="weaponusage"></a>
