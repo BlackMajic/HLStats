@@ -172,7 +172,7 @@ pageHeader(
 			</th>
 			<th class="<?php echo $rcol; ?>"><?php echo l('Percent'); ?></th>
 		</tr>
-		<?php
+	<?php
 		if(!empty($weapons['data'])) {
 			if($page > 1) {
 				$rank = ($page - 1) * (50 + 1);
@@ -190,7 +190,9 @@ pageHeader(
 				echo '</td>',"\n";
 
 				echo '<td class="',$rcol,'">';
+				echo '<a href="index.php?mode=weaponinfo&amp;weapon=',$entry['weapon'],'&amp;game=',$game,'">';
 				echo '<img src="'.$g_options['imgdir'].'weapons/',$game,'/',$entry['weapon'],'.png" alt="',$entry['name'],'" title="',$entry['name'],'" />';
+				echo '</a>';
 				echo '</td>',"\n";
 
 				echo '<td class="',$rcol,'">';
