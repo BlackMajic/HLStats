@@ -114,13 +114,13 @@ pageHeader(
 	<div class="left-box">
 		<ul class="sidemenu">
 			<li>
-				<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="player.gif"><?php echo l('Back to Player page'); ?></a>
+				<a href="index.php?mode=playerchathistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo l('Chat History'); ?></a>
 			</li>
 			<li>
 				<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo l('Event History'); ?></a>
 			</li>
 			<li>
-				<a href="index.php?mode=playerchathistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo l('Chat History'); ?></a>
+				<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="player.gif"><?php echo l('Back to Player page'); ?></a>
 			</li>
 		</ul>
 	</div>
@@ -166,7 +166,8 @@ pageHeader(
 			</th>
 		</tr>
 <?php
-	foreach($history as $entry) {
+	exit('todo');
+	foreach($history['data'] as $entry) {
 		$rcol = "row-dark";
 		echo '<tr>';
 		echo '<td class="',toggleRowClass($rcol),'">',$entry['eventTime'],'</td>';
@@ -176,9 +177,21 @@ pageHeader(
 		echo '<td class="',toggleRowClass($rcol),'">',$entry['map'],'</td>';
 		echo '</tr>';
 	}
-?>
-	</table>
-<?php
+	echo '<tr><td colspan="5" align="right">';
+		if($history['pages'] > 1) {
+			for($i=1;$i<=$history['pages'];$i++) {
+				if($playerObj->getOption('page') == ($i)) {
+					echo "[",$i,"]";
+				}
+				else {
+					echo "<a href='index.php?",makeQueryString(array('page'=>$i)),"'>[",$i,"]</a>";
+				}
+			}
+		}
+		else {
+			echo "[1]";
+		}
+		echo '</td></tr></table>',"\n";
 	}
 	else {
 		echo l('No Data');
@@ -307,12 +320,3 @@ $result = mysql_fetch_assoc($resultCount);
 $numitems = $result['hc'];
 */
 ?>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td width="100%"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Player Event History'); ?></b> (<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('Days'); ?>)<?php echo $g_options["fontend_normal"];?><p>
-
-	<?php
-		$table->draw($query, $numitems, 100);
-	?></td>
-</tr>
-</table>
