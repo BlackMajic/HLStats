@@ -39,6 +39,10 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+$rcol = "row-dark";
+$players['data'] = array();
+$players['pages'] = array();
+
 $weapon = false;
 if(!empty($_GET["weapon"])) {
 	if(validateInput($_GET["weapon"],'nospace') === true) {
