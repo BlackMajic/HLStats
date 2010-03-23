@@ -38,12 +38,150 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+$rcol = "row-dark";
+$weapons['data'] = array();
+$weapons['pages'] = array();
+
+$page = 1;
+if (isset($_GET["page"])) {
+	$check = validateInput($_GET['page'],'digit');
+	if($check === true) {
+		$page = $_GET['page'];
+	}
+}
+$sort = 'kills';
+if (isset($_GET["sort"])) {
+	$check = validateInput($_GET['sort'],'nospace');
+	if($check === true) {
+		$playersObj->setOption("sort",$_GET['sort']);
+	}
+}
+
+$newSort = "ASC";
+$sortorder = 'DESC';
+if (isset($_GET["sortorder"])) {
+	$check = validateInput($_GET['sortorder'],'nospace');
+	if($check === true) {
+		$sortorder = $_GET['sortorder'];
+	}
+
+	if($_GET["sortorder"] == "ASC") {
+		$newSort = "DESC";
+	}
+}
+
+// get the data
+$killCount = mysql_query("
+	SELECT
+		COUNT(".DB_PREFIX."_Players.playerId) kc
+	FROM
+		".DB_PREFIX."_Events_Frags
+	LEFT JOIN ".DB_PREFIX."_Players ON
+		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.killerId
+	WHERE
+		".DB_PREFIX."_Players.game = '".mysql_escape_string($game)."'");
+$result = mysql_fetch_assoc($killCount);
+$totalkills = $result['kc'];
+mysql_free_result($killCount);
+
+if(!empty($totalkills)) {
+	$queryStr = "
+		SELECT SQL_CALC_FOUND_ROWS
+			".DB_PREFIX."_Events_Frags.weapon,
+			".DB_PREFIX."_Weapons.modifier AS modifier,
+			".DB_PREFIX."_Weapons.name,
+			COUNT(".DB_PREFIX."_Events_Frags.weapon) AS kills,
+			COUNT(".DB_PREFIX."_Events_Frags.weapon) / ".mysql_escape_string($totalkills)." * 100 AS percent
+		FROM
+			".DB_PREFIX."_Events_Frags
+		LEFT JOIN ".DB_PREFIX."_Weapons ON
+			".DB_PREFIX."_Weapons.code = ".DB_PREFIX."_Events_Frags.weapon
+		LEFT JOIN ".DB_PREFIX."_Players ON
+			".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.killerId
+		WHERE
+			".DB_PREFIX."_Players.game='".mysql_escape_string($game)."'
+			AND ".DB_PREFIX."_Weapons.game='".mysql_escape_string($game)."'
+			AND ".DB_PREFIX."_Players.hideranking = 0
+		GROUP BY
+			".DB_PREFIX."_Events_Frags.weapon
+		ORDER BY ".$sort." ".$sortorder;
+
+	// calculate the limit
+	if($page === 1) {
+		$queryStr .=" LIMIT 0,50";
+	}
+	else {
+		$start = 50*($page-1);
+		$queryStr .=" LIMIT ".$start.",50";
+	}
+
+
+
+	$query = mysql_query($queryStr);
+	if(mysql_num_rows($query) > 0) {
+		while($result = mysql_fetch_assoc($query)) {
+			var_dump($result);
+			$result['percent'] = number_format($result['kpd'],1,'.','');
+			$weapons[] = $result;
+		}
+	}
+
+	// get the max count for pagination
+	$query = mysql_query("SELECT FOUND_ROWS() AS 'rows'");
+	$result = mysql_fetch_assoc($query);
+	$weapons['pages'] = (int)ceil($result['rows']/50);
+	mysql_freeresult($query);
+}
+
 pageHeader(
 	array($gamename, l("Weapon Statistics")),
 	array($gamename=>"%s?game=$game", l("Weapon Statistics")=>"")
 );
 
-
+?>
+<div id="sidebar">
+	<h1><?php echo l('Options'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>
+				<a href="<?php echo "index.php?game=$game"; ?>"><?php echo l('Back to game overview'); ?></a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="main">
+	<h1><?php echo l("Weapon Statistics"); ?></h1>
+	<table cellpadding="0" cellspacing="0" border="1" width="100%">
+		<tr>
+			<th class="<?php echo toggleRowClass($rcol); ?>"><?php echo l('Rank'); ?></th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'weapon','sortorder'=>$newSort)); ?>">
+					<?php echo l('Weapon'); ?>
+				</a>
+				<?php if($sort == "weapon") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo toggleRowClass($rcol); ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'modifier','sortorder'=>$newSort)); ?>">
+					<?php echo l('Points Modifier'); ?>
+				</a>
+				<?php if($sort == "modifier") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+		</tr>
+	</table>
+	<?php
+		if(!empty($weapons['data'])) {
+		}
+		else {
+			echo l('No data recorded');
+		}
+	?>
+</div>
+<?php
 $tblWeapons = new Table(
 	array(
 		new TableColumn(
@@ -81,43 +219,10 @@ $tblWeapons = new Table(
 	"weap_sort",
 	"weap_sortorder"
 );
-
-$killCount = mysql_query("
-	SELECT
-		COUNT(".DB_PREFIX."_Players.playerId) kc
-	FROM
-		".DB_PREFIX."_Events_Frags
-	LEFT JOIN ".DB_PREFIX."_Players ON
-		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.killerId
-	WHERE
-		".DB_PREFIX."_Players.game = '".mysql_escape_string($game)."'");
-$result = mysql_fetch_assoc($killCount);
-$totalkills = $result['kc'];
-mysql_free_result($killCount);
-
-$result = mysql_query("
-	SELECT
-		".DB_PREFIX."_Events_Frags.weapon,
-		".DB_PREFIX."_Weapons.modifier AS modifier,
-		".DB_PREFIX."_Weapons.name,
-		COUNT(".DB_PREFIX."_Events_Frags.weapon) AS kills,
-		COUNT(".DB_PREFIX."_Events_Frags.weapon) / ".mysql_escape_string($totalkills)." * 100 AS percent
-	FROM
-		".DB_PREFIX."_Events_Frags
-	LEFT JOIN ".DB_PREFIX."_Weapons ON
-		".DB_PREFIX."_Weapons.code = ".DB_PREFIX."_Events_Frags.weapon
-	LEFT JOIN ".DB_PREFIX."_Players ON
-		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.killerId
-	WHERE
-		".DB_PREFIX."_Players.game='".mysql_escape_string($game)."'
-		AND ".DB_PREFIX."_Weapons.game='".mysql_escape_string($game)."'
-		AND ".DB_PREFIX."_Players.hideranking = 0
-	GROUP BY
-		".DB_PREFIX."_Events_Frags.weapon
-	ORDER BY
-		".$tblWeapons->sort." ".$tblWeapons->sortorder.",
-		".$tblWeapons->sort2." ".$tblWeapons->sortorder."");
 ?>
+
+
+
 <p>
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>

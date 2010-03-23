@@ -42,8 +42,6 @@
 require('class/players.class.php');
 $playersObj = new Players($game);
 
-$minkills = 1; //@todo to remove
-
 /**
  * check the get values
  */
@@ -135,7 +133,7 @@ pageHeader(
 			<form method="GET" action="index.php">
 				<input type="hidden" name="game" value="<?php echo $game; ?>" />
 				<input type="hidden" name="mode" value="players" />
-				<?php if (defined('ELORATING') && (ELORATING === "1" || ELORATING === "2")) { ?>
+				<?php if (defined('ELORATING') && (ELORATING === "1" || ELORATING === "2")) { //@todo remove ! ?>
 					Don't show players with an RD higher than
 					<input type="text" name="rdlimit" size="4"  value="<?php echo $rdlimit; ?>">
 					of 350 <input type="submit" value="Apply"> (lower RD = more accurate rating)
