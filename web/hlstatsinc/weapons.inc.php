@@ -54,7 +54,7 @@ $sort = 'kills';
 if (isset($_GET["sort"])) {
 	$check = validateInput($_GET['sort'],'nospace');
 	if($check === true) {
-		$playersObj->setOption("sort",$_GET['sort']);
+		$sort = $_GET['sort'];
 	}
 }
 
@@ -72,39 +72,31 @@ if (isset($_GET["sortorder"])) {
 }
 
 // get the data
-$killCount = mysql_query("
-	SELECT
-		COUNT(".DB_PREFIX."_Players.playerId) kc
-	FROM
-		".DB_PREFIX."_Events_Frags
+// @todo to improve the spead of this query..
+$killCount = mysql_query("SELECT COUNT(".DB_PREFIX."_Players.playerId) kc
+	FROM ".DB_PREFIX."_Events_Frags
 	LEFT JOIN ".DB_PREFIX."_Players ON
 		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.killerId
-	WHERE
-		".DB_PREFIX."_Players.game = '".mysql_escape_string($game)."'");
+	WHERE ".DB_PREFIX."_Players.game = '".mysql_escape_string($game)."'");
 $result = mysql_fetch_assoc($killCount);
 $totalkills = $result['kc'];
 mysql_free_result($killCount);
 
 if(!empty($totalkills)) {
-	$queryStr = "
-		SELECT SQL_CALC_FOUND_ROWS
+	// @todo to improve this query for speed
+	$queryStr = "SELECT SQL_CALC_FOUND_ROWS
 			".DB_PREFIX."_Events_Frags.weapon,
 			".DB_PREFIX."_Weapons.modifier AS modifier,
 			".DB_PREFIX."_Weapons.name,
-			COUNT(".DB_PREFIX."_Events_Frags.weapon) AS kills,
-			COUNT(".DB_PREFIX."_Events_Frags.weapon) / ".mysql_escape_string($totalkills)." * 100 AS percent
-		FROM
-			".DB_PREFIX."_Events_Frags
-		LEFT JOIN ".DB_PREFIX."_Weapons ON
-			".DB_PREFIX."_Weapons.code = ".DB_PREFIX."_Events_Frags.weapon
-		LEFT JOIN ".DB_PREFIX."_Players ON
-			".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.killerId
-		WHERE
-			".DB_PREFIX."_Players.game='".mysql_escape_string($game)."'
-			AND ".DB_PREFIX."_Weapons.game='".mysql_escape_string($game)."'
+			COUNT(".DB_PREFIX."_Events_Frags.weapon) AS kills
+		FROM ".DB_PREFIX."_Events_Frags
+		LEFT JOIN ".DB_PREFIX."_Weapons
+			ON ".DB_PREFIX."_Weapons.code = ".DB_PREFIX."_Events_Frags.weapon
+		LEFT JOIN ".DB_PREFIX."_Players
+			ON ".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.killerId
+		WHERE ".DB_PREFIX."_Players.game='".mysql_escape_string($game)."'
 			AND ".DB_PREFIX."_Players.hideranking = 0
-		GROUP BY
-			".DB_PREFIX."_Events_Frags.weapon
+		GROUP BY ".DB_PREFIX."_Events_Frags.weapon
 		ORDER BY ".$sort." ".$sortorder;
 
 	// calculate the limit
@@ -116,14 +108,12 @@ if(!empty($totalkills)) {
 		$queryStr .=" LIMIT ".$start.",50";
 	}
 
-
-
 	$query = mysql_query($queryStr);
 	if(mysql_num_rows($query) > 0) {
 		while($result = mysql_fetch_assoc($query)) {
-			var_dump($result);
-			$result['percent'] = number_format($result['kpd'],1,'.','');
-			$weapons[] = $result;
+			$result['percent'] = $result['kills']/$totalkills*100;
+
+			$weapons['data'][] = $result;
 		}
 	}
 
@@ -154,8 +144,8 @@ pageHeader(
 	<h1><?php echo l("Weapon Statistics"); ?></h1>
 	<table cellpadding="0" cellspacing="0" border="1" width="100%">
 		<tr>
-			<th class="<?php echo toggleRowClass($rcol); ?>"><?php echo l('Rank'); ?></th>
-			<th class="<?php echo toggleRowClass($rcol); ?>">
+			<th class="<?php echo $rcol; ?>"><?php echo l('Rank'); ?></th>
+			<th class="<?php echo $rcol; ?>">
 				<a href="index.php?<?php echo makeQueryString(array('sort'=>'weapon','sortorder'=>$newSort)); ?>">
 					<?php echo l('Weapon'); ?>
 				</a>
@@ -163,7 +153,15 @@ pageHeader(
 				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
-			<th class="<?php echo toggleRowClass($rcol); ?>">
+			<th class="<?php echo $rcol; ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'name','sortorder'=>$newSort)); ?>">
+					<?php echo l('Name'); ?>
+				</a>
+				<?php if($sort == "name") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo $rcol; ?>">
 				<a href="index.php?<?php echo makeQueryString(array('sort'=>'modifier','sortorder'=>$newSort)); ?>">
 					<?php echo l('Points Modifier'); ?>
 				</a>
@@ -171,17 +169,62 @@ pageHeader(
 				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
+			<th class="<?php echo $rcol; ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'kills','sortorder'=>$newSort)); ?>">
+					<?php echo l('Kills'); ?>
+				</a>
+				<?php if($sort == "kills") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo $rcol; ?>"><?php echo l('Percent'); ?></th>
 		</tr>
-	</table>
-	<?php
+		<?php
 		if(!empty($weapons['data'])) {
+			if($page > 1) {
+				$rank = ($page - 1) * (50 + 1);
+			}
+			else {
+				$rank = 1;
+			}
+			foreach($weapons['data'] as $k=>$entry) {
+				toggleRowClass($rcol);
+
+				echo '<tr>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo $rank+$k;
+				echo '</td>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo '<img src="'.$g_options['imgdir'].'weapons/',$game,'/',$entry['weapon'],'.png" alt="',$entry['name'],'" title="',$entry['name'],'" />';
+				echo '</td>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo $entry['name'];
+				echo '</td>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo $entry['modifier'];
+				echo '</td>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo $entry['kills'];
+				echo '</td>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percent'],0),'px"></div></div>',"\n";
+				echo '</td>',"\n";
+			}
 		}
 		else {
-			echo l('No data recorded');
+			echo '<tr><td colspan="4">',l('No data recorded'),'</td></tr>';
 		}
 	?>
+	</table>
 </div>
 <?php
+/*
 $tblWeapons = new Table(
 	array(
 		new TableColumn(
@@ -219,16 +262,5 @@ $tblWeapons = new Table(
 	"weap_sort",
 	"weap_sortorder"
 );
+	 */
 ?>
-
-
-
-<p>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td width="50%"><?php echo $g_options["font_normal"]; ?><?php echo l('From a total of'); ?> <b><?php echo $totalkills; ?></b> <?php echo l('kills'); ?> (<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('days'); ?>)<?php echo $g_options["fontend_normal"]; ?></td>
-	<td width="50%" align="right"><?php echo $g_options["font_normal"]; ?><?php echo l('Back to'); ?> <a href="<?php echo "index.php?game=$game"; ?>"><?php echo $gamename; ?></a><?php echo $g_options["fontend_normal"]; ?></td>
-</tr>
-</table>
-</p>
-<?php $tblWeapons->draw($result, mysql_num_rows($result), 90); ?>
