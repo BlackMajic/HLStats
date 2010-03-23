@@ -145,14 +145,7 @@ pageHeader(
 	<table cellpadding="0" cellspacing="0" border="1" width="100%">
 		<tr>
 			<th class="<?php echo $rcol; ?>"><?php echo l('Rank'); ?></th>
-			<th class="<?php echo $rcol; ?>">
-				<a href="index.php?<?php echo makeQueryString(array('sort'=>'weapon','sortorder'=>$newSort)); ?>">
-					<?php echo l('Weapon'); ?>
-				</a>
-				<?php if($sort == "weapon") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
-				<?php } ?>
-			</th>
+			<th class="<?php echo $rcol; ?>"><?php echo l('Weapon'); ?></th>
 			<th class="<?php echo $rcol; ?>">
 				<a href="index.php?<?php echo makeQueryString(array('sort'=>'name','sortorder'=>$newSort)); ?>">
 					<?php echo l('Name'); ?>
@@ -215,10 +208,26 @@ pageHeader(
 				echo '<td class="',$rcol,'">';
 				echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percent'],0),'px"></div></div>',"\n";
 				echo '</td>',"\n";
+
+				echo '</tr>';
 			}
+			echo '<tr><td colspan="6" align="right">';
+				if($weapons['pages'] > 1) {
+					for($i=1;$i<=$weapons['pages'];$i++) {
+						if($page == ($i)) {
+							echo "[",$i,"]";
+						}
+						else {
+							echo "<a href='index.php?",makeQueryString(array('page'=>$i)),"'>[",$i,"]</a>";
+						}
+					}
+				}
+				else {
+					echo "[1]";
+				}
 		}
 		else {
-			echo '<tr><td colspan="4">',l('No data recorded'),'</td></tr>';
+			echo '<tr><td colspan="6">',l('No data recorded'),'</td></tr>';
 		}
 	?>
 	</table>
