@@ -1,0 +1,9 @@
+# this file can be used to protect the hlstats installation if all of the
+# data is available/accessable in the webroot.
+# Here is the howto:
+# 1. copy this file into the /web folder
+# 2. RENAME it to .htaccess (yes with the dot)
+# 3. copy the file example.htaccess.for.hlstats.folder.txt to the main hlstats folder (in which the daemon, web etc. folders are)
+# 4. RENAME this file also to .htaccess
+order deny,allow
+allow from all

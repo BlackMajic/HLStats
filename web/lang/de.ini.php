@@ -513,3 +513,5 @@ Player activity = Spieler aktivität
 
 Direct Link = Direktlink
 Player kills per day = Spieler Frags pro Tag
+
+The details for this server couldn't be retrieved, this maybe because the server is currently unavailable. = Die Details für diesen Server konnten nicht geladen werden.

@@ -1,0 +1,4 @@
+# PLEASE REED THE INSTRUCTIONS FIRST IN THIS FILE:
+# example.htaccess.file.for.web.folder.txt
+order deny,allow
+deny from all
