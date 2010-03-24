@@ -137,7 +137,7 @@ if(!empty($totalkills)) {
 	 * @name $queryStr
 	 */
 	$queryStr = "SELECT SQL_CALC_FOUND_ROWS
-		IF(".DB_PREFIX."_Events_Frags.map='', '(Unaccounted)', ".DB_PREFIX."_Events_Frags.map) AS map,
+		IF(".DB_PREFIX."_Events_Frags.map='', 'Unaccounted', ".DB_PREFIX."_Events_Frags.map) AS map,
 		COUNT(".DB_PREFIX."_Events_Frags.map) AS kills
 	FROM ".DB_PREFIX."_Events_Frags
 	LEFT JOIN ".DB_PREFIX."_Players ON
@@ -197,79 +197,78 @@ pageHeader(
 		<?php echo l("Map Statistics"); ?> |
 		<?php echo l('From a total of'); ?> <b><?php echo $totalkills; ?></b> <?php echo l('kills'); ?> (<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('days'); ?>)
 	</h1>
+	<table cellpadding="0" cellspacing="0" border="1" width="100%">
+		<tr>
+			<th class="<?php echo $rcol; ?>"><?php echo l('Rank'); ?></th>
+			<th class="<?php echo $rcol; ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'map','sortorder'=>$newSort)); ?>">
+					<?php echo l('Map Name'); ?>
+				</a>
+				<?php if($sort == "map") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo $rcol; ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'kills','sortorder'=>$newSort)); ?>">
+					<?php echo l('Kills'); ?>
+				</a>
+				<?php if($sort == "kills") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo $rcol; ?>"><?php echo l('Percentage of Kills'); ?></th>
+		</tr>
+	<?php
+		if(!empty($maps['data'])) {
+			if($page > 1) {
+				$rank = ($page - 1) * (50 + 1);
+			}
+			else {
+				$rank = 1;
+			}
+			foreach($maps['data'] as $k=>$entry) {
+				toggleRowClass($rcol);
+
+				echo '<tr>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo $rank+$k;
+				echo '</td>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo '<a href="index.php?mode=mapinfo&amp;map=',$entry['map'],'&amp;game=',$game,'">';
+				echo $entry['map'];
+				echo '</a>';
+				echo '</td>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo $entry['kills'];
+				echo '</td>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percent'],0),'px"></div></div>',"\n";
+				echo '</td>',"\n";
+
+				echo '</tr>';
+			}
+			echo '<tr><td colspan="4" align="right">';
+				if($maps['pages'] > 1) {
+					for($i=1;$i<=$maps['pages'];$i++) {
+						if($page == ($i)) {
+							echo "[",$i,"]";
+						}
+						else {
+							echo "<a href='index.php?",makeQueryString(array('page'=>$i)),"'>[",$i,"]</a>";
+						}
+					}
+				}
+				else {
+					echo "[1]";
+				}
+		}
+		else {
+			echo '<tr><td colspan="4">',l('No data recorded'),'</td></tr>';
+		}
+	?>
+	</table>
 </div>
-
-<?php
-$tblMaps = new Table(
-	array(
-		new TableColumn(
-			"map",
-			"Map Name",
-			"width=25&align=center&link=" . urlencode("mode=mapinfo&amp;map=%k&amp;game=$game")
-		),
-		new TableColumn(
-			"kills",
-			"Kills",
-			"width=10&align=right"
-		),
-		new TableColumn(
-			"percent",
-			"Percentage of Kills",
-			"width=50&sort=no&type=bargraph"
-		),
-		new TableColumn(
-			"percent",
-			"%",
-			"width=10&sort=no&align=right&append=" . urlencode("%")
-		)
-	),
-	"map",
-	"kills",
-	"map",
-	true,
-	9999,
-	"maps_page",
-	"maps_sort",
-	"maps_sortorder",
-	"maps"
-);
-
-$queryKillsCount = mysql_query("SELECT COUNT(*) as kc
-	FROM ".DB_PREFIX."_Events_Frags
-	LEFT JOIN ".DB_PREFIX."_Players ON
-		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.killerId
-	WHERE
-		".DB_PREFIX."_Players.game = '".mysql_escape_string($game)."'
-		AND ".DB_PREFIX."_Players.hideranking = 0");
-$result = mysql_fetch_assoc($queryKillsCount);
-$totalkills = $result['kc'];
-mysql_free_result($queryKillsCount);
-
-$result = mysql_query("
-	SELECT
-		IF(".DB_PREFIX."_Events_Frags.map='', '(Unaccounted)', ".DB_PREFIX."_Events_Frags.map) AS map,
-		COUNT(".DB_PREFIX."_Events_Frags.map) AS kills,
-		COUNT(".DB_PREFIX."_Events_Frags.map) / ".mysql_escape_string($totalkills)." * 100 AS percent
-	FROM
-		".DB_PREFIX."_Events_Frags
-	LEFT JOIN ".DB_PREFIX."_Players ON
-		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.killerId
-	WHERE
-		".DB_PREFIX."_Players.game='".mysql_escape_string($game)."'
-		AND ".DB_PREFIX."_Players.hideranking = 0
-	GROUP BY
-		".DB_PREFIX."_Events_Frags.map
-	ORDER BY
-		".$tblMaps->sort." ".$tblMaps->sortorder.",
-		".$tblMaps->sort2." ".$tblMaps->sortorder."");
-?>
-<p>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td width="50%"><?php echo $g_options["font_normal"]; ?><?php echo l('From a total of'); ?> <b><?php echo $totalkills; ?></b> <?php echo l('kills'); ?> (<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('days'); ?>)<?php echo $g_options["fontend_normal"]; ?></td>
-	<td width="50%" align="right"><?php echo $g_options["font_normal"]; ?><?php echo l('Back to'); ?> <a href="<?php echo "index.php?game=$game"; ?>"><?php echo $gamename; ?></a><?php echo $g_options["fontend_normal"]; ?></td>
-</tr>
-</table>
-</p>
-<?php $tblMaps->draw($result, mysql_num_rows($result), 90);
-?>
