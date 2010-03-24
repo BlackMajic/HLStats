@@ -140,8 +140,8 @@ if(!empty($totalkills)) {
 		IF(".DB_PREFIX."_Events_Frags.map='', 'Unaccounted', ".DB_PREFIX."_Events_Frags.map) AS map,
 		COUNT(".DB_PREFIX."_Events_Frags.map) AS kills
 	FROM ".DB_PREFIX."_Events_Frags
-	LEFT JOIN ".DB_PREFIX."_Players ON
-		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.killerId
+	LEFT JOIN ".DB_PREFIX."_Players
+		ON ".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_Frags.killerId
 	WHERE ".DB_PREFIX."_Players.game='".mysql_escape_string($game)."'
 		AND ".DB_PREFIX."_Players.hideranking = 0
 	GROUP BY ".DB_PREFIX."_Events_Frags.map
@@ -163,6 +163,7 @@ if(!empty($totalkills)) {
 			$maps['data'][] = $result;
 		}
 	}
+	mysql_freeresult($query);
 
 	/**
 	 * query to get the total rows which would be fetched without the LIMIT

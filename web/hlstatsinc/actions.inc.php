@@ -163,6 +163,7 @@ if(!empty($totalactions)) {
 			$actions['data'][] = $result;
 		}
 	}
+	mysql_freeresult($query);
 
 	/**
 	 * query to get the total rows which would be fetched without the LIMIT
