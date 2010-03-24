@@ -1,6 +1,7 @@
 <?php
 /**
  * actions overview file
+ * display the complete game actions sorted by actions count
  * @package HLStats
  */
 
@@ -127,6 +128,11 @@ $totalactions = $result['ac'];
 mysql_free_result($queryActionsCount);
 
 if(!empty($totalactions)) {
+	/**
+	 * query to get the data from the db with the given options
+	 * @global string $queryStr
+	 * @name $queryStr
+	 */
 	$queryStr = "SELECT SQL_CALC_FOUND_ROWS
 		".DB_PREFIX."_Actions.code,
 		".DB_PREFIX."_Actions.description,
@@ -157,7 +163,12 @@ if(!empty($totalactions)) {
 		}
 	}
 
-	// get the max count for pagination
+	/**
+	 * query to get the total rows which would be fetched without the LIMIT
+	 * works only if the $queryStr has SQL_CALC_FOUND_ROWS
+	 * @global string $query
+	 * @name $query
+	 */
 	$query = mysql_query("SELECT FOUND_ROWS() AS 'rows'");
 	$result = mysql_fetch_assoc($query);
 	$actions['pages'] = (int)ceil($result['rows']/50);
