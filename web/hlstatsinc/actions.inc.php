@@ -1,5 +1,10 @@
 <?php
 /**
+ * actions overview file
+ * @package HLStats
+ */
+
+/**
  *
  * Original development:
  * +
@@ -39,10 +44,26 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/**
+ * the initial row color
+ * @global string $rcol
+ * @name $rcol
+ */
 $rcol = "row-dark";
+
+/**
+ * the actions array which holds the data to display and the page count
+ * @global array $actions
+ * @name $actions
+ */
 $actions['data'] = array();
 $actions['pages'] = array();
 
+/**
+ * the current page to display
+ * @global int $page
+ * @name $page
+ */
 $page = 1;
 if (isset($_GET["page"])) {
 	$check = validateInput($_GET['page'],'digit');
@@ -50,6 +71,12 @@ if (isset($_GET["page"])) {
 		$page = $_GET['page'];
 	}
 }
+
+/**
+ * the current element to sort by for the query
+ * @global string $sort
+ * @name $sort
+ */
 $sort = 'obj_count';
 if (isset($_GET["sort"])) {
 	$check = validateInput($_GET['sort'],'nospace');
@@ -58,7 +85,17 @@ if (isset($_GET["sort"])) {
 	}
 }
 
+/**
+ * the default next sort order
+ * @global string $newSort
+ * @name $newSort
+ */
 $newSort = "ASC";
+/**
+ * the default sort order for the query
+ * @global string $sortorder
+ * @name $sortorder
+ */
 $sortorder = 'DESC';
 if (isset($_GET["sortorder"])) {
 	$check = validateInput($_GET['sortorder'],'nospace');
@@ -71,12 +108,21 @@ if (isset($_GET["sortorder"])) {
 	}
 }
 
-// get the data
+/**
+ * query to get the total actions count for this game
+ * @global string $queryActionsCount
+ * @name $queryActionsCount
+ */
 $queryActionsCount = mysql_query("SELECT COUNT(*) ac
 	FROM ".DB_PREFIX."_Actions, ".DB_PREFIX."_Events_PlayerActions
 	WHERE ".DB_PREFIX."_Events_PlayerActions.actionId = ".DB_PREFIX."_Actions.id
 		AND ".DB_PREFIX."_Actions.game='".mysql_escape_string($game)."'");
 $result = mysql_fetch_assoc($queryActionsCount);
+/**
+ * get the total actions count for this game
+ * @global int $totalactions
+ * @name $totalactions
+ */
 $totalactions = $result['ac'];
 mysql_free_result($queryActionsCount);
 
@@ -184,7 +230,7 @@ pageHeader(
 				echo '</td>',"\n";
 
 				echo '<td class="',$rcol,'">';
-				echo '<a href="index.php?mode=weaponinfo&amp;weapon=',$entry['weapon'],'&amp;game=',$game,'">';
+				echo '<a href="index.php?mode=actioninfo&amp;action=',$entry['code'],'&amp;game=',$game,'">';
 				echo $entry['description'];
 				echo '</a>';
 				echo '</td>',"\n";

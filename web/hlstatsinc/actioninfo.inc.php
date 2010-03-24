@@ -38,6 +38,7 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
 $action = false;
 if(!empty($_GET["action"])) {
 	if(validateInput($_GET["action"],'nospace') === true) {
@@ -48,6 +49,35 @@ if(!empty($_GET["action"])) {
 	}
 }
 
+$page = 1;
+if (isset($_GET["page"])) {
+	$check = validateInput($_GET['page'],'digit');
+	if($check === true) {
+		$page = $_GET['page'];
+	}
+}
+$sort = 'obj_count';
+if (isset($_GET["sort"])) {
+	$check = validateInput($_GET['sort'],'nospace');
+	if($check === true) {
+		$sort = $_GET['sort'];
+	}
+}
+
+$newSort = "ASC";
+$sortorder = 'DESC';
+if (isset($_GET["sortorder"])) {
+	$check = validateInput($_GET['sortorder'],'nospace');
+	if($check === true) {
+		$sortorder = $_GET['sortorder'];
+	}
+
+	if($_GET["sortorder"] == "ASC") {
+		$newSort = "DESC";
+	}
+}
+
+// get the description name
 $query = mysql_query("SELECT description FROM ".DB_PREFIX."_Actions
 					WHERE code='".mysql_escape_string($action)."'
 						AND game='".mysql_escape_string($game)."'");
@@ -59,15 +89,6 @@ else {
 	$act_name = $result["description"];
 }
 mysql_free_result($query);
-
-$query = mysql_query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='".mysql_escape_string($game)."'");
-if (mysql_num_rows($query) != 1) {
-	error("Invalid or no game specified.");
-}
-else {
-	$result = mysql_fetch_assoc($query);
-	$gamename = $result['name'];
-}
 
 pageHeader(
 	array($gamename, l("Action Details"), $act_name),
