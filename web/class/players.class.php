@@ -2,6 +2,7 @@
 /**
  * players class file
  * @package HLStats
+ * @author Johannes 'Banana' Keßler
  */
 
 /**

@@ -2,6 +2,7 @@
 /**
  * the main file. Handles all the requests for the interface
  * @package HLStats
+ * @author Johannes 'Banana' Keßler
  */
 
 /**

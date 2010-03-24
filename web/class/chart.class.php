@@ -2,6 +2,7 @@
 /**
  * chart class file. uses the pChart library
  * @package HLStats
+ * @author Johannes 'Banana' Keßler
  */
 
 

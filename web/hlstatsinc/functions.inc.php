@@ -1,5 +1,12 @@
 <?php
 /**
+ * gloabl functions file
+ * functions which can be used everywhere
+ * @package HLStats
+ * @author Johannes 'Banana' Keßler
+ */
+
+/**
  * Original development:
  * +
  * + HLStats - Real-time player and clan rankings and statistics for Half-Life
@@ -43,6 +50,7 @@
  * toggle the color/css class for each row
  *
  * @param string $col The curren css class
+ * @return string The new color
  */
 function toggleRowClass(&$col) {
 	if($col === "row-light") {
@@ -67,6 +75,9 @@ function sanitize($text) {
 
 /**
  * make a save player name and keeping the special tags and stuff
+ *
+ * @param string $name The player name as string
+ * @return string The escaped player name
  */
 function makeSavePlayerName($name) {
 	return htmlentities($name, ENT_QUOTES, "UTF-8");
@@ -77,7 +88,6 @@ function makeSavePlayerName($name) {
  *
  * @param string $ip
  * @return boolean
- * @author banana
  */
 function checkIP($ip) {
 	if(ereg("^[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}$", $ip)) {

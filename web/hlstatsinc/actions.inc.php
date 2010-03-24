@@ -3,6 +3,7 @@
  * actions overview file
  * display the complete game actions sorted by actions count
  * @package HLStats
+ * @author Johannes 'Banana' Keßler
  */
 
 /**
