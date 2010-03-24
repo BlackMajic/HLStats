@@ -1,5 +1,11 @@
 <?php
 /**
+ * single overview file
+ * display the action listing sorted by action count for each player
+ * @package HLStats
+ */
+
+/**
  *
  * Original development:
  * +
@@ -39,6 +45,27 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/**
+ * the initial row color
+ * @global string $rcol
+ * @name $rcol
+ */
+$rcol = "row-dark";
+
+/**
+ * the players array which holds the data to display and the page count
+ * @global array $players
+ * @name $players
+ */
+$players['data'] = array();
+$players['pages'] = array();
+
+
+/**
+ * the action identifier which is needed to load the data
+ * @global string $action
+ * @name $action
+ */
 $action = false;
 if(!empty($_GET["action"])) {
 	if(validateInput($_GET["action"],'nospace') === true) {
@@ -49,6 +76,11 @@ if(!empty($_GET["action"])) {
 	}
 }
 
+/**
+ * the current page to display
+ * @global int $page
+ * @name $page
+ */
 $page = 1;
 if (isset($_GET["page"])) {
 	$check = validateInput($_GET['page'],'digit');
@@ -56,6 +88,12 @@ if (isset($_GET["page"])) {
 		$page = $_GET['page'];
 	}
 }
+
+/**
+ * the current element to sort by for the query
+ * @global string $sort
+ * @name $sort
+ */
 $sort = 'obj_count';
 if (isset($_GET["sort"])) {
 	$check = validateInput($_GET['sort'],'nospace');
@@ -64,7 +102,17 @@ if (isset($_GET["sort"])) {
 	}
 }
 
+/**
+ * the default next sort order
+ * @global string $newSort
+ * @name $newSort
+ */
 $newSort = "ASC";
+/**
+ * the default sort order for the query
+ * @global string $sortorder
+ * @name $sortorder
+ */
 $sortorder = 'DESC';
 if (isset($_GET["sortorder"])) {
 	$check = validateInput($_GET['sortorder'],'nospace');
@@ -77,8 +125,12 @@ if (isset($_GET["sortorder"])) {
 	}
 }
 
-// get the description name
-$query = mysql_query("SELECT description FROM ".DB_PREFIX."_Actions
+/**
+ * query to get the full action name
+ * @global string $queryActionName
+ * @name $queryActionName
+ */
+$queryActionName = mysql_query("SELECT description FROM ".DB_PREFIX."_Actions
 					WHERE code='".mysql_escape_string($action)."'
 						AND game='".mysql_escape_string($game)."'");
 if (mysql_num_rows($query) != 1) {
@@ -86,9 +138,83 @@ if (mysql_num_rows($query) != 1) {
 }
 else {
 	$result = mysql_fetch_assoc($query);
+	/**
+	 * the full action name
+	 * @global string $act_name
+	 * @name $act_name
+	 */
 	$act_name = $result["description"];
 }
 mysql_free_result($query);
+
+/**
+ * query to get the total total action count
+ * @global string $queryCount
+ * @name $queryCount
+ */
+$queryCount = mysql_query("SELECT
+		COUNT(".DB_PREFIX."_Events_PlayerActions.Id) AS tc
+	FROM ".DB_PREFIX."_Events_PlayerActions, ".DB_PREFIX."_Players, ".DB_PREFIX."_Actions
+	WHERE ".DB_PREFIX."_Actions.code = '".mysql_escape_string($action)."' AND
+		".DB_PREFIX."_Players.game = '".mysql_escape_string($game)."' AND
+		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_PlayerActions.playerId AND
+		".DB_PREFIX."_Events_PlayerActions.actionId = ".DB_PREFIX."_Actions.id");
+$result = mysql_fetch_assoc($queryCount);
+/**
+ * the toral action count for this specific action
+ * @global string $totalact
+ * @name $totalact
+ */
+$totalact = $result['tc'];
+
+if(!empty($totalact)) {
+	/**
+	 * query to get the data from the db with the given options
+	 * @global string $queryStr
+	 * @name $queryStr
+	 */
+	$queryStr = "SELECT SQL_CALC_FOUND_ROWS
+			".DB_PREFIX."_Events_PlayerActions.playerId,
+			".DB_PREFIX."_Players.lastName AS playerName,
+			COUNT(".DB_PREFIX."_Events_PlayerActions.id) AS obj_count,
+			COUNT(".DB_PREFIX."_Events_PlayerActions.id) * ".DB_PREFIX."_Actions.reward_player AS obj_bonus
+		FROM ".DB_PREFIX."_Events_PlayerActions, ".DB_PREFIX."_Players, ".DB_PREFIX."_Actions
+		WHERE ".DB_PREFIX."_Actions.code = '".mysql_escape_string($action)."' AND
+			".DB_PREFIX."_Players.game = '".mysql_escape_string($game)."' AND
+			".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_PlayerActions.playerId AND
+			".DB_PREFIX."_Events_PlayerActions.actionId = ".DB_PREFIX."_Actions.id AND
+			".DB_PREFIX."_Players.hideranking<>'1'
+		GROUP BY ".DB_PREFIX."_Events_PlayerActions.playerId
+		ORDER BY ".$sort." ".$sortorder;
+
+	// calculate the limit
+	if($page === 1) {
+		$queryStr .=" LIMIT 0,50";
+	}
+	else {
+		$start = 50*($page-1);
+		$queryStr .=" LIMIT ".$start.",50";
+	}
+
+	$query = mysql_query($queryStr);
+	if(mysql_num_rows($query) > 0) {
+		while($result = mysql_fetch_assoc($query)) {
+			$players['data'][] = $result;
+		}
+	}
+
+	/**
+	 * query to get the total rows which would be fetched without the LIMIT
+	 * works only if the $queryStr has SQL_CALC_FOUND_ROWS
+	 * @global string $query
+	 * @name $query
+	 */
+	$query = mysql_query("SELECT FOUND_ROWS() AS 'rows'");
+	$result = mysql_fetch_assoc($query);
+	$players['pages'] = (int)ceil($result['rows']/50);
+	mysql_freeresult($query);
+
+}
 
 pageHeader(
 	array($gamename, l("Action Details"), $act_name),
@@ -100,78 +226,100 @@ pageHeader(
 	$act_name
 );
 
-
-
-$table = new Table(
-	array(
-		new TableColumn(
-			"playerName",
-			"Player",
-			"width=45&align=left&icon=player&link=" . urlencode("mode=playerinfo&amp;player=%k")
-		),
-		new TableColumn(
-			"obj_count",
-			"Achieved",
-			"width=25&align=right"
-		),
-		new TableColumn(
-			"obj_bonus",
-			"Skill Bonus Total",
-			"width=25&align=right&sort=no"
-		)
-	),
-	"playerId",
-	"obj_count",
-	"playerName",
-	true,
-	50
-);
-
-$query = mysql_query("
-	SELECT
-		".DB_PREFIX."_Events_PlayerActions.playerId,
-		".DB_PREFIX."_Players.lastName AS playerName,
-		COUNT(".DB_PREFIX."_Events_PlayerActions.id) AS obj_count,
-		COUNT(".DB_PREFIX."_Events_PlayerActions.id) * ".DB_PREFIX."_Actions.reward_player AS obj_bonus
-	FROM
-		".DB_PREFIX."_Events_PlayerActions, ".DB_PREFIX."_Players, ".DB_PREFIX."_Actions
-	WHERE
-		".DB_PREFIX."_Actions.code = '".mysql_escape_string($action)."' AND
-		".DB_PREFIX."_Players.game = '".mysql_escape_string($game)."' AND
-		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_PlayerActions.playerId AND
-		".DB_PREFIX."_Events_PlayerActions.actionId = ".DB_PREFIX."_Actions.id AND
-		".DB_PREFIX."_Players.hideranking<>'1'
-	GROUP BY
-		".DB_PREFIX."_Events_PlayerActions.playerId
-	ORDER BY
-		".$table->sort." ".$table->sortorder.",
-		".$table->sort2." ".$table->sortorder."
-	LIMIT ".$table->startitem.",".$table->numperpage."
-");
-
-$queryCount = mysql_query("
-	SELECT
-		COUNT(DISTINCT ".DB_PREFIX."_Events_PlayerActions.playerId) AS ac,
-		COUNT(".DB_PREFIX."_Events_PlayerActions.Id) AS tc
-	FROM
-		".DB_PREFIX."_Events_PlayerActions, ".DB_PREFIX."_Players, ".DB_PREFIX."_Actions
-	WHERE
-		".DB_PREFIX."_Actions.code = '$action' AND
-		".DB_PREFIX."_Players.game = '$game' AND
-		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_PlayerActions.playerId AND
-		".DB_PREFIX."_Events_PlayerActions.actionId = ".DB_PREFIX."_Actions.id
-");
-
-$result = mysql_fetch_assoc($queryCount);
-$numitems = $result['ac'];
-$totalact = $result['tc'];
 ?>
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td width="50%"><?php echo $g_options["font_normal"]; ?><?php echo l('From a total of'); ?> <b><?php echo intval($totalact); ?></b> <?php echo l('achievements'); ?> (<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('days'); ?>)<?php echo $g_options["fontend_normal"]; ?></td>
-	<td width="50%" align="right"><?php echo $g_options["font_normal"]; ?><?php echo l('Back to'); ?> <a href="<?php echo "index.php?mode=actions&amp;game=$game"; ?>"><?php echo l('Action Statistics'); ?></a><?php echo $g_options["fontend_normal"]; ?></td>
-</tr>
-</table><p>
-<?php
-	$table->draw($query, $numitems, 90, "center");
-?>
+<div id="sidebar">
+	<h1><?php echo l('Options'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>
+				<a href="<?php echo "index.php?mode=actions&amp;game=$game"; ?>"><?php echo l('Back to Action Statistics'); ?></a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="main">
+	<h1>
+		<?php echo l('From a total of'); ?> <b><?php echo intval($totalact); ?></b> <?php echo l('achievements'); ?> (<?php echo l('Last'); ?> <?php echo DELETEDAYS; ?> <?php echo l('days'); ?>)
+	</h1>
+	<table cellpadding="0" cellspacing="0" border="1" width="100%">
+		<tr>
+			<th class="<?php echo $rcol; ?>"><?php echo l('Rank'); ?></th>
+			<th class="<?php echo $rcol; ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'playerId','sortorder'=>$newSort)); ?>">
+					<?php echo l('Player'); ?>
+				</a>
+				<?php if($sort == "playerId") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo $rcol; ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'obj_count','sortorder'=>$newSort)); ?>">
+					<?php echo l('Achieved'); ?>
+				</a>
+				<?php if($sort == "obj_count") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo $rcol; ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'obj_bonus','sortorder'=>$newSort)); ?>">
+					<?php echo l('Skill Bonus Total'); ?>
+				</a>
+				<?php if($sort == "obj_bonus") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+		</tr>
+	<?php
+		if(!empty($players['data'])) {
+			if($page > 1) {
+				$rank = ($page - 1) * (50 + 1);
+			}
+			else {
+				$rank = 1;
+			}
+			foreach($players['data'] as $k=>$entry) {
+				toggleRowClass($rcol);
+
+				echo '<tr>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo $rank+$k;
+				echo '</td>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo '<a href="index.php?mode=playerinfo&amp;player=',$entry['playerId'],'">';
+				echo '<img src="'.$g_options['imgdir'].'player.gif" width="16" height="16" /> ',makeSavePlayerName($entry['playerName']);
+				echo '</a>';
+				echo '</td>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo $entry['obj_count'];
+				echo '</td>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo $entry['obj_bonus'];
+				echo '</td>',"\n";
+
+				echo '</tr>';
+			}
+			echo '<tr><td colspan="4" align="right">';
+				if($players['pages'] > 1) {
+					for($i=1;$i<=$players['pages'];$i++) {
+						if($page == ($i)) {
+							echo "[",$i,"]";
+						}
+						else {
+							echo "<a href='index.php?",makeQueryString(array('page'=>$i)),"'>[",$i,"]</a>";
+						}
+					}
+				}
+				else {
+					echo "[1]";
+				}
+		}
+		else {
+			echo '<tr><td colspan="4">',l('No data recorded'),'</td></tr>';
+		}
+	?>
+	</table>
+</div>
