@@ -105,7 +105,6 @@ function checkIP($ip) {
  *
  * @param string $string
  * @return string
- * @author jumpin_banana
  */
 function makeXMLSave($string) {
 	// have to have the same count
@@ -160,7 +159,6 @@ function validateInput($string,$mode) {
  * @param sctring email
  * @return boolean
  * @author  Dave Child 	http://www.ilovejackdaniels.com/
- * @desc valids an email
  */
 function check_email_address($email) {
 	// First, we check that there's one @ symbol, and that the lengths are right
@@ -194,7 +192,6 @@ function check_email_address($email) {
  * plain and simple language function
  * check if given string is a key in $lData array
  * if so return it, if not return string
- *
  * of default lang is uses, return string immediately
  *
  * @param string $string
@@ -349,6 +346,7 @@ function getEmailLink ($email, $maxlength=40) {
 
 /**
  * return formatted link
+ *
  * @param string url
  * @param int $maxlength
  * @param string $type
@@ -403,6 +401,9 @@ function getGameName($gCode) {
 }
 
 ######## THOSE FUNCTIONS BELOW SHOULD BE CHECKED ############
+/**
+ * @todo functions to be checked
+ */
 
 //
 // void error (string message, [boolean exit])
