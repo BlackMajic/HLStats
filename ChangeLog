@@ -4,13 +4,15 @@ HLStats ChangeLog
 1.60 (TBA)
 *) New: HLStats needs MySQL 4.1 and MySQL is the only supported DB yet.
 *) New: HLStats needs PHP > 5.2.0 now.
+*) New: New design and overall re-write of the web-interface
+*) New: phpDoc documentation available for the web-interface
 *) Changed: Constant INCLUDE_PATH removed.
 *) Changed: hlstats.php file renamed to index.php
 				scripturl option has been removed.
 *) Changed: sorting pictures renamed
 *) Changed: replaced AMCharts with pChart
 *) Changed: Information about real kills removed
-*) Fixed: type in lang (thx to LuBJe)
+*) Fixed: typo in lang (thx to LuBJe)
 *) Fixed: bug in admin -> Tools -> Reset (thx to conan)
 
 
