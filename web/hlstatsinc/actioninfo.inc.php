@@ -1,6 +1,6 @@
 <?php
 /**
- * single overview file
+ * single action overview file
  * display the action listing sorted by action count for each player
  * @package HLStats
  * @author Johannes 'Banana' Keßler
