@@ -109,7 +109,7 @@ elseif(isset($_COOKIE['hls_language']) && !empty($_COOKIE['hls_language'])) {
 if($cl !== 'en') { // use standard language
 	$langFile = getcwd().'/lang/'.$cl.'.ini.php';
 	if(!file_exists($langFile)) {
-		die('Language file coul not be loaded. Please check your LANGUAGE setting in configuration file.');
+		die('Language file could not be loaded. Please check your LANGUAGE setting in configuration file.');
 	}
 	$lData = parse_custom_lang_file($langFile);
 	if(empty($lData)) {
