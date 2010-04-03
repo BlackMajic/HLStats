@@ -15,6 +15,7 @@ No = Nein
 Yes = Ja
 None = Kein
 No Data = Keine Daten
+Percent = Prozent
 
 Contents = Übersicht
 Games = Spiele
@@ -515,3 +516,7 @@ Direct Link = Direktlink
 Player kills per day = Spieler Frags pro Tag
 
 The details for this server couldn't be retrieved, this maybe because the server is currently unavailable. = Die Details für diesen Server konnten nicht geladen werden.
+
+Back to game overview = Zurück zur Spielübersicht
+Back to Weapon Statistics = Zurück zur Waffenübersicht
+Back to Action Statistics = Zurück zur Aktionsübersicht

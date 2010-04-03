@@ -123,28 +123,28 @@ pageHeader(
 			<li>
 				<a href="<?php echo "index.php?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="clan.gif">&nbsp;<?php echo l('Clan Rankings'); ?></a>
 			</li>
-			<form method="GET" action="index.php">
-				<input type="hidden" name="mode" value="search">
-				<input type="hidden" name="game" value="<?php echo $game; ?>">
-				<input type="hidden" name="st" value="player">
-				<input type="text" name="q" size="20" maxlength="64">
-				<input type="submit" value="<?php echo l('Find a player'); ?>">
-			</form>
-			<form method="GET" action="index.php">
-				<input type="hidden" name="game" value="<?php echo $game; ?>" />
-				<input type="hidden" name="mode" value="players" />
-				<?php if (defined('ELORATING') && (ELORATING === "1" || ELORATING === "2")) { //@todo remove ! ?>
-					Don't show players with an RD higher than
-					<input type="text" name="rdlimit" size="4"  value="<?php echo $rdlimit; ?>">
-					of 350 <input type="submit" value="Apply"> (lower RD = more accurate rating)
-				<?php } else { ?>
-				<?php echo l('Only show players with'); ?><br />
-					<input type="text" name="minkills" size="4" maxlength="2" value="<?php echo $playersObj->getOption('minkills'); ?>"><br />
-					<?php echo l('or more kills'); ?>.<br />
-					<input type="submit" value="<?php echo l('Apply'); ?>">
-				<?php } ?>
-			</form>
 		</ul>
+		<form method="GET" action="index.php">
+			<input type="hidden" name="mode" value="search">
+			<input type="hidden" name="game" value="<?php echo $game; ?>">
+			<input type="hidden" name="st" value="player">
+			<input type="text" name="q" size="20" maxlength="64">
+			<input type="submit" value="<?php echo l('Find a player'); ?>">
+		</form>
+		<form method="GET" action="index.php">
+			<input type="hidden" name="game" value="<?php echo $game; ?>" />
+			<input type="hidden" name="mode" value="players" />
+			<?php if (defined('ELORATING') && (ELORATING === "1" || ELORATING === "2")) { //@todo remove ! ?>
+				Don't show players with an RD higher than
+				<input type="text" name="rdlimit" size="4"  value="<?php echo $rdlimit; ?>">
+				of 350 <input type="submit" value="Apply"> (lower RD = more accurate rating)
+			<?php } else { ?>
+			<?php echo l('Only show players with'); ?><br />
+				<input type="text" name="minkills" size="4" maxlength="2" value="<?php echo $playersObj->getOption('minkills'); ?>"><br />
+				<?php echo l('or more kills'); ?>.<br />
+				<input type="submit" value="<?php echo l('Apply'); ?>">
+			<?php } ?>
+		</form>
 	</div>
 </div>
 <div id="main">
