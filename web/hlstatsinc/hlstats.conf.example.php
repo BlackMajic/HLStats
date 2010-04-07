@@ -1,5 +1,12 @@
 <?php
 /**
+ * example configuration file for web-interface
+ * copy this file to hlstats.conf.php and set the options
+ * @package HLStats
+ * @author Johannes 'Banana' Keßler
+ */
+
+/**
  *
  * Original development:
  * +
@@ -43,28 +50,52 @@
 /// Database Settings
 ///
 
-// DB_NAME - The name of the database
+/**
+ * DB_NAME - The name of the database
+ * @global string DB_NAME
+ * @name DB_NAME
+ */
 define("DB_NAME", "hlstats");
 
-// DB_USER - The username to connect to the database as
+/**
+ * DB_USER - The username to connect to the database as
+ * @global string DB_USER
+ * @name DB_USER
+ */
 define("DB_USER", "user");
 
-// DB_PASS - The password for DB_USER
+/**
+ * DB_PASS - The password for DB_USER
+ * @global string DB_PASS
+ * @name DB_PASS
+ */
 define("DB_PASS", "test");
 
-// DB_ADDR - The address of the database server, in host:port format.
-//           (You might also try setting this to e.g. ":/tmp/mysql.sock" to
-//           use a Unix domain socket, if your mysqld is on the same box as
-//           your web server.)
+/**
+ * DB_ADDR - The address of the database server, in host:port format.
+ * 			(You might also try setting this to e.g. ":/tmp/mysql.sock" to
+ * 			use a Unix domain socket, if your mysqld is on the same box as
+ * 			your web server.)
+ * @global string DB_ADDR
+ * @name DB_ADDR
+ */
 define("DB_ADDR", "localhost");
 
-// DB_PREFIX - The table prefix. Default is hlstats (the leading _ will comes from the sql file)
+/**
+ * DB_PREFIX - The table prefix. Default is hlstats (the leading _ comes from the sql file)
+ * @global string DB_PREFIX
+ * @name DB_PREFIX
+ */
 define("DB_PREFIX", "hlstats");
 
-// DB_PCONNECT - Set to 1 to use persistent database connections. Persistent
-//               connections can give better performance, but may overload
-//               the database server. Set to 0 to use non-persistent
-//               connections.
+/**
+ * DB_PCONNECT - Set to 1 to use persistent database connections. Persistent
+ * 			connections can give better performance, but may overload
+ * 			the database server. Set to 0 to use non-persistent
+ * 			connections.
+ * @global string DB_PCONNECT
+ * @name DB_PCONNECT
+ */
 define("DB_PCONNECT", 0);
 
 
@@ -72,12 +103,16 @@ define("DB_PCONNECT", 0);
 /// General Settings
 ///
 
-// LANGUAGE
-//			load the given translation
-//			Possible values are the file in the lang folder
-//			Use the LANGCODE.ini.php to put in here
-//			Default is en.
-//			If a translation is not found the en text will be displayed.
+/**
+ * LANGUAGE
+ * 			load the given translation
+ * 			Possible values are the file in the lang folder
+ * 			Use the LANGCODE.ini.php to put in here
+ * 			Default is en
+ * 			If a translation is not found the en text will be displayed.
+ * @global string LANGUAGE
+ * @name LANGUAGE
+ */
 define('LANGUAGE','en');
 
 // DELETEDAYS - How many days the Event History covers. Must match the value
