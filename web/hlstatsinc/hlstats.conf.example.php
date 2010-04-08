@@ -115,39 +115,57 @@ define("DB_PCONNECT", 0);
  */
 define('LANGUAGE','en');
 
-// DELETEDAYS - How many days the Event History covers. Must match the value
-//              of DeleteDays in hlstats.conf.
-//              default = 5
+/**
+ * DELETEDAYS - How many days the Event History covers. Must match the value
+ * 			of DeleteDays in hlstats.conf.
+ * 			default = 5
+ * @global string DELETEDAYS
+ * @name DELETEDAYS
+ */
 define("DELETEDAYS", 5);
 
-// MODE - Sets the player-tracking mode. Must match the value of Mode in
-//        hlstats.conf. Possible values:
-//           1) "Normal"    - Recommended for public Internet server use.
-//                            Players will be tracked by Unique ID.
-//           2) "NameTrack" - Useful for shared-PC environments, such as
-//                            Internet cafes, etc. Players will be tracked
-//                            by nickname. EXPERIMENTAL!
-//           3) "LAN"       - Useful for LAN servers where players do not
-//                            have a real Unique ID. Players will be tracked
-//                            by IP Address.
+/**
+ * MODE - Sets the player-tracking mode. Must match the value of Mode in
+ *         hlstats.conf. Possible values:
+ *         1) "Normal"    - Recommended for public Internet server use.
+ *                          Players will be tracked by Unique ID.
+ *         2) "NameTrack" - Useful for shared-PC environments, such as
+ *                          Internet cafes, etc. Players will be tracked
+ *                          by nickname. EXPERIMENTAL!
+ *         3) "LAN"       - Useful for LAN servers where players do not
+ *                          have a real Unique ID. Players will be tracked
+ *                          by IP Address.
+ * @global string MODE
+ * @name MODE
+ */
 define("MODE", "Normal");
 
 
-// hide bot players from stats
-// values are 1 or 0
+/**
+ * hide bot players from stats
+ * values are 1 or 0
+ *
+ * @global string HIDE_BOTS
+ * @name HIDE_BOTS
+ */
 define("HIDE_BOTS", "0");
 
-// the Elo rating system
-// developed by HampusW
-// 			here you can decide if you want to use this system
-//			IMPORTANT: Must match the value of EloRating in hlstats.conf !!
-//			Possible values are
-//
-//			ATTENTION:
-//			If you change the setting here you have to reset your stats !!
-//
-//			1) "0"		- Off. Do not use the rating system at all.
-//			2) "1"		- Use the system and display it with the ordinary system
-//			3) "2"		- Only use the EloRating and show only the new one. !! not working yet !!
+/**
+ * the Elo rating system
+ * developed by HampusW
+ * 			here you can decide if you want to use this system
+ * 			IMPORTANT: Must match the value of EloRating in hlstats.conf !!
+ * 			Possible values are
+ *
+ * 			ATTENTION:
+ * 			If you change the setting here you have to reset your stats !!
+ *
+ * 			1) "0"		- Off. Do not use the rating system at all.
+ * 			2) "1"		- Use the system and display it with the ordinary system
+ * 			3) "2"		- Only use the EloRating and show only the new one. !! not working yet !!
+ *
+ * @global string ELORATING
+ * @name ELORATING
+ */
 define('ELORATING','0');
 ?>
