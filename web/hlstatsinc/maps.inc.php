@@ -180,7 +180,7 @@ if(!empty($totalkills)) {
 
 pageHeader(
 	array($gamename, l("Map Statistics")),
-	array($gamename=>"%s?game=$game", l("Map Statistics")=>"")
+	array($gamename=>"index.php?game=$game", l("Map Statistics")=>"")
 );
 ?>
 <div id="sidebar">

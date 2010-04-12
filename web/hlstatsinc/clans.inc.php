@@ -5,7 +5,7 @@
  * @package HLStats
  * @author Johannes 'Banana' Keßler
  */
- 
+
 /**
  *
  * Original development:
@@ -144,7 +144,7 @@ $queryStr = "SELECT SQL_CALC_FOUND_ROWS
 	GROUP BY ".DB_PREFIX."_Clans.clanId
 	HAVING nummembers >= ".mysql_escape_string($minmembers)."
 	ORDER BY ".$sort." ".$sortorder;
-	
+
 // calculate the limit
 if($page === 1) {
 	$queryStr .=" LIMIT 0,50";
@@ -175,7 +175,7 @@ mysql_freeresult($query);
 
 pageHeader(
 	array($gamename, l("Clan Rankings")),
-	array($gamename=>"%s?game=$game", l("Clan Rankings")=>"")
+	array($gamename=>"index.php?game=$game", l("Clan Rankings")=>"")
 );
 ?>
 
@@ -295,7 +295,7 @@ pageHeader(
 				echo '<td class="',$rcol,'">';
 				echo $entry['nummembers'];
 				echo '</td>',"\n";
-				
+
 				echo '<td class="',$rcol,'">';
 				echo $entry['kills'];
 				echo '</td>',"\n";
@@ -303,7 +303,7 @@ pageHeader(
 				echo '<td class="',$rcol,'">';
 				echo $entry['deaths'];
 				echo '</td>',"\n";
-				
+
 				echo '<td class="',$rcol,'">';
 				echo number_format($entry['kpd'],1);
 				echo '</td>',"\n";

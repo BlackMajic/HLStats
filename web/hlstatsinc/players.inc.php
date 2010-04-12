@@ -103,7 +103,7 @@ $rd2limit = $rdlimit * $rdlimit;
 
 pageHeader(
 	array($gamename, l('Player Rankings')),
-	array($gamename => "%s?game=$game", l('Player Rankings')=>"")
+	array($gamename => "index.php?game=$game", l('Player Rankings')=>"")
 );
 ?>
 

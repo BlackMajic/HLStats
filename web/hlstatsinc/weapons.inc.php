@@ -126,7 +126,7 @@ if(!empty($totalkills)) {
 
 pageHeader(
 	array($gamename, l("Weapon Statistics")),
-	array($gamename=>"%s?game=$game", l("Weapon Statistics")=>"")
+	array($gamename=>"index.php?game=$game", l("Weapon Statistics")=>"")
 );
 
 ?>
