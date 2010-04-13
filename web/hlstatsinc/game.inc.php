@@ -1,5 +1,13 @@
 <?php
 /**
+ * game overview file
+ * display an overview for one game and display the awards
+ * @category game
+ * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
+ */
+
+/**
  *
  * Original development:
  * +

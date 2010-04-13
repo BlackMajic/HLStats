@@ -1,9 +1,10 @@
 <?php
 /**
  * clans overview file
- * display conplete clan overview
- * @package HLStats
+ * display complete clan overview
+ * @category clan
  * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
  */
 
 /**
@@ -46,26 +47,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-/**
- * the initial row color
- * @global string $rcol
- * @name $rcol
- */
+// the initial row color
 $rcol = "row-dark";
 
-/**
- * the actions array which holds the data to display and the page count
- * @global array $actions
- * @name $actions
- */
+// the actions array which holds the data to display and the page count
 $clans['data'] = array();
 $clans['pages'] = array();
 
-/**
- * the current page to display
- * @global int $page
- * @name $page
- */
+// the current page to display
 $page = 1;
 if (isset($_GET["page"])) {
 	$check = validateInput($_GET['page'],'digit');
@@ -74,11 +63,7 @@ if (isset($_GET["page"])) {
 	}
 }
 
-/**
- * the current element to sort by for the query
- * @global string $sort
- * @name $sort
- */
+// the current element to sort by for the query
 $sort = 'skill';
 if (isset($_GET["sort"])) {
 	$check = validateInput($_GET['sort'],'nospace');
@@ -87,17 +72,9 @@ if (isset($_GET["sort"])) {
 	}
 }
 
-/**
- * the default next sort order
- * @global string $newSort
- * @name $newSort
- */
+// the default next sort order
 $newSort = "ASC";
-/**
- * the default sort order for the query
- * @global string $sortorder
- * @name $sortorder
- */
+// the default sort order for the query
 $sortorder = 'DESC';
 if (isset($_GET["sortorder"])) {
 	$check = validateInput($_GET['sortorder'],'nospace');
@@ -110,11 +87,7 @@ if (isset($_GET["sortorder"])) {
 	}
 }
 
-/**
- * minimum mebers count to show
- * @global int $minmembers
- * @name $minmembers
- */
+// minimum mebers count to show
 $minmembers = 2;
 if (isset($_GET["minmembers"])) {
 	$check = validateInput($_GET['minmembers'],'digit');
@@ -122,12 +95,8 @@ if (isset($_GET["minmembers"])) {
 		$minmembers = $_GET["minmembers"];
 }
 
-/**
- * query to get the data from the db with the given options
- * @global string $queryStr
- * @name $queryStr
- */
-$queryStr = "SELECT SQL_CALC_FOUND_ROWS
+// query to get the data from the db with the given options
+s$queryStr = "SELECT SQL_CALC_FOUND_ROWS
 		".DB_PREFIX."_Clans.clanId,
 		".DB_PREFIX."_Clans.name,
 		".DB_PREFIX."_Clans.tag,
@@ -162,12 +131,8 @@ if(mysql_num_rows($query) > 0) {
 }
 mysql_freeresult($query);
 
-/**
- * query to get the total rows which would be fetched without the LIMIT
- * works only if the $queryStr has SQL_CALC_FOUND_ROWS
- * @global string $query
- * @name $query
- */
+// query to get the total rows which would be fetched without the LIMIT
+// works only if the $queryStr has SQL_CALC_FOUND_ROWS
 $query = mysql_query("SELECT FOUND_ROWS() AS 'rows'");
 $result = mysql_fetch_assoc($query);
 $clans['pages'] = (int)ceil($result['rows']/50);
