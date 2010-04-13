@@ -2,8 +2,9 @@
 /**
  * maps overview file
  * display the overall maps stats for this game
- * @package HLStats
+ * @category map
  * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
  */
 
 /**
@@ -46,26 +47,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-/**
- * the initial row color
- * @global string $rcol
- * @name $rcol
- */
+// the initial row color
 $rcol = "row-dark";
 
-/**
- * the maps array which holds the data to display and the page count
- * @global array $maps
- * @name $maps
- */
+// the maps array which holds the data to display and the page count
 $maps['data'] = array();
 $maps['pages'] = array();
 
-/**
- * the current page to display
- * @global int $page
- * @name $page
- */
+// the current page to display
 $page = 1;
 if (isset($_GET["page"])) {
 	$check = validateInput($_GET['page'],'digit');
@@ -74,11 +63,7 @@ if (isset($_GET["page"])) {
 	}
 }
 
-/**
- * the current element to sort by for the query
- * @global string $sort
- * @name $sort
- */
+// the current element to sort by for the query
 $sort = 'kills';
 if (isset($_GET["sort"])) {
 	$check = validateInput($_GET['sort'],'nospace');
@@ -87,17 +72,9 @@ if (isset($_GET["sort"])) {
 	}
 }
 
-/**
- * the default next sort order
- * @global string $newSort
- * @name $newSort
- */
+// the default next sort order
 $newSort = "ASC";
-/**
- * the default sort order for the query
- * @global string $sortorder
- * @name $sortorder
- */
+// the default sort order for the query
 $sortorder = 'DESC';
 if (isset($_GET["sortorder"])) {
 	$check = validateInput($_GET['sortorder'],'nospace');
@@ -110,11 +87,7 @@ if (isset($_GET["sortorder"])) {
 	}
 }
 
-/**
- * query to get the total kills count for this game
- * @global string $queryKillsCount
- * @name $queryKillsCount
- */
+// query to get the total kills count for this game
 $queryKillsCount = mysql_query("SELECT COUNT(*) as kc
 	FROM ".DB_PREFIX."_Events_Frags
 	LEFT JOIN ".DB_PREFIX."_Players
@@ -122,20 +95,12 @@ $queryKillsCount = mysql_query("SELECT COUNT(*) as kc
 	WHERE ".DB_PREFIX."_Players.game = '".mysql_escape_string($game)."'
 		AND ".DB_PREFIX."_Players.hideranking = 0");
 $result = mysql_fetch_assoc($queryKillsCount);
-/**
- * get the total kill count for this game
- * @global int $totalkills
- * @name $totalkills
- */
+// get the total kill count for this game
 $totalkills = $result['kc'];
 mysql_free_result($queryKillsCount);
 
 if(!empty($totalkills)) {
-	/**
-	 * query to get the data from the db with the given options
-	 * @global string $queryStr
-	 * @name $queryStr
-	 */
+	// query to get the data from the db with the given options
 	$queryStr = "SELECT SQL_CALC_FOUND_ROWS
 		IF(".DB_PREFIX."_Events_Frags.map='', 'Unaccounted', ".DB_PREFIX."_Events_Frags.map) AS map,
 		COUNT(".DB_PREFIX."_Events_Frags.map) AS kills
@@ -165,12 +130,8 @@ if(!empty($totalkills)) {
 	}
 	mysql_freeresult($query);
 
-	/**
-	 * query to get the total rows which would be fetched without the LIMIT
-	 * works only if the $queryStr has SQL_CALC_FOUND_ROWS
-	 * @global string $query
-	 * @name $query
-	 */
+	// query to get the total rows which would be fetched without the LIMIT
+	// works only if the $queryStr has SQL_CALC_FOUND_ROWS
 	$query = mysql_query("SELECT FOUND_ROWS() AS 'rows'");
 	$result = mysql_fetch_assoc($query);
 	$maps['pages'] = (int)ceil($result['rows']/50);

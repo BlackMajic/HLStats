@@ -112,7 +112,7 @@ if (isset($_GET["sortorder"])) {
 
 /**
  * minimum mebers count to show
- * @gloabl int $minmembers
+ * @global int $minmembers
  * @name $minmembers
  */
 $minmembers = 2;

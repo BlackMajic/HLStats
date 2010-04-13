@@ -2,8 +2,9 @@
 /**
  * single action overview file
  * display the action listing sorted by action count for each player
- * @package HLStats
+ * @category action
  * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
  */
 
 /**
@@ -46,27 +47,15 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-/**
- * the initial row color
- * @global string $rcol
- * @name $rcol
- */
+// the initial row color
 $rcol = "row-dark";
 
-/**
- * the players array which holds the data to display and the page count
- * @global array $players
- * @name $players
- */
+// the players array which holds the data to display and the page count
 $players['data'] = array();
 $players['pages'] = array();
 
 
-/**
- * the action identifier which is needed to load the data
- * @global string $action
- * @name $action
- */
+// the action identifier which is needed to load the data
 $action = false;
 if(!empty($_GET["action"])) {
 	if(validateInput($_GET["action"],'nospace') === true) {
@@ -77,11 +66,7 @@ if(!empty($_GET["action"])) {
 	}
 }
 
-/**
- * the current page to display
- * @global int $page
- * @name $page
- */
+// the current page to display
 $page = 1;
 if (isset($_GET["page"])) {
 	$check = validateInput($_GET['page'],'digit');
@@ -90,11 +75,7 @@ if (isset($_GET["page"])) {
 	}
 }
 
-/**
- * the current element to sort by for the query
- * @global string $sort
- * @name $sort
- */
+// the current element to sort by for the query
 $sort = 'obj_count';
 if (isset($_GET["sort"])) {
 	$check = validateInput($_GET['sort'],'nospace');
@@ -103,17 +84,9 @@ if (isset($_GET["sort"])) {
 	}
 }
 
-/**
- * the default next sort order
- * @global string $newSort
- * @name $newSort
- */
+// the default next sort order
 $newSort = "ASC";
-/**
- * the default sort order for the query
- * @global string $sortorder
- * @name $sortorder
- */
+// the default sort order for the query
 $sortorder = 'DESC';
 if (isset($_GET["sortorder"])) {
 	$check = validateInput($_GET['sortorder'],'nospace');
@@ -126,11 +99,7 @@ if (isset($_GET["sortorder"])) {
 	}
 }
 
-/**
- * query to get the full action name
- * @global string $queryActionName
- * @name $queryActionName
- */
+// query to get the full action name
 $queryActionName = mysql_query("SELECT description FROM ".DB_PREFIX."_Actions
 					WHERE code='".mysql_escape_string($action)."'
 						AND game='".mysql_escape_string($game)."'");
@@ -139,20 +108,12 @@ if (mysql_num_rows($query) != 1) {
 }
 else {
 	$result = mysql_fetch_assoc($query);
-	/**
-	 * the full action name
-	 * @global string $act_name
-	 * @name $act_name
-	 */
+	//the full action name
 	$act_name = $result["description"];
 }
 mysql_free_result($query);
 
-/**
- * query to get the total total action count
- * @global string $queryCount
- * @name $queryCount
- */
+// query to get the total total action count
 $queryCount = mysql_query("SELECT
 		COUNT(".DB_PREFIX."_Events_PlayerActions.Id) AS tc
 	FROM ".DB_PREFIX."_Events_PlayerActions, ".DB_PREFIX."_Players, ".DB_PREFIX."_Actions
@@ -161,19 +122,11 @@ $queryCount = mysql_query("SELECT
 		".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_Events_PlayerActions.playerId AND
 		".DB_PREFIX."_Events_PlayerActions.actionId = ".DB_PREFIX."_Actions.id");
 $result = mysql_fetch_assoc($queryCount);
-/**
- * the toral action count for this specific action
- * @global string $totalact
- * @name $totalact
- */
+// the toral action count for this specific action
 $totalact = $result['tc'];
 
 if(!empty($totalact)) {
-	/**
-	 * query to get the data from the db with the given options
-	 * @global string $queryStr
-	 * @name $queryStr
-	 */
+	// query to get the data from the db with the given options
 	$queryStr = "SELECT SQL_CALC_FOUND_ROWS
 			".DB_PREFIX."_Events_PlayerActions.playerId,
 			".DB_PREFIX."_Players.lastName AS playerName,
@@ -204,12 +157,7 @@ if(!empty($totalact)) {
 		}
 	}
 
-	/**
-	 * query to get the total rows which would be fetched without the LIMIT
-	 * works only if the $queryStr has SQL_CALC_FOUND_ROWS
-	 * @global string $query
-	 * @name $query
-	 */
+	// query to get the total rows which would be fetched without the LIMIT
 	$query = mysql_query("SELECT FOUND_ROWS() AS 'rows'");
 	$result = mysql_fetch_assoc($query);
 	$players['pages'] = (int)ceil($result['rows']/50);

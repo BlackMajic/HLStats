@@ -2,8 +2,9 @@
 /**
  * actions overview file
  * display the complete game actions sorted by actions count
- * @package HLStats
+ * @category action
  * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
  */
 
 /**
@@ -46,26 +47,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-/**
- * the initial row color
- * @global string $rcol
- * @name $rcol
- */
+// the initial row color
 $rcol = "row-dark";
 
-/**
- * the actions array which holds the data to display and the page count
- * @global array $actions
- * @name $actions
- */
+// the actions array which holds the data to display and the page count
 $actions['data'] = array();
 $actions['pages'] = array();
 
-/**
- * the current page to display
- * @global int $page
- * @name $page
- */
+// the current page to display
 $page = 1;
 if (isset($_GET["page"])) {
 	$check = validateInput($_GET['page'],'digit');
@@ -74,11 +63,7 @@ if (isset($_GET["page"])) {
 	}
 }
 
-/**
- * the current element to sort by for the query
- * @global string $sort
- * @name $sort
- */
+// the current element to sort by for the query
 $sort = 'obj_count';
 if (isset($_GET["sort"])) {
 	$check = validateInput($_GET['sort'],'nospace');
@@ -87,17 +72,9 @@ if (isset($_GET["sort"])) {
 	}
 }
 
-/**
- * the default next sort order
- * @global string $newSort
- * @name $newSort
- */
+// the default next sort order
 $newSort = "ASC";
-/**
- * the default sort order for the query
- * @global string $sortorder
- * @name $sortorder
- */
+// the default sort order for the query
 $sortorder = 'DESC';
 if (isset($_GET["sortorder"])) {
 	$check = validateInput($_GET['sortorder'],'nospace');
@@ -110,30 +87,18 @@ if (isset($_GET["sortorder"])) {
 	}
 }
 
-/**
- * query to get the total actions count for this game
- * @global string $queryActionsCount
- * @name $queryActionsCount
- */
+// query to get the total actions count for this game
 $queryActionsCount = mysql_query("SELECT COUNT(*) ac
 	FROM ".DB_PREFIX."_Actions, ".DB_PREFIX."_Events_PlayerActions
 	WHERE ".DB_PREFIX."_Events_PlayerActions.actionId = ".DB_PREFIX."_Actions.id
 		AND ".DB_PREFIX."_Actions.game='".mysql_escape_string($game)."'");
 $result = mysql_fetch_assoc($queryActionsCount);
-/**
- * get the total actions count for this game
- * @global int $totalactions
- * @name $totalactions
- */
+// get the total actions count for this game
 $totalactions = $result['ac'];
 mysql_free_result($queryActionsCount);
 
 if(!empty($totalactions)) {
-	/**
-	 * query to get the data from the db with the given options
-	 * @global string $queryStr
-	 * @name $queryStr
-	 */
+	// query to get the data from the db with the given options
 	$queryStr = "SELECT SQL_CALC_FOUND_ROWS
 		".DB_PREFIX."_Actions.code,
 		".DB_PREFIX."_Actions.description,
@@ -165,12 +130,8 @@ if(!empty($totalactions)) {
 	}
 	mysql_freeresult($query);
 
-	/**
-	 * query to get the total rows which would be fetched without the LIMIT
-	 * works only if the $queryStr has SQL_CALC_FOUND_ROWS
-	 * @global string $query
-	 * @name $query
-	 */
+	// query to get the total rows which would be fetched without the LIMIT
+	// works only if the $queryStr has SQL_CALC_FOUND_ROWS
 	$query = mysql_query("SELECT FOUND_ROWS() AS 'rows'");
 	$result = mysql_fetch_assoc($query);
 	$actions['pages'] = (int)ceil($result['rows']/50);

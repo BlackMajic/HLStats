@@ -1,9 +1,11 @@
 <?php
 /**
  * map info page
- * display the stats for each player on this map
+ * display the kills for each player on this map compared to all map kills
  * @package HLStats
+ * @category map
  * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
  */
 
 /**
@@ -46,26 +48,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-/**
- * the initial row color
- * @global string $rcol
- * @name $rcol
- */
+// the initial row color
 $rcol = "row-dark";
 
-/**
- * the players array which holds the data to display and the page count
- * @global array $players
- * @name $players
- */
+// the players array which holds the data to display and the page count
 $players['data'] = array();
 $players['pages'] = array();
 
-/**
- * the current map to display
- * @global int $map
- * @name $map
- */
+// the current map to display
 $map = false;
 if(!empty($_GET["map"])) {
 	if(validateInput($_GET["map"],'nospace') === true) {
@@ -76,11 +66,7 @@ if(!empty($_GET["map"])) {
 	}
 }
 
-/**
- * the current page to display
- * @global int $page
- * @name $page
- */
+// the current page to display
 $page = 1;
 if (isset($_GET["page"])) {
 	$check = validateInput($_GET['page'],'digit');
@@ -89,11 +75,7 @@ if (isset($_GET["page"])) {
 	}
 }
 
-/**
- * the current element to sort by for the query
- * @global string $sort
- * @name $sort
- */
+// the current element to sort by for the query
 $sort = 'kills';
 if (isset($_GET["sort"])) {
 	$check = validateInput($_GET['sort'],'nospace');
@@ -102,17 +84,9 @@ if (isset($_GET["sort"])) {
 	}
 }
 
-/**
- * the default next sort order
- * @global string $newSort
- * @name $newSort
- */
+// the default next sort order
 $newSort = "ASC";
-/**
- * the default sort order for the query
- * @global string $sortorder
- * @name $sortorder
- */
+// the default sort order for the query
 $sortorder = 'DESC';
 if (isset($_GET["sortorder"])) {
 	$check = validateInput($_GET['sortorder'],'nospace');
@@ -125,11 +99,7 @@ if (isset($_GET["sortorder"])) {
 	}
 }
 
-/**
- * query to get the total kills count for this map
- * @global string $queryCount
- * @name $queryCount
- */
+// query to get the total kills count for this map
 $queryCount = mysql_query("SELECT COUNT(DISTINCT ".DB_PREFIX."_Events_Frags.killerId) AS cc,
 		SUM(".DB_PREFIX."_Events_Frags.map='".mysql_escape_string($map)."') AS tc
 	FROM ".DB_PREFIX."_Events_Frags
@@ -140,11 +110,7 @@ $queryCount = mysql_query("SELECT COUNT(DISTINCT ".DB_PREFIX."_Events_Frags.kill
 		AND ".DB_PREFIX."_Players.hideranking = 0
 ");
 $result = mysql_fetch_assoc($queryCount);
-/**
- * the total kills for this map
- * @global string $totalkills
- * @name $totalkills
- */
+// the total kills for this map
 $totalkills = $result['tc'];
 mysql_freeresult($queryCount);
 
@@ -181,12 +147,8 @@ if(!empty($totalkills)) {
 	}
 	mysql_freeresult($query);
 
-	/**
-	 * query to get the total rows which would be fetched without the LIMIT
-	 * works only if the $queryStr has SQL_CALC_FOUND_ROWS
-	 * @global string $query
-	 * @name $query
-	 */
+	// query to get the total rows which would be fetched without the LIMIT
+	// works only if the $queryStr has SQL_CALC_FOUND_ROWS
 	$query = mysql_query("SELECT FOUND_ROWS() AS 'rows'");
 	$result = mysql_fetch_assoc($query);
 	$players['pages'] = (int)ceil($result['rows']/50);
@@ -282,7 +244,7 @@ pageHeader(
 			}
 			echo '<tr><td colspan="4" align="right">';
 				if($players['pages'] > 1) {
-					for($i=1;$i<=$maps['pages'];$i++) {
+					for($i=1;$i<=$players['pages'];$i++) {
 						if($players == ($i)) {
 							echo "[",$i,"]";
 						}
