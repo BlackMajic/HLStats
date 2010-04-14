@@ -5,6 +5,7 @@
  * This file can contain PHP code.
  * @package HLStats
  * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
  */
 
 /**

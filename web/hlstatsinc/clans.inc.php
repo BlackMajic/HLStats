@@ -2,7 +2,7 @@
 /**
  * clans overview file
  * display complete clan overview
- * @category clan
+ * @package HLStats
  * @author Johannes 'Banana' Keßler
  * @copyright Johannes 'Banana' Keßler
  */

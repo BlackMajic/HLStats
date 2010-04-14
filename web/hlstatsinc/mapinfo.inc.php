@@ -3,7 +3,6 @@
  * map info page
  * display the kills for each player on this map compared to all map kills
  * @package HLStats
- * @category map
  * @author Johannes 'Banana' Keßler
  * @copyright Johannes 'Banana' Keßler
  */

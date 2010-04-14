@@ -1,5 +1,13 @@
 <?php
 /**
+ * games overview file
+ * display an overview about all games
+ * @package HLStats
+ * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
+ */
+
+/**
  * Original development:
  * +
  * + HLStats - Real-time player and clan rankings and statistics for Half-Life

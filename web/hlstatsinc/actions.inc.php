@@ -2,7 +2,7 @@
 /**
  * actions overview file
  * display the complete game actions sorted by actions count
- * @category action
+ * @package HLStats
  * @author Johannes 'Banana' Keßler
  * @copyright Johannes 'Banana' Keßler
  */

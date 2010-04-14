@@ -2,7 +2,7 @@
 /**
  * maps overview file
  * display the overall maps stats for this game
- * @category map
+ * @package HLStats
  * @author Johannes 'Banana' Keßler
  * @copyright Johannes 'Banana' Keßler
  */

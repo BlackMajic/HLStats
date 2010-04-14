@@ -2,7 +2,7 @@
 /**
  * single action overview file
  * display the action listing sorted by action count for each player
- * @category action
+ * @package HLStats
  * @author Johannes 'Banana' Keßler
  * @copyright Johannes 'Banana' Keßler
  */
