@@ -96,7 +96,7 @@ if (isset($_GET["minmembers"])) {
 }
 
 // query to get the data from the db with the given options
-s$queryStr = "SELECT SQL_CALC_FOUND_ROWS
+$queryStr = "SELECT SQL_CALC_FOUND_ROWS
 		".DB_PREFIX."_Clans.clanId,
 		".DB_PREFIX."_Clans.name,
 		".DB_PREFIX."_Clans.tag,
