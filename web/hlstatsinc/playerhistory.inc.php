@@ -1,5 +1,13 @@
 <?php
 /**
+ * single action overview file
+ * display the action listing sorted by action count for each player
+ * @package HLStats
+ * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
+ */
+
+/**
  *
  * Original development:
  * +

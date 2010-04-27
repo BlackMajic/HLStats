@@ -4,6 +4,7 @@
  * functions which can be used everywhere
  * @package HLStats
  * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
  */
 
 /**
