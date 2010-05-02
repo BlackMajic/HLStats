@@ -35,6 +35,7 @@ Map = Map
 ago = her
 Type = Typ
 Change sorting order = Sortierung ändern
+No players recorded = Keine Spielerdaten vorhanden
 
 Change language = Sprache ändern
 

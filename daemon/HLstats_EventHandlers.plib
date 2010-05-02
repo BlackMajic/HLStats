@@ -61,8 +61,7 @@ sub doEvent_Connect
 		$hostname = &resolveIp($ipAddr);
 		$hostgroup = "";
 
-		if ($g_mode eq "LAN")
-		{
+		if ($g_mode eq "LAN") {
 			$player->set("uniqueid", $ipAddr);
 		}
 

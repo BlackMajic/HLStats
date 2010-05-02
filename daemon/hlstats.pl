@@ -652,29 +652,27 @@ while ($loop = &getLine()) {
 			my $ipAddr = $ev_obj_a;
 			my $playerinfo;
 
-			if ($ipAddr =~ /([\d.]+):(\d+)/)
-			{
+			if ($ipAddr =~ /([\d.]+):(\d+)/) {
 				$ipAddr = $1;
 			}
 
-			if ($g_mode eq "LAN")
-			{
-				if($ipAddr eq '127.0.0.1' || $ipAddr eq 'loopback')
-				{
+			if ($g_mode eq "LAN") {
+				if($ipAddr eq '127.0.0.1' || $ipAddr eq 'loopback') {
 					$ipAddr = $s_peerhost;
 				}
 				$playerinfo = &getPlayerInfo($ev_player, $ipAddr);
 			}
-			else
-			{
+			else {
 				$playerinfo = &getPlayerInfo($ev_player);
 			}
 
 			$ev_type = 1;
 
-			if ($playerinfo)
-			{
-				if (($playerinfo->{"uniqueid"} =~ /PENDING/) || ($playerinfo->{"uniqueid"} =~ /VALVE_ID_LAN/))
+			if ($playerinfo) {
+				if (($playerinfo->{"uniqueid"} =~ /PENDING/)
+					|| ($playerinfo->{"uniqueid"} =~ /VALVE_ID_LAN/)
+					|| ($playerinfo->{"uniqueid"} =~ /STEAM_ID_LAN/)
+					)
 				{
 					$ev_status = "(DELAYING CONNECTION): $s_output";
 
@@ -684,8 +682,7 @@ while ($loop = &getLine()) {
 						server => $s_addr
 					};
 				}
-				else
-				{
+				else {
 					$ev_status = &doEvent_Connect(
 						$playerinfo->{"userid"},
 						$ipAddr

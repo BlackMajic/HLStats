@@ -224,6 +224,12 @@ sub rcon
 			Type=>$server_type
 		);
 
+		print "rcon command: ".$command."\n";
+
+		#if($command eq "status") {
+		#	return $rcon->getPlayers();
+		#}
+		#els
 		if($private) {
 			if($g_rcon_say eq "admin_psay") {
 				$command = "admin_command admin_psay ".$command;
@@ -838,7 +844,6 @@ sub getPlayerInfo
 		return 0 if ($uniqueid eq "BOT");
 	}
 
-
 	if ($forced_uniqueid) {
 		$uniqueid = $forced_uniqueid;
 	}
@@ -846,7 +851,7 @@ sub getPlayerInfo
 		$uniqueid = $name;
 	}
 	else {
-		if (($uniqueid =~ /PENDING/) || ($uniqueid =~ /VALVE_ID_LAN/)) {
+		if (($uniqueid =~ /PENDING/) || ($uniqueid =~ /VALVE_ID_LAN/) || ($uniqueid =~ /STEAM_ID_LAN/)) {
 			return {
 				name     => $name,
 				userid   => $userid,
@@ -864,12 +869,10 @@ sub getPlayerInfo
 		}
 	}
 
-	if ($g_players{"$s_addr/$userid"})
-	{
+	if ($g_players{"$s_addr/$userid"}) {
 		$haveplayer = 1;
 	}
-	else
-	{
+	else {
 		$haveplayer = 0;
 	}
 
@@ -883,8 +886,7 @@ sub getPlayerInfo
 
 		$player->updateTimestamp();
 	}
-	else
-	{
+	else {
 		if ($g_mode ne "LAN" || $forced_uniqueid) {
 
 			# Add the player to our hash of player objects

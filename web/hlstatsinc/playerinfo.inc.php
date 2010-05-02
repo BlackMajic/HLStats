@@ -326,7 +326,7 @@ $rcol = "row-dark";
 			<th><?php echo l("Player ID"); ?></th>
 			<td><?php echo $player; ?></td>
 			<th><?php echo l("Kills per Death"); ?></th>
-			<td><?php echo number_format($playerObj->getParam("kpd"),1); ?></t>
+			<td><?php echo number_format((int)$playerObj->getParam("kpd"),1); ?></t>
 		</tr>
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th>
@@ -676,7 +676,7 @@ if(!empty($playerKillStats)) { ?>
 	<table cellpadding="2" cellspacing="0" border="1" width="100%">
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l('Victim'); ?></th>
-			<th><?php echo l('Times killed'); ?></th>
+			<th><?php echo l('Times Killed'); ?></th>
 			<th><?php echo l('Deaths by'); ?></th>
 			<th><?php echo l('Kills per Death'); ?></th>
 		</tr>
