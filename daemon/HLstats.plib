@@ -215,6 +215,7 @@ sub rcon
 	$server_type = "source" if ($source);
 
 	if ($password) {
+		$command =~ s/;/ /g;
 		&printNotice("Doing rcon: $server_ip:$server_port, \"$password\", \"$command\"");
 		my $rcon;
 		$rcon = new KKrcon(
