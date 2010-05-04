@@ -167,6 +167,23 @@ pageHeader(
 		<?php echo l("Clan Rankings"); ?>
 	</h1>
 	<table cellpadding="0" cellspacing="0" border="1" width="100%">
+		<?php
+		echo '<tr><td colspan="8" align="right">';
+			if($clans['pages'] > 1) {
+				for($i=1;$i<=$clans['pages'];$i++) {
+					if($page == ($i)) {
+						echo "[",$i,"]";
+					}
+					else {
+						echo "<a href='index.php?",makeQueryString(array('page'=>$i)),"'>[",$i,"]</a>";
+					}
+				}
+			}
+			else {
+				echo "[1]";
+			}
+			echo '</td></tr>';
+		?>
 		<tr>
 			<th class="<?php echo $rcol; ?>"><?php echo l('Rank'); ?></th>
 			<th class="<?php echo $rcol; ?>">
@@ -244,7 +261,7 @@ pageHeader(
 				echo '</td>',"\n";
 
 				echo '<td class="',$rcol,'">';
-				echo '<a href="index.php?mode=claninfo&amp;clan=',$entry['name'],'">';
+				echo '<a href="index.php?mode=claninfo&amp;clan=',$entry['clanId'],'">';
 				echo $entry['name'];
 				echo '</a>';
 				echo '</td>',"\n";
@@ -276,19 +293,20 @@ pageHeader(
 				echo '</tr>';
 			}
 			echo '<tr><td colspan="8" align="right">';
-				if($clans['pages'] > 1) {
-					for($i=1;$i<=$clans['pages'];$i++) {
-						if($page == ($i)) {
-							echo "[",$i,"]";
-						}
-						else {
-							echo "<a href='index.php?",makeQueryString(array('page'=>$i)),"'>[",$i,"]</a>";
-						}
+			if($clans['pages'] > 1) {
+				for($i=1;$i<=$clans['pages'];$i++) {
+					if($page == ($i)) {
+						echo "[",$i,"]";
+					}
+					else {
+						echo "<a href='index.php?",makeQueryString(array('page'=>$i)),"'>[",$i,"]</a>";
 					}
 				}
-				else {
-					echo "[1]";
-				}
+			}
+			else {
+				echo "[1]";
+			}
+			echo '</td></tr>';
 		}
 		else {
 			echo '<tr><td colspan="8">',l('No data recorded'),'</td></tr>';

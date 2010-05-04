@@ -136,6 +136,23 @@ pageHeader(
 	if(!empty($history)) {
 ?>
 	<table cellpadding="0" cellspacing="0" border="1" width="100%">
+		<?php
+		echo '<tr><td colspan="5" align="right">';
+		if($history['pages'] > 1) {
+			for($i=1;$i<=$history['pages'];$i++) {
+				if($playerObj->getOption('page') == ($i)) {
+					echo "[",$i,"]";
+				}
+				else {
+					echo "<a href='index.php?",makeQueryString(array('page'=>$i)),"'>[",$i,"]</a>";
+				}
+			}
+		}
+		else {
+			echo "[1]";
+		}
+		echo '</td></tr>',"\n";
+		?>
 		<tr>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
 				<a href="index.php?<?php echo makeQueryString(array('sort'=>'eventTime','sortorder'=>$newSort)); ?>">
@@ -166,18 +183,18 @@ pageHeader(
 			</th>
 		</tr>
 <?php
-	exit('todo');
-	foreach($history['data'] as $entry) {
-		$rcol = "row-dark";
-		echo '<tr>';
-		echo '<td class="',toggleRowClass($rcol),'">',$entry['eventTime'],'</td>';
-		echo '<td class="',toggleRowClass($rcol),'">',$entry['eventType'],'</td>';
-		echo '<td class="',toggleRowClass($rcol),'">',$entry['eventDesc'],'</td>';
-		echo '<td class="',toggleRowClass($rcol),'">',$entry['serverName'],'</td>';
-		echo '<td class="',toggleRowClass($rcol),'">',$entry['map'],'</td>';
-		echo '</tr>';
-	}
-	echo '<tr><td colspan="5" align="right">';
+		exit('todo');
+		foreach($history['data'] as $entry) {
+			$rcol = "row-dark";
+			echo '<tr>';
+			echo '<td class="',toggleRowClass($rcol),'">',$entry['eventTime'],'</td>';
+			echo '<td class="',toggleRowClass($rcol),'">',$entry['eventType'],'</td>';
+			echo '<td class="',toggleRowClass($rcol),'">',$entry['eventDesc'],'</td>';
+			echo '<td class="',toggleRowClass($rcol),'">',$entry['serverName'],'</td>';
+			echo '<td class="',toggleRowClass($rcol),'">',$entry['map'],'</td>';
+			echo '</tr>';
+		}
+		echo '<tr><td colspan="5" align="right">';
 		if($history['pages'] > 1) {
 			for($i=1;$i<=$history['pages'];$i++) {
 				if($playerObj->getOption('page') == ($i)) {

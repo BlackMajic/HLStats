@@ -1,1 +1,3 @@
-*.kpf
+.buildpath
+.project
+.settings/
