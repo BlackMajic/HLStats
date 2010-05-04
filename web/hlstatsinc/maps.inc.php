@@ -208,7 +208,7 @@ pageHeader(
 				echo '</td>',"\n";
 
 				echo '<td class="',$rcol,'">';
-				echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percent'],0),'px"></div></div>',"\n";
+				echo '<div class="percentBar"><div class="barContent" style="width:',number_format((int)$entry['percent'],0),'px"></div></div>',"\n";
 				echo '</td>',"\n";
 
 				echo '</tr>';

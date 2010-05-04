@@ -353,7 +353,7 @@ $rcol = "row-dark";
 			<th><?php echo l("Last Connect"); ?>*</th>
 			<td><?php echo $playerObj->getParam('lastConnect'); ?></td>
 			<th><?php echo l("Weapon Accuracy"); ?></th>
-			<td><?php echo number_format($playerObj->getParam("accuracy"),1); ?>%</td>
+			<td><?php echo number_format((int)$playerObj->getParam("accuracy"),1); ?>%</td>
 		</tr>
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l("Total Connection Time"); ?>*</th>
@@ -394,7 +394,7 @@ if(!empty($aliases)) { ?>
 			echo '<td>',$entry['lastuse'],'</td>';
 			echo '<td>',$entry['kills'],'</td>';
 			echo '<td>',$entry['deaths'],'</td>';
-			echo '<td>',number_format($entry['kpd'],1),'</td>';
+			echo '<td>',number_format((int)$entry['kpd'],1),'</td>';
 			echo '<td>',$entry['suicides'],'</td>';
 			echo '</tr>';
 		}
@@ -474,7 +474,7 @@ if(!empty($teamSelection)) { ?>
 			echo '<td>',$entry['name'],'</td>';
 			echo '<td>',$entry['teamcount'],'</td>';
 			echo '<td>';
-			echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percent'],0),'px"></div></div>',"\n";
+			echo '<div class="percentBar"><div class="barContent" style="width:',number_format((int)$entry['percent'],0),'px"></div></div>',"\n";
 			echo '</td>';
 			echo '</tr>';
 		}
@@ -503,7 +503,7 @@ if(!empty($roleSelection)) { ?>
 			echo '<td>',$entry['name'],'</td>';
 			echo '<td>',$entry['rolecount'],'</td>';
 			echo '<td>';
-			echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percent'],0),'px"></div></div>',"\n";
+			echo '<div class="percentBar"><div class="barContent" style="width:',number_format((int)$entry['percent'],0),'px"></div></div>',"\n";
 			echo '</td>';
 			echo '</tr>';
 		}
@@ -535,7 +535,7 @@ if(!empty($weaponUsage)) { ?>
 			echo '<td>',$entry['modifier'],'</td>',"\n";
 			echo '<td>',$entry['kills'],'</td>',"\n";
 			echo '<td>',"\n";
-			echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percent'],0),'px"></div></div>',"\n";
+			echo '<div class="percentBar"><div class="barContent" style="width:',number_format((int)$entry['percent'],0),'px"></div></div>',"\n";
 			echo '</td>',"\n";
 			echo '</tr>',"\n";
 		}
@@ -580,10 +580,10 @@ if(!empty($weaponStats)) { ?>
 			echo '<td>',$entry['smheadshots'],'</td>';
 			echo '<td>',$entry['smkills'],'</td>';
 			echo '<td>',$entry['smdeaths'],'</td>';
-			echo '<td>',number_format($entry['smkdr'],1),'</td>';
-			echo '<td>',number_format($entry['smaccuracy'],1),'%</td>';
-			echo '<td>',number_format($entry['smdhr'],1),'</td>';
-			echo '<td>',number_format($entry['smspk'],1),'</td>';
+			echo '<td>',number_format((int)$entry['smkdr'],1),'</td>';
+			echo '<td>',number_format((int)$entry['smaccuracy'],1),'%</td>';
+			echo '<td>',number_format((int)$entry['smdhr'],1),'</td>';
+			echo '<td>',number_format((int)$entry['smspk'],1),'</td>';
 			echo '</tr>';
 		}
 		?>
@@ -654,10 +654,10 @@ if(!empty($maps)) { ?>
 			echo '<td><a href="index.php?mode=mapinfo&game=',$game,'&map=',$entry['map'],'">',$entry['map'],'</a></td>';
 			echo '<td>',$entry['kills'],'</td>';
 			echo '<td>';
-			echo '<div class="percentBar"><div class="barContent" style="width:',number_format($entry['percentage'],0),'px"></div></div>',"\n";
+			echo '<div class="percentBar"><div class="barContent" style="width:',number_format((int)$entry['percentage'],0),'px"></div></div>',"\n";
 			echo '</td>';
 			echo '<td>',$entry['deaths'],'</td>';
-			echo '<td>',number_format($entry['kpd'],1),'</td>';
+			echo '<td>',number_format((int)$entry['kpd'],1),'</td>';
 			echo '</tr>';
 		}
 		?>
@@ -694,7 +694,7 @@ if(!empty($playerKillStats)) { ?>
 			echo '</td>';
 			echo '<td>',$entry['kills'],'</td>';
 			echo '<td>',$entry['deaths'],'</td>';
-			echo '<td>',number_format($entry['kpd'],1),'</td>';
+			echo '<td>',number_format((int)$entry['kpd'],1),'</td>';
 			echo '</tr>';
 		}
 		?>

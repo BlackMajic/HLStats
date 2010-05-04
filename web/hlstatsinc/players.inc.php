@@ -241,7 +241,7 @@ pageHeader(
 						echo '<img src="hlstatsimg/player_inactive.gif" alt="inactive Player" title="inactive Player" width="16" height="16" />';
 					}
 
-					echo '<a href="index.php?mode=playerinfo&amp;player=',$entry['playerId'],'">',$entry['lastName'],'</a></td>',"\n";
+					echo '<a href="index.php?mode=playerinfo&amp;player=',$entry['playerId'],'">',makeSavePlayerName($entry['lastName']),'</a></td>',"\n";
 
 					echo '<td class="',toggleRowClass($rcol),'">';
 					echo '<img width="16" height="16" ';

@@ -1,7 +1,7 @@
 <?php
 /**
  * clans overview file
- * display complete clan overview
+ * display complete clans overview
  * @package HLStats
  * @author Johannes 'Banana' Keßler
  * @copyright Johannes 'Banana' Keßler
@@ -287,7 +287,7 @@ pageHeader(
 				echo '</td>',"\n";
 
 				echo '<td class="',$rcol,'">';
-				echo number_format($entry['kpd'],1);
+				echo number_format((int)$entry['kpd'],1);
 				echo '</td>',"\n";
 
 				echo '</tr>';

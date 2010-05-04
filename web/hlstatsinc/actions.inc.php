@@ -220,19 +220,20 @@ pageHeader(
 				echo '</tr>';
 			}
 			echo '<tr><td colspan="4" align="right">';
-				if($actions['pages'] > 1) {
-					for($i=1;$i<=$actions['pages'];$i++) {
-						if($page == ($i)) {
-							echo "[",$i,"]";
-						}
-						else {
-							echo "<a href='index.php?",makeQueryString(array('page'=>$i)),"'>[",$i,"]</a>";
-						}
+			if($actions['pages'] > 1) {
+				for($i=1;$i<=$actions['pages'];$i++) {
+					if($page == ($i)) {
+						echo "[",$i,"]";
+					}
+					else {
+						echo "<a href='index.php?",makeQueryString(array('page'=>$i)),"'>[",$i,"]</a>";
 					}
 				}
-				else {
-					echo "[1]";
-				}
+			}
+			else {
+				echo "[1]";
+			}
+			echo '</td></tr>';
 		}
 		else {
 			echo '<tr><td colspan="4">',l('No data recorded'),'</td></tr>';
