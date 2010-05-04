@@ -163,9 +163,6 @@ pageHeader(
 				<?php echo l('Type'); ?>
 			</th>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
-				<?php echo l('Description'); ?>
-			</th>
-			<th class="<?php echo toggleRowClass($rcol); ?>">
 				<a href="index.php?<?php echo makeQueryString(array('sort'=>'serverName','sortorder'=>$newSort)); ?>">
 					<?php echo l('Server'); ?>
 				</a>
@@ -183,14 +180,12 @@ pageHeader(
 			</th>
 		</tr>
 <?php
-		exit('todo');
 		foreach($history['data'] as $entry) {
 			$rcol = "row-dark";
 			echo '<tr>';
 			echo '<td class="',toggleRowClass($rcol),'">',$entry['eventTime'],'</td>';
-			echo '<td class="',toggleRowClass($rcol),'">',$entry['eventType'],'</td>';
-			echo '<td class="',toggleRowClass($rcol),'">',$entry['eventDesc'],'</td>';
-			echo '<td class="',toggleRowClass($rcol),'">',$entry['serverName'],'</td>';
+			echo '<td class="',toggleRowClass($rcol),'">',$entry['message'],'</td>';
+			echo '<td class="',toggleRowClass($rcol),'">',$entry['name'],'</td>';
 			echo '<td class="',toggleRowClass($rcol),'">',$entry['map'],'</td>';
 			echo '</tr>';
 		}
