@@ -1,5 +1,13 @@
 <?php
 /**
+ * weapons overview file
+ * display an overview about all weapons and usage
+ * @package HLStats
+ * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
+ */
+
+/**
  *
  * Original development:
  * +

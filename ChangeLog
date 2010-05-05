@@ -6,6 +6,7 @@ HLStats ChangeLog
 *) New: HLStats needs PHP > 5.2.0 now.
 *) New: New design and overall re-write of the web-interface
 *) New: phpDoc documentation available for the web-interface
+*) New: Team statistics overview page (thx to goose for the idea)
 *) Changed: Constant INCLUDE_PATH removed.
 *) Changed: hlstats.php file renamed to index.php
 				scripturl option has been removed.

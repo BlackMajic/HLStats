@@ -261,7 +261,7 @@ pageHeader(
 				echo '</td>',"\n";
 
 				echo '<td class="',$rcol,'">';
-				echo '<a href="index.php?mode=claninfo&amp;clan=',$entry['clanId'],'">';
+				echo '<a href="index.php?mode=claninfo&amp;clan=',$entry['clanId'],'&amp;game=',$game,'">';
 				echo $entry['name'];
 				echo '</a>';
 				echo '</td>',"\n";

@@ -126,17 +126,6 @@ $cl_name = ereg_replace(" ", "&nbsp;", htmlspecialchars($clandata["name"]));
 $cl_tag  = ereg_replace(" ", "&nbsp;", htmlspecialchars($clandata["tag"]));
 $cl_full = $cl_tag . " " . $cl_name;
 
-$game = $clandata["game"];
-$query = mysql_query("SELECT name FROM ".DB_PREFIX."_Games WHERE code='".mysql_escape_string($game)."'");
-if (mysql_num_rows($query) != 1) {
-	$gamename = ucfirst($game);
-}
-else {
-	$result = mysql_fetch_assoc($query);
-	$gamename = $result['name'];
-}
-mysql_free_result($query);
-
 // now get the clan memebers
 $queryStr = "SELECT SQL_CALC_FOUND_ROWS
 			playerId, lastName, skill, oldSkill, kills, deaths, active,
@@ -321,7 +310,7 @@ pageHeader(
 				else {
 					echo '<img src="hlstatsimg/player_inactive.gif" alt="inactive Player" title="inactive Player" width="16" height="16" />';
 				}
-				echo '<a href="index.php?mode=mode=playerinfo&amp;player=',$entry['playerId'],'">';
+				echo '<a href="index.php?mode=playerinfo&amp;player=',$entry['playerId'],'">';
 				echo makeSavePlayerName($entry['lastName']);
 				echo '</a>';
 				echo '</td>',"\n";

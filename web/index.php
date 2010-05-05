@@ -164,7 +164,8 @@ $modes = array(
 	"admin",
 	"help",
 	"livestats",
-	"playerchathistory"
+	"playerchathistory",
+	"teams"
 );
 
 $mode = '';

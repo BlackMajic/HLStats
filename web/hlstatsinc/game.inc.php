@@ -60,6 +60,9 @@ pageHeader(array($gamename), array($gamename=>""));
 				<a href="<?php echo "index.php?mode=clans&amp;game=$game"; ?>"><?php echo l('Clan Rankings'); ?></a>
 			</li>
 			<li>
+				<a href="<?php echo "index.php?mode=teams&amp;game=$game"; ?>"><?php echo l('Team Rankings'); ?></a>
+			</li>
+			<li>
 				<a href="<?php echo "index.php?mode=weapons&amp;game=$game"; ?>"><?php echo l('Weapon Statistics'); ?></a>
 			</li>
 			<li>
