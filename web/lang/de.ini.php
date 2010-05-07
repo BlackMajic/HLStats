@@ -521,3 +521,6 @@ The details for this server couldn't be retrieved, this maybe because the server
 Back to game overview = Zurück zur Spielübersicht
 Back to Weapon Statistics = Zurück zur Waffenübersicht
 Back to Action Statistics = Zurück zur Aktionsübersicht
+
+Back to start page = Zurück zur Startseite
+All = Alle

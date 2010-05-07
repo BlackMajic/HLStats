@@ -84,6 +84,11 @@ ul, ol {
 	padding: 0 20px;
 }
 
+
+.small {
+	font-size: 80%;
+}
+
 code {
   margin: 10px 0;
   padding: 10px;
@@ -121,7 +126,7 @@ label {
 	font-weight:bold;
 	margin:5px 0;
 }
-input {
+input,select {
 	padding: 2px;
 	border:1px solid #eee;
 	font: normal 1em Verdana, sans-serif;
@@ -136,7 +141,7 @@ textarea {
 	display:block;
 	color:#777;
 }
-input.button {
+input.button, button {
 	margin: 0;
 	font: bolder 12px Arial, Sans-serif;
 	border: 1px solid #CCC;

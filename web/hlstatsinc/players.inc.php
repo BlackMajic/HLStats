@@ -1,5 +1,13 @@
 <?php
 /**
+ * list all players for a game
+ * overall overview from all players
+ * @package HLStats
+ * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
+ */
+
+/**
  *
  * Original development:
  * +
