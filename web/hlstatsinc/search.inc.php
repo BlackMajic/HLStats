@@ -82,6 +82,7 @@ while ($result = mysql_fetch_assoc($query)) {
 }
 
 $searchResults = array();
+$queryStr = false;
 
 if(isset($_POST['submit']['search'])) {
 	$term = trim($_POST['search']['input']);
@@ -89,11 +90,26 @@ if(isset($_POST['submit']['search'])) {
 	if(!empty($term)) {
 		$andgame = "";
 		if ($_POST['search']['game'] !== "---") {
-			$andgame = "AND ".DB_PREFIX."_Players.game = '".mysql_escape_string($_POST['search']['game'])."'";
+			$andgame = "AND ".DB_PREFIX."_Games.name = '".mysql_escape_string($_POST['search']['game'])."'";
 		}
 
 		switch($_POST['search']['area']) {
 			case 'clan':
+				$queryStr = "SELECT
+						".DB_PREFIX."_Clans.clanId,
+						".DB_PREFIX."_Clans.tag,
+						".DB_PREFIX."_Clans.name,
+						".DB_PREFIX."_Games.name AS gamename
+					FROM ".DB_PREFIX."_Clans
+					LEFT JOIN ".DB_PREFIX."_Games ON
+						".DB_PREFIX."_Games.code = ".DB_PREFIX."_Clans.game
+					WHERE ".DB_PREFIX."_Games.hidden='0' AND
+						(
+							".DB_PREFIX."_Clans.tag LIKE '%".mysql_escape_string($term)."%'
+							OR ".DB_PREFIX."_Clans.name LIKE '%".mysql_escape_string($term)."%'
+						)
+						".$andgame."
+					ORDER BY `name`";
 			break;
 
 			case 'player':
@@ -110,260 +126,24 @@ if(isset($_POST['submit']['search'])) {
 						".DB_PREFIX."_PlayerNames.name LIKE '%".mysql_escape_string($term)."%'
 						".$andgame."
 					ORDER BY `name`";
-				$query = mysql_query($queryStr);
-
-
-				if(mysql_num_rows($query) > 0) {
-					while($result = mysql_fetch_assoc($query)) {
-						$searchResults[$result['gamename']][] = $result;
-					}
-				}
 			break;
 		}
+		if(!empty($queryStr)) {
+			$query = mysql_query($queryStr);
+
+			if(mysql_num_rows($query) > 0) {
+				while($result = mysql_fetch_assoc($query)) {
+					$searchResults[$result['gamename']][] = $result;
+				}
+			}
+		}
 	}
-
-	/*
-	if ($this->type == "player") {
-
-		$table = new Table(
-			array(
-				new TableColumn(
-					"playerId",
-					"ID",
-					"width=5align=right"
-				),
-				new TableColumn(
-					"name",
-					"Name",
-					"width=65&icon=player&link=" . urlencode($link_player)
-				),
-				new TableColumn(
-					"gamename",
-					"Game",
-					"width=30"
-				)
-			),
-			"playerId",
-			"name",
-			"playerId",
-			false,
-			50,
-			"page",
-			"sort",
-			"sortorder",
-			"results",
-			"asc"
-		);
-
-		if ($this->game)
-			$andgame = "AND ".DB_PREFIX."_Players.game='" . $this->game . "'";
-		else
-			$andgame = "";
-
-		$query = mysql_query("
-			SELECT
-				".DB_PREFIX."_PlayerNames.playerId,
-				".DB_PREFIX."_PlayerNames.name,
-				".DB_PREFIX."_Games.name AS gamename
-			FROM
-				".DB_PREFIX."_PlayerNames
-			LEFT JOIN ".DB_PREFIX."_Players ON
-				".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_PlayerNames.playerId
-			LEFT JOIN ".DB_PREFIX."_Games ON
-				".DB_PREFIX."_Games.code = ".DB_PREFIX."_Players.game
-			WHERE
-				".DB_PREFIX."_Games.hidden='0' AND
-				".DB_PREFIX."_PlayerNames.name LIKE '%".mysql_escape_string($sr_query)."%'
-				".$andgame."
-			ORDER BY
-				".$table->sort." ".$table->sortorder.",
-				".$table->sort2." ".$table->sortorder."
-			LIMIT ".$table->startitem.",".$table->numperpage."
-		");
-
-		$queryCount = mysql_query("
-			SELECT
-				COUNT(*) AS pn
-			FROM
-				".DB_PREFIX."_PlayerNames
-			LEFT JOIN ".DB_PREFIX."_Players ON
-				".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_PlayerNames.playerId
-			WHERE
-				".DB_PREFIX."_PlayerNames.name LIKE '%".mysql_escape_string($sr_query)."%'
-				".$andgame."");
-		$result = mysql_fetch_assoc($queryCount);
-		$numitems = $result['pn'];
-
-
-		$table->draw($query, $numitems, 90);
-	}
-	elseif ($this->type == "uniqueid")
-	{
-		$table = new Table(
-			array(
-				new TableColumn(
-					"uniqueId",
-					$this->uniqueid_string,
-					"width=15&align=right"
-				),
-				new TableColumn(
-					"lastName",
-					"Name",
-					"width=50&icon=player&link=" . urlencode($link_player)
-				),
-				new TableColumn(
-					"gamename",
-					"Game",
-					"width=30"
-				),
-				new TableColumn(
-					"playerId",
-					"ID",
-					"width=5&align=right"
-				)
-			),
-			"playerId",
-			"lastName",
-			"uniqueId",
-			false,
-			50,
-			"page",
-			"sort",
-			"sortorder",
-			"results",
-			"asc"
-		);
-
-		if ($this->game)
-			$andgame = "AND ".DB_PREFIX."_PlayerUniqueIds.game='" . $this->game . "'";
-		else
-			$andgame = "";
-
-		$query = mysql_query("
-			SELECT
-				".DB_PREFIX."_PlayerUniqueIds.uniqueId,
-				".DB_PREFIX."_PlayerUniqueIds.playerId,
-				".DB_PREFIX."_Players.lastName,
-				".DB_PREFIX."_Games.name AS gamename
-			FROM
-				".DB_PREFIX."_PlayerUniqueIds
-			LEFT JOIN ".DB_PREFIX."_Players ON
-				".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_PlayerUniqueIds.playerId
-			LEFT JOIN ".DB_PREFIX."_Games ON
-				".DB_PREFIX."_Games.code = ".DB_PREFIX."_PlayerUniqueIds.game
-			WHERE
-				".DB_PREFIX."_Games.hidden='0' AND
-				".DB_PREFIX."_PlayerUniqueIds.uniqueId LIKE '%".mysql_escape_string($sr_query)."%'
-				".$andgame."
-			ORDER BY
-				".$table->sort." ".$table->sortorder.",
-				".$table->sort2." ".$table->sortorder."
-			LIMIT ".$table->startitem.",".$table->numperpage."");
-
-		$queryCount = mysql_query("
-			SELECT
-				COUNT(*) AS pu
-			FROM
-				".DB_PREFIX."_PlayerUniqueIds
-			LEFT JOIN ".DB_PREFIX."_Players ON
-				".DB_PREFIX."_Players.playerId = ".DB_PREFIX."_PlayerUniqueIds.playerId
-			WHERE
-				".DB_PREFIX."_PlayerUniqueIds.uniqueId LIKE '%".mysql_escape_string($sr_query)."%'
-				".$andgame."
-		");
-		$result = mysql_fetch_assoc($queryCount);
-		$numitems = $result['pu'];
-
-		$table->draw($query, $numitems, 90);
-	}
-	elseif ($this->type == "clan")
-	{
-		$table = new Table(
-			array(
-				new TableColumn(
-					"tag",
-					"Tag",
-					"width=15"
-				),
-				new TableColumn(
-					"name",
-					"Name",
-					"width=50&icon=clan&link=" . urlencode($link_clan)
-				),
-				new TableColumn(
-					"gamename",
-					"Game",
-					"width=30"
-				),
-				new TableColumn(
-					"clanId",
-					"ID",
-					"width=5&align=right"
-				)
-			),
-			"clanId",
-			"name",
-			"tag",
-			false,
-			50,
-			"page",
-			"sort",
-			"sortorder",
-			"results",
-			"asc"
-		);
-
-		if ($this->game)
-			$andgame = "AND ".DB_PREFIX."_Clans.game='" . $this->game . "'";
-		else
-			$andgame = "";
-
-		$query = mysql_query("
-			SELECT
-				".DB_PREFIX."_Clans.clanId,
-				".DB_PREFIX."_Clans.tag,
-				".DB_PREFIX."_Clans.name,
-				".DB_PREFIX."_Games.name AS gamename
-			FROM
-				".DB_PREFIX."_Clans
-			LEFT JOIN ".DB_PREFIX."_Games ON
-				".DB_PREFIX."_Games.code = ".DB_PREFIX."_Clans.game
-			WHERE
-				".DB_PREFIX."_Games.hidden='0' AND
-				(
-					".DB_PREFIX."_Clans.tag LIKE '%".mysql_escape_string($sr_query)."%'
-					OR ".DB_PREFIX."_Clans.name LIKE '%".mysql_escaoe_string($sr_query)."%'
-				)
-				$andgame
-			ORDER BY
-				$table->sort $table->sortorder,
-				$table->sort2 $table->sortorder
-			LIMIT $table->startitem,$table->numperpage
-		");
-
-		$queryCount = mysql_query("
-			SELECT COUNT(*) AS cc
-			FROM
-				".DB_PREFIX."_Clans
-			WHERE
-				(
-					tag LIKE '%".mysql_escape_string($sr_query)."%'
-					OR name LIKE '%".mysql_escape_string($sr_query)."%'
-				)
-				".$andgame."
-		");
-		$result = mysql_fetch_assoc($queryCount);
-		$numitems = $result['cc'];
-
-		$table->draw($query, $numitems, 90);
-	}
-	*/
 }
-
-#$search = new Search($sr_query, $sr_type, $sr_game);
-
-#$search->drawForm(array("mode"=>"search"));
-#if ($sr_query || $sr_query == "0") $search->drawResults();
+else {
+	$_POST = array();
+	$_POST['search']['area'] = '';
+	$_POST['search']['game'] = '';
+}
 ?>
 
 <div id="sidebar">
@@ -384,8 +164,8 @@ if(isset($_POST['submit']['search'])) {
 		<br />
 		<b><?php echo l('In'); ?></b>
 		<select name="search[area]">
-			<option value="player"><?php echo l('Player names'); ?></option>
-			<option value="clan"><?php echo l('Clan names'); ?></option>
+			<option value="player" <?php if($_POST['search']['area'] == "player") echo 'selected="1"'; ?>><?php echo l('Player names'); ?></option>
+			<option value="clan" <?php if($_POST['search']['area'] == "clan") echo 'selected="1"'; ?>><?php echo l('Clan names'); ?></option>
 		</select><br />
 		<br />
 		<?php echo l('Game'); ?>
@@ -393,7 +173,9 @@ if(isset($_POST['submit']['search'])) {
 			<option value="---"><?php echo l('All'); ?></option>
 			<?php
 			foreach($gamesArr as $k=>$v) {
-				echo '<option value="',$k,'">',$v,'</option>';
+				$selected = '';
+				if($_POST['search']['game'] == $k) $selected = 'selected="1"';
+				echo '<option value="',$k,'" ',$selected,'>',$v,'</option>';
 			}
 			?>
 		</select><br />
