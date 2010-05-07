@@ -75,7 +75,7 @@ if (isset($_GET["page"])) {
 }
 
 // the current element to sort by for the query
-$sort = 'kills';
+$sort = 'frags';
 if (isset($_GET["sort"])) {
 	$check = validateInput($_GET['sort'],'nospace');
 	if($check === true) {
@@ -173,7 +173,7 @@ pageHeader(
 				<a href="<?php echo "index.php?game=$game&amp;mode=maps"; ?>"><?php echo l('Back to Map Statistics'); ?></a>
 			</li>
 		</ul>
-		<img src="<?php echo $g_options['imgdir']."/maps/".$game/$map; ?>" alt="<?php echo $map; ?>" title='<?php echo $map; ?>'><br />
+		<img src="<?php echo $g_options['imgdir']."/maps/".$game."/".$map; ?>.jpg" alt="<?php echo $map; ?>" title='<?php echo $map; ?>'><br />
 		<?php
 		if ($g_options["map_dlurl"]) {
 			$map_dlurl = str_replace("%MAP%", $map, $g_options["map_dlurl"]);
