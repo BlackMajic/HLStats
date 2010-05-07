@@ -125,13 +125,6 @@ pageHeader(
 			</li>
 		</ul>
 		<form method="GET" action="index.php">
-			<input type="hidden" name="mode" value="search">
-			<input type="hidden" name="game" value="<?php echo $game; ?>">
-			<input type="hidden" name="st" value="player">
-			<input type="text" name="q" size="20" maxlength="64">
-			<input type="submit" value="<?php echo l('Find a player'); ?>">
-		</form>
-		<form method="GET" action="index.php">
 			<input type="hidden" name="game" value="<?php echo $game; ?>" />
 			<input type="hidden" name="mode" value="players" />
 			<?php if (defined('ELORATING') && (ELORATING === "1" || ELORATING === "2")) { //@todo remove ! ?>
