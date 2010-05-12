@@ -164,6 +164,13 @@ pageHeader(
 	),
 	$map
 );
+
+// map image
+$mapImage = $g_options['imgdir'].'/maps/'.strtolower($game).'/'.strtolower($map).'.jpg';
+if(!file_exists($mapImage)) {
+	$mapImage = $g_options['imgdir'].'/noimage.jpg';
+}
+
 ?>
 <div id="sidebar">
 	<h1><?php echo l('Options'); ?></h1>
@@ -173,7 +180,7 @@ pageHeader(
 				<a href="<?php echo "index.php?game=$game&amp;mode=maps"; ?>"><?php echo l('Back to Map Statistics'); ?></a>
 			</li>
 		</ul>
-		<img src="<?php echo $g_options['imgdir']."/maps/".$game."/".$map; ?>.jpg" alt="<?php echo $map; ?>" title='<?php echo $map; ?>'><br />
+		<img src="<?php echo $mapImage; ?>" alt="<?php echo $map; ?>" title='<?php echo $map; ?>'><br />
 		<?php
 		if ($g_options["map_dlurl"]) {
 			$map_dlurl = str_replace("%MAP%", $map, $g_options["map_dlurl"]);

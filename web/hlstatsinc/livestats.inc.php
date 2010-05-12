@@ -85,15 +85,15 @@ else {
 }
 
 pageHeader(
-	array('Server Statistics', $server['name']),
+	array(l('Server Statistics'), $server['name']),
 	array($server['gamename'] => 'index.php?game=' . $server['game'],
 		l('Server Statistics') => 'index.php?game=' . $server['game'],
 		$server['name'] => ''
 	)
 );
 
-if ($server['publicaddress']) {
-	# Port maybe different
+if(!empty($server['publicaddress'])) {
+	// Port maybe different
 	$temp = explode(':', $server['publicaddress']);
 	$server_ip = $server['address'];
 	if (isset($temp[1])) {
@@ -112,34 +112,33 @@ $server_rcon = $server['rcon_password'];
 $server_hltv = array();
 $server_players = array();
 
-# Get info
+// Get info
 if (!$server_details = Source_A2S_Info($server_ip, $server_port)) {
-	error(l("The details for this server couldn't be retrieved, this maybe because the server is currently unavailable."));
+	die(l("The details for this server couldn't be retrieved, this maybe because the server is currently unavailable."));
 }
 
-if ($server_details['gametype'] == 73)
-{
+$server['source'] = 0;
+// check if we have a source server or not
+if ($server_details['gametype'] == 73) {
 	$server['source'] = 1;
 	$server_details['address'] = $server_ip.':'.$server_port;
 }
-else {
-	$server['source'] = 0;
-}
 
 
-# Get challenge
+// Get rcon challenge
 $query_challenge = Source_A2S_GetChallenge($server_ip, $server_port);
 
-# Get packets with challenge number
-# strange as of 29.10.2008 only the Source_A2S_Rules returns a challenge which
-# is used and needed in Source_A2S_Player (banana)
+// Get packets with challenge number
+// strange as of 29.10.2008 only the Source_A2S_Rules returns a challenge which
+// is used and needed in Source_A2S_Player
 $server_rules = Source_A2S_Rules($server_ip, $server_port, $query_challenge);
 $server_players = Source_A2S_Player($server_ip, $server_port, $query_challenge);
 
 $server_details = Format_Info_Array($server_details);
-# If HLStats currently stores the rcon, might as well try to get more data from a HL status
+// If HLStats currently stores the rcon, might as well try to get more data from a HL status
 
-// since the rcon is broken we deaktivate this.... 31.10.2008 banana
+// since the rcon is broken we deactivate this.... 31.10.2008 banana
+// @todo: to complete this and use eg. steamcondenser
 $server_rcon  = false;
 $server_status = false;
 if ($server_rcon) {
@@ -167,8 +166,8 @@ if ($server_rcon) {
 	}
 }
 
-# If rcon failed then $server_status is FALSE and if we don't have rcon
-# it won't exist
+// If rcon failed then $server_status is FALSE and if we don't have rcon
+// it won't exist
 if ($server_status === false) {
 	$player_columns[] = array('column' => 'index', 'name' => 'ID', 'align' => 'left', 'width' => '25');
 	$player_columns[] = array('column' => 'name', 'name' => 'Name', 'align' => 'left', 'width' => '');
@@ -186,13 +185,89 @@ $server_details['players_connecting'] = $server_details['numplayers'];
 $server_details['players_connecting'] -= $server_details['numbots'];
 $server_details['players_connecting'] -= count($server_players);
 $server_details['players_connecting'] -= $server_details['hltvcount'];
+
+// map image
+$mapImage = $g_options['imgdir'].'/maps/'.strtolower($server['game']).'/'.strtolower($server_details['map']).'.jpg';
+if(!file_exists($mapImage)) {
+	$mapImage = $g_options['imgdir'].'/noimage.jpg';
+}
+
+// server details
+if (isset($server_rules['cm_nextmap']))
+	$server_details['nextmap'] = $server_rules['cm_nextmap'];
+elseif (isset($server_rules['amx_nextmap']))
+	$server_details['nextmap'] = $server_rules['amx_nextmap'];
+elseif (isset($server_rules['mani_nextmap']))
+	$server_details['nextmap'] = $server_rules['mani_nextmap'];
+
+// Some unfortunate games like CS don't usually give the map timeleft
+// I wonder if some plugin can yet again provide a use here...
+// Generally the plugin version is more reliable so that is the highest priority to use
+if (isset($server_rules['amx_timeleft']))
+	$server_details['timeleft'] = $server_rules['amx_timeleft'];
+elseif (isset($server_rules['cm_timeleft']))
+	$server_details['timeleft'] = $server_rules['cm_timeleft'];
+elseif (isset($server_rules['mani_timeleft']))
+	$server_details['timeleft'] = $server_rules['mani_timeleft'];
+elseif (isset($server_rules['mp_timeleft']))
+	$server_details['timeleft'] = sprintf('%02u:%02u', ($server_rules['mp_timeleft'] / 60), ($server_rules['mp_timeleft'] % 60));
 ?>
+
+<div id="sidebar" >
+	<h1><?php echo l('Server details'); ?></h1>
+	<br />
+	<img src="<?php echo $mapImage; ?>" width="218" height="164" title="<?php echo $server_details['map']; ?>" alt="<?php echo $server_details['map']; ?>" />
+	<?php echo l('Address'); ?>: <?php echo $server_details['address']; ?><br>
+	<?php echo l('Server Type'); ?>: <?php echo $server_details['serveros']; ?>, <?php echo $server_details['servertype']; ?><br>
+	<?php echo l('Map'); ?>: <a href="index.php?mode=mapinfo&amp;map=<?php echo $server_details['map']; ?>&amp;game=<?php echo $server['game']; ?>"><?php echo $server_details['map']; ?></a><br>
+	<?php
+		if (isset($server_details['nextmap'])) {
+			echo l('Nextmap'),': <a href="index.php?mode=mapinfo&amp;map='.$server_details['nextmap'].'&amp;game='.$server['game'].'">'.$server_details['nextmap'].'</a><br>';
+		}
+
+		// Are there any time limits or frag limits?
+		if (isset($server_details['timeleft'])) {
+			echo l('Timeleft'),': '.$server_details['timeleft'];
+			if(isset($server_rules['mp_timelimit'])) {
+				echo ' ('.sprintf('%02u:%02u', $server_rules['mp_timelimit'], 0).')';
+			}
+			echo '<br>';
+		}
+		if (!empty($server_rules['mp_fraglimit'])) {
+			echo l('Fragsleft'),': '.$server_rules['mp_fragsleft'];
+			if (isset($server_rules['mp_fragslimit'])) {
+				echo '('.$server_rules['mp_fraglimit'].')';
+			}
+			echo '<br>';
+		}
+	?>
+	<?php echo l('Password'); ?>: <?php echo $server_details['password']; ?><br>
+	<?php echo l('Players'); ?>: <?php echo $server_details['players_real']; ?>/<?php echo $server_details['maxplayers'];?><br>
+	<?php
+		if (!empty($server_details['botcount'])) { // Don't show this information if there are no bots
+			echo l('Bots'),' : ',$server_details['numbots'],'/',$server_details['maxplayers'],'<br>';
+		}
+		if (!empty($server_details['hltvcount'])) { // Don't show this information if there is no HLTV
+			echo l('HLTV'),' : ',$server_details['hltvcount'],'/',$server_details['maxplayers'],'<br>';
+		}
+		if (!empty($server_details['players_connecting'])) { // Don't show this information if there are no players connecting
+			echo l('Connecting'),' : ',$server_details['players_connecting'],'/',$server_details['maxplayers'],'<br>';
+		}
+		echo l('Valve Anti-Cheat'),' : ',$server_details['secure'],'<br>';
+	?>
+</div>
+<div id="main">
+	<h1><?php echo htmlentities($server_details['hostname'], ENT_COMPAT, "UTF-8"); ?></h1>
+	<a href="index.php?game=<?php echo $server['game']; ?>"><?php echo $server_details['gamedesc'];?></a>
+</div>
+
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options['table_border']; ?>">
 	<tr>
 		<td>
 			<table width="100%" border="0" cellspacing="1" cellpadding="2">
 				<tr bgcolor="<?php echo $g_options['table_bgcolor1']; ?>">
-					<td style="padding: 0px;" width="208" height="163"><img src="<?php
+					<td style="padding: 0px;" width="208" height="163">
+					<img src="<?php
 $image = getImage('/maps/'.strtolower($server['game']).'/'.strtolower($server_details['map']));
 if ($image) {
 	echo $image['url'];

@@ -491,6 +491,7 @@ Connecting = Verbinden
 Valve Anti-Cheat = Valve Anti-Cheat
 Rules = Regeln
 Server Addons = Serveraddons
+The details for this server couldn't be retrieved, this maybe because the server is currently unavailable. = Die Details für diesen Game-Server konnten nicht erfragt werden. Der Game-Server ist nicht erreichbar.
 
 Player Chat History = Spieler Chat Historie
 Chat History = Chat Historie
