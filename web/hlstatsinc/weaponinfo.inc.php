@@ -49,7 +49,7 @@ if(!empty($_GET["weapon"])) {
 		$weapon = $_GET["weapon"];
 	}
 	else {
-		error("No weapon specified.");
+		die("No weapon specified.");
 	}
 }
 

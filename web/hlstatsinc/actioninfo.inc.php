@@ -62,7 +62,7 @@ if(!empty($_GET["action"])) {
 		$action = $_GET["action"];
 	}
 	else {
-		error("No action specified.");
+		die("No action specified.");
 	}
 }
 

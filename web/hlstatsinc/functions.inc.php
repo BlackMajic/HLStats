@@ -412,7 +412,7 @@ function getGameName($gCode) {
 // Formats and outputs the given error message. Optionally terminates script
 // processing.
 //
-
+// @todo remove
 function error ($message, $exit=true) {
 ?>
 <table border="1" cellspacing="0" cellpadding="5">

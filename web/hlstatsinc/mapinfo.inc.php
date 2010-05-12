@@ -61,7 +61,7 @@ if(!empty($_GET["map"])) {
 		$map = $_GET["map"];
 	}
 	else {
-		error("No map specified.");
+		die("No map specified.");
 	}
 }
 

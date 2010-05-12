@@ -47,7 +47,7 @@ if(!empty($_GET["player"])) {
 		$player = $_GET["player"];
 	}
 	else {
-		error("No player ID specified.");
+		die("No player ID specified.");
 	}
 }
 

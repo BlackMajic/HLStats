@@ -1,5 +1,14 @@
 <?php
 /**
+ * livestats game overview
+ * makes a rcon status call to the game server
+ * @package HLStats
+ * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
+ */
+
+
+/**
  *
  * Original development:
  * +
@@ -39,9 +48,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-	// Live Stats
-	// The binary functions need to be included
-	// Along with the HL Query functions
+// Live Stats
+// The binary functions need to be included
+// Along with the HL Query functions
 
 $serverId = '';
 if(!empty($_GET["server"])) {
@@ -49,7 +58,7 @@ if(!empty($_GET["server"])) {
 		$serverId = $_GET["server"];
 	}
 	else {
-		error("No server ID specified.");
+		die("No server ID specified.");
 	}
 }
 
@@ -62,27 +71,14 @@ $start = $time;
 include('hlstatsinc/binary_funcs.inc.php');
 include('hlstatsinc/hlquery_funcs.inc.php');
 
-$query = mysql_query("
-		SELECT
-			s.serverId,
-			s.name,
-			s.address,
-			s.port,
-			s.publicaddress,
-			s.game,
-			s.rcon_password,
+$query = mysql_query("SELECT s.serverId, s.name, s.address,
+			s.port, s.publicaddress, s.game, s.rcon_password,
 			g.name gamename
-		FROM
-			".DB_PREFIX."_Servers s
-		LEFT JOIN
-			".DB_PREFIX."_Games g
-		ON
-			s.game=g.code
-		WHERE
-			serverId=".$serverId."
-			");
+		FROM ".DB_PREFIX."_Servers AS s
+		LEFT JOIN ".DB_PREFIX."_Games AS g ON s.game=g.code
+		WHERE serverId = '".mysql_escape_string($serverId)."'");
 if (mysql_num_rows($query) != 1) {
-	error("Invalid or no server specified.");
+	die("Invalid or no server specified.");
 }
 else {
 	$server = mysql_fetch_assoc($query);

@@ -61,7 +61,7 @@ if(!empty($_GET["clan"])) {
 		$clan = $_GET["clan"];
 	}
 	else {
-		error("No clan ID specified.");
+		die("No clan ID specified.");
 	}
 }
 
@@ -115,8 +115,9 @@ $query = mysql_query("SELECT
 	GROUP BY ".DB_PREFIX."_Clans.clanId
 ");
 
-if (mysql_num_rows($query) != 1)
-	error("No such clan '$clan'.");
+if (mysql_num_rows($query) != 1) {
+	die("No such clan '$clan'.");
+}
 
 $clandata = mysql_fetch_assoc($query);
 mysql_free_result($query);
