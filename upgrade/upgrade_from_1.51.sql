@@ -18,3 +18,10 @@ ALTER TABLE `#DB_PREFIX#_Events_ChangeRole` ADD INDEX ( `serverId` );
 ALTER TABLE `hlstats_dev`.`hlstats_Events_ChangeTeam` ADD INDEX ( `team` ) ;
 ALTER TABLE `hlstats_dev`.`hlstats_Events_ChangeTeam` ADD INDEX ( `serverId` ) ;
 ALTER TABLE `hlstats_dev`.`hlstats_Servers` ADD INDEX ( `game` ) ;
+
+UPDATE `hlstats_Server_Addons` SET `url` = 'http://wiki.hlsw.net/index.php/LogMod_Information'  WHERE `hlstats_Server_Addons`.`rule` = 'logmod_version';
+UPDATE `hlstats_Server_Addons` SET `url` = 'http://wiki.hlsw.net/index.php/HLGuard' WHERE `hlstats_Server_Addons`.`rule` = 'hlg_version';
+UPDATE `hlstats_Server_Addons` SET `url` = 'http://sourceforge.net/projects/clanmod/' WHERE `hlstats_Server_Addons`.`rule` = 'clanmod_version';
+UPDATE `hlstats_Server_Addons` SET `url` = 'http://sourceforge.net/projects/statsme/' WHERE `hlstats_Server_Addons`.`rule` = 'statsme_version';
+UPDATE `hlstats_Server_Addons` SET `url` = 'http://phpua.sourceforge.net/' WHERE `hlstats_Server_Addons`.`rule` = 'phpua_mm_version';
+UPDATE `hlstats_Server_Addons` SET `url` = 'http://de.wikipedia.org/wiki/Cheating-Death'  WHERE `hlstats_Server_Addons`.`rule` = 'cdversion';

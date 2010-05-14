@@ -46,6 +46,39 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+$query = mysql_query("
+	SELECT
+		".DB_PREFIX."_Games.name AS gamename,
+		".DB_PREFIX."_Actions.description,
+		IF(SIGN(".DB_PREFIX."_Actions.reward_player) > 0,
+			CONCAT('+', ".DB_PREFIX."_Actions.reward_player),
+			".DB_PREFIX."_Actions.reward_player
+		) AS s_reward_player,
+		IF(".DB_PREFIX."_Actions.team != '' AND ".DB_PREFIX."_Actions.reward_team != 0,
+			IF(SIGN(".DB_PREFIX."_Actions.reward_team) >= 0,
+				CONCAT(".DB_PREFIX."_Teams.name, ' +', ".DB_PREFIX."_Actions.reward_team),
+				CONCAT(".DB_PREFIX."_Teams.name,  ' ', ".DB_PREFIX."_Actions.reward_team)
+			),
+			''
+		) AS s_reward_team,
+		IF(for_PlayerActions='1', 'Yes', 'No') AS for_PlayerActions,
+		IF(for_PlayerPlayerActions='1', 'Yes', 'No') AS for_PlayerPlayerActions,
+		IF(for_TeamActions='1', 'Yes', 'No') AS for_TeamActions,
+		IF(for_WorldActions='1', 'Yes', 'No') AS for_WorldActions
+	FROM ".DB_PREFIX."_Actions
+	LEFT JOIN ".DB_PREFIX."_Games ON ".DB_PREFIX."_Games.code = ".DB_PREFIX."_Actions.game
+	LEFT JOIN ".DB_PREFIX."_Teams ON ".DB_PREFIX."_Teams.code = ".DB_PREFIX."_Actions.team
+		AND ".DB_PREFIX."_Teams.game = ".DB_PREFIX."_Actions.game
+	ORDER BY ".DB_PREFIX."_Actions.game ASC,".DB_PREFIX."_Actions.description ASC");
+$gameActions = array();
+if(mysql_num_rows($query) > 0) {
+	while($result = mysql_fetch_assoc($query)) {
+		$gameActions[] = $result;
+	}
+}
+
+
 pageHeader(array(l("Help")), array(l("Help")=>""));
 ?>
 
@@ -89,7 +122,7 @@ pageHeader(array(l("Help")), array(l("Help")=>""));
 		and <a href="http://twitter.com/HLStats" target="_blank">twitter</a>.
 	</p>
 	<h1>
-		<a name="players"></a>2. How are players tracked? Or, why is my name listed more than once?
+		<a name="players"></a>How are players tracked? Or, why is my name listed more than once?
 	</h1>
 	<p>
 	<?php if (MODE == "NameTrack") { ?>
@@ -122,6 +155,36 @@ pageHeader(array(l("Help")), array(l("Help")=>""));
 		You can use the <a href="index.php?mode=search">Search</a> function to find a player by name or
 		<?php echo $uniqueid; ?>.
 	<?php } ?>
+	</p>
+	<h1>
+		<a name="points"></a>How is the "points" rating calculated?
+	</h1>
+	<p>
+		A new player has 1000 points. Every time you make a kill, you gain a certain amount of
+		points depending on a) the victim's points rating, and b) the weapon you used. If you kill
+		someone with a higher points rating than you, then you gain more points than if you kill
+		someone with a lower points rating than you. Therefore, killing newbies will not get you as
+		far as killing the #1 player. And if you kill someone with your knife, you gain more points
+		than if you kill them with a rifle, for example.<br />
+		<br />
+		When you are killed, you lose a certain amount of points, which again depends on the points
+		rating of your killer and the weapon they used (you don't lose as many points for being killed
+		by the #1 player with a rifle than you do for being killed by a low ranked player with a knife).
+		This makes moving up the rankings easier, but makes staying in the top spots harder.<br />
+		<br />
+		Specifically, the equations are:<br />
+		<br />
+<pre>Killer Points = Killer Points + (Victim Points / Killer Points)
+                 &times; Weapon Modifier &times; 5
+Victim Points = Victim Points - (Victim Points / Killer Points)
+                 &times; Weapon Modifier &times; 5</pre>
+         <br />
+		Plus, the following point bonuses are available for completing objectives in some games:<br />
+		<?php if(!empty($gameActions)) { ?>
+		<table cellpadding="2" cellspacing="0" border="0" width="100%">
+		</table>
+		<?php }	?>
+		<b>Note</b> The player who triggers an action may receive both the player reward and the team reward.
 	</p>
 </div>
 
