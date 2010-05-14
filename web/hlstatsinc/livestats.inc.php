@@ -211,6 +211,14 @@ elseif (isset($server_rules['mani_timeleft']))
 	$server_details['timeleft'] = $server_rules['mani_timeleft'];
 elseif (isset($server_rules['mp_timeleft']))
 	$server_details['timeleft'] = sprintf('%02u:%02u', ($server_rules['mp_timeleft'] / 60), ($server_rules['mp_timeleft'] % 60));
+
+// Load our plugin list
+$server_details['addon_count'] = 0;
+$query = mysql_query("SELECT * FROM ".DB_PREFIX."_Server_Addons");
+while ($addon_list = mysql_fetch_assoc($query)) {
+	$server_addon[$addon_list['rule']] = array('addon' => $addon_list['addon'], 'url' => $addon_list['url']);
+}
+
 ?>
 
 <div id="sidebar" >
@@ -254,11 +262,33 @@ elseif (isset($server_rules['mp_timeleft']))
 			echo l('Connecting'),' : ',$server_details['players_connecting'],'/',$server_details['maxplayers'],'<br>';
 		}
 		echo l('Valve Anti-Cheat'),' : ',$server_details['secure'],'<br>';
+
+		if(!empty($server_addon)) {
+			echo l('Server Addons').'<ul>';
+			foreach ($server_rules as $key => $value) {
+				if (isset($server_addon[$key])) {
+					if ($server_addon[$key]['url']) {
+						echo '<li><a href="'.$server_addon[$key]['url'].'" target="_blank">'.str_replace('%', $value, $server_addon[$key]['addon']).'</a></li>';
+					}
+					else {
+						echo '<li>'.str_replace('%', $value, $server_addon[$key]['addon']).'</li>';
+					}
+				}
+			}
+			echo '</ul>';
+		}
 	?>
 </div>
 <div id="main">
 	<h1><?php echo htmlentities($server_details['hostname'], ENT_COMPAT, "UTF-8"); ?></h1>
 	<a href="index.php?game=<?php echo $server['game']; ?>"><?php echo $server_details['gamedesc'];?></a>
+	<?php
+		# Ok we have an array of players
+		# and we have an array of columns
+		# So lets dynamically create something
+		if(!empty($server_players)) {
+		}
+	?>
 </div>
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options['table_border']; ?>">
