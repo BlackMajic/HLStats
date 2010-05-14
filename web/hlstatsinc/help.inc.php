@@ -1,5 +1,13 @@
 <?php
 /**
+ * help overview page
+ * @package HLStats
+ * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
+ */
+
+
+/**
  *
  * Original development:
  * +
@@ -40,6 +48,82 @@
  */
 pageHeader(array(l("Help")), array(l("Help")=>""));
 ?>
+
+<div id="sidebar" >
+	<h1><?php echo l('Questions'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>
+				<a href="#help">How and where can I get help if I need it ?</a>
+			</li>
+			<li>
+				<a href="#players">How are players tracked? Or, why is my name listed more than once?</a>
+			</li>
+			<li>
+				<a href="#points">How is the "points" rating calculated?</a>
+			</li>
+			<li>
+				<a href="#weaponmods">What are all the weapon points modifiers?</a>
+			</li>
+			<li>
+				<a href="#set">How can I set my real name, e-mail address, homepage and ICQ number?</a>
+			</li>
+			<li>
+				<a href="#hideranking">My rank is embarrassing. How can I opt out?</a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="main">
+	<h1>
+		<a name="help"></a>How and where can I get help if I need it ?
+	</h1>
+	<p>
+		First make sure you have <a href="http://hlstats-community.org/Documentation.html" target="_blank">read the documentation</a>.<br />
+		In most cases it is only a config error.<br />
+		<br />
+		Then you can request help in the <a href="http://forum.hlstats-community.org/" target="_blank">hlstats-community.org forum</a>.
+		But please use the search function first befor you start a new topic. Also explain as much as possible otherwise no one can help.<br />
+		<br />
+		For more and quick information we a <a href="http://blog.bananas-playground.net/categories/12-HLstats" target="_blank">blog</a>
+		and <a href="http://twitter.com/HLStats" target="_blank">twitter</a>.
+	</p>
+	<h1>
+		<a name="players"></a>2. How are players tracked? Or, why is my name listed more than once?
+	</h1>
+	<p>
+	<?php if (MODE == "NameTrack") { ?>
+		Players are tracked by nickname. All statistics for any player using a particular name will
+		be grouped under that name. It is not possible for a name to be listed more than once for each game.<br />
+		<br />
+	<?php } else {
+			if (MODE == "LAN") {
+				$uniqueid = "IP Address";
+				$uniqueid_plural = "IP Addresses";
+	?>
+		Players are tracked by IP Address. IP addresses are specific to a computer on a network.<br />
+		<br />
+	<?php
+			} else {
+				$uniqueid = "Unique ID";
+				$uniqueid_plural = "Unique IDs";
+	?>
+		Players are tracked by Unique ID.<br />
+		<br />
+	<?php } ?>
+		A player may have more than one name. On the Player Rankings pages, players are shown with the most
+		recent name they used in the game. If you click on a player's name, the Player Details page will
+		show you a list of all other names that this player uses, if any, under the Aliases section
+		(if the player has not used any other names, the Aliases section will not be displayed).<br />
+		<br />
+		Your name may be listed more than once if somebody else (with a different <?php echo $uniqueid; ?>)
+		uses the same name.<br />
+		<br />
+		You can use the <a href="index.php?mode=search">Search</a> function to find a player by name or
+		<?php echo $uniqueid; ?>.
+	<?php } ?>
+	</p>
+</div>
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>

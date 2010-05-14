@@ -1,5 +1,13 @@
 <?php
 /**
+ * binary functions file
+ * needed for working with the rcon
+ * @package HLStats
+ * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
+ */
+
+/**
  *
  * Original development:
  * +
@@ -39,15 +47,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-   // Binary functions.
 
-// Pass the functions the whole lot of data and the point at which
-// the function is to begin working from
-
-// TODO: These functions need signed versions creating ASAP
-
-function GetInt8($data, &$datastart)
-{
+/**
+ * get 8 int
+ * @param string $data
+ * @param int $datastart
+ */
+function GetInt8($data, &$datastart) {
 	$temp = '';
 	if(isset($data{$datastart})) {
 		$temp = ord($data{$datastart});
@@ -56,8 +62,12 @@ function GetInt8($data, &$datastart)
 	return $temp;
 }
 
-function GetBoolean($data, &$datastart)
-{
+/**
+ * check if we have a boolean
+ * @param string $data
+ * @param int $datastart
+ */
+function GetBoolean($data, &$datastart) {
 	$temp = '';
 	$temp = GetInt8($data, $datastart);
 
@@ -67,8 +77,12 @@ function GetBoolean($data, &$datastart)
 		return false;
 }
 
-function GetInt16($data, &$datastart)
-{
+/**
+ * get 16 int
+ * @param string $data
+ * @param int $datastart
+ */
+function GetInt16($data, &$datastart) {
 	$temp = '';
 	// @todo: possible bug ?
 	//$temp = GetInt8($data, $datastart) + (GetInt8($data, $datastart) * 256);
@@ -77,15 +91,23 @@ function GetInt16($data, &$datastart)
 	return $temp;
 }
 
-function GetInt32($data, &$datastart)
-{
+/**
+ * get 32 int
+ * @param string $data
+ * @param int $datastart
+ */
+function GetInt32($data, &$datastart) {
 	$temp = '';
 	$temp = GetInt8($data, $datastart) + (GetInt8($data, $datastart)<<8) + (GetInt8($data, $datastart)<<16) + (GetInt8($data, $datastart)<<24);
 
 	return $temp;
 }
 
-// Null-Terminated String
+/**
+ * Null-Terminated String
+ * @param string $data
+ * @param int $datastart
+ */
 function GetString($data, &$datastart) 	{
 	$temp = '';
 	$counter = 0;
@@ -99,8 +121,12 @@ function GetString($data, &$datastart) 	{
 	return $temp;
 }
 
-function GetFloat32($data, &$datastart)
-{
+/**
+ * get 32 float
+ * @param string $data
+ * @param int $datastart
+ */
+function GetFloat32($data, &$datastart) {
 	$decnumber = GetInt32($data, $datastart);
 	$binnumber = base_convert($decnumber, 10, 2);
 	while (strlen($binnumber) < 32)

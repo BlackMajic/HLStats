@@ -144,6 +144,8 @@ else {
 	$_POST['search']['area'] = '';
 	$_POST['search']['game'] = '';
 }
+
+//@todo: search for uniq id
 ?>
 
 <div id="sidebar">
@@ -162,13 +164,13 @@ else {
 		<b><?php echo l('Search For'); ?></b>:<br />
 		<input type="text" name="search[input]" value="" /><br />
 		<br />
-		<b><?php echo l('In'); ?></b>
+		<b><?php echo l('In'); ?></b>:<br />
 		<select name="search[area]">
 			<option value="player" <?php if($_POST['search']['area'] == "player") echo 'selected="1"'; ?>><?php echo l('Player names'); ?></option>
 			<option value="clan" <?php if($_POST['search']['area'] == "clan") echo 'selected="1"'; ?>><?php echo l('Clan names'); ?></option>
 		</select><br />
 		<br />
-		<?php echo l('Game'); ?>
+		<b><?php echo l('Game'); ?></b>:<br />
 		<select name="search[game]">
 			<option value="---"><?php echo l('All'); ?></option>
 			<?php

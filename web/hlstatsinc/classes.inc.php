@@ -41,6 +41,7 @@
 
 //
 // Table
+// @todo: to remove !!!
 //
 // Generates an HTML table from a DB result.
 //
