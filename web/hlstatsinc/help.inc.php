@@ -181,7 +181,33 @@ Victim Points = Victim Points - (Victim Points / Killer Points)
          <br />
 		Plus, the following point bonuses are available for completing objectives in some games:<br />
 		<?php if(!empty($gameActions)) { ?>
-		<table cellpadding="2" cellspacing="0" border="0" width="100%">
+		<table cellpadding="2" cellspacing="0" border="1" width="100%">
+			<tr>
+				<th><?php echo l('Game'); ?></th>
+				<th><?php echo l('Player Action'); ?></th>
+				<th><?php echo l('PlyrPlyr Action'); ?></th>
+				<th><?php echo l('Team Action'); ?></th>
+				<th><?php echo l('World Action'); ?></th>
+				<th><?php echo l('Action'); ?></th>
+				<th><?php echo l('Player Reward'); ?></th>
+				<th><?php echo l('Team Reward'); ?></th>
+			</tr>
+			<?php
+				foreach($gameActions as $a) {
+					echo '<tr>';
+
+					echo '<td>',$a['gamename'],'</td>';
+					echo '<td>',$a['for_PlayerActions'],'</td>';
+					echo '<td>',$a['for_PlayerPlayerActions'],'</td>';
+					echo '<td>',$a['for_TeamActions'],'</td>';
+					echo '<td>',$a['for_WorldActions'],'</td>';
+					echo '<td>',$a['description'],'</td>';
+					echo '<td>',$a['s_reward_player'],'</td>';
+					echo '<td>',$a['s_reward_team'],'</td>';
+
+					echo '<tr>';
+				}
+			?>
 		</table>
 		<?php }	?>
 		<b>Note</b> The player who triggers an action may receive both the player reward and the team reward.
