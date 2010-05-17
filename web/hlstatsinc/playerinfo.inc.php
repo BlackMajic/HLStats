@@ -260,73 +260,13 @@ $rcol = "row-dark";
 			 </td>
 		</tr>
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
-			<th><?php echo l("Real Name"); ?></th>
-			<td>
-			   <?php
-				if ($playerObj->getParam("fullName")) {
-					echo "<b>" . htmlspecialchars($playerObj->getParam("fullName")) . "</b>";
-				} else {
-					echo l("Unknown");
-				}
-			   ?>
-			</td>
+			<th><?php echo l("Player ID"); ?></th>
+			<td><?php echo $player; ?></td>
 			<th align="right"><?php echo l("Rank"); ?></th>
 			<td>
 				<b><?php echo $playerObj->getParam('rankPoints'); ?></b>
 				(<?php echo l('ordered by Points'); ?>)
 			</td>
-		</tr>
-		<tr class="<?php echo toggleRowClass($rcol); ?>">
-			<th><?php echo l("E-mail Address"); ?></th>
-			<td>
-			   <?php
-				$email = getEmailLink($playerObj->getParam("email"));
-				if (!empty($email)) {
-					echo $email;
-				} else {
-					echo l("Unknown");
-				}
-			   ?>
-			</td>
-			<th><?php echo l("Kills"); ?></th>
-			<td><?php echo $playerObj->getParam("kills"); ?></td>
-		</tr>
-		<tr class="<?php echo toggleRowClass($rcol); ?>">
-			<th><?php echo l("Home Page"); ?></th>
-			<td>
-				<?php
-				$url = getLink($playerObj->getParam("homepage"));
-				if (!empty($url)) {
-					echo $url;
-				} else {
-					echo l("Not specified");
-				}
-			   ?>
-			</td>
-			<th><?php echo l("Deaths"); ?></th>
-			<td><?php echo $playerObj->getParam("deaths"); ?></td>
-		</tr>
-		<tr class="<?php echo toggleRowClass($rcol); ?>">
-			<th><?php echo l("ICQ Number"); ?></th>
-			<td>
-			   <?php
-				if ($playerObj->getParam("icq")) {
-					echo "<a href=\"http://www.icq.com/"
-						. urlencode($playerObj->getParam("icq")) . "\" target=\"_blank\">"
-						. htmlspecialchars($playerObj->getParam("icq")) . "</a>";
-				} else {
-					echo l("Not specified");
-				}
-			   ?>
-			</td>
-			<th><?php echo l("Suicides"); ?></th>
-			<td><?php echo $playerObj->getParam("suicides"); ?></td>
-		</tr>
-		<tr class="<?php echo toggleRowClass($rcol); ?>">
-			<th><?php echo l("Player ID"); ?></th>
-			<td><?php echo $player; ?></td>
-			<th><?php echo l("Kills per Death"); ?></th>
-			<td><?php echo number_format((int)$playerObj->getParam("kpd"),1); ?></t>
 		</tr>
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th>
@@ -346,28 +286,137 @@ $rcol = "row-dark";
 				}
 			   ?>
 			</td>
-			<th><?php echo l("Teammate Kills"); ?>*</th>
-			<td><?php echo $playerObj->getParam("teamkills"); ?></td>
+			<th><?php echo l("Kills"); ?></th>
+			<td><?php echo $playerObj->getParam("kills"); ?></td>
 		</tr>
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l("Last Connect"); ?>*</th>
 			<td><?php echo $playerObj->getParam('lastConnect'); ?></td>
-			<th><?php echo l("Weapon Accuracy"); ?></th>
-			<td><?php echo number_format((int)$playerObj->getParam("accuracy"),1); ?>%</td>
+			<th><?php echo l("Deaths"); ?></th>
+			<td><?php echo $playerObj->getParam("deaths"); ?></td>
 		</tr>
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l("Total Connection Time"); ?>*</th>
 			<td><?php echo $playerObj->getParam('maxTime'); ?></td>
-			<td colspan="2">&nbsp;</td>
+			<th><?php echo l("Suicides"); ?></th>
+			<td><?php echo $playerObj->getParam("suicides"); ?></td>
 		</tr>
-
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l("Average Ping"); ?></th>
 			<td><?php echo $playerObj->getParam('avgPing'); ?></td>
+			<th><?php echo l("Kills per Death"); ?></th>
+			<td><?php echo number_format((int)$playerObj->getParam("kpd"),1); ?></t>
+		</tr>
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<td colspan="2">&nbsp;</td>
+			<th><?php echo l("Teammate Kills"); ?>*</th>
+			<td><?php echo $playerObj->getParam("teamkills"); ?></td>
+		</tr>
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
+			<td colspan="2">&nbsp;</td>
+			<th><?php echo l("Weapon Accuracy"); ?></th>
+			<td><?php echo number_format((int)$playerObj->getParam("accuracy"),1); ?>%</td>
 		</tr>
 	</table>
-
+	<a name="profile"></a>
+	<h1>
+		<?php echo l('Profile'); ?>
+		<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>#Profile"><img src="<?php echo $g_options["imgdir"]; ?>/link.gif" alt="<?php echo l('Direct Link'); ?>" title="<?php echo l('Direct Link'); ?>" /></a>
+	</h1>
+	<table border="1" cellspacing="0" cellpadding="4" width="100%">
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
+			<th><?php echo l("Real Name"); ?></th>
+			<td>
+			   <?php
+				if ($playerObj->getParam("fullName")) {
+					echo "<b>" . htmlspecialchars($playerObj->getParam("fullName")) . "</b>";
+				} else {
+					echo l("Unknown");
+				}
+			   ?>
+			</td>
+			<th><?php echo l("Myspace"); ?></th>
+			<td><?php
+				$url = getLink($playerObj->getParam("myspace"));
+				if (!empty($url)) {
+					echo $url;
+				} else {
+					echo l("Not specified");
+				}
+			   ?>
+			</td>
+		</tr>
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
+			<th><?php echo l("E-mail Address"); ?></th>
+			<td>
+			   <?php
+				$email = getEmailLink($playerObj->getParam("email"));
+				if (!empty($email)) {
+					echo $email;
+				} else {
+					echo l("Unknown");
+				}
+			   ?>
+			</td>
+			<th><?php echo l("Facebook"); ?></th>
+			<td><?php
+				$url = getLink($playerObj->getParam("facebook"));
+				if (!empty($url)) {
+					echo $url;
+				} else {
+					echo l("Not specified");
+				}
+			   ?>
+			</td>
+		</tr>
+		<tr>
+			<th><?php echo l("Home Page"); ?></th>
+			<td>
+				<?php
+				$url = getLink($playerObj->getParam("homepage"));
+				if (!empty($url)) {
+					echo $url;
+				} else {
+					echo l("Not specified");
+				}
+			   ?>
+			</td>
+			<th><?php echo l("Jabber"); ?></th>
+			<td>
+			   <?php
+				if ($playerObj->getParam("jabber")) {
+					echo htmlspecialchars($playerObj->getParam("jabber"));
+				} else {
+					echo l("Not specified");
+				}
+			   ?>
+			</td>
+		</tr>
+		<tr>
+			<th><?php echo l("ICQ Number"); ?></th>
+			<td>
+			   <?php
+				if ($playerObj->getParam("icq")) {
+					echo "<a href=\"http://www.icq.com/"
+						. urlencode($playerObj->getParam("icq")) . "\" target=\"_blank\">"
+						. htmlspecialchars($playerObj->getParam("icq")) . "</a>";
+				} else {
+					echo l("Not specified");
+				}
+			   ?>
+			</td>
+			<th><?php echo l("Steam Profile"); ?></th>
+			<td><?php
+				$url = getLink($playerObj->getParam("steamprofile"));
+				if (!empty($url)) {
+					echo $url;
+				} else {
+					echo l("Not specified");
+				}
+			   ?>
+			</td>
+		</tr>
+	</table>
 <?php
 $aliases = $playerObj->getParam('aliases');
 if(!empty($aliases)) { ?>
