@@ -113,7 +113,7 @@ pageHeader(array(l("Help")), array(l("Help")=>""));
 				<a href="#weaponmods">What are all the weapon points modifiers?</a>
 			</li>
 			<li>
-				<a href="#set">How can I set my real name, e-mail address, homepage and ICQ number?</a>
+				<a href="#set">How can I set my profile data ? eg. hompage or Facebook profile</a>
 			</li>
 			<li>
 				<a href="#hideranking">My rank is embarrassing. How can I opt out?</a>
@@ -226,6 +226,7 @@ Victim Points = Victim Points - (Victim Points / Killer Points)
 		<?php }	?>
 		<b>Note</b> The player who triggers an action may receive both the player reward and the team reward.
 	</p>
+	<a name="weaponmods"></a>
 	<h1>What are all the weapon points modifiers?</h1>
 	<p>
 		Weapon points modifiers are used to determine how many points you should gain or lose
@@ -256,7 +257,8 @@ Victim Points = Victim Points - (Victim Points / Killer Points)
 		</table>
 		<?php }	?>
 	</p>
-	<h1>How can I set my real name, e-mail address, homepage and ICQ number?</h1>
+	<a name="set"></a>
+	<h1>How can I set my profile data ?</h1>
 	<p>
 		Player profile options can be configured by saying the appropriate <b>SET</b> command
 		while you are playing on a participating game server. To say commands, push your
