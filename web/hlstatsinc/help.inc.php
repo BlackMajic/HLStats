@@ -47,9 +47,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-$query = mysql_query("
-	SELECT
-		".DB_PREFIX."_Games.name AS gamename,
+$query = mysql_query("SELECT ".DB_PREFIX."_Games.name AS gamename,
 		".DB_PREFIX."_Actions.description,
 		IF(SIGN(".DB_PREFIX."_Actions.reward_player) > 0,
 			CONCAT('+', ".DB_PREFIX."_Actions.reward_player),
@@ -76,8 +74,24 @@ if(mysql_num_rows($query) > 0) {
 	while($result = mysql_fetch_assoc($query)) {
 		$gameActions[] = $result;
 	}
+	mysql_free_result($query);
 }
 
+$query = mysql_query("
+		SELECT ".DB_PREFIX."_Games.name AS gamename,
+			".DB_PREFIX."_Weapons.code,
+			".DB_PREFIX."_Weapons.name,
+			".DB_PREFIX."_Weapons.modifier
+		FROM ".DB_PREFIX."_Weapons
+		LEFT JOIN ".DB_PREFIX."_Games ON ".DB_PREFIX."_Games.code = ".DB_PREFIX."_Weapons.game
+		ORDER BY game ASC, modifier DESC");
+$weaponModifiers = array();
+if(mysql_num_rows($query) > 0) {
+	while($result = mysql_fetch_assoc($query)) {
+		$weaponModifiers[] = $result;
+	}
+	mysql_free_result($query);
+}
 
 pageHeader(array(l("Help")), array(l("Help")=>""));
 ?>
@@ -178,7 +192,7 @@ pageHeader(array(l("Help")), array(l("Help")=>""));
                  &times; Weapon Modifier &times; 5
 Victim Points = Victim Points - (Victim Points / Killer Points)
                  &times; Weapon Modifier &times; 5</pre>
-         <br />
+        <br />
 		Plus, the following point bonuses are available for completing objectives in some games:<br />
 		<?php if(!empty($gameActions)) { ?>
 		<table cellpadding="2" cellspacing="0" border="1" width="100%">
@@ -212,7 +226,39 @@ Victim Points = Victim Points - (Victim Points / Killer Points)
 		<?php }	?>
 		<b>Note</b> The player who triggers an action may receive both the player reward and the team reward.
 	</p>
+	<h1>What are all the weapon points modifiers?</h1>
+	Weapon points modifiers are used to determine how many points you should gain or lose
+	when you make a kill or are killed by another player. Higher modifiers indicate that more
+	points will be gained when killing with that weapon (and similarly, more points will be lost
+	when being killed <i>by</i> that weapon). Modifiers generally range from 0.00 to 2.00.<br />
+	<br />
+	<?php if(!empty($weaponModifiers)) { ?>
+	<table cellpadding="2" cellspacing="0" border="1" width="100%">
+		<tr>
+			<th><?php echo l('Game'); ?></th>
+			<th><?php echo l('Weapon'); ?></th>
+			<th><?php echo l('Name'); ?></th>
+			<th><?php echo l('Points Modifier'); ?></th>
+		</tr>
+		<?php
+			foreach($weaponModifiers as $w) {
+				echo '<tr>';
+
+				echo '<td>',$w['gamename'],'</td>';
+				echo '<td>',$w['code'],'</td>';
+				echo '<td>',$w['name'],'</td>';
+				echo '<td>',$w['modifier'],'</td>';
+
+				echo '<tr>';
+			}
+			?>
+	</table>
+	<?php }	?>
 </div>
+
+
+
+
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 <tr>
