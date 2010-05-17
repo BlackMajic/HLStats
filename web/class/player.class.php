@@ -602,9 +602,13 @@ class Player {
 						WHERE playerId='".mysql_escape_string($this->playerId)."'");
 		if(mysql_num_rows($query) > 0) {
 			while ($result = mysql_fetch_assoc($query)) {
-				$ret = $result['uniqueId'].",";
+
+				if(strstr($result['uniqueId'],'STEAM_')) {
+					$result['uniqueId'] = getSteamProfileUrl($result['uniqueId']);
+				}
+				$ret = $result['uniqueId'].", ";
 			}
-			$this->_playerData['uniqueIds'] = trim($ret,',');
+			$this->_playerData['uniqueIds'] = trim($ret,', ');
 			mysql_free_result($query);
 		}
 	}

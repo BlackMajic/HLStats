@@ -46,6 +46,26 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/**
+ * create the steam profile url
+ * eg. STEAM_0:0:123456
+ * Steam_community_number = (Last_part_of_steam_id * 2) + 76561197960265728 + Second_to_last_part_of_steam_id
+ * this needs bcmath support in PHP
+ * http://www.php.net/manual/en/book.bc.php
+ * @param string $steamId
+ * @return string $ret
+ */
+function getSteamProfileUrl($steamId) {
+	$ret = $steamId;
+	if(!empty($steamId) && strstr($steamId,'STEAM_') && function_exists('bcadd')) {
+		$t = explode(':',$steamId);
+		$s = bcadd('76561197960265728',$t[2]*2);
+		$s = bcadd($s,$t[1]);
+		$ret = '<a href="http://steamcommunity.com/profiles/'.$s.'" target="_blank">'.$steamId.'</a>';
+	}
+
+	return $ret;
+}
 
 /**
  * toggle the color/css class for each row
