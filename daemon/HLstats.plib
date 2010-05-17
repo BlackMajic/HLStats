@@ -561,20 +561,17 @@ sub getPlayerId
 #
 # Updates a player's profile information in the database.
 #
-sub updatePlayerProfile
-{
+sub updatePlayerProfile {
 	my ($player, $field, $value) = @_;
 
-	unless ($player)
-	{
+	unless ($player) {
 		&printNotice("updatePlayerInfo: Bad player");
 		return 0;
 	}
 
 	$value = &quoteSQL($value);
 
-	if ($value eq "none" || $value eq " ")
-	{
+	if ($value eq "none" || $value eq " ") {
 		$value = "";
 	}
 

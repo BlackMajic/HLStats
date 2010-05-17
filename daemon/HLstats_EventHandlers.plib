@@ -763,25 +763,32 @@ sub doEvent_Chat
 	}
 
 
-	if ($message =~ /^\/hls_set ([^ ]+) (.+)$/i)
-	{
+	if ($message =~ /^\/hls_set ([^ ]+) (.+)$/i) {
 		my $set_field = lc($1);
 		my $set_value = $2;
 
-		if ($set_field eq "name" || $set_field eq "realname")
-		{
+		if ($set_field eq "realname") {
 			&updatePlayerProfile($player, "fullName", $set_value);
 		}
-		elsif ($set_field eq "email" || $set_field eq "e-mail")
-		{
+		elsif ($set_field eq "email" || $set_field eq "e-mail") {
 			&updatePlayerProfile($player, "email", $set_value);
 		}
-		elsif ($set_field eq "homepage" || $set_field eq "url")
-		{
+		elsif ($set_field eq "homepage") {
 			&updatePlayerProfile($player, "homepage", $set_value);
 		}
-		elsif ($set_field eq "icq" || $set_field eq "uin")
-		{
+		elsif ($set_field eq "myspace") {
+			&updatePlayerProfile($player, "myspace", $set_value);
+		}
+		elsif ($set_field eq "facebook") {
+			&updatePlayerProfile($player, "facebook", $set_value);
+		}
+		elsif ($set_field eq "jabber") {
+			&updatePlayerProfile($player, "jabber", $set_value);
+		}
+		elsif ($set_field eq "steamprofile") {
+			&updatePlayerProfile($player, "steamprofile", $set_value);
+		}
+		elsif ($set_field eq "icq") {
 			&updatePlayerProfile($player, "icq", $set_value);
 		}
 	}

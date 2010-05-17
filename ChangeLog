@@ -7,12 +7,17 @@ HLStats ChangeLog
 *) New: New design and overall re-write of the web-interface
 *) New: phpDoc documentation available for the web-interface
 *) New: Team statistics overview page (thx to goose for the idea)
+*) New: Player profile has new myspace field /hls_set myspace url
+*) New: Player profile has new facebook field /hls_set facebook url
+*) New: Player profile has new jabber field /hls_set jabber url
+*) New: Player profile has new steamprofile field /hls_set steamprofile url
 *) Changed: Constant INCLUDE_PATH removed.
 *) Changed: hlstats.php file renamed to index.php
 				scripturl option has been removed.
 *) Changed: sorting pictures renamed
 *) Changed: replaced AMCharts with pChart
 *) Changed: Information about real kills removed
+*) Changed: hls_set options cleanup
 *) Fixed: typo in lang (thx to LuBJe)
 *) Fixed: bug in admin -> Tools -> Reset (thx to conan)
 *) Fixed: remove the ; in rcon commands (thx to Par0noid)

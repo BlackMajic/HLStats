@@ -282,6 +282,22 @@ Victim Points = Victim Points - (Victim Points / Killer Points)
 				Sets your ICQ Number as shown in your profile.<br>
 				Example: &nbsp;&nbsp; <b>/hls_set icq 123456789</b>
 			</li>
+			<li><b>myspace</b><br>
+				Sets your myspace page as shown in your profile.<br>
+				Example: &nbsp;&nbsp; <b>/hls_set myspace http://myspace.com/name</b>
+			</li>
+			<li><b>facebook</b><br>
+				Sets your facebook page as shown in your profile.<br>
+				Example: &nbsp;&nbsp; <b>/hls_set facebook http://facebook/name</b>
+			</li>
+			<li><b>jabber</b><br>
+				Sets your jabber ID as shown in your profile.<br>
+				Example: &nbsp;&nbsp; <b>/hls_set jabber ID</b>
+			</li>
+			<li><b>steamprofile</b><br>
+				Sets your steamprofile URL as shown in your profile.<br>
+				Example: &nbsp;&nbsp; <b>/hls_set steamprofile URL</b>
+			</li>
 		</ul>
 		The server will respond with "SET command successful." If you get no response,
 		it probably means you typed the command incorrectly.<br />

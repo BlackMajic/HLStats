@@ -25,3 +25,8 @@ UPDATE `hlstats_Server_Addons` SET `url` = 'http://sourceforge.net/projects/clan
 UPDATE `hlstats_Server_Addons` SET `url` = 'http://sourceforge.net/projects/statsme/' WHERE `hlstats_Server_Addons`.`rule` = 'statsme_version';
 UPDATE `hlstats_Server_Addons` SET `url` = 'http://phpua.sourceforge.net/' WHERE `hlstats_Server_Addons`.`rule` = 'phpua_mm_version';
 UPDATE `hlstats_Server_Addons` SET `url` = 'http://de.wikipedia.org/wiki/Cheating-Death'  WHERE `hlstats_Server_Addons`.`rule` = 'cdversion';
+
+ALTER TABLE `hlstats_Players` ADD `myspace` VARCHAR( 128 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `icq`;
+ALTER TABLE `hlstats_Players` ADD `facebook` VARCHAR( 128 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `myspace` ;
+ALTER TABLE `hlstats_Players` ADD `jabber` VARCHAR( 128 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `facebook` ;
+ALTER TABLE `hlstats_Players` ADD `steamprofile` VARCHAR( 128 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `jabber` ;
