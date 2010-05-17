@@ -286,9 +286,44 @@ while ($addon_list = mysql_fetch_assoc($query)) {
 		# Ok we have an array of players
 		# and we have an array of columns
 		# So lets dynamically create something
-		if(!empty($server_players)) {
-		}
-	?>
+		$totalfrags = 0;
+		$totalping = 0;
+		$totaltime = 0;
+		$nonbots = 0;
+		if(!empty($server_players)) { ?>
+		<table cellpadding="2" cellspacing="0" border="0">
+			<tr>
+				<th>&nbsp;</th>
+				<th><?php echo l('Name'); ?></th>
+				<th><?php echo l('Frags'); ?></th>
+				<th><?php echo l('Connected'); ?></th>
+			</tr>
+			<?php
+			foreach($server_players as $k=>$p) {
+				# figure out if the player is a bot
+				# HLTV and rcon is not really a bot we will have to treat it like one.
+				# However, HLTV shouldn't even show up at this point
+				$is_bot = 0;
+				$is_rcon = 0;
+				if (isset($p['uid'])) {
+					if ('UNKNOWN' == $p['uid'])
+						$is_bot = 1;
+					elseif ('BOT' == $p['uid'])
+						$is_bot = 1;
+					elseif ('HLTV' == $p['uid'])
+						$is_bot = 1;
+					elseif ('rcon' == $p['uid'])
+						$is_rcon = 1;
+					elseif ('0' == $p['uid'])
+						$is_bot = 1;
+					elseif ('0' == $p['ping'])
+						$is_bot = 1;
+				}
+				var_dump($p);
+			}
+			?>
+		</table>
+	<?php } ?>
 </div>
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options['table_border']; ?>">
