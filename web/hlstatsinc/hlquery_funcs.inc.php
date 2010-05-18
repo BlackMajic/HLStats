@@ -324,8 +324,13 @@ function Decode_Challenge_Packet ($packet) {
 	return $challenge;
 }
 
-function Decode_Source_Info_Packet ($packet)
-{
+/**
+ * decdode the A2S_INFO Pack
+ * http://developer.valvesoftware.com/wiki/Server_Queries#A2S_INFO
+ * @param string $packet
+ * @return array $serverdetails
+ */
+function Decode_Source_Info_Packet ($packet) {
 	$serverdetails = array();
 	$datastart = 0;
 
@@ -350,8 +355,7 @@ function Decode_Source_Info_Packet ($packet)
 	return $serverdetails;
 }
 
-function Decode_HL1_Info_Packet ($packet)
-{
+function Decode_HL1_Info_Packet ($packet) {
 	$serverdetails = array();
 	$datastart = 0;
 
@@ -384,14 +388,22 @@ function Decode_HL1_Info_Packet ($packet)
 	return $serverdetails;
 }
 
-function Decode_Player_Packet ($packet)
-{
+/**
+ * A2S_PLAYER request
+ * rcon request without rcon password
+ * http://developer.valvesoftware.com/wiki/Server_Queries#A2S_PLAYER
+ * @param string $packet
+ * @return array $serverplayers
+ */
+function Decode_Player_Packet ($packet) {
 	$serverplayers = array();
 	$datastart = 0;
 
 	GetInt32($packet, $datastart);
 
 	$type = GetInt8($packet, $datastart);
+	if($type !== 68)  return $serverplayers;
+
 	$players = GetInt8($packet, $datastart);
 
 	if ($players == 0) return $serverplayers;
@@ -634,8 +646,13 @@ function Format_Info_Array ($info)
 	return $info;
 }
 
-function Format_Time ($temp)
-{
+/**
+ * format the given time
+ * The time in seconds this player has been connected
+ * @param string $temp
+ * @return string $time
+ */
+function Format_Time ($temp) {
 	$time = sprintf('%s', str_pad(floor($temp/3600), 2, 0, STR_PAD_LEFT));
 	$temp %= 3600;
 	$time = sprintf('%s:%s', $time, str_pad(floor($temp/60), 2, 0, STR_PAD_LEFT));

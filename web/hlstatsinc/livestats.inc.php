@@ -5,6 +5,7 @@
  * @package HLStats
  * @author Johannes 'Banana' Keßler
  * @copyright Johannes 'Banana' Keßler
+ * @todo rcon stats call with rcon password
  */
 
 
@@ -281,7 +282,9 @@ while ($addon_list = mysql_fetch_assoc($query)) {
 </div>
 <div id="main">
 	<h1><?php echo htmlentities($server_details['hostname'], ENT_COMPAT, "UTF-8"); ?></h1>
-	<a href="index.php?game=<?php echo $server['game']; ?>"><?php echo $server_details['gamedesc'];?></a>
+	<p>
+		<a href="index.php?game=<?php echo $server['game']; ?>"><?php echo $server_details['gamedesc'];?></a>
+	</p>
 	<?php
 		# Ok we have an array of players
 		# and we have an array of columns
@@ -291,9 +294,9 @@ while ($addon_list = mysql_fetch_assoc($query)) {
 		$totaltime = 0;
 		$nonbots = 0;
 		if(!empty($server_players)) { ?>
-		<table cellpadding="2" cellspacing="0" border="0">
+		<table cellpadding="2" cellspacing="0" border="0" width="100%">
 			<tr>
-				<th>&nbsp;</th>
+				<th width="20">&nbsp;</th>
 				<th><?php echo l('Name'); ?></th>
 				<th><?php echo l('Frags'); ?></th>
 				<th><?php echo l('Connected'); ?></th>
@@ -319,12 +322,28 @@ while ($addon_list = mysql_fetch_assoc($query)) {
 					elseif ('0' == $p['ping'])
 						$is_bot = 1;
 				}
-				var_dump($p);
+
+				$img = "player.gif";
+				if($is_bot === 1 || $is_rcon === 1) {
+					$img = "server.gif";
+				}
+
+				echo '<tr>';
+
+				echo '<td><img src="',$g_options['imgdir'],$img,'" alt="" width="16"/></td>';
+				echo '<td>',makeSavePlayerName($p['name']),'</td>';
+				echo '<td>',$p['frags'],'</td>';
+				echo '<td>',Format_Time($p['time']),'</td>';
+
+				echo '</tr>';
 			}
 			?>
 		</table>
 	<?php } ?>
 </div>
+
+
+
 
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0" bgcolor="<?php echo $g_options['table_border']; ?>">
 	<tr>

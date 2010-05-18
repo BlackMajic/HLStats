@@ -105,6 +105,7 @@ function GetInt32($data, &$datastart) {
 
 /**
  * Null-Terminated String
+ * http://developer.valvesoftware.com/wiki/String
  * @param string $data
  * @param int $datastart
  */
