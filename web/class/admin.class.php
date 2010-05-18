@@ -1,13 +1,12 @@
 <?php
 /**
- * main admin file
+ * chart class file. uses the pChart library
  * @package HLStats
  * @author Johannes 'Banana' Keßler
- * @copyright Johannes 'Banana' Keßler
  */
 
+
 /**
- *
  * Original development:
  * +
  * + HLStats - Real-time player and clan rankings and statistics for Half-Life
@@ -46,33 +45,31 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+/**
+ * the main admin class
+ * @author banana
+ * @package HLStats
+ *
+ */
+class Admin {
 
-$selTask = '';
-$selGame = '';
+	/**
+	 * if we are logged in or not
+	 * @var boolean
+	 */
+	private $_authStatus = false;
 
-if(!empty($_GET["task"])) {
-	if(validateInput($_GET["task"],'nospace') === true) {
-		$selTask = $_GET["task"];
+	/**
+	 * load stuff and check if we are logged in
+	 */
+	public function __construct() {
+		$this->_checkAuth();
+	}
+
+	/**
+	 * check if the user is logged in
+	 */
+	private function _checkAuth() {
 	}
 }
-
-if(!empty($_GET["admingame"])) {
-	if(validateInput($_GET["admingame"],'nospace') === true) {
-		$selGame = $_GET["admingame"];
-	}
-}
-
-require('class/admin.class.php');
-$adminObj = new Admin();
-
-session_set_cookie_params(43200); // 8 hours
-session_name("hlstats-session");
-session_start();
-session_regenerate_id(true);
-
-pageHeader(array(l("Admin")), array(l("Admin")=>""));
- ?>
-
-<div id="main-full">
-
-</div>
+?>

@@ -1,5 +1,12 @@
 <?php
 /**
+ * rcon functions to handle the rcon requests
+ * @package HLStats
+ * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
+ */
+
+/**
  *
  * Original development:
  * +
