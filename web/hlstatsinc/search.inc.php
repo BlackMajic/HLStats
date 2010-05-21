@@ -47,7 +47,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-require("hlstatsinc/search-class.inc.php");
+//require("hlstatsinc/search-class.inc.php");
 
 pageHeader(
 	array(l("Search")),
@@ -194,7 +194,7 @@ else {
 				if(!empty($entry)) {
 					echo '<ul>';
 					foreach($entry as $e) {
-						echo '<li><a href="index.php?mode=playerinfo&player=',$e['playerId'],'">',$e['name'],'</a></li>';
+						echo '<li><a href="index.php?mode=playerinfo&player=',$e['playerId'],'">',makeSavePlayerName($e['name']),'</a></li>';
 					}
 					echo '</ul>';
 				}
