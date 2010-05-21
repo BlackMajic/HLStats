@@ -183,8 +183,8 @@ $server_details['players_real'] -= $server_details['numbots'];
 $server_details['players_real'] -= $server_details['hltvcount'];
 
 $server_details['players_connecting'] = $server_details['numplayers'];
-$server_details['players_connecting'] -= $server_details['numbots'];
 $server_details['players_connecting'] -= count($server_players);
+$server_details['players_connecting'] -= $server_details['numbots'];
 $server_details['players_connecting'] -= $server_details['hltvcount'];
 
 // map image
