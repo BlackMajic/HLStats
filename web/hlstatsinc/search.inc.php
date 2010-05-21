@@ -54,15 +54,16 @@ pageHeader(
 	array(l("Search")=>"")
 );
 
-$sr_query = '';
+$sr_query = false;
 $sr_type = 'player';
-$sr_game = '';
+$sr_game = false;
 
 if(!empty($_GET["q"])) {
 	$sr_query = sanitize($_GET["q"]);
+	$sr_query = urldecode($sr_query);
 }
 
-if(!empty($_GET["q"])) {
+if(!empty($_GET["st"])) {
 	if(validateInput($_GET["st"],'nospace') === true) {
 		$sr_type = $_GET["st"];
 	}
@@ -74,6 +75,12 @@ if(!empty($_GET["game"])) {
 	}
 }
 
+$remoteSearch = false;
+// check if we have asearch request via get
+if(!empty($sr_query) && !empty($sr_type) && !empty($sr_game)) {
+	$remoteSearch = true;
+}
+
 // get the game list
 $gamesArr = array();
 $query = mysql_query("SELECT code, name FROM ".DB_PREFIX."_Games WHERE hidden='0' ORDER BY name");
@@ -81,19 +88,24 @@ while ($result = mysql_fetch_assoc($query)) {
 	$gamesArr[$result['code']] = $result['name'];
 }
 
-$searchResults = array();
+$searchResults = false;
 $queryStr = false;
 
-if(isset($_POST['submit']['search'])) {
-	$term = trim($_POST['search']['input']);
+if(isset($_POST['submit']['search']) || $remoteSearch === true) {
 
-	if(!empty($term)) {
+	if($remoteSearch === false) {
+		$sr_query = trim($_POST['search']['input']);
+		$sr_game = trim($_POST['search']['game']);
+		$sr_type = trim($_POST['search']['area']);
+	}
+
+	if(!empty($sr_query)) {
 		$andgame = "";
-		if ($_POST['search']['game'] !== "---") {
-			$andgame = "AND ".DB_PREFIX."_Games.name = '".mysql_escape_string($_POST['search']['game'])."'";
+		if ($sr_game !== "---") {
+			$andgame = "AND ".DB_PREFIX."_Games.name = '".mysql_escape_string($sr_game)."'";
 		}
 
-		switch($_POST['search']['area']) {
+		switch($sr_type) {
 			case 'clan':
 				$queryStr = "SELECT
 						".DB_PREFIX."_Clans.clanId,
@@ -105,8 +117,8 @@ if(isset($_POST['submit']['search'])) {
 						".DB_PREFIX."_Games.code = ".DB_PREFIX."_Clans.game
 					WHERE ".DB_PREFIX."_Games.hidden='0' AND
 						(
-							".DB_PREFIX."_Clans.tag LIKE '%".mysql_escape_string($term)."%'
-							OR ".DB_PREFIX."_Clans.name LIKE '%".mysql_escape_string($term)."%'
+							".DB_PREFIX."_Clans.tag LIKE '%".mysql_escape_string($sr_query)."%'
+							OR ".DB_PREFIX."_Clans.name LIKE '%".mysql_escape_string($sr_query)."%'
 						)
 						".$andgame."
 					ORDER BY `name`";
@@ -123,12 +135,13 @@ if(isset($_POST['submit']['search'])) {
 					LEFT JOIN ".DB_PREFIX."_Games ON
 						".DB_PREFIX."_Games.code = ".DB_PREFIX."_Players.game
 					WHERE ".DB_PREFIX."_Games.hidden='0' AND
-						".DB_PREFIX."_PlayerNames.name LIKE '%".mysql_escape_string($term)."%'
+						".DB_PREFIX."_PlayerNames.name LIKE '%".mysql_escape_string($sr_query)."%'
 						".$andgame."
 					ORDER BY `name`";
 			break;
 		}
 		if(!empty($queryStr)) {
+			$searchResults = array();
 			$query = mysql_query($queryStr);
 
 			if(mysql_num_rows($query) > 0) {
@@ -139,11 +152,7 @@ if(isset($_POST['submit']['search'])) {
 		}
 	}
 }
-else {
-	$_POST = array();
-	$_POST['search']['area'] = '';
-	$_POST['search']['game'] = '';
-}
+
 
 //@todo: search for uniq id
 ?>
@@ -166,8 +175,8 @@ else {
 		<br />
 		<b><?php echo l('In'); ?></b>:<br />
 		<select name="search[area]">
-			<option value="player" <?php if($_POST['search']['area'] == "player") echo 'selected="1"'; ?>><?php echo l('Player names'); ?></option>
-			<option value="clan" <?php if($_POST['search']['area'] == "clan") echo 'selected="1"'; ?>><?php echo l('Clan names'); ?></option>
+			<option value="player" <?php if($sr_type == "player") echo 'selected="1"'; ?>><?php echo l('Player names'); ?></option>
+			<option value="clan" <?php if($sr_type == "clan") echo 'selected="1"'; ?>><?php echo l('Clan names'); ?></option>
 		</select><br />
 		<br />
 		<b><?php echo l('Game'); ?></b>:<br />
@@ -176,7 +185,7 @@ else {
 			<?php
 			foreach($gamesArr as $k=>$v) {
 				$selected = '';
-				if($_POST['search']['game'] == $k) $selected = 'selected="1"';
+				if($sr_game == $k) $selected = 'selected="1"';
 				echo '<option value="',$k,'" ',$selected,'>',$v,'</option>';
 			}
 			?>
@@ -184,10 +193,11 @@ else {
 		<br />
 		<button type="submit" name="submit[search]" title="<?php echo l('Find Now'); ?>">
 			<?php echo l('Find Now'); ?>
-		</button>
+		</button><br />
+		<br />
 	</form>
 	<?php
-		if(!empty($searchResults)) {
+		if(is_array($searchResults) && !empty($searchResults)) {
 			echo '<ul>';
 			foreach($searchResults as $gn=>$entry) {
 				echo '<li><b>',$gn,'</b>';
@@ -201,6 +211,9 @@ else {
 				echo '</li>';
 			}
 			echo '</ul>';
+		}
+		elseif(is_array($searchResults)) {
+			echo '<b>',l('Nothing found'),'</b>';
 		}
 	?>
 </div>

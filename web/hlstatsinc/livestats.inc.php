@@ -331,7 +331,7 @@ while ($addon_list = mysql_fetch_assoc($query)) {
 				echo '<tr>';
 
 				echo '<td><img src="',$g_options['imgdir'],$img,'" alt="" width="16"/></td>';
-				echo '<td>',makeSavePlayerName($p['name']),'</td>';
+				echo '<td><a href="index.php?mode=search&amp;game='.$server['game'].'&amp;q='.urlencode(makeSavePlayerName($p['name'])).'">',makeSavePlayerName($p['name']),'</a></td>';
 				echo '<td>',$p['frags'],'</td>';
 				echo '<td>',Format_Time($p['time']),'</td>';
 
