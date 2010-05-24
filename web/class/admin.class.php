@@ -67,9 +67,55 @@ class Admin {
 	}
 
 	/**
+	 * true if we have a valid auth
+	 * @return boolean
+	 */
+	public function getAuthStatus() {
+		return $this->_authStatus;
+	}
+
+	/**
 	 * check if the user is logged in
 	 */
 	private function _checkAuth() {
+		if(isset($_SESSION['hlstatsAuth']['authCode'])) {
+			$check = validateInput($_SESSION['hlstatsAuth']['authCode']);
+			if($check === true) {
+				// check if we have such code into the db
+				$userData = $this->_getSessionDataFromDB($_SESSION['hlstatsAuth']['authCode']);
+				if($userData !== false) {
+					// we have a valid user with valid authCode
+				}
+				else {
+					$this->_logoutCleanUp($_SESSION['hlstatsAuth']['authCode']);
+				}
+			}
+		}
+	}
+
+	/**
+	 * load the session info from the db with the given auth code
+	 */
+	private function _getSessionDataFromDB($authCode) {
+		$ret = false;
+		
+		$query = mysql_query("SELECT `username`,`password`
+								FROM `".TABLE_PREFIX."_Users`
+								WHERE `authCode` = '".mysql_escape_string($authCode)."'");
+		if(mysql_num_rows($query) > 0) {
+			$ret = mysql_fetch_assoc($query);
+		}
+
+		mysql_free_result($query);
+
+		return $ret;
+	}
+
+	/**
+	 * clean up at logout
+	 */
+	private function _logoutCleanUp() {
+		unset($_SESSION['hlstatsAuth']);
 	}
 }
 ?>

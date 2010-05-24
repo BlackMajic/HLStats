@@ -1,6 +1,6 @@
 <?php
 /**
- * gloabl functions file
+ * global functions file
  * functions which can be used everywhere
  * @package HLStats
  * @author Johannes 'Banana' Keßler

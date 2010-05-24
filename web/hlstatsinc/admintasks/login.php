@@ -46,41 +46,4 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
-$selTask = '';
-$selGame = '';
-
-if(!empty($_GET["task"])) {
-	if(validateInput($_GET["task"],'nospace') === true) {
-		$selTask = $_GET["task"];
-	}
-}
-
-if(!empty($_GET["admingame"])) {
-	if(validateInput($_GET["admingame"],'nospace') === true) {
-		$selGame = $_GET["admingame"];
-	}
-}
-
-$auth = false;
-require('class/admin.class.php');
-$adminObj = new Admin();
-$auth = $adminObj->getAuthStatus();
-
-session_set_cookie_params(43200); // 8 hours
-session_name("hlstats-session");
-session_start();
-session_regenerate_id(true);
-
-pageHeader(array(l("Admin")), array(l("Admin")=>""));
 ?>
-
-<div id="main-full">
-<?php
-if($auth === true) {
-}
-else {
-	require('hlstatsinc/admintasks/login.php');
-}
-?>
-</div>
