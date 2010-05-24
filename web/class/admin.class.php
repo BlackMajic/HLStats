@@ -87,6 +87,14 @@ class Admin {
 				$lPass = md5($pass);
 				if($result['password'] === $lPass) {
 					// valid username and password
+					// create auth code
+					$authCode = sha1($_SERVER['HTTP_USER_AGENT'].$lPass);
+					$query = mysql_query("UPDATE `".TABLE_PREFIX."_Users`
+											SET `authCode` = '".mysql_escape_string($authCode)."'
+											WHERE `username` = '".mysql_escape_string($username)."'");
+					if($query !== false) {
+						exit("todo")
+					}
 				}
 			}
 		}

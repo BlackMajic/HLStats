@@ -32,4 +32,4 @@ ALTER TABLE `#DB_PREFIX#_Players` ADD `jabber` VARCHAR( 128 ) CHARACTER SET utf8
 ALTER TABLE `#DB_PREFIX#_Players` ADD `steamprofile` VARCHAR( 128 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL AFTER `jabber` ;
 
 ALTER TABLE `#DB_PREFIX#_Users`  DROP `acclevel`,  DROP `playerId`;
-ALTER TABLE `#DB_PREFIX#_Users` ADD `authCode` VARCHAR( 42 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL 
+ALTER TABLE `#DB_PREFIX#_Users` ADD `authCode` VARCHAR( 40 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL 
