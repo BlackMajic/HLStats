@@ -91,6 +91,7 @@ Show only active players = Nur aktive Spieler anzeigen
 Player Rankings = Spieler Rankings
 Sections = Bereiche
 Clan Rankings = Clan Rankings
+Team Rankings = Team Rankings
 Weapon Statistics = Waffen Statistiken
 Action Statistics = Aktion Statistiken
 Map Statistics = Map Statistiken
