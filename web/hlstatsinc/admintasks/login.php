@@ -45,5 +45,55 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+$return['status'] = false;
+$return['msg'] = false;
 
+if(isset($_POST['sub']['auth'])) {
+	if(isset($_POST['login']['username']) && isset($_POST['login']['pass'])) {
+		$username = trim($_POST['login']['username']);
+		$pass = trim($_POST['login']['pass']);
+		$check = validateInput($username,'nospace');
+		$check1 = validateInput($pass,'nospace');
+		if($check === true && $check1 === true) {
+			$adminObj->doLogin($username,$pass);
+		}
+		else {
+			$return['status'] = "1";
+			$return['msg'] = l('Please provide authentication data');
+		}
+	}
+}
 ?>
+
+<h1><?php echo l('Authorisation Required'); ?></h1>
+<?php
+if(!empty($return['status'])) {
+	if($return['status'] === "1") {
+		echo '<p class="error">',$return['msg'],'</p>';
+	}
+}
+?>
+<form method="post">
+	<table cellpadding="2" cellspacing="0" border="0">
+		<tr>
+			<th><?php echo l('Username'); ?></th>
+			<td>
+				<input type="text" name="login[username]" value="" />
+			</td>
+		</tr>
+		<tr>
+			<th><?php echo l('Password'); ?></th>
+			<td>
+				<input type="password" name="login[pass]" value="" />
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<button type="submit" name="sub[auth]" title="<?php echo l('Login'); ?>">
+					<?php echo l('Login'); ?>
+				</button>
+			</td>
+		</tr>
+	</table>
+</form>
+<p><?php echo l('Please ensure cookies are enabled in your browser security options'); ?></p>

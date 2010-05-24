@@ -177,6 +177,12 @@ form.search input.searchbutton {
 	width: 60px;
 }
 
+.error {
+	font-weight: bold;
+	font-style: normal;
+	color: red;
+}
+
 /** percentage bar layout */
 .percentBar {
 	display: block;

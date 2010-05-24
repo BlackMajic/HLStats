@@ -74,6 +74,26 @@ class Admin {
 		return $this->_authStatus;
 	}
 
+	public function doLogin($username,$pass) {
+		$ret = false;
+
+		if(!empty($username) && !empty($pass)) {
+			$query = mysql_query("SELECT `username`,`password`
+									FROM `".TABLE_PREFIX."_Users`
+									WHERE `username` = '".mysql_escape_string($username."'");
+			if(mysql_num_rows($query) > 0) {
+				// we have such user, now check pass
+				$result = mysql_fetch_assoc($query);
+				$lPass = md5($pass);
+				if($result['password'] === $lPass) {
+					// valid username and password
+				}
+			}
+		}
+
+		return $ret;
+	}
+
 	/**
 	 * check if the user is logged in
 	 */
