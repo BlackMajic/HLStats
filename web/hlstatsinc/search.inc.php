@@ -213,7 +213,7 @@ if(isset($_POST['submit']['search']) || $remoteSearch === true) {
 			echo '</ul>';
 		}
 		elseif(is_array($searchResults)) {
-			echo '<b>',l('Nothing found'),'</b>';
+			echo '<div style="text-align: center; color: red;"><b>',l('Nothing found'),'</b></div>';
 		}
 	?>
 </div>
