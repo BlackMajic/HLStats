@@ -182,6 +182,11 @@ form.search input.searchbutton {
 	font-style: normal;
 	color: red;
 }
+.success {
+	font-weight: bold;
+	font-style: normal;
+	color: green;
+}
 
 /** percentage bar layout */
 .percentBar {
@@ -229,15 +234,13 @@ form.search input.searchbutton {
 }
 #header-logo #logo {
 	position: absolute;
-	top: 3px; left: 5px;
-	font: bold 30px "trebuchet MS", Arial, Tahoma, Sans-Serif;
-	margin: 0; padding: 0;
-	letter-spacing: -1px;
-	color: #000;
+	top: 0px; 
+	left: 0px;
 }
 #header-logo #breadcrumb {
 	position: absolute;
-	top: 15px; left: 130px;
+	top: 17px; 
+	left: 150px;
 	margin: 0; padding: 0;
 	color: #000;
 }

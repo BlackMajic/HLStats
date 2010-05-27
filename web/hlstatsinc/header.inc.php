@@ -47,6 +47,9 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
+
+$titlestr = $title;
+$tstr = array_pop($titlestr);
 ?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 <html>
@@ -64,7 +67,7 @@
 <body>
 <div id="wrap">
 	<div id="header">
-		<span id="slogan">Home</span>
+		<span id="slogan"><?php echo $tstr; ?></span>
 		<ul>
 			<li id="current"><a href="index.php"><span>Content</span></a></li>
 			<li id="current"><a href="index.php?mode=search"><span>Search</span></a></li>
@@ -72,7 +75,9 @@
 		</ul>
 	</div>
 	<div id="header-logo">
-		<div id="logo">HL<span class="red">Stats</span></div>
+		<div id="logo">
+			<img src="<?php echo $g_options['imgdir']; ?>title.png" />
+		</div>
 		<div id="breadcrumb">
 			<a href="<?php echo $g_options["siteurl"]; ?>"><?php echo $g_options["sitename"]; ?></a>:
 			<a href="index.php">HLStats</a>

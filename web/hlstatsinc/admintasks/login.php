@@ -55,7 +55,16 @@ if(isset($_POST['sub']['auth'])) {
 		$check = validateInput($username,'nospace');
 		$check1 = validateInput($pass,'nospace');
 		if($check === true && $check1 === true) {
-			$adminObj->doLogin($username,$pass);
+			$do = $adminObj->doLogin($username,$pass);
+			if($do === true) {
+				$return['status'] = "3";
+				$return['msg'] = l('Login successfull');
+				header('Location: index.php?mode=admin');
+			}
+			else {
+				$return['status'] = "2";
+				$return['msg'] = l('Invalid auth data');
+			}
 		}
 		else {
 			$return['status'] = "1";
@@ -63,37 +72,58 @@ if(isset($_POST['sub']['auth'])) {
 		}
 	}
 }
+
+pageHeader(array(l("Admin")), array(l("Admin")=>""));
 ?>
 
-<h1><?php echo l('Authorisation Required'); ?></h1>
-<?php
-if(!empty($return['status'])) {
-	if($return['status'] === "1") {
-		echo '<p class="error">',$return['msg'],'</p>';
+<div id="sidebar">
+	<h1><?php echo l('Options'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>
+				<a href="<?php echo "index.php"; ?>"><?php echo l('Back to game overview'); ?></a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="main">
+	<h1><?php echo l('Authorisation Required'); ?></h1>
+	<?php
+	if(!empty($return['status'])) {
+		if($return['status'] === "1") {
+			echo '<p class="error">',$return['msg'],'</p>';
+		}
+		elseif($return['status'] === "2") {
+			echo '<p class="error">',$return['msg'],'</p>';
+		}
+		elseif($return['status'] === "3") {
+			echo '<meta http-equiv="refresh" content="2; url=index.php?mode=admin"> ';
+			echo '<p class="success">',$return['msg'],' <a href="index.php?mode=admin">&#187;&#187;</a></p>';
+		}
 	}
-}
-?>
-<form method="post">
-	<table cellpadding="2" cellspacing="0" border="0">
-		<tr>
-			<th><?php echo l('Username'); ?></th>
-			<td>
-				<input type="text" name="login[username]" value="" />
-			</td>
-		</tr>
-		<tr>
-			<th><?php echo l('Password'); ?></th>
-			<td>
-				<input type="password" name="login[pass]" value="" />
-			</td>
-		</tr>
-		<tr>
-			<td colspan="2">
-				<button type="submit" name="sub[auth]" title="<?php echo l('Login'); ?>">
-					<?php echo l('Login'); ?>
-				</button>
-			</td>
-		</tr>
-	</table>
-</form>
-<p><?php echo l('Please ensure cookies are enabled in your browser security options'); ?></p>
+	?>
+	<form method="post">
+		<table cellpadding="2" cellspacing="0" border="0">
+			<tr>
+				<th><?php echo l('Username'); ?></th>
+				<td>
+					<input type="text" name="login[username]" value="" />
+				</td>
+			</tr>
+			<tr>
+				<th><?php echo l('Password'); ?></th>
+				<td>
+					<input type="password" name="login[pass]" value="" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<button type="submit" name="sub[auth]" title="<?php echo l('Login'); ?>">
+						<?php echo l('Login'); ?>
+					</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+	<p><?php echo l('Please ensure cookies are enabled in your browser security options'); ?></p>
+</div>

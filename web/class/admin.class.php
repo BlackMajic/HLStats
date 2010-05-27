@@ -79,8 +79,8 @@ class Admin {
 
 		if(!empty($username) && !empty($pass)) {
 			$query = mysql_query("SELECT `username`,`password`
-									FROM `".TABLE_PREFIX."_Users`
-									WHERE `username` = '".mysql_escape_string($username."'");
+									FROM `".DB_PREFIX."_Users`
+									WHERE `username` = '".mysql_escape_string($username)."'");
 			if(mysql_num_rows($query) > 0) {
 				// we have such user, now check pass
 				$result = mysql_fetch_assoc($query);
@@ -88,12 +88,13 @@ class Admin {
 				if($result['password'] === $lPass) {
 					// valid username and password
 					// create auth code
-					$authCode = sha1($_SERVER['HTTP_USER_AGENT'].$lPass);
-					$query = mysql_query("UPDATE `".TABLE_PREFIX."_Users`
+					$authCode = sha1($_SERVER["REMOTE_ADDR"].$_SERVER['HTTP_USER_AGENT'].$lPass);
+					$query = mysql_query("UPDATE `".DB_PREFIX."_Users`
 											SET `authCode` = '".mysql_escape_string($authCode)."'
 											WHERE `username` = '".mysql_escape_string($username)."'");
 					if($query !== false) {
-						exit("todo")
+						$_SESSION['hlstatsAuth']['authCode'] = $authCode;
+						$ret = true;
 					}
 				}
 			}
@@ -107,12 +108,17 @@ class Admin {
 	 */
 	private function _checkAuth() {
 		if(isset($_SESSION['hlstatsAuth']['authCode'])) {
-			$check = validateInput($_SESSION['hlstatsAuth']['authCode']);
+			$check = validateInput($_SESSION['hlstatsAuth']['authCode'],'nospace');
 			if($check === true) {
 				// check if we have such code into the db
 				$userData = $this->_getSessionDataFromDB($_SESSION['hlstatsAuth']['authCode']);
 				if($userData !== false) {
 					// we have a valid user with valid authCode
+					// re create the authcode with current data
+					$authCode = sha1($_SERVER["REMOTE_ADDR"].$_SERVER['HTTP_USER_AGENT'].$userData['password']);
+					if($authCode === $_SESSION['hlstatsAuth']['authCode']) {
+						$this->_authStatus = true;
+					}
 				}
 				else {
 					$this->_logoutCleanUp($_SESSION['hlstatsAuth']['authCode']);
@@ -126,9 +132,9 @@ class Admin {
 	 */
 	private function _getSessionDataFromDB($authCode) {
 		$ret = false;
-		
+
 		$query = mysql_query("SELECT `username`,`password`
-								FROM `".TABLE_PREFIX."_Users`
+								FROM `".DB_PREFIX."_Users`
 								WHERE `authCode` = '".mysql_escape_string($authCode)."'");
 		if(mysql_num_rows($query) > 0) {
 			$ret = mysql_fetch_assoc($query);

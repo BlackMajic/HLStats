@@ -158,8 +158,7 @@ pageHeader(
 		$gamename => "index.php?game=$game",
 		l("Weapon Statistics") => "index.php?mode=weapons&amp;game=$game",
 		l("Weapon Details")=>""
-	),
-	$wep_name
+	)
 );
 ?>
 

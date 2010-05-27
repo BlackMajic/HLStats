@@ -1,6 +1,6 @@
 <?php
 /**
- * main admin file
+ * admin overview file
  * @package HLStats
  * @author Johannes 'Banana' Keßler
  * @copyright Johannes 'Banana' Keßler
@@ -45,41 +45,15 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-
-
-$selTask = false;
-$selGame = false;
-
-if(!empty($_GET["task"])) {
-	if(validateInput($_GET["task"],'nospace') === true) {
-		$selTask = $_GET["task"];
-	}
-}
-
-if(!empty($_GET["admingame"])) {
-	if(validateInput($_GET["admingame"],'nospace') === true) {
-		$selGame = $_GET["admingame"];
-	}
-}
-
-session_set_cookie_params(43200); // 8 hours
-session_name("hlstats-session");
-session_start();
-session_regenerate_id(true);
-
-$auth = false;
-require('class/admin.class.php');
-$adminObj = new Admin();
-$auth = $adminObj->getAuthStatus();
-
-if($auth === true) {
-	if(!empty($selTask)) {
-	}
-	else { // show overview
-		require('hlstatsinc/admintasks/overview.php');
-	}
-}
-else {
-	require('hlstatsinc/admintasks/login.php');
-}
 ?>
+
+<ul>
+	<li><?php echo l('HLStats Options'); ?></li>
+	<li><?php echo l("Admin Users"); ?></li>
+	<li><?php echo l("Games"); ?></li>
+	<li><?php echo l("Clan Tag Patterns"); ?></li>
+	<li><?php echo l("Server Plugins"); ?></li>
+	<li><?php echo l("Admin Users"); ?></li>
+	<li><?php echo l("Admin Users"); ?></li>
+	<li><?php echo l("Admin Users"); ?></li>
+</ul>
