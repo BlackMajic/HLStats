@@ -45,15 +45,61 @@
  * along with this program; if not, write to the Free Software
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
-?>
 
-<ul>
-	<li><?php echo l('HLStats Options'); ?></li>
-	<li><?php echo l("Admin Users"); ?></li>
-	<li><?php echo l("Games"); ?></li>
-	<li><?php echo l("Clan Tag Patterns"); ?></li>
-	<li><?php echo l("Server Plugins"); ?></li>
-	<li><?php echo l("Admin Users"); ?></li>
-	<li><?php echo l("Admin Users"); ?></li>
-	<li><?php echo l("Admin Users"); ?></li>
-</ul>
+pageHeader(array(l("Admin")), array(l("Admin")=>""));
+?>
+<div id="sidebar">
+	<h1><?php echo l('Options'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>
+				<a href="<?php echo "index.php"; ?>"><?php echo l('HLStats Options'); ?></a>
+			</li>
+			<li>
+				<a href="<?php echo "index.php"; ?>"><?php echo l('Admin Users'); ?></a>
+			</li>
+			<li>
+				<a href="<?php echo "index.php"; ?>"><?php echo l('Games'); ?></a>
+			</li>
+			<li>
+				<a href="<?php echo "index.php"; ?>"><?php echo l('Clan Tag Patterns'); ?></a>
+			</li>
+			<li>
+				<a href="<?php echo "index.php"; ?>"><?php echo l('Server Plugins'); ?></a>
+			</li>
+			<li>
+				<a href="<?php echo "index.php"; ?>"><?php echo l('Back to game overview'); ?></a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="main">
+	<h1><?php echo l('Admin overview'); ?></h1>
+	<h2><?php echo l('Tools'); ?></h2>
+	<ul>
+		<li>
+			<a href="index.php?mode=admin&task=toolsEditdetails"><?php echo l('Edit Player or Clan Details'); ?></a><br />
+			<span class="small"><?php echo l("Edit a player or clan's profile information."); ?></span>
+		</li>
+		<li>
+			<a href="index.php?mode=admin&task=toolsAdminevents"><?php echo l('Admin-Event History'); ?></a><br />
+			<span class="small"><?php echo l("View event history of logged Rcon commands and Admin Mod messages."); ?></span>
+		</li>
+		<li>
+			<a href="index.php?mode=admin&task=toolsIpstats"><?php echo l('Host Statistics'); ?></a><br />
+			<span class="small"><?php echo l("See which ISPs your players are using."); ?></span>
+		</li>
+		<li>
+			<a href="index.php?mode=admin&task=toolsOptimize"><?php echo l('Optimize Database'); ?></a><br />
+			<span class="small"><?php echo l("This operation tells the MySQL server to clean up the database tables, optimizing them for better performance. It is recommended that you run this at least once a month."); ?></span>
+		</li>
+		<li>
+			<a href="index.php?mode=admin&task=toolsReset"><?php echo l('Reset Statistics'); ?></a><br />
+			<span class="small"><?php echo l("Delete all players, clans and events from the database."); ?></span>
+		</li>
+		<li>
+			<a href="index.php?mode=admin&task=toolsNews"><?php echo l('News at Front page'); ?></a><br />
+			<span class="small"><?php echo l("Write news to the front page."); ?></span>
+		</li>
+	</ul>
+</div>
