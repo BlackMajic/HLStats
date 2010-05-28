@@ -54,8 +54,8 @@
 	<p>
 		<?php echo l('Generated in real-time by'); ?> <a href="http://www.hlstats-community.org">HLStats</a> <?php echo VERSION; ?> &nbsp;&nbsp;&nbsp; [<a href="index.php?mode=admin">Admin</a>]
 		<?php
-			if(isset($_COOKIE["authusername"]) && $_COOKIE['authusername'] != "") {
-				echo '&nbsp;[<a href="index.php?logout=1">',l('Logout'),'</a>]';
+			if(isset($auth) && !empty($auth)) {
+				echo '&nbsp;[<a href="index.php?mode=admin&amp;logout=1">',l('Logout'),'</a>]';
 			}
 		?>
 		<form action="" method="post">

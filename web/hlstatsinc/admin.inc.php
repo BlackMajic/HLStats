@@ -72,6 +72,14 @@ require('class/admin.class.php');
 $adminObj = new Admin();
 $auth = $adminObj->getAuthStatus();
 
+// process the logout
+if(!empty($_GET['logout'])) {
+	if(validateInput($_GET['logout'],'digit') === true && $_GET['logout'] == "1") {
+		$adminObj->doLogout();
+		header('Location: index.php');
+	}
+}
+
 if($auth === true) {
 	if(!empty($selTask)) {
 	}

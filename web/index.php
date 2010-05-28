@@ -178,14 +178,6 @@ if(!empty($_GET["mode"])) {
 // process the logout
 if(!empty($_GET['logout'])) {
 	if(validateInput($_GET['logout'],'digit') === true && $_GET['logout'] == "1") {
-		// destroy session and cookie
-
-		setcookie("authusername", '', mktime(12,0,0,1, 1, 1990));
-		setcookie("authpassword", '', mktime(12,0,0,1, 1, 1990));
-		setcookie("authsavepass", '', mktime(12,0,0,1, 1, 1990));
-		setcookie("authsessionStart", '', mktime(12,0,0,1, 1, 1990));
-
-		$_COOKIE = array();
 		$_SESSION = array();
 	}
 }

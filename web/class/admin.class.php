@@ -74,6 +74,12 @@ class Admin {
 		return $this->_authStatus;
 	}
 
+	/**
+	 * check if we valid data and if so login
+	 * @param string $username
+	 * @param string $pass
+	 * @return boolean $ret
+	 */
 	public function doLogin($username,$pass) {
 		$ret = false;
 
@@ -101,6 +107,24 @@ class Admin {
 		}
 
 		return $ret;
+	}
+
+	/**
+	 * logout the current user and destroy the session
+	 * @return void
+	 */
+	public function doLogout() {
+		if(isset($_SESSION['hlstatsAuth']['authCode'])) {
+			$authCode = $_SESSION['hlstatsAuth']['authCode'];
+			if(validateInput($authCode,'nospace') === true) {
+				$query = mysql_query("UPDATE`".DB_PREFIX."_Users`
+										SET `authCode` = ''
+										WHERE `authCode` = '".mysql_escape_string($authCode)."'");
+			}
+		}
+
+		session_destroy();
+		$_SESSION = array();
 	}
 
 	/**
