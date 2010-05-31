@@ -175,13 +175,6 @@ if(!empty($_GET["mode"])) {
 	}
 }
 
-// process the logout
-if(!empty($_GET['logout'])) {
-	if(validateInput($_GET['logout'],'digit') === true && $_GET['logout'] == "1") {
-		$_SESSION = array();
-	}
-}
-
 // decide if we show the games or the game file
 $queryAllGames = mysql_query("SELECT code,name FROM ".DB_PREFIX."_Games WHERE hidden='0' ORDER BY name ASC");
 $num_games = mysql_num_rows($queryAllGames);

@@ -335,7 +335,7 @@ $rcol = "row-dark";
 				}
 			   ?>
 			</td>
-			<th><?php echo l("Myspace"); ?></th>
+			<th><?php echo l("MySpace"); ?></th>
 			<td><?php
 				$url = getLink($playerObj->getParam("myspace"));
 				if (!empty($url)) {
@@ -749,11 +749,9 @@ if(!empty($playerKillStats)) { ?>
 		?>
 	</table>
 	<script type="text/javascript" language="javascript">
-	<!--
 	function changeLimit(num) {
 		location = "index.php?mode=playerinfo&player=<?php echo $player ?>&killLimit=" + num + "#killstats";
 	}
-	-->
 	</script>
 	<?php echo l('Show people this person has killed'); ?>
 		<select onchange='changeLimit(this.options[this.selectedIndex].value)'>
@@ -804,6 +802,7 @@ if($g_options['showChart'] == "1") {
 <?php echo DELETEDAYS; ?> <?php echo l('Days" or "*" above are generated from the player\'s Event History. Player kill, death and suicide totals and points ratings cover the entire recorded period'); ?>.
 </p>
 <p style="text-align: right">
-    <b><?php echo l('Admin Options'); ?>:</b> <a href="<?php echo "index.php?mode=admin&task=toolsEditdetailsPlayer&id=$player"; ?>"><?php echo l('Edit Player Details'); ?></a>
+    <b><?php echo l('Admin Options'); ?>:</b>
+    <a href="<?php echo "index.php?mode=admin&amp;task=toolsEditdetails&amp;playerId=$player"; ?>"><?php echo l('Edit Player Details'); ?></a>
 </p>
 </div>

@@ -82,6 +82,12 @@ if(!empty($_GET['logout'])) {
 
 if($auth === true) {
 	if(!empty($selTask)) {
+		if(file_exists(getcwd().'/hlstatsinc/admintasks/'.$selTask.'.inc.php')) {
+			require('hlstatsinc/admintasks/'.$selTask.'.inc.php');
+		}
+		else {
+			require('hlstatsinc/admintasks/overview.php');
+		}
 	}
 	else { // show overview
 		require('hlstatsinc/admintasks/overview.php');
