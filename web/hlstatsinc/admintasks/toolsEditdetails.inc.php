@@ -62,7 +62,16 @@ if(!empty($_GET["playerId"])) {
 
 // process the edit
 if(isset($_POST['submit']['editPlayer']) && !empty($playerObj)) {
-	var_dump($_POST);
+
+	// the checkboxes
+	if(!isset($_POST['details']['deletefromclan'])) {
+		$_POST['details']['deletefromclan'] = "0";
+	}
+	if(!isset($_POST['details']['resetstats'])) {
+		$_POST['details']['resetstats'] = "0";
+	}
+
+	$check = $playerObj->checkFields($_POST['details']);
 }
 
 // process the search
@@ -155,10 +164,10 @@ pageHeader(array(l("Admin"),l('Edit Details')), array(l("Admin")=>"index.php?mod
 			</select><br />
 			<br />
 			<b><?php echo l('Delete From Clan'); ?> :</b>
-			<input type="checkbox" name="option[deletefromclan]" value="1" /><br />
+			<input type="checkbox" name="details[deletefromclan]" value="1" /><br />
 			<br />
 			<b><?php echo l('Reset player stats'); ?> :</b>
-			<input type="checkbox" name="option[resetstats]" value="1" />
+			<input type="checkbox" name="details[resetstats]" value="1" />
 			<p>
 				<button type="submit" title=" <?php echo l('Apply'); ?>" name="submit[editPlayer]">
 					<?php echo l('Apply'); ?>

@@ -79,6 +79,14 @@ class Player {
 	private $_option = array();
 
 	/**
+	 * fields which has the data from an input
+	 * eg. used at player details update
+	 *
+	 * @var array $_saveFields
+	 */
+	private $_saveFields = array();
+
+	/**
 	 * load the player id
 	 *
 	 * @param int $id The player id
@@ -524,6 +532,44 @@ class Player {
 			}
 		}
 
+		return $ret;
+	}
+
+	/**
+	 * this is used to check if we have missing fields in an input
+	 * @param array $array
+	 * @return array $ret
+	 */
+	public function checkFields($array) {
+		$ret = false;
+		$missing = array();
+		$this->_saveFields = array();
+		if(!empty($params)) {
+			foreach ($params as $k=>$v) {
+				$v = trim($v);
+
+				// check if we have a req_key
+				if(strstr($k,'req_')) {
+					$newKey = str_replace('req_','',$k);
+					if($v !== "") {
+						$this->_saveFields[$newKey] = $v;
+					}
+					else {
+						$missing[] = $newKey; // is missing
+					}
+				}
+				else {
+					$this->_saveFields[$k] = $v;
+				}
+			}
+		}
+
+		if(!empty($missing)) {
+			$ret = $missing;
+		}
+		else {
+			$ret = true;
+		}
 		return $ret;
 	}
 
