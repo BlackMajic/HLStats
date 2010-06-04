@@ -537,11 +537,12 @@ class Player {
 
 	/**
 	 * this is used to check if we have missing fields in an input
-	 * @param array $array
+	 * @param array $params
 	 * @return array $ret
 	 */
-	public function checkFields($array) {
+	public function checkFields($params) {
 		$ret = false;
+
 		$missing = array();
 		$this->_saveFields = array();
 		if(!empty($params)) {
@@ -570,6 +571,49 @@ class Player {
 		else {
 			$ret = true;
 		}
+		return $ret;
+	}
+
+	/**
+	 * update the current loaded player with the data from $_saveFields
+	 * if empty $_saveFields to nothin
+	 * @return boolean $ret
+	 */
+	public function updatePlayerProfile() {
+		$ret = false;
+
+		// we do not have to update anything
+		if(empty($this->_saveFields)) return true;
+
+		// check if we have to reset or delete from clan
+		$deleteFromClan = false;
+		if(isset($this->_saveFields['deletefromclan']) && $this->_saveFields['deletefromclan'] == "1") {
+			$deleteFromClan = true;
+		}
+		unset($this->_saveFields['deletefromclan']);
+		$resetStats = false;
+		if(isset($this->_saveFields['resetstats']) && $this->_saveFields['resetstats'] == "1") {
+			$resetStats = true;
+		}
+		unset($this->_saveFields['resetstats']);
+
+
+		if(!empty($this->playerId)) {
+			$queryStr = "UPDATE `".DB_PREFIX."_Players` SET";
+
+			foreach($this->_saveFields as $k=>$v) {
+				$queryStr .= " `".$k."` = '".mysql_escape_string($v)."',";
+			}
+			$queryStr = trim($queryStr,",");
+
+			$queryStr .= " WHERE `playerId` = '".mysql_escape_string($this->playerId)."'";
+
+			$run = mysql_query($queryStr);
+			if($run !== false) {
+				$ret = true;
+			}
+		}
+
 		return $ret;
 	}
 

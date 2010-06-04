@@ -72,6 +72,20 @@ if(isset($_POST['submit']['editPlayer']) && !empty($playerObj)) {
 	}
 
 	$check = $playerObj->checkFields($_POST['details']);
+	if($check === true) {
+		$do = $playerObj->updatePlayerProfile();
+		if($do === true) {
+			header('Location: index.php?mode=admin&task=toolsEditdetails&playerId='.$_GET["playerId"]);
+		}
+		else {
+			$return['msg'] = l('Could not save data');
+			$return['status'] = "1";
+		}
+	}
+	else {
+		$return['msg'] = l('Invalid Input');
+		$return['status'] = "1";
+	}
 }
 
 // process the search
@@ -88,7 +102,7 @@ if(isset($_POST['submit']['searchForId'])) {
 									WHERE `playerId` = '".mysql_escape_string($searchFor)."'");
 			if(mysql_num_rows($query) > 0) {
 				$result = mysql_fetch_assoc($query);
-				header('Location: index.php?mode=admin&amp;task=toolsEditdetails&amp;playerId='.$result['playerId']);
+				header('Location: index.php?mode=admin&task=toolsEditdetails&playerId='.$result['playerId']);
 			}
 			else {
 				$return['msg'] = l('Nothing found');
@@ -178,6 +192,7 @@ pageHeader(array(l("Admin"),l('Edit Details')), array(l("Admin")=>"index.php?mod
 		}
 	?>
 	<p>&nbsp;</p>
+	<h2><?php echo l('Enter player or clan ID'); ?></h2>
 	<form method="post" action="">
 		<?php echo l('You can enter a player or clan ID number directly, or you can search for a player or clan'); ?>.<br />
 		<br />
@@ -189,55 +204,3 @@ pageHeader(array(l("Admin"),l('Edit Details')), array(l("Admin")=>"index.php?mod
 		</button>
 	</form>
 </div>
-
-
-
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-
-<tr valign="top">
-	<td width="100%"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo l('Jump Direct'); ?></b><?php echo $g_options["fontend_normal"]; ?><p>
-
-		<form method="GET" action="index.php">
-		<input type="hidden" name="mode" value="admin">
-		<table width="100%" border="0" cellspacing="0" cellpadding="0">
-		<tr>
-			<td width="10%">&nbsp;</td>
-			<td width="90%">
-				<table width="40%" border="0" cellspacing="0" cellpadding="0">
-
-				<tr valign="top" bgcolor="<?php echo $g_options["table_border"]; ?>">
-					<td>
-						<table width="100%" border="0" cellspacing="1" cellpadding="4">
-
-						<tr valign="middle">
-							<td nowrap width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?><?php echo l('Type'); ?>:<?php echo $g_options["fontend_normal"]; ?></td>
-							<td width="55%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>">
-								<?php
-									echo getSelect("task",
-										array(
-											"toolsEditdetailsPlayer"=>"Player",
-											"toolsEditdetailsClan"=>"Clan"
-										)
-									);
-								?>
-							<td rowspan="2"  bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><input type="submit" value=" <?php echo l('Edit'); ?> &gt;&gt; " class="submit"></td>
-						</tr>
-
-						<tr valign="middle">
-							<td nowrap width="45%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><?php echo $g_options["font_normal"]; ?><?php echo l('ID Number'); ?>:<?php echo $g_options["fontend_normal"]; ?></td>
-							<td width="55%" bgcolor="<?php echo $g_options["table_bgcolor1"]; ?>"><input type="text" name="id" size=15 maxlength=12 class="textbox"></td>
-						</tr>
-
-						</table>
-					</td>
-				</tr>
-
-				</table></td>
-		</tr>
-
-		</table>
-
-		</form><?php echo $g_options["fontend_normal"]; ?></td>
-</tr>
-
-</table><p>
