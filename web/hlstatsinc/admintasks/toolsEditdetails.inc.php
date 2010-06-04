@@ -150,12 +150,12 @@ if(isset($_POST['submit']['searchForId'])) {
 			}
 		}
 		elseif($searchWhere === "clan") {
-			$query = mysql_query("SELECT `playerId`
+			$query = mysql_query("SELECT `clanId`
 									FROM `".DB_PREFIX."_Clans`
 									WHERE `clanId` = '".mysql_escape_string($searchFor)."'");
 			if(mysql_num_rows($query) > 0) {
 				$result = mysql_fetch_assoc($query);
-				header('Location: index.php?mode=admin&task=toolsEditdetails&clanId='.$result['playerId']);
+				header('Location: index.php?mode=admin&task=toolsEditdetails&clanId='.$result['clanId']);
 			}
 			else {
 				$return['msg'] = l('Nothing found');
