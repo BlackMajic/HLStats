@@ -102,6 +102,7 @@ $query = mysql_query("SELECT
 		".DB_PREFIX."_Clans.tag,
 		".DB_PREFIX."_Clans.name,
 		".DB_PREFIX."_Clans.homepage,
+		".DB_PREFIX."_Clans.steamGroup,
 		".DB_PREFIX."_Clans.game,
 		SUM(".DB_PREFIX."_Players.kills) AS kills,
 		SUM(".DB_PREFIX."_Players.deaths) AS deaths,
@@ -176,11 +177,23 @@ pageHeader(
 
 <div id="main-full">
 	<h1><?php echo l('Clan Profile and Statistics Summary'); ?></h1>
-	<table width="100%" border="0" cellspacing="0" cellpadding="0">
+	<table width="100%" border="1" cellspacing="0" cellpadding="2">
 		<tr class="<?php echo toggleRowClass($rcol); ?>">
 			<th><?php echo l("Home Page");?></th>
 			<td><?php
 				if ($url = getLink($clandata["homepage"])) {
+					echo $url;
+				}
+				else {
+					echo '(',l("Not specified"),")";
+				}
+				?>
+			</td>
+		</tr>
+		<tr class="<?php echo toggleRowClass($rcol); ?>">
+			<th><?php echo l("Steam Group page");?></th>
+			<td><?php
+				if ($url = getLink($clandata["steamGroup"])) {
 					echo $url;
 				}
 				else {

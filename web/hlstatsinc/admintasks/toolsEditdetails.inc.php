@@ -50,6 +50,7 @@
 $return = false;
 $editMode = false;
 $playerObj = false;
+$clanData = false;
 
 require('class/player.class.php');
 
@@ -62,8 +63,22 @@ if(!empty($_GET["playerId"])) {
 
 if(!empty($_GET["clanId"])) {
 	if(validateInput($_GET["clanId"],'digit') === true) {
-		//$playerObj = new Player($_GET["clanId"],false);
 		$editMode = 'clan';
+
+		// now get the clan details
+		// since we do not have a clan class we make it this way
+		$query = mysql_query("SELECT
+				".DB_PREFIX."_Clans.tag,
+				".DB_PREFIX."_Clans.name,
+				".DB_PREFIX."_Clans.homepage,
+				".DB_PREFIX."_Clans.steamGroup
+			FROM ".DB_PREFIX."_Clans
+			WHERE ".DB_PREFIX."_Clans.clanId=".mysql_escape_string($_GET["clanId"])."");
+
+		if (mysql_num_rows($query) > 0) {
+			$clanData = mysql_fetch_assoc($query);
+		}
+		mysql_free_result($query);
 	}
 }
 
@@ -92,6 +107,24 @@ if(isset($_POST['submit']['editPlayer']) && !empty($playerObj)) {
 	else {
 		$return['msg'] = l('Invalid Input');
 		$return['status'] = "1";
+	}
+}
+
+// process the edit of a clan
+if(isset($_POST['submit']['editClan']) && !empty($clanData)) {
+	if(!empty($_POST['details'])) {
+		$query = mysql_query("UPDATE `".DB_PREFIX."_Clans`
+						SET `name` = '".mysql_escape_string($_POST['details']['name'])."',
+							`homepage` = '".mysql_escape_string($_POST['details']['homepage'])."',
+							`steamGroup` = '".mysql_escape_string($_POST['details']['steamGroup'])."'
+					WHERE `clanId` = '".mysql_escape_string($_GET["clanId"])."'");
+		if($query !== false) {
+			header('Location: index.php?mode=admin&task=toolsEditdetails&clanId='.$_GET["clanId"]);
+		}
+		else {
+			$return['msg'] = l('Could not save data');
+			$return['status'] = "1";
+		}
 	}
 }
 
@@ -202,6 +235,24 @@ pageHeader(array(l("Admin"),l('Edit Details')), array(l("Admin")=>"index.php?mod
 			<input type="checkbox" name="details[resetstats]" value="1" />
 			<p>
 				<button type="submit" title=" <?php echo l('Apply'); ?>" name="submit[editPlayer]">
+					<?php echo l('Apply'); ?>
+				</button>
+			</p>
+		</form>
+		<?php
+		} elseif($editMode === "clan") { ?>
+		<h2><?php echo l('Clan'),': ',$clanData['name']; ?></h2>
+		<form method="post" action="">
+
+			<label><?php echo l('Clan Name'); ?> :</label>
+			<input type="text" name="details[name]" value="<?php echo $clanData['name']; ?>" />
+			<label><?php echo l('Homepage'); ?> :</label>
+			<input type="text" name="details[homepage]" value="<?php echo $clanData['homepage']; ?>" />
+			<label><?php echo l('Steam group URL'); ?> :</label>
+			<input type="text" name="details[steamGroup]" value="<?php echo $clanData['steamGroup']; ?>" />
+
+			<p>
+				<button type="submit" title=" <?php echo l('Apply'); ?>" name="submit[editClan]">
 					<?php echo l('Apply'); ?>
 				</button>
 			</p>
