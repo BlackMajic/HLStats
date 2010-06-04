@@ -1,5 +1,13 @@
 <?php
 /**
+ * view any admin events recorded by HLStats
+ * @package HLStats
+ * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
+ */
+
+
+/**
  *
  * Original development:
  * +
@@ -39,160 +47,193 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
-?>
+// the initial row color
+$rcol = "row-dark";
 
-&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo $task->title; ?></b> (Last <?php echo DELETEDAYS; ?> Days)<p>
+// the actions array which holds the data to display and the page count
+$adminEvents['data'] = array();
+$adminEvents['pages'] = array();
 
-<?php
-	$table = new Table(
-		array(
-			new TableColumn(
-				"eventTime",
-				"Date",
-				"width=20"
-			),
-			new TableColumn(
-				"eventType",
-				"Type",
-				"width=10&align=center"
-			),
-			new TableColumn(
-				"eventDesc",
-				"Description",
-				"width=40&sort=no&append=.&embedlink=yes"
-			),
-			new TableColumn(
-				"serverName",
-				"Server",
-				"width=20"
-			),
-			new TableColumn(
-				"map",
-				"Map",
-				"width=10"
-			)
-		),
-		"eventTime",
-		"eventTime",
-		"eventType",
-		false,
-		50,
-		"page",
-		"sort",
-		"sortorder"
-	);
+// the current page to display
+$page = 1;
+if (isset($_GET["page"])) {
+	$check = validateInput($_GET['page'],'digit');
+	if($check === true) {
+		$page = $_GET['page'];
+	}
+}
 
-	mysql_query("DROP TABLE IF EXISTS ".DB_PREFIX."_AdminEventHistory");
-	mysql_query("
-		CREATE TEMPORARY TABLE ".DB_PREFIX."_AdminEventHistory
-		(
-			eventType VARCHAR(32) NOT NULL,
-			eventTime DATETIME NOT NULL,
-			eventDesc VARCHAR(255) NOT NULL,
-			serverName VARCHAR(32) NOT NULL,
-			map VARCHAR(32) NOT NULL
-		) DEFAULT CHARSET=utf8
-	");
+// the current element to sort by for the query
+$sort = 'eventTime';
+if (isset($_GET["sort"])) {
+	$check = validateInput($_GET['sort'],'nospace');
+	if($check === true) {
+		$sort = $_GET['sort'];
+	}
+}
 
-	function insertEvents ($table, $select) {
-		$select = str_replace("<table>", "".DB_PREFIX."_Events_$table", $select);
-		mysql_query("
-			INSERT INTO
-				".DB_PREFIX."_AdminEventHistory
-				(
-					eventType,
-					eventTime,
-					eventDesc,
-					serverName,
-					map
-				)
-			$select
-		");
+// the default next sort order
+$newSort = "ASC";
+// the default sort order for the query
+$sortorder = 'DESC';
+if (isset($_GET["sortorder"])) {
+	$check = validateInput($_GET['sortorder'],'nospace');
+	if($check === true) {
+		$sortorder = $_GET['sortorder'];
 	}
 
-	insertEvents("Rcon", "
-		SELECT
-			CONCAT(<table>.type, ' Rcon'),
-			<table>.eventTime,
-			CONCAT('\"', command, '\"\nFrom: ', remoteIp, ', password: \"', password, '\"'),
-			".DB_PREFIX."_Servers.name,
-			<table>.map
-		FROM
-			<table>
-		LEFT JOIN ".DB_PREFIX."_Servers ON
-			".DB_PREFIX."_Servers.serverId = <table>.serverId
-	");
+	if($_GET["sortorder"] == "ASC") {
+		$newSort = "DESC";
+	}
+}
 
-	insertEvents("Admin", "
-		SELECT
-			<table>.type,
-			<table>.eventTime,
+// get the admin event history
+$queryStr = "SELECT SQL_CALC_FOUND_ROWS
+			CONCAT(er.type, ' Rcon') AS `type`,
+			er.eventTime,
+			CONCAT('\"', command, '\"\nFrom: ', remoteIp, ', password: \"', password, '\"') AS `desc`,
+			".DB_PREFIX."_Servers.name,
+			er.map
+		FROM `".DB_PREFIX."_Events_Rcon` AS er
+		LEFT JOIN ".DB_PREFIX."_Servers ON
+			".DB_PREFIX."_Servers.serverId = er.serverId";
+$queryStr .= " UNION ALL
+			SELECT ea.type AS `type`,
+			ea.eventTime,
 			IF(playerName != '',
 				CONCAT('\"', playerName, '\": ', message),
 				message
-			),
+			) AS `desc`,
 			".DB_PREFIX."_Servers.name,
-			<table>.map
-		FROM
-			<table>
-		LEFT JOIN ".DB_PREFIX."_Servers ON
-			".DB_PREFIX."_Servers.serverId = <table>.serverId
-	");
+			ea.map
+		FROM `".DB_PREFIX."_Events_Admin` AS ea
+		LEFT JOIN ".DB_PREFIX."_Servers ON ".DB_PREFIX."_Servers.serverId = ea.serverId";
 
-	$type = $_GET['type'];
-	$where = "";
-	if (!empty($type)) {
-		$where = "WHERE eventType='".mysql_escape_string($type)."'";
+$queryStr .= " ORDER BY ".$sort." ".$sortorder;
+
+// calculate the limit
+if($page === 1) {
+	$queryStr .=" LIMIT 0,50";
+}
+else {
+	$start = 50*($page-1);
+	$queryStr .=" LIMIT ".$start.",50";
+}
+
+$query = mysql_query($queryStr);
+if(mysql_num_rows($query) > 0) {
+	while($result = mysql_fetch_assoc($query)) {
+		$adminEvents['data'][] = $result;
 	}
+}
+mysql_freeresult($query);
 
-	$query = mysql_query("
-		SELECT
-			eventTime,
-			eventType,
-			eventDesc,
-			serverName,
-			map
-		FROM
-			".DB_PREFIX."_AdminEventHistory
-		$where
-		ORDER BY
-			$table->sort $table->sortorder,
-			$table->sort2 $table->sortorder
-		LIMIT
-			$table->startitem,$table->numperpage
-	");
+// query to get the total rows which would be fetched without the LIMIT
+// works only if the $queryStr has SQL_CALC_FOUND_ROWS
+$query = mysql_query("SELECT FOUND_ROWS() AS 'rows'");
+$result = mysql_fetch_assoc($query);
+$adminEvents['pages'] = (int)ceil($result['rows']/50);
+mysql_freeresult($query);
 
-	$resultCount = mysql_query("SELECT COUNT(*) AS ac FROM ".DB_PREFIX."_AdminEventHistory $where");
-	$result = mysql_fetch_assoc($resultCount);
-	$numitems = $result['ac'];
+pageHeader(array(l("Admin"),l('Admin Event History')), array(l("Admin")=>"index.php?mode=admin",l('Admin Event History')=>''));
 ?>
-<form method="GET" action="index.php">
-<input type="hidden" name="mode" value="admin">
-<input type="hidden" name="task" value="<?php if(!empty($code)) echo $code; ?>">
-<input type="hidden" name="sort" value="<?php if(!empty($sort)) echo $sort; ?>">
-<input type="hidden" name="sortorder" value="<?php if(!empty($sortorder)) echo $sortorder; ?>">
 
-<b>&#149;</b> <?php echo l('Show only events of type'); ?>: <?php
-	$resultTypes = mysql_query("
-		SELECT
-			DISTINCT eventType
-		FROM
-			".DB_PREFIX."_AdminEventHistory
-		ORDER BY
-			eventType ASC
-	");
+<div id="sidebar">
+	<h1><?php echo l('Options'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>
+				<a href="<?php echo "index.php?mode=admin"; ?>"><?php echo l('Back to admin overview'); ?></a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="main">
+	<h1><?php echo l('Admin Event History'); ?></h1>
+	<table cellpadding="0" cellspacing="0" border="1" width="100%">
+		<tr>
+			<th class="<?php echo $rcol; ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'eventTime','sortorder'=>$newSort)); ?>">
+					<?php echo l('Date'); ?>
+				</a>
+				<?php if($sort == "eventTime") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo $rcol; ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'type','sortorder'=>$newSort)); ?>">
+					<?php echo l('Type'); ?>
+				</a>
+				<?php if($sort == "type") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo $rcol; ?>"><?php echo l('Description'); ?></th>
+			<th class="<?php echo $rcol; ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'name','sortorder'=>$newSort)); ?>">
+					<?php echo l('Server'); ?>
+				</a>
+				<?php if($sort == "name") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+			<th class="<?php echo $rcol; ?>">
+				<a href="index.php?<?php echo makeQueryString(array('sort'=>'map','sortorder'=>$newSort)); ?>">
+					<?php echo l('Map'); ?>
+				</a>
+				<?php if($sort == "map") { ?>
+				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<?php } ?>
+			</th>
+		</tr>
+	<?php
+		if(!empty($adminEvents['data'])) {
+			foreach($adminEvents['data'] as $k=>$entry) {
+				toggleRowClass($rcol);
 
-	$types[""] = "All";
+				echo '<tr>',"\n";
 
-	while ($result = mysql_fetch_assoc($resultTypes))
-	{
-		$types[$result['eventType']] = $result['eventType'];
-	}
+				echo '<td class="',$rcol,'">';
+				echo $entry['eventTime'];
+				echo '</td>',"\n";
 
-	echo getSelect("type", $types, $type,false);
-?> <input type="submit" value="Filter" class="smallsubmit"><p>
-</form>
-<?php
-	$table->draw($query, $numitems, 100, "");
-?>
+				echo '<td class="',$rcol,'">';
+				echo $entry['type'];
+				echo '</td>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo $entry['desc'];
+				echo '</td>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo $entry['name'];
+				echo '</td>',"\n";
+
+				echo '<td class="',$rcol,'">';
+				echo $entry['map'];
+				echo '</td>',"\n";
+
+				echo '</tr>';
+			}
+			echo '<tr><td colspan="5" align="right">';
+			if($adminEvents['pages'] > 1) {
+				for($i=1;$i<=$adminEvents['pages'];$i++) {
+					if($page == ($i)) {
+						echo "[",$i,"]";
+					}
+					else {
+						echo "<a href='index.php?",makeQueryString(array('page'=>$i)),"'>[",$i,"]</a>";
+					}
+				}
+			}
+			else {
+				echo "[1]";
+			}
+			echo '</td></tr>';
+		}
+		else {
+			echo '<tr><td colspan="5">',l('No data recorded'),'</td></tr>';
+		}
+	?>
+	</table>
+</div>
