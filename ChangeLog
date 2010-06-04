@@ -1,5 +1,5 @@
 HLStats ChangeLog
-==============
+=================
 
 1.60 (TBA)
 *) New: HLStats needs MySQL 4.1 and MySQL is the only supported DB yet.
