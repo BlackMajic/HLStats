@@ -60,7 +60,14 @@ if(!empty($_GET["playerId"])) {
 	}
 }
 
-// process the edit
+if(!empty($_GET["clanId"])) {
+	if(validateInput($_GET["clanId"],'digit') === true) {
+		//$playerObj = new Player($_GET["clanId"],false);
+		$editMode = 'clan';
+	}
+}
+
+// process the edit of a player
 if(isset($_POST['submit']['editPlayer']) && !empty($playerObj)) {
 
 	// the checkboxes
@@ -110,6 +117,17 @@ if(isset($_POST['submit']['searchForId'])) {
 			}
 		}
 		elseif($searchWhere === "clan") {
+			$query = mysql_query("SELECT `playerId`
+									FROM `".DB_PREFIX."_Clans`
+									WHERE `clanId` = '".mysql_escape_string($searchFor)."'");
+			if(mysql_num_rows($query) > 0) {
+				$result = mysql_fetch_assoc($query);
+				header('Location: index.php?mode=admin&task=toolsEditdetails&clanId='.$result['playerId']);
+			}
+			else {
+				$return['msg'] = l('Nothing found');
+				$return['status'] = "1";
+			}
 		}
 		else {
 			$return['msg'] = l('Invalid Input');

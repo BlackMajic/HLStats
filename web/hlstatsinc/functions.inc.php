@@ -61,6 +61,12 @@ function getSteamProfileUrl($steamId) {
 		$t = explode(':',$steamId);
 		$s = bcadd('76561197960265728',$t[2]*2);
 		$s = bcadd($s,$t[1]);
+
+		if(strstr($s,'.')) {
+			$st = explode('.',$s);
+			$s = $st[0];
+		}
+
 		$ret = '<a href="http://steamcommunity.com/profiles/'.$s.'" target="_blank">'.$steamId.'</a>';
 	}
 

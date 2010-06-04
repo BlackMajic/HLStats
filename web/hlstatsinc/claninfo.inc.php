@@ -370,4 +370,8 @@ pageHeader(
 		}
 		?>
 	</table>
+	<p style="text-align: right">
+	    <b><?php echo l('Admin Options'); ?>:</b>
+	    <a href="<?php echo "index.php?mode=admin&amp;task=toolsEditdetails&amp;clanId=$clan"; ?>"><?php echo l('Edit Clan Details'); ?></a>
+	</p>
 </div>
