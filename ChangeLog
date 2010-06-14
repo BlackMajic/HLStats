@@ -14,6 +14,7 @@ HLStats ChangeLog
 *) New: Steam profile page lookup via SteamID. BCmath support (PHP) is needed.
 	http://www.php.net/manual/en/book.bc.php
 *) New: Clan Profile can new enter a steam group URL
+*) Changed: Host statistics in admin disabled. New version will include this again.
 *) Changed: Constant INCLUDE_PATH removed.
 *) Changed: hlstats.php file renamed to index.php
 				scripturl option has been removed.
