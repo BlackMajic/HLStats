@@ -79,10 +79,12 @@ pageHeader(array(l("Admin"),l('Admin Optimize Database')), array(l("Admin")=>"in
 			$result = mysql_query("SHOW TABLES");
 
 			echo "Upgrading all tables to MyISAM format:<ul>\n";
+			flush();
 			while (list($table) = mysql_fetch_array($result)) {
 				echo "<li>$table ... ";
 				mysql_query("ALTER TABLE $table TYPE=MYISAM");
 				echo "OK\n";
+				flush();
 			}
 			echo "</ul>\n";
 
