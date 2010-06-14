@@ -47,8 +47,6 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
-
 pageHeader(array(l("Admin"),l('Admin Reset Statistics')), array(l("Admin")=>"index.php?mode=admin",l('Admin Reset Statistics')=>''));
 ?>
 

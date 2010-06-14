@@ -55,9 +55,15 @@ class Admin {
 
 	/**
 	 * if we are logged in or not
-	 * @var boolean
+	 * @var $_authStatus boolean
 	 */
 	private $_authStatus = false;
+
+	/**
+	 * the data of the current authenticated user
+	 * @var $_userData array
+	 */
+	private $_userData = false;
 
 	/**
 	 * load stuff and check if we are logged in
@@ -72,6 +78,14 @@ class Admin {
 	 */
 	public function getAuthStatus() {
 		return $this->_authStatus;
+	}
+
+	/**
+	 * return the current username
+	 * @return string
+	 */
+	public function getUsername() {
+		return $this->_userData['username'];
 	}
 
 	/**
@@ -101,6 +115,8 @@ class Admin {
 					if($query !== false) {
 						$_SESSION['hlstatsAuth']['authCode'] = $authCode;
 						$ret = true;
+
+						$this->_userData['username'] = $username;
 					}
 				}
 			}
@@ -165,6 +181,8 @@ class Admin {
 		}
 
 		mysql_free_result($query);
+
+		$this->_userData['username'] = $ret['username'];
 
 		return $ret;
 	}
