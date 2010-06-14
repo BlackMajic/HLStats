@@ -300,7 +300,7 @@ Are you sure you want to reset all statistics for game = Wollen Sie wirklich die
 All players, clans and events will be deleted from the database = Alle Spieler,Clans und Events werden aus der Datenbank gelöscht
 (All other admin settings will be retained) = Alle anderen Einstellungen bleiben erhalten
 You should kill = Beenden Sie
-before resetting the stats. You can restart it after they are reset = bevor Sie die Stats zurücksetzten.
+before resetting the stats. = bevor Sie die Stats zurücksetzten.
 
 Action Code = Aktion Code
 Player Action = Spieler Aktion
