@@ -16,6 +16,7 @@ Yes = Ja
 None = Kein
 No Data = Keine Daten
 Percent = Prozent
+Currently disabled ! = Aktuell nicht aktiv.
 
 Contents = Übersicht
 Games = Spiele
