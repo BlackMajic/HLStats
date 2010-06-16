@@ -51,7 +51,7 @@
 class Player {
 	/**
 	 * the player id
-	 * @var int The player id
+	 * @var int $playerId The player id
 	 */
 	public $playerId = 0;
 
@@ -59,14 +59,14 @@ class Player {
 	 * the game
 	 * need for player lookup via uniqueid
 	 *
-	 * @var string The game code
+	 * @var string $_game The game code
 	 */
 	private $_game = false;
 
 	/**
 	 * the player data
 	 * non empty if successfull
-	 * @var array The playerData
+	 * @var array $_playerData The playerData
 	 *
 	 */
 	private $_playerData = false;
@@ -74,7 +74,7 @@ class Player {
 	/**
 	 * the options
 	 *
-	 * @var array The options needed for this class
+	 * @var array $_option The options needed for this class
 	 */
 	private $_option = array();
 

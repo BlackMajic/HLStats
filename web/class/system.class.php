@@ -52,5 +52,55 @@
  *
  */
 class System {
+	/**
+	 * stores the key=>value data validated inputs
+	 * @var $_saveFields array
+	 */
+	private $_saveFields = false;
+
+	/**
+	 * set some vars
+	 */
+	public function __construct() {
+	}
+
+	/**
+	 * this is used to check if we have missing fields in an input
+	 * @param array $params
+	 * @return array $ret
+	 */
+	public function checkFields($params) {
+		$ret = false;
+
+		$missing = array();
+		$this->_saveFields = array();
+		if(!empty($params)) {
+			foreach ($params as $k=>$v) {
+				$v = trim($v);
+
+				// check if we have a req_key
+				if(strstr($k,'req_')) {
+					$newKey = str_replace('req_','',$k);
+					if($v !== "") {
+						$this->_saveFields[$newKey] = $v;
+					}
+					else {
+						$missing[] = $newKey; // is missing
+					}
+				}
+				else {
+					$this->_saveFields[$k] = $v;
+				}
+			}
+		}
+
+		if(!empty($missing)) {
+			$ret = $missing;
+		}
+		else {
+			$ret = true;
+		}
+		return $ret;
+	}
 }
 ?>
