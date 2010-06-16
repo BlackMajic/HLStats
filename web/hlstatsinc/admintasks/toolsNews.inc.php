@@ -78,11 +78,15 @@ if(isset($_POST['saveNews'])) {
 
 // edit load
 $post = false;
-if(!empty($_GET['editpost'])) {
+if(!empty($_GET['editpost']) || !empty($_GET['deletepost'])) {
 	$postnr = 0;
 	if(!empty($_GET['editpost'])) {
 		$postnr = sanitize($_GET['editpost']);
 	}
+	elseif(!empty($_GET['deletepost'])) {
+		$postnr = sanitize($_GET['deletepost']);
+	}
+
 	$check = validateInput($postnr,'digit');
 	if(!empty($postnr) && $check === true) {
 		$query = mysql_query("SELECT * FROM ".DB_PREFIX."_News
@@ -94,37 +98,48 @@ if(!empty($_GET['editpost'])) {
 
 // edit save
 if(isset($_POST['editNews']) && !empty($_GET['editpost'])) {
-	if(isset($_POST['newsDelete']) && $_POST['newsDelete'] == "1") {
-		$result = mysql_query("DELETE FROM ".DB_PREFIX."_News
-									WHERE `id` = '".mysql_escape_string($_GET['saveEdit'])."'
-								");
-		echo "<b>".l('News has been deleted'),".</b><br><br>";
+	$newsID = $_GET['editpost'];
+
+	$subject = trim($_POST["subject"]);
+	$subjectCheck = validateInput($subject,'text');
+
+	$message = trim($_POST["message"]);
+	$messageCheck = validateInput($message,'text');
+
+	if(empty($messageCheck) || empty($subjectCheck)) {
+		$return['msg'] = l('Please provide a subject and message');
+		$return['status'] = "1";
 	}
 	else {
-		$newsID = $_GET['editpost'];
+		$newsdate = date("Y-m-d H:i:s");
+		$result = mysql_query("UPDATE `".DB_PREFIX."_News`
+								SET `date` = '".$newsdate."',
+									`user` = '".mysql_escape_string($adminObj->getUsername())."',
+									`email` = '".mysql_escape_string($_POST["email"])."',
+									`subject` = '".mysql_escape_string($_POST["subject"])."',
+									`message` = '".mysql_escape_string($_POST["message"])."'
+								WHERE `id` = '".mysql_escape_string($newsID)."'
+							");
+		$return['msg'] = l('News has been saved');
+		$return['status'] = "2";
+	}
+}
 
-		$subject = trim($_POST["subject"]);
-		$subjectCheck = validateInput($subject,'text');
+//delete
+if(isset($_POST['deleteNews']) && !empty($_GET['deletepost'])) {
+	$newsId = trim($_GET['deletepost']);
+	$check = validateInput($newsId,'digit');
 
-		$message = trim($_POST["message"]);
-		$messageCheck = validateInput($message,'text');
-
-		if(empty($messageCheck) || empty($subjectCheck)) {
-			$return['msg'] = l('Please provide a subject and message');
-			$return['status'] = "1";
+	if(!empty($newsId) && $check === true) {
+		$query = mysql_query("DELETE FROM `".DB_PREFIX."_News`
+								WHERE `id` = '".mysql_escape_string($newsId)."'");
+		if($query !== false) {
+			$return['msg'] = l('News item deleted');
+			$return['status'] = "2";
 		}
 		else {
-			$newsdate = date("Y-m-d H:i:s");
-			$result = mysql_query("UPDATE ".DB_PREFIX."_News
-									SET `date` = '".$newsdate."',
-										`user` = '".mysql_escape_string($adminObj->getUsername())."',
-										`email` = '".mysql_escape_string($_POST["email"])."',
-										`subject` = '".mysql_escape_string($_POST["subject"])."',
-										`message` = '".mysql_escape_string($_POST["message"])."'
-									WHERE `id` = '".mysql_escape_string($newsID)."'
-								");
-			$return['msg'] = l('News has been saved');
-			$return['status'] = "2";
+			$return['msg'] = l('News Item could not be delete');
+			$return['status'] = "1";
 		}
 	}
 }
@@ -163,7 +178,7 @@ pageHeader(array(l("Admin"),l('News at Front page')), array(l("Admin")=>"index.p
 			echo '<div class="success">',$return['msg'],'</div>';
 		}
 	}
-	if(!empty($post)) {
+	if(!empty($post) && isset($_GET['editpost'])) {
 	?>
 	<form method="post" action="">
 		<table border="0" cellpadding="2" cellspacing="0">
@@ -202,9 +217,23 @@ pageHeader(array(l("Admin"),l('News at Front page')), array(l("Admin")=>"index.p
 			</tr>
 			<tr>
 				<td width="100px">&nbsp;</td>
-				<td><input type="submit" name="editNews" value=" <?php echo l('Save'); ?> " /></td>
+				<td>
+					<button type="submit" title="<?php echo l('Update'); ?>" name="editNews">
+						<?php echo l('Update'); ?>
+					</button>
+				</td>
 			</tr>
 		</table>
+	</form>
+	<?php } elseif(isset($_GET['deletepost']) && !empty($_GET['deletepost'])) { ?>
+	<form action="" method="post">
+		<?php echo l('Do you want to delete the following news item ?'); ?><br />
+		<br />
+		&#187; <i><?php echo l('Date'),'</i>: ',$post['date'],' <i>',l('Subject'),'</i>: ',$post['subject']; ?></i><br />
+		<br />
+		<button type="submit" title="<?php echo l('Delete'); ?>" name="deleteNews">
+			<?php echo l('Delete'); ?>
+		</button>
 	</form>
 	<?php } else { ?>
 	<form method="post" action="">
@@ -244,7 +273,11 @@ pageHeader(array(l("Admin"),l('News at Front page')), array(l("Admin")=>"index.p
 			</tr>
 			<tr>
 				<td width="100px">&nbsp;</td>
-				<td><input type="submit" name="saveNews" value=" <?php echo l('Save'); ?> " /></td>
+				<td>
+					<button type="submit" title="<?php echo l('Save'); ?>" name="saveNews">
+						<?php echo l('Save'); ?>
+					</button>
+				</td>
 			</tr>
 		</table>
 	</form>
@@ -256,6 +289,7 @@ pageHeader(array(l("Admin"),l('News at Front page')), array(l("Admin")=>"index.p
 				<th><?php echo l('Date'); ?></th>
 				<th><?php echo l('Subject'); ?></th>
 				<th><?php echo l('Author'); ?></th>
+				<th><?php echo l('Delete'); ?></th>
 			</tr>
 			<?php
 			foreach($newsArray as $entry) {
@@ -264,6 +298,7 @@ pageHeader(array(l("Admin"),l('News at Front page')), array(l("Admin")=>"index.p
 				echo '<td>',$entry['date'],'</td>';
 				echo '<td><a href="index.php?mode=admin&amp;task=toolsNews&amp;editpost=',$entry['id'],'">',$entry['subject'],'</a></td>';
 				echo '<td>',$entry['user'],'</td>';
+				echo '<td><a href="index.php?mode=admin&amp;task=toolsNews&amp;deletepost=',$entry['id'],'">',l('Delete'),'</a></td>';
 
 				echo '</tr>';
 			}
