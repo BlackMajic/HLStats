@@ -127,7 +127,9 @@ pageHeader(array(l("Admin"),l('Admin Reset Statistics')), array(l("Admin")=>"ind
 					<br />
 					<input type="hidden" name="confirm" value="1">
 					<center>
-						<input type="submit" value=" <?php echo l('Reset Stats'); ?> ">
+						<button type="submit" title="<?php echo l('Reset Stats'); ?>">
+							<?php echo l('Reset Stats'); ?>
+						</button>
 					</center>
 				</td>
 			</tr>
