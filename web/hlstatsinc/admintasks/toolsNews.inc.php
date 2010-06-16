@@ -51,24 +51,19 @@ $post = false;
 $return['status'] = false;
 $return['msg'] = false;
 
-if(!empty($_GET['editpost'])) {
 
-	$postnr = 0;
-	if(!empty($_GET['editpost'])) {
-		$postnr = sanitize($_GET['editpost']);
-	}
-	$result = mysql_query("SELECT * FROM ".DB_PREFIX."_News
-					WHERE id = '".mysql_escape_string($postnr)."'");
-	$post = mysql_fetch_array($result);
-	mysql_free_result($query);
-}
 
+// new one
 if(isset($_POST['saveNews'])) {
-	if ($_POST["subject"] == "") {
-		$return['msg'] = l('Error: Please provide a subject');
-	}
-	elseif ($_POST["message"] == "") {
-		echo "<b>".l('Error: Please provide a Message'),".</b><br><br>";
+	$subject = trim($_POST["subject"]);
+	$subjectCheck = validateInput($subject,'text');
+
+	$message = trim($_POST["message"]);
+	$messageCheck = validateInput($message,'text');
+
+	if(empty($messageCheck) || empty($subjectCheck)) {
+		$return['msg'] = l('Please provide a subject and message');
+		$return['status'] = "1";
 	}
 	else {
 		$newsdate = date("Y-m-d H:i:s");
@@ -76,14 +71,31 @@ if(isset($_POST['saveNews'])) {
 							VALUES ('',
 									'".$newsdate."',
 									'".$auth->userdata["username"]."',
-									'".$_POST["email"]."',
-									'".$_POST["subject"]."',
-									'".$_POST["message"]."')
+									'".mysql_escape_string($_POST["email"])."',
+									'".mysql_escape_string($subject)."',
+									'".mysql_escape_string($message)."')
 							");
-		echo "<b>".l('News has been saved'),".</b><br><br>";
+		$return['msg'] = l('News has been saved');
+		$return['status'] = "2";
 	}
 }
 
+// edit load
+if(!empty($_GET['editpost'])) {
+	$postnr = 0;
+	if(!empty($_GET['editpost'])) {
+		$postnr = sanitize($_GET['editpost']);
+	}
+	$check = validateInput($postnr,'digit');
+	if(!empty($postnr) && $check === true) {
+		$result = mysql_query("SELECT * FROM ".DB_PREFIX."_News
+						WHERE id = '".mysql_escape_string($postnr)."'");
+		$post = mysql_fetch_array($result);
+		mysql_free_result($query);
+	}
+}
+
+// edit save
 if(isset($_POST['editNews'])) {
 	if(isset($_POST['newsDelete']) && $_POST['newsDelete'] == "1") {
 		$result = mysql_query("DELETE FROM ".DB_PREFIX."_News
@@ -130,6 +142,14 @@ pageHeader(array(l("Admin"),l('News at Front page')), array(l("Admin")=>"index.p
 	<h1><?php echo l('News at Front page'); ?></h1>
 	<p><?php echo l('Here you can write and edit the news which are displayed at the front page'); ?></p>
 	<?php
+	if(!empty($return)) {
+		if($return['status'] === "1") {
+			echo '<div class="error">',$return['msg'],'</div>';
+		}
+		elseif($return['status'] === "2") {
+			echo '<div class="success">',$return['msg'],'</div>';
+		}
+	}
 	if(!empty($post)) {
 	?>
 	<?php } else { ?>
