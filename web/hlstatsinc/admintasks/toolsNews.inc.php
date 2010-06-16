@@ -46,12 +46,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-$post = false;
-
 $return['status'] = false;
 $return['msg'] = false;
-
-
 
 // new one
 if(isset($_POST['saveNews'])) {
@@ -81,6 +77,7 @@ if(isset($_POST['saveNews'])) {
 }
 
 // edit load
+$post = false;
 if(!empty($_GET['editpost'])) {
 	$postnr = 0;
 	if(!empty($_GET['editpost'])) {
@@ -88,9 +85,9 @@ if(!empty($_GET['editpost'])) {
 	}
 	$check = validateInput($postnr,'digit');
 	if(!empty($postnr) && $check === true) {
-		$result = mysql_query("SELECT * FROM ".DB_PREFIX."_News
-						WHERE id = '".mysql_escape_string($postnr)."'");
-		$post = mysql_fetch_array($result);
+		$query = mysql_query("SELECT * FROM ".DB_PREFIX."_News
+						WHERE `id` = '".mysql_escape_string($postnr)."'");
+		$post = mysql_fetch_array($query);
 		mysql_free_result($query);
 	}
 }
@@ -99,28 +96,33 @@ if(!empty($_GET['editpost'])) {
 if(isset($_POST['editNews'])) {
 	if(isset($_POST['newsDelete']) && $_POST['newsDelete'] == "1") {
 		$result = mysql_query("DELETE FROM ".DB_PREFIX."_News
-									WHERE id = '".$_GET['saveEdit']."'
+									WHERE `id` = '".mysql_escape_string($_GET['saveEdit'])."'
 								");
 		echo "<b>".l('News has been deleted'),".</b><br><br>";
 	}
 	else {
-		if ($_POST["subject"] == "") {
-			echo "<b>",l('Error: Please provide a subject'),".</b><br><br>";
-		}
-		elseif ($_POST["message"] == "") {
-			echo "<b>".l('Error: Please provide a Message'),".</b><br><br>";
+		$subject = trim($_POST["subject"]);
+		$subjectCheck = validateInput($subject,'text');
+
+		$message = trim($_POST["message"]);
+		$messageCheck = validateInput($message,'text');
+
+		if(empty($messageCheck) || empty($subjectCheck)) {
+			$return['msg'] = l('Please provide a subject and message');
+			$return['status'] = "1";
 		}
 		else {
 			$newsdate = date("Y-m-d H:i:s");
 			$result = mysql_query("UPDATE ".DB_PREFIX."_News
-									SET date = '".$newsdate."',
-										user = '".$auth->userdata["username"]."',
-										email = '".$_POST["email"]."',
-										subject = '".$_POST["subject"]."',
-										message = '".$_POST["message"]."'
-									WHERE id = '".$_GET['saveEdit']."'
+									SET `date` = '".$newsdate."',
+										`user` = '".$auth->userdata["username"]."',
+										`email` = '".mysql_escape_string($_POST["email"])."',
+										`subject` = '".mysql_escape_string($_POST["subject"])."',
+										`message` = '".mysql_escape_string($_POST["message"])."'
+									WHERE `id` = '".mysql_escape_string($_GET['saveEdit'])."'
 								");
-			echo "<b>".l('News has been saved'),".</b><br><br>";
+			$return['msg'] = l('News has been saved');
+			$return['status'] = "2";
 		}
 	}
 }
@@ -161,6 +163,47 @@ pageHeader(array(l("Admin"),l('News at Front page')), array(l("Admin")=>"index.p
 	}
 	if(!empty($post)) {
 	?>
+	<form method="post" action="index.php?mode=admin&task=toolsNews">
+		<table border="0" cellpadding="2" cellspacing="0">
+			<tr>
+				<th width="100px">
+					<?php echo l('Author'); ?>:
+				</th>
+				<td>
+					<input type="text" disabled="disabled" name="author"
+						value="<?php echo $post['user']; ?>" />
+				</td>
+			</tr>
+			<tr>
+				<th width="100px">
+					<?php echo l('E-Mail'); ?>:
+				</th>
+				<td>
+					<input type="text" name="email" value="<?php echo $post['email']; ?>" />
+				</td>
+			</tr>
+			<tr>
+				<th width="100px">
+					<?php echo l('Subject'); ?>:
+				</th>
+				<td>
+					<input type="text" name="subject" value="<?php echo $post['subject']; ?>" />
+				</td>
+			</tr>
+			<tr>
+				<th width="100px" valign="top">
+					<?php echo l('Message'); ?>:
+				</th>
+				<td>
+					<textarea name="message" cols="70" rows="6" /><?php echo $post['message']; ?></textarea>
+				</td>
+			</tr>
+			<tr>
+				<td width="100px">&nbsp;</td>
+				<td><input type="submit" name="saveNews" value=" <?php echo l('Save'); ?> " /></td>
+			</tr>
+		</table>
+	</form>
 	<?php } else { ?>
 	<form method="post" action="index.php?mode=admin&task=toolsNews">
 		<table border="0" cellpadding="2" cellspacing="0">
