@@ -53,7 +53,7 @@ pageHeader(array(l("Admin")), array(l("Admin")=>""));
 	<div class="left-box">
 		<ul class="sidemenu">
 			<li>
-				<a href="<?php echo "index.php"; ?>"><?php echo l('HLStats Options'); ?></a>
+				<a href="<?php echo "index.php?mode=admin&task=options"; ?>"><?php echo l('HLStats Options'); ?></a>
 			</li>
 			<li>
 				<a href="<?php echo "index.php"; ?>"><?php echo l('Admin Users'); ?></a>

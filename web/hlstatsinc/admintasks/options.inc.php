@@ -1,5 +1,12 @@
 <?php
 /**
+ * admin options file. manage the general options
+ * @package HLStats
+ * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
+ */
+
+/**
  *
  * Original development:
  * +
@@ -39,13 +46,124 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-	if ($auth->userdata["acclevel"] < 100) die ("Access denied!");
 
-	function whichStyle() {
-		$query = mysql_query("SELECT value FROM ".DB_PREFIX."_Options WHERE keyname = 'style'");
-		$data = mysql_fetch_assoc($query);
-		return $data['value'];
-	}
+function whichStyle() {
+	$query = mysql_query("SELECT value FROM ".DB_PREFIX."_Options WHERE keyname = 'style'");
+	$data = mysql_fetch_assoc($query);
+	return $data['value'];
+}
+
+pageHeader(array(l("Admin"),l('Options')), array(l("Admin")=>"index.php?mode=admin",l('Options')=>''));
+?>
+
+<div id="sidebar">
+	<h1><?php echo l('Options'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>
+				<a style="color:#CC0001;" href="<?php echo "index.php?mode=admin&task=options"; ?>"><?php echo l('HLStats Options'); ?></a>
+			</li>
+			<li>
+				<a href="<?php echo "index.php"; ?>"><?php echo l('Admin Users'); ?></a>
+			</li>
+			<li>
+				<a href="<?php echo "index.php"; ?>"><?php echo l('Games'); ?></a>
+			</li>
+			<li>
+				<a href="<?php echo "index.php"; ?>"><?php echo l('Clan Tag Patterns'); ?></a>
+			</li>
+			<li>
+				<a href="<?php echo "index.php"; ?>"><?php echo l('Server Plugins'); ?></a>
+			</li>
+			<li>
+				<a href="<?php echo "index.php"; ?>"><?php echo l('Back to game overview'); ?></a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="main">
+	<h1><?php echo l('HLStats Options'); ?></h1>
+	<form method="post" action="">
+		<h2><?php echo l('General'); ?></h2>
+		<table cellpadding="2" cellspacing="0" border="0">
+			<tr>
+				<th><?php echo l("Site Name"); ?></th>
+				<td>
+					<input type="text" name="option[sitename]" size="40"
+						value="<?php echo $g_options['sitename']; ?>" />
+				</td>
+			</tr>
+			<tr>
+				<th><?php echo l("Site URL"); ?></th>
+				<td>
+					<input type="text" name="option[siteurl]" size="40"
+						value="<?php echo $g_options['siteurl']; ?>" />
+				</td>
+			</tr>
+			<tr>
+				<th><?php echo l("Contact URL"); ?></th>
+				<td>
+					<input type="text" name="option[contact]" size="40"
+						value="<?php echo $g_options['contact']; ?>" /><br />
+					<span class="small"><?php echo l('Can be an URL or even mailto:address'); ?></span>
+				</td>
+			</tr>
+			<tr>
+				<th><?php echo l("Hide Daily Awards"); ?></th>
+				<td>
+					<select name="option[hideAwards]">
+						<option value="0"><?php echo l('No'); ?></option>
+						<option value="1"><?php echo l('Yes'); ?></option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th><?php echo l("Hide News"); ?></th>
+				<td>
+					<select name="option[hideNews]">
+						<option value="0"><?php echo l('No'); ?></option>
+						<option value="1"><?php echo l('Yes'); ?></option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th><?php echo l("Show chart graphics"); ?></th>
+				<td>
+					<select name="option[showChart]">
+						<option value="0"><?php echo l('No'); ?></option>
+						<option value="1"><?php echo l('Yes'); ?></option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th><?php echo l("Allow the use of signatures"); ?></th>
+				<td>
+					<select name="option[allowSig]">
+						<option value="0"><?php echo l('No'); ?></option>
+						<option value="1"><?php echo l('Yes'); ?></option>
+					</select>
+				</td>
+			</tr>
+			<tr>
+				<th><?php echo l("Allow XML interface"); ?></th>
+				<td>
+					<select name="option[allowXML]">
+						<option value="0"><?php echo l('No'); ?></option>
+						<option value="1"><?php echo l('Yes'); ?></option>
+					</select>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+
+
+<?php
+
+
+
+
+
 
 
 	class OptionGroup
