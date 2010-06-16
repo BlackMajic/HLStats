@@ -166,6 +166,18 @@ pageHeader(array(l("Admin"),l('Options')), array(l("Admin")=>"index.php?mode=adm
 				</td>
 			</tr>
 		</table>
+		<h2><?php echo l('Preset Styles'); ?></h2>
+		<table cellpadding="2" cellspacing="0" border="0">
+			<tr>
+				<th><?php echo l("Load Preset Style"); ?></th>
+				<td>
+					<select name="option[style]">
+						<option value="0" <?php if($g_options['allowXML'] === "0") echo 'selected="1"'; ?>><?php echo l('No'); ?></option>
+						<option value="1" <?php if($g_options['allowXML'] === "0") echo 'selected="1"'; ?>><?php echo l('Yes'); ?></option>
+					</select>
+				</td>
+			</tr>
+		</table>
 	</form>
 </div>
 
