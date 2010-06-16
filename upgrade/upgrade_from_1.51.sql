@@ -40,3 +40,28 @@ ALTER TABLE `#DB_PREFIX#_Clans` ADD `steamGroup` VARCHAR( 128 ) CHARACTER SET ut
 
 DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'imgdir';
 DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'imgpath';
+
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'font_normal';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'fontend_normal';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'font_small';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'fontend_small';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'font_title';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'fontend_title';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'table_bgcolor1';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'table_bgcolor2';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'table_wpnbgcolor';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'table_border';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'table_head_text';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'table_head_bgcolor';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'location_link';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'location_text';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'location_bgcolor';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'body_leftmargin';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'body_topmargin';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'body_alink';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'body_link';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'body_hlink';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'body_vlink';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'body_text';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'body_bgcolor';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'body_background';
