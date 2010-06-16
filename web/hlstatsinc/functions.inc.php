@@ -169,7 +169,7 @@ function validateInput($string,$mode) {
 			break;
 
 			case 'text':
-				$pattern = '/[^\p{L}\p{N}\p{P}]/u';
+				$pattern = '/[^\p{L}\p{N}\p{P}\s]/u';
 				$value = preg_replace($pattern, '', $string);
 				if($string === $value) {
 					 $ret = true;

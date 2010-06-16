@@ -66,7 +66,7 @@ if(isset($_POST['saveNews'])) {
 		$result = mysql_query("INSERT INTO ".DB_PREFIX."_News
 							VALUES ('',
 									'".$newsdate."',
-									'".$auth->userdata["username"]."',
+									'".mysql_escape_string($adminObj-getUsername())."',
 									'".mysql_escape_string($_POST["email"])."',
 									'".mysql_escape_string($subject)."',
 									'".mysql_escape_string($message)."')
@@ -93,7 +93,7 @@ if(!empty($_GET['editpost'])) {
 }
 
 // edit save
-if(isset($_POST['editNews'])) {
+if(isset($_POST['editNews']) && !empty($_GET['editpost'])) {
 	if(isset($_POST['newsDelete']) && $_POST['newsDelete'] == "1") {
 		$result = mysql_query("DELETE FROM ".DB_PREFIX."_News
 									WHERE `id` = '".mysql_escape_string($_GET['saveEdit'])."'
@@ -101,6 +101,8 @@ if(isset($_POST['editNews'])) {
 		echo "<b>".l('News has been deleted'),".</b><br><br>";
 	}
 	else {
+		$newsID = $_GET['editpost'];
+
 		$subject = trim($_POST["subject"]);
 		$subjectCheck = validateInput($subject,'text');
 
@@ -115,11 +117,11 @@ if(isset($_POST['editNews'])) {
 			$newsdate = date("Y-m-d H:i:s");
 			$result = mysql_query("UPDATE ".DB_PREFIX."_News
 									SET `date` = '".$newsdate."',
-										`user` = '".$auth->userdata["username"]."',
+										`user` = '".mysql_escape_string($adminObj->getUsername())."',
 										`email` = '".mysql_escape_string($_POST["email"])."',
 										`subject` = '".mysql_escape_string($_POST["subject"])."',
 										`message` = '".mysql_escape_string($_POST["message"])."'
-									WHERE `id` = '".mysql_escape_string($_GET['saveEdit'])."'
+									WHERE `id` = '".mysql_escape_string($newsID)."'
 								");
 			$return['msg'] = l('News has been saved');
 			$return['status'] = "2";
@@ -163,7 +165,7 @@ pageHeader(array(l("Admin"),l('News at Front page')), array(l("Admin")=>"index.p
 	}
 	if(!empty($post)) {
 	?>
-	<form method="post" action="index.php?mode=admin&task=toolsNews">
+	<form method="post" action="">
 		<table border="0" cellpadding="2" cellspacing="0">
 			<tr>
 				<th width="100px">
@@ -171,7 +173,7 @@ pageHeader(array(l("Admin"),l('News at Front page')), array(l("Admin")=>"index.p
 				</th>
 				<td>
 					<input type="text" disabled="disabled" name="author"
-						value="<?php echo $post['user']; ?>" />
+						value="<?php echo $adminObj->getUsername(); ?>" />
 				</td>
 			</tr>
 			<tr>
@@ -200,12 +202,12 @@ pageHeader(array(l("Admin"),l('News at Front page')), array(l("Admin")=>"index.p
 			</tr>
 			<tr>
 				<td width="100px">&nbsp;</td>
-				<td><input type="submit" name="saveNews" value=" <?php echo l('Save'); ?> " /></td>
+				<td><input type="submit" name="editNews" value=" <?php echo l('Save'); ?> " /></td>
 			</tr>
 		</table>
 	</form>
 	<?php } else { ?>
-	<form method="post" action="index.php?mode=admin&task=toolsNews">
+	<form method="post" action="">
 		<table border="0" cellpadding="2" cellspacing="0">
 			<tr>
 				<th width="100px">
