@@ -125,6 +125,15 @@ if(isset($_POST['editNews'])) {
 	}
 }
 
+// load existing news
+$newsArray = false;
+$query = mysql_query("SELECT * FROM ".DB_PREFIX."_News ORDER BY `date` DESC");
+if(mysql_num_rows($query) > 0) {
+	while($result = mysql_fetch_assoc($query)) {
+		$newsArray[] = $result;
+	}
+}
+
 pageHeader(array(l("Admin"),l('News at Front page')), array(l("Admin")=>"index.php?mode=admin",l('News at Front page')=>''));
 ?>
 
@@ -194,104 +203,26 @@ pageHeader(array(l("Admin"),l('News at Front page')), array(l("Admin")=>"index.p
 			</tr>
 		</table>
 	</form>
+	<?php
+	}
+	if(!empty($newsArray)) { ?>
+		<table cellpadding="2" cellspacing="0" border="1" width="100%">
+			<tr>
+				<th><?php echo l('Date'); ?></th>
+				<th><?php echo l('Subject'); ?></th>
+				<th><?php echo l('Author'); ?></th>
+			</tr>
+			<?php
+			foreach($newsArray as $entry) {
+				echo '<tr>';
+
+				echo '<td>',$entry['date'],'</td>';
+				echo '<td><a href="index.php?mode=admin&amp;task=toolsNews&amp;editpost=',$entry['id'],'">',$entry['subject'],'</a></td>';
+				echo '<td>',$entry['user'],'</td>';
+
+				echo '</tr>';
+			}
+			?>
+		</table>
 	<?php }	?>
 </div>
-
-&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif">
-	<b>&nbsp;<a href="index.php?mode=admin&task=toolsNews"><?php echo $task->title; ?></a></b>
-
-<p><?php echo l('Here you can write and edit the news which are displayed at the front page'); ?></p>
-
-<?php
-if(!empty($_GET['editpost'])) {
-
-	$postnr = 0;
-	if(!empty($_GET['editpost'])) {
-		$postnr = sanitize($_GET['editpost']);
-	}
-	$result = mysql_query("SELECT * FROM ".DB_PREFIX."_News WHERE id = $postnr");
-	$post = mysql_fetch_array($result);
-?>
-
-<form method="post" action="index.php?mode=admin&amp;task=toolsNews&amp;saveEdit=<?php echo $postnr; ?>">
-<table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
-	<tr valign="top">
-		<td width="100%">
-			<form method="post" action="index.php?mode=admin&task=toolsNews">
-				<table border="0" cellpadding="2" cellspacing="0">
-					<tr>
-						<td width="100px"><?php echo $g_options["font_normal"]; ?><b><?php echo l('Author'); ?>:</b><?php echo $g_options["fontend_normal"]; ?></td>
-						<td><input type="text" disabled="disabled" name="author" value="<?php echo $post['user'];?>" /></td>
-					</tr>
-					<tr>
-						<td width="100px"><?php echo $g_options["font_normal"]; ?><b><?php echo l('E-Mail'); ?>:</b><?php echo $g_options["fontend_normal"]; ?></td>
-						<td><input type="text" name="email" value="<?php echo $post['email'];?>" /></td>
-					</tr>
-					<tr>
-						<td width="100px"><?php echo $g_options["font_normal"]; ?><b><?php echo l('Subject'); ?>:</b><?php echo $g_options["fontend_normal"]; ?></td>
-						<td><input type="text" name="subject" value="<?php echo $post['subject'];?>" /></td>
-					</tr>
-					<tr>
-						<td width="100px" valign="top"><?php echo $g_options["font_normal"]; ?><b><?php echo l('Message'); ?>:</b><?php echo $g_options["fontend_normal"]; ?></td>
-						<td><textarea name="message" cols="70" rows="6" /><?php echo $post['message'];?></textarea></td>
-					</tr>
-					<tr>
-						<td width="100px">&nbsp;</td>
-						<td>
-							<?php echo $g_options["font_normal"]; ?>
-								<input type="submit" name="editNews" value=" <?php echo l('Edit'); ?>  " />&nbsp;
-								<input type="checkbox" name="newsDelete" value="1" />&nbsp;<b><?php echo l('DELETE NEWS'); ?></b>
-							<?php echo $g_options["fontend_normal"]; ?>
-						</td>
-					</tr>
-				</table>
-			</form>
-		</td>
-	</tr>
-</table>
-</form>
-
-<?php
-}
-else {
-?>
-
-
-
-<?php
-}
-	$table = new Table(
-		array(
-			new TableColumn(
-				"date",
-				"Date",
-				"width=25"
-			),
-			new TableColumn(
-				"subject",
-				"Subject",
-				"width=50&embedlink=yes&link=" . urlencode("mode=admin&task=toolsNews&editpost=%k")
-			),
-			new TableColumn(
-				"user",
-				"Author",
-				"width=25"
-			)
-		),
-		"id",
-		"date",
-		"user",
-		false,
-		50,
-		"page",
-		"sort",
-		"sortorder"
-	);
-
-$query = mysql_query("SELECT * FROM ".DB_PREFIX."_News
-	ORDER BY ".$table->sort." ".$table->sortorder.", ".$table->sort2." ".$table->sortorder."
-	LIMIT ".$table->startitem.",".$table->numperpage."");
-$resultCount = mysql_query("SELECT COUNT(*) AS nc FROM ".DB_PREFIX."_News");
-$numitems = $resultCount['nc'];
-$table->draw($query, $numitems, 100, "");
-?>
