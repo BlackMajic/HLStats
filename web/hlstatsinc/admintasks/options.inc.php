@@ -112,8 +112,8 @@ pageHeader(array(l("Admin"),l('Options')), array(l("Admin")=>"index.php?mode=adm
 				<th><?php echo l("Hide Daily Awards"); ?></th>
 				<td>
 					<select name="option[hideAwards]">
-						<option value="0"><?php echo l('No'); ?></option>
-						<option value="1"><?php echo l('Yes'); ?></option>
+						<option value="0" <?php if($g_options['hideAwards'] === "0") echo 'selected="1"'; ?>><?php echo l('No'); ?></option>
+						<option value="1" <?php if($g_options['hideAwards'] === "1") echo 'selected="1"'; ?>><?php echo l('Yes'); ?></option>
 					</select>
 				</td>
 			</tr>
@@ -121,8 +121,8 @@ pageHeader(array(l("Admin"),l('Options')), array(l("Admin")=>"index.php?mode=adm
 				<th><?php echo l("Hide News"); ?></th>
 				<td>
 					<select name="option[hideNews]">
-						<option value="0"><?php echo l('No'); ?></option>
-						<option value="1"><?php echo l('Yes'); ?></option>
+						<option value="0" <?php if($g_options['hideNews'] === "0") echo 'selected="1"'; ?>><?php echo l('No'); ?></option>
+						<option value="1" <?php if($g_options['hideNews'] === "0") echo 'selected="1"'; ?>><?php echo l('Yes'); ?></option>
 					</select>
 				</td>
 			</tr>
@@ -130,8 +130,8 @@ pageHeader(array(l("Admin"),l('Options')), array(l("Admin")=>"index.php?mode=adm
 				<th><?php echo l("Show chart graphics"); ?></th>
 				<td>
 					<select name="option[showChart]">
-						<option value="0"><?php echo l('No'); ?></option>
-						<option value="1"><?php echo l('Yes'); ?></option>
+						<option value="0" <?php if($g_options['showChart'] === "0") echo 'selected="1"'; ?>><?php echo l('No'); ?></option>
+						<option value="1" <?php if($g_options['showChart'] === "0") echo 'selected="1"'; ?>><?php echo l('Yes'); ?></option>
 					</select>
 				</td>
 			</tr>
@@ -139,8 +139,8 @@ pageHeader(array(l("Admin"),l('Options')), array(l("Admin")=>"index.php?mode=adm
 				<th><?php echo l("Allow the use of signatures"); ?></th>
 				<td>
 					<select name="option[allowSig]">
-						<option value="0"><?php echo l('No'); ?></option>
-						<option value="1"><?php echo l('Yes'); ?></option>
+						<option value="0" <?php if($g_options['allowSig'] === "0") echo 'selected="1"'; ?>><?php echo l('No'); ?></option>
+						<option value="1" <?php if($g_options['allowSig'] === "0") echo 'selected="1"'; ?>><?php echo l('Yes'); ?></option>
 					</select>
 				</td>
 			</tr>
@@ -148,9 +148,21 @@ pageHeader(array(l("Admin"),l('Options')), array(l("Admin")=>"index.php?mode=adm
 				<th><?php echo l("Allow XML interface"); ?></th>
 				<td>
 					<select name="option[allowXML]">
-						<option value="0"><?php echo l('No'); ?></option>
-						<option value="1"><?php echo l('Yes'); ?></option>
+						<option value="0" <?php if($g_options['allowXML'] === "0") echo 'selected="1"'; ?>><?php echo l('No'); ?></option>
+						<option value="1" <?php if($g_options['allowXML'] === "0") echo 'selected="1"'; ?>><?php echo l('Yes'); ?></option>
 					</select>
+				</td>
+			</tr>
+		</table>
+		<h2><?php echo l('Paths'); ?></h2>
+		<table cellpadding="2" cellspacing="0" border="0">
+			<tr>
+				<th><?php echo l("Map Download URL"); ?></th>
+				<td>
+					<input type="text" name="option[sitename]" size="40"
+						value="<?php echo $g_options['map_dlurl']; ?>" /><br />
+					<span class="small">eg. http://domain.tld/maps/%GAME%/%MAP%.zip</span><br />
+					<span class="small">=&gt; http://domain.tld/maps/cstrike/nuke.zip</span><br />
 				</td>
 			</tr>
 		</table>

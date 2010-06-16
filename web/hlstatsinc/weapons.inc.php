@@ -199,7 +199,7 @@ pageHeader(
 
 				echo '<td class="',$rcol,'">';
 				echo '<a href="index.php?mode=weaponinfo&amp;weapon=',$entry['weapon'],'&amp;game=',$game,'">';
-				echo '<img src="'.$g_options['imgdir'].'weapons/',$game,'/',$entry['weapon'],'.png" alt="',$entry['name'],'" title="',$entry['name'],'" />';
+				echo '<img src="hlstatsimg/weapons/',$game,'/',$entry['weapon'],'.png" alt="',$entry['name'],'" title="',$entry['name'],'" />';
 				echo '</a>';
 				echo '</td>',"\n";
 

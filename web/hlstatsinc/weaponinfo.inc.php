@@ -217,7 +217,7 @@ pageHeader(
 
 				echo '<td class="',$rcol,'">';
 				echo '<a href="index.php?mode=playerinfo&amp;player=',$entry['killerId'],'">';
-				echo '<img src="'.$g_options['imgdir'].'player.gif" width="16" height="16" /> ',makeSavePlayerName($entry['killerName']);
+				echo '<img src="hlstatsimg/player.gif" width="16" height="16" /> ',makeSavePlayerName($entry['killerName']);
 				echo '</a>';
 				echo '</td>',"\n";
 

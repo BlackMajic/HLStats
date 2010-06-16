@@ -37,3 +37,6 @@ ALTER TABLE `#DB_PREFIX#_Users` ADD `authCode` VARCHAR( 40 ) CHARACTER SET utf8 
 ALTER TABLE `#DB_PREFIX#_Players` CHANGE `icq` `icq` VARCHAR( 10 ) NOT NULL ;
 
 ALTER TABLE `#DB_PREFIX#_Clans` ADD `steamGroup` VARCHAR( 128 ) CHARACTER SET utf8 COLLATE utf8_general_ci NOT NULL ;
+
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'imgdir';
+DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'imgpath';

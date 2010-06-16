@@ -166,9 +166,9 @@ pageHeader(
 );
 
 // map image
-$mapImage = $g_options['imgdir'].'/maps/'.strtolower($game).'/'.strtolower($map).'.jpg';
+$mapImage = 'hlstatsimg/maps/'.strtolower($game).'/'.strtolower($map).'.jpg';
 if(!file_exists($mapImage)) {
-	$mapImage = $g_options['imgdir'].'/noimage.jpg';
+	$mapImage = 'hlstatsimg/noimage.jpg';
 }
 
 ?>

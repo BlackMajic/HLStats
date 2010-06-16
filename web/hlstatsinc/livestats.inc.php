@@ -188,9 +188,9 @@ $server_details['players_connecting'] -= $server_details['numbots'];
 $server_details['players_connecting'] -= $server_details['hltvcount'];
 
 // map image
-$mapImage = $g_options['imgdir'].'/maps/'.strtolower($server['game']).'/'.strtolower($server_details['map']).'.jpg';
+$mapImage = 'hlstatsimg/maps/'.strtolower($server['game']).'/'.strtolower($server_details['map']).'.jpg';
 if(!file_exists($mapImage)) {
-	$mapImage = $g_options['imgdir'].'/noimage.jpg';
+	$mapImage = 'hlstatsimg/noimage.jpg';
 }
 
 // server details
@@ -330,7 +330,7 @@ while ($addon_list = mysql_fetch_assoc($query)) {
 
 				echo '<tr>';
 
-				echo '<td><img src="',$g_options['imgdir'],$img,'" alt="" width="16"/></td>';
+				echo '<td><img src="hlstatsimg/',$img,'" alt="" width="16"/></td>';
 				echo '<td><a href="index.php?mode=search&amp;game='.$server['game'].'&amp;q='.urlencode(makeSavePlayerName($p['name'])).'">',makeSavePlayerName($p['name']),'</a></td>';
 				echo '<td>',$p['frags'],'</td>';
 				echo '<td>',Format_Time($p['time']),'</td>';

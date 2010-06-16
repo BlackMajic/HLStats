@@ -76,7 +76,7 @@ $tstr = array_pop($titlestr);
 	</div>
 	<div id="header-logo">
 		<div id="logo">
-			<img src="<?php echo $g_options['imgdir']; ?>title.png" />
+			<img src="hlstatsimg/title.png" />
 		</div>
 		<div id="breadcrumb">
 			<a href="<?php echo $g_options["siteurl"]; ?>"><?php echo $g_options["sitename"]; ?></a>:
