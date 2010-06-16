@@ -1,6 +1,6 @@
 <?php
 /**
- * chart class file. uses the pChart library
+ * admin user auth class file.
  * @package HLStats
  * @author Johannes 'Banana' Keßler
  */

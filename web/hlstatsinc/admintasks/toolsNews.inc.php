@@ -47,6 +47,10 @@
  */
 
 $post = false;
+
+$return['status'] = false;
+$return['msg'] = false;
+
 if(!empty($_GET['editpost'])) {
 
 	$postnr = 0;
@@ -61,7 +65,7 @@ if(!empty($_GET['editpost'])) {
 
 if(isset($_POST['saveNews'])) {
 	if ($_POST["subject"] == "") {
-		echo "<b>",l('Error: Please provide a subject'),".</b><br><br>";
+		$return['msg'] = l('Error: Please provide a subject');
 	}
 	elseif ($_POST["message"] == "") {
 		echo "<b>".l('Error: Please provide a Message'),".</b><br><br>";
