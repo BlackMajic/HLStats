@@ -189,8 +189,7 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 			<?php
 				if ($awarddata["d_winner_id"]) {
 					echo "<a href=\"index.php?mode=playerinfo&amp;player="
-						. $awarddata["d_winner_id"] . "\"><img src=\""
-						. $g_options["imgdir"] . "/player.gif\" width=16 height=16 "
+						. $awarddata["d_winner_id"] . "\"><img src=\"hlstatsimg/player.gif\" width=16 height=16 "
 						. "hspace='4' border='0' align=\"middle\" alt=\"player.gif\">&nbsp;<b>"
 						. htmlspecialchars($awarddata["d_winner_name"]) . "</b></a> ("
 						. $awarddata["d_winner_count"] . " " . htmlspecialchars($awarddata["verb"]) . ")";
@@ -250,7 +249,7 @@ if(!$g_options['hideNews'] && $num_games === 1) {
 ?>
 		<tr>
 			<td align="left">
-				<img src="<?php echo $g_options["imgdir"]; ?>/server.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="server.gif">
+				<img src="hlstatsimg/server.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="server.gif">
 				<?php echo $rowdata["name"]; ?>
 			</td>
 			<td align="left"><?php echo $addr; ?></td>

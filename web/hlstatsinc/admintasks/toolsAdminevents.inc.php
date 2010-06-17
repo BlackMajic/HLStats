@@ -157,7 +157,7 @@ pageHeader(array(l("Admin"),l('Admin Event History')), array(l("Admin")=>"index.
 					<?php echo l('Date'); ?>
 				</a>
 				<?php if($sort == "eventTime") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo $rcol; ?>">
@@ -165,7 +165,7 @@ pageHeader(array(l("Admin"),l('Admin Event History')), array(l("Admin")=>"index.
 					<?php echo l('Type'); ?>
 				</a>
 				<?php if($sort == "type") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo $rcol; ?>"><?php echo l('Description'); ?></th>
@@ -174,7 +174,7 @@ pageHeader(array(l("Admin"),l('Admin Event History')), array(l("Admin")=>"index.
 					<?php echo l('Server'); ?>
 				</a>
 				<?php if($sort == "name") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo $rcol; ?>">
@@ -182,7 +182,7 @@ pageHeader(array(l("Admin"),l('Admin Event History')), array(l("Admin")=>"index.
 					<?php echo l('Map'); ?>
 				</a>
 				<?php if($sort == "map") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 		</tr>

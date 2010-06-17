@@ -129,7 +129,7 @@ pageHeader(
 		?>
 			</li>
 			<li>
-				<a href="<?php echo "index.php?mode=clans&amp;game=$game"; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/clan.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="clan.gif">&nbsp;<?php echo l('Clan Rankings'); ?></a>
+				<a href="<?php echo "index.php?mode=clans&amp;game=$game"; ?>"><img src="hlstatsimg/clan.gif" width="16" height="16" hspace="3" border="0" align="middle" alt="clan.gif">&nbsp;<?php echo l('Clan Rankings'); ?></a>
 			</li>
 		</ul>
 		<form method="GET" action="index.php">
@@ -179,7 +179,7 @@ pageHeader(
 					<?php echo l('Name'); ?>
 				</a>
 				<?php if($playersObj->getOption('sort') == "lastName") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
@@ -187,7 +187,7 @@ pageHeader(
 					<?php echo l('Points'); ?>
 				</a>
 				<?php if($playersObj->getOption('sort') == "skill") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
@@ -195,7 +195,7 @@ pageHeader(
 					<?php echo l('Kills'); ?>
 				</a>
 				<?php if($playersObj->getOption('sort') == "kills") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
@@ -203,7 +203,7 @@ pageHeader(
 					<?php echo l('Deaths'); ?>
 				</a>
 				<?php if($playersObj->getOption('sort') == "deaths") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
@@ -211,7 +211,7 @@ pageHeader(
 					<?php echo l('Kills per Death'); ?>
 				</a>
 				<?php if($playersObj->getOption('sort') == "kpd") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $playersObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 		</tr>

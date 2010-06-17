@@ -198,7 +198,7 @@ pageHeader(
 					<?php echo l('Player'); ?>
 				</a>
 				<?php if($sort == "playerId") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo $rcol; ?>">
@@ -206,7 +206,7 @@ pageHeader(
 					<?php echo l('Achieved'); ?>
 				</a>
 				<?php if($sort == "obj_count") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo $rcol; ?>">
@@ -214,7 +214,7 @@ pageHeader(
 					<?php echo l('Skill Bonus Total'); ?>
 				</a>
 				<?php if($sort == "obj_bonus") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 		</tr>

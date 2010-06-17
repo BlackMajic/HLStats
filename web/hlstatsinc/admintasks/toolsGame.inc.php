@@ -44,7 +44,7 @@
 	if ($auth->userdata["acclevel"] < 100) die ("Access denied!");
 ?>
 
-&nbsp;&nbsp;&nbsp;&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo $task->title; ?></b><p>
+&nbsp;&nbsp;&nbsp;&nbsp;<img src="hlstatsimg/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"><b>&nbsp;<?php echo $task->title; ?></b><p>
 
 <?php
 	if (isset($_POST['submitAdd'])) {

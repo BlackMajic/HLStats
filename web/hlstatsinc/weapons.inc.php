@@ -159,7 +159,7 @@ pageHeader(
 					<?php echo l('Name'); ?>
 				</a>
 				<?php if($sort == "name") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo $rcol; ?>">
@@ -167,7 +167,7 @@ pageHeader(
 					<?php echo l('Points Modifier'); ?>
 				</a>
 				<?php if($sort == "modifier") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo $rcol; ?>">
@@ -175,7 +175,7 @@ pageHeader(
 					<?php echo l('Kills'); ?>
 				</a>
 				<?php if($sort == "kills") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo $rcol; ?>"><?php echo l('Percent'); ?></th>

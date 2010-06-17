@@ -202,7 +202,7 @@ if(!file_exists($mapImage)) {
 					<?php echo l('Player'); ?>
 				</a>
 				<?php if($sort == "killerId") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo $rcol; ?>">
@@ -210,7 +210,7 @@ if(!file_exists($mapImage)) {
 					<?php echo l('Kills on'),' ',$map; ?>
 				</a>
 				<?php if($sort == "frags") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $sortorder; ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo $rcol; ?>"><?php echo l('Percentage of Kills'); ?></th>

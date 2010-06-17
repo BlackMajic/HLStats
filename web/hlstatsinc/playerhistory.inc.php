@@ -117,13 +117,13 @@ pageHeader(
 	<div class="left-box">
 		<ul class="sidemenu">
 			<li>
-				<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo l('Event History'); ?></a>
+				<a href="index.php?mode=playerhistory&amp;player=<?php echo $player; ?>"><img src="hlstatsimg/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo l('Event History'); ?></a>
 			</li>
 			<li>
-				<a href="index.php?mode=playerchathistory&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo l('Chat History'); ?></a>
+				<a href="index.php?mode=playerchathistory&amp;player=<?php echo $player; ?>"><img src="hlstatsimg/history.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="history.gif"><?php echo l('Chat History'); ?></a>
 			</li>
 			<li>
-				<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>"><img src="<?php echo $g_options["imgdir"]; ?>/player.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="player.gif"><?php echo l('Back to Player page'); ?></a>
+				<a href="index.php?mode=playerinfo&amp;player=<?php echo $player; ?>"><img src="hlstatsimg/player.gif" width='16' height='16' border='0' hspace="3" align="middle" alt="player.gif"><?php echo l('Back to Player page'); ?></a>
 			</li>
 		</ul>
 	</div>
@@ -162,7 +162,7 @@ pageHeader(
 					<?php echo l('Date'); ?>
 				</a>
 				<?php if($playerObj->getOption('sort') == "eventTime") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
@@ -170,7 +170,7 @@ pageHeader(
 					<?php echo l('Type'); ?>
 				</a>
 				<?php if($playerObj->getOption('sort') == "eventType") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo toggleRowClass($rcol); ?>"><?php echo l('Description'); ?></th>
@@ -179,7 +179,7 @@ pageHeader(
 					<?php echo l('Server'); ?>
 				</a>
 				<?php if($playerObj->getOption('sort') == "serverName") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 			<th class="<?php echo toggleRowClass($rcol); ?>">
@@ -187,7 +187,7 @@ pageHeader(
 					<?php echo l('Map'); ?>
 				</a>
 				<?php if($playerObj->getOption('sort') == "map") { ?>
-				<img src="<?php echo $g_options["imgdir"]; ?>/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
+				<img src="hlstatsimg/<?php echo $playerObj->getOption('sortorder'); ?>.gif" alt="Sorting" width="7" height="7" />
 				<?php } ?>
 			</th>
 		</tr>

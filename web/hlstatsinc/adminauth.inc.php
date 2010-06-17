@@ -44,7 +44,7 @@
 <table width="90%" align="center" border="0" cellspacing="0" cellpadding="0">
 
 <tr>
-	<td width="100%"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="<?php echo $g_options["imgdir"]; ?>/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Authorisation Required'); ?></b><p>
+	<td width="100%"><?php echo $g_options["font_normal"]; ?>&nbsp;<img src="hlstatsimg/downarrow.gif" width="9" height="6" border="0" align="middle" alt="downarrow.gif"> <b><?php echo l('Authorisation Required'); ?></b><p>
 
 	<form method="POST" action="<?php echo $_SERVER["REQUEST_URI"]; ?>" name="auth">
 
@@ -61,7 +61,7 @@
 			<table width="60%" border="0" cellspacing="0" cellpadding="0">
 
 			<tr valign="top">
-				<td width=40><img src="<?php echo $g_options["imgdir"]; ?>/warning.gif" width="16" height="16" border="0" hspace=5></td>
+				<td width=40><img src="hlstatsimg/warning.gif" width="16" height="16" border="0" hspace=5></td>
 				<td width="100%"><?php
 		echo $g_options["font_normal"];
 		echo "<b>$this->error</b>";
