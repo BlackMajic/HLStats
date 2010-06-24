@@ -86,7 +86,7 @@ function GetInt16($data, &$datastart) {
 	$temp = '';
 	// @todo: possible bug ?
 	//$temp = GetInt8($data, $datastart) + (GetInt8($data, $datastart) * 256);
-	$temp = GetInt8($data, $datastart) + (GetInt8($data, $datastart));
+	$temp = GetInt8($data, $datastart) + (GetInt8($data, $datastart)<<8);
 
 	return $temp;
 }
