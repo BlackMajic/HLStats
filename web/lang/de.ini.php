@@ -360,6 +360,7 @@ Profile updated successfully = Profil erfolgreich aktualisiert
 
 Player Details = Spieler Details
 Player Profile = Spielerprofil
+Profile = Profil
 Statistics Summary = Übersicht
 Member of Clan = Clanmitglied
 Real Name = Richtiger Name
