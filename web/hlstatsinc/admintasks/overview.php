@@ -74,7 +74,7 @@ pageHeader(array(l("Admin")), array(l("Admin")=>""));
 	</div>
 </div>
 <div id="main">
-	<h1><?php echo l('Admin overview'); ?></h1>
+	<h1><?php echo l('Overview'); ?></h1>
 	<h2><?php echo l('Tools'); ?></h2>
 	<ul>
 		<li>
