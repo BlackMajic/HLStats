@@ -135,7 +135,7 @@ $result = mysql_fetch_assoc($query);
 $adminEvents['pages'] = (int)ceil($result['rows']/50);
 mysql_freeresult($query);
 
-pageHeader(array(l("Admin"),l('Admin Event History')), array(l("Admin")=>"index.php?mode=admin",l('Admin Event History')=>''));
+pageHeader(array(l("Admin"),l('Event History')), array(l("Admin")=>"index.php?mode=admin",l('Event History')=>''));
 ?>
 
 <div id="sidebar">
@@ -149,7 +149,7 @@ pageHeader(array(l("Admin"),l('Admin Event History')), array(l("Admin")=>"index.
 	</div>
 </div>
 <div id="main">
-	<h1><?php echo l('Admin Event History'); ?></h1>
+	<h1><?php echo l('Event History'); ?></h1>
 	<table cellpadding="0" cellspacing="0" border="1" width="100%">
 		<tr>
 			<th class="<?php echo $rcol; ?>">

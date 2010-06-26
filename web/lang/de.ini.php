@@ -205,14 +205,14 @@ Weapon Background Colour = Waffenbilder Hintergrundfarbe
 Head Background Colour = Kopfzeilen Hintergrundfarbe
 Head Text Colour = kopfzeilen Textfarbe
 Fonts = Schriftarten
-Preset Styles = Vordefinierte Themen
+Preset Styles = Vordefinierte Designs
 Normal Font Tag = Normale Schrift Tag
 Normal Font Closing Tag = Normale Schrift Ende
 Small Font Tag = Kleine Schrift
 Small Font Closing Tag = Kleine Schrift Ende
 Title Font Tag = Titel Schrift
 Title Font Closing Tag = Titel Schrift Ende
-Load Preset Style = Definierte Themen laden
+Load Preset Style = Design verwenden
 Options updated successfully = Optionen erfolgreich gespeichert
 Operation successful = Aktion Erfolgreich
 
@@ -483,6 +483,7 @@ Avg. Member Points = Durchsch. Punkte pro Spieler
 Total Kills = Frags (alle)
 Total Deaths = Tote (alle)
 Contribution to Clan Kills = Beitrag zu den Clan Frags
+Steam Group page = Steam Gruppe
 
 Server Statistics = Serverstatistik
 Total Time = Gesamtzeit
@@ -528,3 +529,31 @@ Back to Action Statistics = Zurück zur Aktionsübersicht
 
 Back to start page = Zurück zur Startseite
 All = Alle
+
+Invalid auth data = Falsche Anmeldeinformationen
+Login successfull = Anmeldung erfolgreich
+
+Overview = Übersicht
+Edit Details = Details bearbeiten
+Back to admin overview = Zurück zur Admin Übersicht
+
+Enter player or clan ID = Eingabe von Spieler oder Clan ID
+Clan = Clan
+Clan Name = Clan Name
+Homepage = Homepage
+Steam group URL = Steam Gruppe URL
+MySpace = MySpace
+Facebook = Facebook
+Jabber = Jabber
+Steam Profile = Steam Profil
+
+Event History = Aktion Verlauf
+Host Statistics = Host Statistiken
+Optimize Database = Datenbank optimieren
+if you get "table handler does not support check/repair" = wenn die Meldung "table handler does not support check/repair" erscheint
+Optimizing tables... = Optimiere Tabellen...
+Analyzing tables... = Analysiere Tabellen...
+Reset Statistics = Statistiken zurücksetzten
+Update = Aktualisieren
+
+Can be an URL or even mailto:address = kann eine URL sein oder eine mailto:Adresse
