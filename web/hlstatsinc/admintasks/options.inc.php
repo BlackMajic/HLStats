@@ -46,12 +46,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-
-function whichStyle() {
-	$query = mysql_query("SELECT value FROM ".DB_PREFIX."_Options WHERE keyname = 'style'");
-	$data = mysql_fetch_assoc($query);
-	return $data['value'];
-}
+// get the available styles
+$styleFiles = glob("css/*.css");
 
 pageHeader(array(l("Admin"),l('Options')), array(l("Admin")=>"index.php?mode=admin",l('Options')=>''));
 ?>
@@ -172,8 +168,15 @@ pageHeader(array(l("Admin"),l('Options')), array(l("Admin")=>"index.php?mode=adm
 				<th><?php echo l("Load Preset Style"); ?></th>
 				<td>
 					<select name="option[style]">
-						<option value="0" <?php if($g_options['allowXML'] === "0") echo 'selected="1"'; ?>><?php echo l('No'); ?></option>
-						<option value="1" <?php if($g_options['allowXML'] === "0") echo 'selected="1"'; ?>><?php echo l('Yes'); ?></option>
+						<?php
+						foreach($styleFiles as $styleFile) {
+							$sfile = str_replace('.css','',basename($styleFile));
+							$selected='';
+							if($g_options['style'] === $sfile) $selected='selected="1"';
+							
+							echo '<option ',$selected,' value="',$sfile,'">',$sfile,'</option>';
+						}
+						?>
 					</select>
 				</td>
 			</tr>
