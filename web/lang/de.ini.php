@@ -17,6 +17,8 @@ None = Kein
 No Data = Keine Daten
 Percent = Prozent
 Currently disabled ! = Aktuell nicht aktiv.
+Could not save data = Daten konnten nicht gespeichert werden
+Data saved = Daten gespeichert
 
 Contents = Übersicht
 Games = Spiele
