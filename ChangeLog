@@ -10,13 +10,18 @@ HLStats ChangeLog
 *) New: Player profile has new myspace field /hls_set myspace url
 *) New: Player profile has new facebook field /hls_set facebook url
 *) New: Player profile has new jabber field /hls_set jabber url
-*) New: Player profile has new steamprofile field /hls_set steamprofile url
-*) New: Steam profile page lookup via SteamID. BCmath support (PHP) is needed.
+*) New: Player profile has new steamprofile field /hls_set steamprofile
+		url
+*) New: Steam profile page lookup via SteamID. BCmath support (PHP) is
+		needed.
 	http://www.php.net/manual/en/book.bc.php
 *) New: Clan Profile can new enter a steam group URL
+*) Changed: Only one admin user is now possible. Dropped admin rights
+			for now.
 *) Changed: Design options removed from options table
 *) Changed: imgpaht and imgdir option removed
-*) Changed: Host statistics in admin disabled. New version will include this again.
+*) Changed: Host statistics in admin disabled. New version will include
+			this again.
 *) Changed: Constant INCLUDE_PATH removed.
 *) Changed: hlstats.php file renamed to index.php
 				scripturl option has been removed.
