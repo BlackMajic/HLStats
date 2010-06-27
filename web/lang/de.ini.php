@@ -231,7 +231,7 @@ Here you can either add support for a game with a gamesupport_*.sql file or remo
 IF you remove support for a game, all data associated with this game will be deleted = Wenn ein Spiel entfernt wird, dann werden auch alle Daten für dieses Spiel gelöscht
 Choose a gamesupport_*.sql file, open it and paste the whole content into the following input field = Wählen Sie ein gamesupport_*.sql Datei und fügen Sie den Inhalt dieser Datei in die Textbox ein
 Add support for a game = Statistikinformationen für ein Spiel hinzufügen
-After creating a game, you will be able to configure servers, awards, etc. for that game under Game Settings = Nach dem Hinzufügen des Spiel kann man unter dem Punk Spiel Einstellungen den Server,Aktionen, etc. konfigurieren.
+After creating a game, you will be able to configure servers, awards, etc. for that game under Game Settings = Nach dem Hinzufügen eines Spiels kann man unter dem Punk Spiel Einstellungen den Server,Aktionen, etc. konfigurieren.
 Choose a gamesupport file from the install directory to install = Wählen Sie ein Spiel aus der Liste aus, dass Sie hinzufügen möchten
 The list contains only games which are not installed yet = Die Liste enthält nur die Spiele die noch nicht installiert sind
 ADD NEW GAME = Spiel hinzufügen
@@ -555,3 +555,5 @@ Can be an URL or even mailto:address = kann eine URL sein oder eine mailto:Adres
 
 Users = Benutzer
 Error with update = Fehler beim Update
+Gamesupport = Spielunterstützung
+Add game = Spiel hinzufügen
