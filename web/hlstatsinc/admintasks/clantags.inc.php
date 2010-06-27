@@ -1,5 +1,12 @@
 <?php
 /**
+ * manage the clan tags
+ * @package HLStats
+ * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
+ */
+ 
+/**
  *
  * Original development:
  * +
@@ -39,22 +46,62 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
 
-	$edlist = new EditList("id", DB_PREFIX."_ClanTags", "clan", true);
-	$edlist->columns[] = new EditListColumn("pattern", "Pattern", 40, true, "text", "", 64);
-	$edlist->columns[] = new EditListColumn("position", "Match Position", 0, true, "select", "EITHER/EITHER;START/START only;END/END only");
+if ($_POST) {
+	if ($edlist->update())
+		message("success", l("Operation successful"));
+	else
+		message("warning", $edlist->error());
+}
 
-
-	if ($_POST)
-	{
-		if ($edlist->update())
-			message("success", l("Operation successful"));
-		else
-			message("warning", $edlist->error());
-	}
-
+pageHeader(array(l("Admin"),l('Clan Tag Patterns')), array(l("Admin")=>"index.php?mode=admin",l('Clan Tag Patterns')=>''));
 ?>
+<div id="sidebar">
+	<h1><?php echo l('Options'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>
+				<a href="<?php echo "index.php?mode=admin"; ?>"><?php echo l('Back to admin overview'); ?></a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="main">
+	<h1><?php echo l('Clan Tag Patterns'); ?></h1>
+	<p>
+		<?php echo l("Here you can define the patterns used to determine what clan a player is in. These patterns are applied to players' names when they connect or change name"); ?>.
+	</p>
+	<p>
+		<?php echo l("Special characters in the pattern"); ?>:<p>
+		<table border="0" cellspacing="0" cellpadding="4">
+			<tr>
+				<th><?php echo l('Character'); ?></th>
+				<th><?php echo l('Description'); ?></th>
+			</tr>
+
+			<tr>
+				<td><?php echo $g_options["font_normal"],'<tt>A</tt>', $g_options["fontend_normal"]; ?></td>
+				<td><?php echo $g_options["font_normal"],l('Matches one character. Character is required'), $g_options["fontend_normal"]; ?></td>
+			</tr>
+
+			<tr>
+				<td><?php echo $g_options["font_normal"]; ?><tt>X</tt><?php echo $g_options["fontend_normal"]; ?></td>
+				<td><?php echo $g_options["font_normal"], l('Matches zero or one characters. Character is optional'), $g_options["fontend_normal"]; ?></td>
+			</tr>
+
+			<tr>
+				<td><?php echo $g_options["font_normal"]; ?><tt>a</tt><?php echo $g_options["fontend_normal"]; ?></td>
+				<td><?php echo $g_options["font_normal"], l('Matches literal A or a'), $g_options["fontend_normal"]; ?></td>
+			</tr>
+
+			<tr>
+				<td><?php echo $g_options["font_normal"]; ?><tt>x</tt><?php echo $g_options["fontend_normal"]; ?></td>
+				<td><?php echo $g_options["font_normal"], l('Matches literal X or x'), $g_options["fontend_normal"]; ?></td>
+			</tr>
+
+		</table>
+	</p>
+</div>
 
 <p>
 <?php echo l("Here you can define the patterns used to determine what clan a player is in. These patterns are applied to players' names when they connect or change name"); ?>.
