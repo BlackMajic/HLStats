@@ -144,6 +144,20 @@ class Admin {
 	}
 
 	/**
+	 * update the current users login data
+	 */
+	public function updateLogin($username,$pw) {
+		$ret = false;
+		
+		if(!empty($username) && !empty($pw)) {
+			$queryStr = "";
+			exit("todo");
+		}
+
+		return $ret;
+	}
+
+	/**
 	 * check if the user is logged in
 	 */
 	private function _checkAuth() {
