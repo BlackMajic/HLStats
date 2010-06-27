@@ -47,7 +47,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-if (isset($_POST['submitAdd'])) {
+if (isset($_POST['sub']['newgame'])) {
 	$newGame = trim($_POST['newGame']);
 	if(!empty($newGame)) {
 		// read the gamesupport_file
