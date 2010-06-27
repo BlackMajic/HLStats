@@ -47,6 +47,8 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+$return = false;
+
 if (isset($_POST['sub']['newgame'])) {
 	$newGame = trim($_POST['newGame']);
 	if(!empty($newGame)) {
@@ -110,21 +112,13 @@ elseif(isset($_POST['sub']['deleteGame'])) {
 
 			foreach($dbtables as $table) {
 				if($table == '".DB_PREFIX."_Events_Frags' || $table == '".DB_PREFIX."_Events_Teamkills') {
-					if(mysql_query("DELETE FROM `".$table."`
+					mysql_query("DELETE FROM `".$table."`
 									WHERE killerId IN (".$playerIdString.")
-										OR victimId IN (".$playerIdString.")")) {
-					}
-					else {
-						echo $table,' ',l("ERROR");
-					}
+										OR victimId IN (".$playerIdString.")");
 				}
 				else {
-					if(mysql_query("DELETE FROM `".$table."`
-									WHERE playerId IN (".$playerIdString.")")) {
-					}
-					else {
-						echo $table,' ',l("ERROR");
-					}
+					mysql_query("DELETE FROM `".$table."`
+									WHERE playerId IN (".$playerIdString.")");
 				}
 			}
 		}
@@ -141,12 +135,14 @@ elseif(isset($_POST['sub']['deleteGame'])) {
 		}
 
 		mysql_query("DELETE FROM `".DB_PREFIX."_Games`
-						WHERE code='".mysql_escape_string($gametodelete)."'")) {
+						WHERE code='".mysql_escape_string($gametodelete)."'");
 
 		// delete the players
 		if(!empty($players)) {
 			mysql_query("DELETE FROM ".DB_PREFIX."_Players WHERE playerId IN (".$playerIdString.")");
 		}
+
+		header('Location: index.php?mode=admin&task=games');
 	}
 }
 else {
