@@ -56,7 +56,7 @@ pageHeader(array(l("Admin")), array(l("Admin")=>""));
 				<a href="<?php echo "index.php?mode=admin&task=options"; ?>"><?php echo l('HLStats Options'); ?></a>
 			</li>
 			<li>
-				<a href="<?php echo "index.php"; ?>"><?php echo l('Admin Users'); ?></a>
+				<a href="<?php echo "index.php?mode=admin&task=adminusers"; ?>"><?php echo l('Admin Users'); ?></a>
 			</li>
 			<li>
 				<a href="<?php echo "index.php"; ?>"><?php echo l('Games'); ?></a>

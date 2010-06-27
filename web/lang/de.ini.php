@@ -218,15 +218,7 @@ Load Preset Style = Design verwenden
 Options updated successfully = Optionen erfolgreich gespeichert
 Operation successful = Aktion Erfolgreich
 
-Access Level = Berechtigung
-Access Levels = Berechtigungen
-Usernames and passwords can be set up for access to this HLStats Admin area. For most sites you will only want one admin user - yourself. Some sites may however need to give administration access to several people = Es können Benutzer die Zugang zu Administration erhalten sollen hier angelegt werden. In den meisten Fällen reicht ein Benutzer. Man kann aber auch mehrere Benutzer anlegen die die Einstellungen verwalten.
 Passwords are encrypted in the database and so cannot be viewed. However, you can change a user's password by entering a new plain text value in the Password field = Passwörter werden verschlüsselt in der Datenbank abgespeichert und können nicht wieder hergestellt werden. Es kann daher nur ein neues Passwort vergeben werden.
-Restricted = Eingeschränkt
-Administrator = Administrator
-users only have access to the Host Groups, Clan Tag Patterns, Weapons, Teams, Awards and Actions configuration areas. This means these users cannot set Options or add new Games, Servers or Admin Users to HLStats, or use any of the admin Tools = Benutzer haben nur eingeschränkten Zugriff. Diese Benutzer können keine wichtigen Einstellungen ändern
-users have full, unrestricted access = Benutzer mit vollen Rechten
-No Access = Kein Berechtigung
 
 ERROR while importing this game = FEHLER beim Import dieses Spieles
 Import done = Import erfolgreich
@@ -560,3 +552,5 @@ Reset Statistics = Statistiken zurücksetzten
 Update = Aktualisieren
 
 Can be an URL or even mailto:address = kann eine URL sein oder eine mailto:Adresse
+
+Users = Benuzter

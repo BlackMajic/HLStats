@@ -1,5 +1,12 @@
 <?php
 /**
+ * edit HLStats users
+ * @package HLStats
+ * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
+ */
+ 
+/**
  *
  * Original development:
  * +
@@ -39,7 +46,58 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-	if ($auth->userdata["acclevel"] < 100) die ("Access denied!");
+if(isset($_POST['sub']['edituser'])) {
+	$username = trim($_POST['user']['username']);
+	$pw = trim($_POST['user']['password']);
+
+	if(!empty($username)) {
+		$do = $adminObj->updateLogin($username,$pw);
+	}
+}
+
+pageHeader(array(l("Admin"),l('Users')), array(l("Admin")=>"index.php?mode=admin",l('Users')=>''));
+?>
+<div id="sidebar">
+	<h1><?php echo l('Options'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>
+				<a href="<?php echo "index.php?mode=admin"; ?>"><?php echo l('Back to admin overview'); ?></a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="main">
+	<h1><?php echo l('Users'); ?></h1>
+	<p>
+		<?php echo l('Passwords are encrypted in the database and so cannot be viewed. However, you can change a user\'s password by entering a new plain text value in the Password field'); ?>
+	</p>
+	<form method="post" action="">
+		<table cellpadding="2" cellspacing="0" border="0">
+			<tr>
+				<th><?php echo l('Username'); ?></th>
+				<td>
+					<input type="text" name="user[username]"
+						value="" />
+				</td>
+			</tr>
+			<tr>
+				<th><?php echo l('Password'); ?></th>
+				<td>
+					<input type="password" name="user[password]" value="" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="2">
+					<button type="submit" title="<?php echo l('Save'); ?>" name="sub[edituser]">
+						<?php echo l('Save'); ?>
+					</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+</div>
+<?php
 
 	$edlist = new EditList("username", DB_PREFIX."_Users", "user", false);
 	$edlist->columns[] = new EditListColumn("username", "Username", 15, true, "text", "", 16);
