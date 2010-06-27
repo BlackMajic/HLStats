@@ -553,4 +553,5 @@ Update = Aktualisieren
 
 Can be an URL or even mailto:address = kann eine URL sein oder eine mailto:Adresse
 
-Users = Benuzter
+Users = Benutzer
+Error with update = Fehler beim Update
