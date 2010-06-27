@@ -83,13 +83,14 @@ if (isset($_POST['sub']['newgame'])) {
 		}
 	}
 }
-elseif(isset($_POST['submitDelete'])) {
-	exit("dotododo");
-	if($_POST['gameToDelete'] != "") {
+elseif(isset($_POST['sub']['deleteGame'])) {
+	$gametodelete = trim($_POST['gameToDelete']);
+	if(!empty($gametodelete)) {
 
 		// we need first the playids for this game
 		$players = array();
-		$query = mysql_query("SELECT playerId FROM ".DB_PREFIX."_Players WHERE game = '".mysql_escape_string($_POST['gameToDelete'])."'");
+		$query = mysql_query("SELECT playerId FROM ".DB_PREFIX."_Players
+								WHERE game = '".mysql_escape_string($gametodelete)."'");
 		while($result = mysql_fetch_assoc($query)) {
 			$players[]= $result['playerId'];
 		}
@@ -107,29 +108,24 @@ elseif(isset($_POST['submitDelete'])) {
 				$dbtables[] = $table;
 			}
 
-			echo '<ul>';
 			foreach($dbtables as $table) {
-				echo "<li>";
 				if($table == '".DB_PREFIX."_Events_Frags' || $table == '".DB_PREFIX."_Events_Teamkills') {
-					if(mysql_query("DELETE FROM ".$table."
+					if(mysql_query("DELETE FROM `".$table."`
 									WHERE killerId IN (".$playerIdString.")
 										OR victimId IN (".$playerIdString.")")) {
-						echo $table,' ',l("OK");
 					}
 					else {
 						echo $table,' ',l("ERROR");
 					}
 				}
 				else {
-					if(mysql_query("DELETE FROM ".$table."
+					if(mysql_query("DELETE FROM `".$table."`
 									WHERE playerId IN (".$playerIdString.")")) {
-						echo $table,' ',l("OK");
 					}
 					else {
 						echo $table,' ',l("ERROR");
 					}
 				}
-				echo '</li>';
 			}
 		}
 
@@ -138,38 +134,19 @@ elseif(isset($_POST['submitDelete'])) {
 								DB_PREFIX.'_Roles', DB_PREFIX.'_Servers',
 								DB_PREFIX.'_Teams', DB_PREFIX.'_Weapons');
 		foreach($gameTables as $gt) {
-			echo "<li>";
-			if(mysql_query("DELETE FROM ".$gt." WHERE game = '".$_POST['gameToDelete']."'")) {
-				echo $gt,' ',l("OK");
-			}
-			else {
+			$do = mysql_query("DELETE FROM ".$gt." WHERE game = '".$_POST['gameToDelete']."'");
+			if($do === false) {
 				echo $gt,' ',l("ERROR");
 			}
-			echo "</li>";
 		}
 
-		echo "<li>";
-		if(mysql_query("DELETE FROM ".DB_PREFIX."_Games WHERE code='".$_POST['gameToDelete']."'")) {
-			echo "".DB_PREFIX."_Games ",l('OK');
-		}
-		else {
-			echo "hlstast_Games ",l('ERROR');
-		}
-		echo "</li>";
+		mysql_query("DELETE FROM `".DB_PREFIX."_Games`
+						WHERE code='".mysql_escape_string($gametodelete)."'")) {
 
 		// delete the players
 		if(!empty($players)) {
-			echo "<li>";
-			if(mysql_query("DELETE FROM ".DB_PREFIX."_Players WHERE playerId IN (".$playerIdString.")")) {
-				echo "".DB_PREFIX."_Players ",l('OK');
-			}
-			else {
-				echo "".DB_PREFIX."_Players ",l("ERROR");
-			}
-			echo "</li>";
+			mysql_query("DELETE FROM ".DB_PREFIX."_Players WHERE playerId IN (".$playerIdString.")");
 		}
-		echo "</ul>";
-		echo l("Done");
 	}
 }
 else {
