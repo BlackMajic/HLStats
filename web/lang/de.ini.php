@@ -17,6 +17,8 @@ None = Kein
 No Data = Keine Daten
 Percent = Prozent
 Currently disabled ! = Aktuell nicht aktiv.
+Could not save data = Daten konnten nicht gespeichert werden
+Data saved = Daten gespeichert
 
 Contents = Übersicht
 Games = Spiele
@@ -205,26 +207,18 @@ Weapon Background Colour = Waffenbilder Hintergrundfarbe
 Head Background Colour = Kopfzeilen Hintergrundfarbe
 Head Text Colour = kopfzeilen Textfarbe
 Fonts = Schriftarten
-Preset Styles = Vordefinierte Themen
+Preset Styles = Vordefinierte Designs
 Normal Font Tag = Normale Schrift Tag
 Normal Font Closing Tag = Normale Schrift Ende
 Small Font Tag = Kleine Schrift
 Small Font Closing Tag = Kleine Schrift Ende
 Title Font Tag = Titel Schrift
 Title Font Closing Tag = Titel Schrift Ende
-Load Preset Style = Definierte Themen laden
+Load Preset Style = Design verwenden
 Options updated successfully = Optionen erfolgreich gespeichert
 Operation successful = Aktion Erfolgreich
 
-Access Level = Berechtigung
-Access Levels = Berechtigungen
-Usernames and passwords can be set up for access to this HLStats Admin area. For most sites you will only want one admin user - yourself. Some sites may however need to give administration access to several people = Es können Benutzer die Zugang zu Administration erhalten sollen hier angelegt werden. In den meisten Fällen reicht ein Benutzer. Man kann aber auch mehrere Benutzer anlegen die die Einstellungen verwalten.
 Passwords are encrypted in the database and so cannot be viewed. However, you can change a user's password by entering a new plain text value in the Password field = Passwörter werden verschlüsselt in der Datenbank abgespeichert und können nicht wieder hergestellt werden. Es kann daher nur ein neues Passwort vergeben werden.
-Restricted = Eingeschränkt
-Administrator = Administrator
-users only have access to the Host Groups, Clan Tag Patterns, Weapons, Teams, Awards and Actions configuration areas. This means these users cannot set Options or add new Games, Servers or Admin Users to HLStats, or use any of the admin Tools = Benutzer haben nur eingeschränkten Zugriff. Diese Benutzer können keine wichtigen Einstellungen ändern
-users have full, unrestricted access = Benutzer mit vollen Rechten
-No Access = Kein Berechtigung
 
 ERROR while importing this game = FEHLER beim Import dieses Spieles
 Import done = Import erfolgreich
@@ -237,7 +231,7 @@ Here you can either add support for a game with a gamesupport_*.sql file or remo
 IF you remove support for a game, all data associated with this game will be deleted = Wenn ein Spiel entfernt wird, dann werden auch alle Daten für dieses Spiel gelöscht
 Choose a gamesupport_*.sql file, open it and paste the whole content into the following input field = Wählen Sie ein gamesupport_*.sql Datei und fügen Sie den Inhalt dieser Datei in die Textbox ein
 Add support for a game = Statistikinformationen für ein Spiel hinzufügen
-After creating a game, you will be able to configure servers, awards, etc. for that game under Game Settings = Nach dem Hinzufügen des Spiel kann man unter dem Punk Spiel Einstellungen den Server,Aktionen, etc. konfigurieren.
+After creating a game, you will be able to configure servers, awards, etc. for that game under Game Settings = Nach dem Hinzufügen eines Spiels kann man unter dem Punk Spiel Einstellungen den Server,Aktionen, etc. konfigurieren.
 Choose a gamesupport file from the install directory to install = Wählen Sie ein Spiel aus der Liste aus, dass Sie hinzufügen möchten
 The list contains only games which are not installed yet = Die Liste enthält nur die Spiele die noch nicht installiert sind
 ADD NEW GAME = Spiel hinzufügen
@@ -358,6 +352,7 @@ Profile updated successfully = Profil erfolgreich aktualisiert
 
 Player Details = Spieler Details
 Player Profile = Spielerprofil
+Profile = Profil
 Statistics Summary = Übersicht
 Member of Clan = Clanmitglied
 Real Name = Richtiger Name
@@ -483,6 +478,7 @@ Avg. Member Points = Durchsch. Punkte pro Spieler
 Total Kills = Frags (alle)
 Total Deaths = Tote (alle)
 Contribution to Clan Kills = Beitrag zu den Clan Frags
+Steam Group page = Steam Gruppe
 
 Server Statistics = Serverstatistik
 Total Time = Gesamtzeit
@@ -528,3 +524,36 @@ Back to Action Statistics = Zurück zur Aktionsübersicht
 
 Back to start page = Zurück zur Startseite
 All = Alle
+
+Invalid auth data = Falsche Anmeldeinformationen
+Login successfull = Anmeldung erfolgreich
+
+Overview = Übersicht
+Edit Details = Details bearbeiten
+Back to admin overview = Zurück zur Admin Übersicht
+
+Enter player or clan ID = Eingabe von Spieler oder Clan ID
+Clan = Clan
+Clan Name = Clan Name
+Homepage = Homepage
+Steam group URL = Steam Gruppe URL
+MySpace = MySpace
+Facebook = Facebook
+Jabber = Jabber
+Steam Profile = Steam Profil
+
+Event History = Aktion Verlauf
+Host Statistics = Host Statistiken
+Optimize Database = Datenbank optimieren
+if you get "table handler does not support check/repair" = wenn die Meldung "table handler does not support check/repair" erscheint
+Optimizing tables... = Optimiere Tabellen...
+Analyzing tables... = Analysiere Tabellen...
+Reset Statistics = Statistiken zurücksetzten
+Update = Aktualisieren
+
+Can be an URL or even mailto:address = kann eine URL sein oder eine mailto:Adresse
+
+Users = Benutzer
+Error with update = Fehler beim Update
+Gamesupport = Spielunterstützung
+Add game = Spiel hinzufügen

@@ -46,7 +46,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-pageHeader(array(l("Admin"),l('Admin Host Statistics')), array(l("Admin")=>"index.php?mode=admin",l('Admin Host Statistics')=>''));
+pageHeader(array(l("Admin"),l('Host Statistics')), array(l("Admin")=>"index.php?mode=admin",l('Host Statistics')=>''));
 
 ?>
 <div id="sidebar">
@@ -60,6 +60,6 @@ pageHeader(array(l("Admin"),l('Admin Host Statistics')), array(l("Admin")=>"inde
 	</div>
 </div>
 <div id="main">
-	<h1><?php echo l('Admin Host Statistics'); ?></h1>
+	<h1><?php echo l('Host Statistics'); ?></h1>
 	<p><?php echo l('Currently disabled !'); ?></p>
 </div>

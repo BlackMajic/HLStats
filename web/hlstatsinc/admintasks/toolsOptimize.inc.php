@@ -59,7 +59,7 @@ if(!empty($_GET['upgrade'])) {
 	}
 }
 
-pageHeader(array(l("Admin"),l('Admin Optimize Database')), array(l("Admin")=>"index.php?mode=admin",l('Admin Optimize Database')=>''));
+pageHeader(array(l("Admin"),l('Optimize Database')), array(l("Admin")=>"index.php?mode=admin",l('Optimize Database')=>''));
 ?>
 <div id="sidebar">
 	<h1><?php echo l('Options'); ?></h1>
@@ -72,7 +72,7 @@ pageHeader(array(l("Admin"),l('Admin Optimize Database')), array(l("Admin")=>"in
 	</div>
 </div>
 <div id="main">
-	<h1><?php echo l('Admin Optimize Database'); ?></h1>
+	<h1><?php echo l('Optimize Database'); ?></h1>
 	<a href="index.php?mode=admin&amp;task=toolsOptimize&amp;upgrade=yes"><?php echo l('Click here'); ?></a> <?php echo l('if you get "table handler does not support check/repair"'); ?></a>
 	<?php
 		if ($upgrade === true) {

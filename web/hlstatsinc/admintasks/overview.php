@@ -56,13 +56,13 @@ pageHeader(array(l("Admin")), array(l("Admin")=>""));
 				<a href="<?php echo "index.php?mode=admin&task=options"; ?>"><?php echo l('HLStats Options'); ?></a>
 			</li>
 			<li>
-				<a href="<?php echo "index.php"; ?>"><?php echo l('Admin Users'); ?></a>
+				<a href="<?php echo "index.php?mode=admin&task=adminusers"; ?>"><?php echo l('Admin Users'); ?></a>
 			</li>
 			<li>
-				<a href="<?php echo "index.php"; ?>"><?php echo l('Games'); ?></a>
+				<a href="<?php echo "index.php?mode=admin&task=games"; ?>"><?php echo l('Games'); ?></a>
 			</li>
 			<li>
-				<a href="<?php echo "index.php"; ?>"><?php echo l('Clan Tag Patterns'); ?></a>
+				<a href="<?php echo "index.php?mode=admin&task=clantags"; ?>"><?php echo l('Clan Tag Patterns'); ?></a>
 			</li>
 			<li>
 				<a href="<?php echo "index.php"; ?>"><?php echo l('Server Plugins'); ?></a>
@@ -74,7 +74,7 @@ pageHeader(array(l("Admin")), array(l("Admin")=>""));
 	</div>
 </div>
 <div id="main">
-	<h1><?php echo l('Admin overview'); ?></h1>
+	<h1><?php echo l('Overview'); ?></h1>
 	<h2><?php echo l('Tools'); ?></h2>
 	<ul>
 		<li>

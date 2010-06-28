@@ -144,6 +144,34 @@ class Admin {
 	}
 
 	/**
+	 * update the current user login data
+	 * @param string $username The new username
+	 * @param string $pw The new password
+	 * @return boolean $ret
+	 */
+	public function updateLogin($username,$pw) {
+		$ret = false;
+		
+		if(!empty($username)) {
+			$queryStr = "UPDATE `".DB_PREFIX."_Users`
+							SET `username` = '".mysql_escape_string($username)."'";
+			if(!empty($pw)) {
+				$pw = md5($pw);
+				$queryStr .= ", `password` = '".mysql_escape_string($pw)."'";
+			}
+
+			$queryStr .= " WHERE `username` = '".$this->_userData['username']."'";
+
+			$query = mysql_query($queryStr);
+			if($query !== false) {
+				$ret = true;
+			}
+		}
+
+		return $ret;
+	}
+
+	/**
 	 * check if the user is logged in
 	 */
 	private function _checkAuth() {
