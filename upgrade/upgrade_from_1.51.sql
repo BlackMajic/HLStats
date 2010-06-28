@@ -65,3 +65,5 @@ DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'body_vlink';
 DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'body_text';
 DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'body_bgcolor';
 DELETE FROM `#DB_PREFIX#_Options` WHERE `keyname` = 'body_background';
+
+UPDATE `#DB_PREFIX#_Options` SET `value` = 'default' WHERE `keyname` =  'style';
