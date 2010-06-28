@@ -56,7 +56,7 @@
 			foreach ($inputStrArr as $line) {
 				$line = trim($line);
 				if(!preg_match("/^#/",$line) && $line != "") {
-					$query =mysql_query($line);
+					$query = mysql_query($line);
 					if(!$query) {
 						echo("Query Failed: ".$line);
 						$i++;
