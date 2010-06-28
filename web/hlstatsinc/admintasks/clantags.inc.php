@@ -48,13 +48,22 @@
 
 $return = false;
 if(isset($_POST['sub']['patterns'])) {
+
+	if(!empty($_POST['del'])) {
+		foreach($_POST['del'] as $k=>$v) {
+			$query = mysql_query("DELETE FROM `".DB_PREFIX."_ClanTags`
+									WHERE `id` = '".mysql_escape_string($k)."'");
+			unset($_POST['pat'][$k]);
+		}
+	}
+
 	if(!empty($_POST['pat']) && !empty($_POST['sel'])) {
 		// update given patterns
 		foreach($_POST['pat'] as $k=>$v) {
 			$v = trim($v);
 			if(!empty($v) && isset($_POST['sel'][$k])) {
 				$query = mysql_query("UPDATE `".DB_PREFIX."_ClanTags`
-										SET `pattern` = '".mysql_escape_string($v)."',
+										SET `pattern` = '".$v."',
 											`position` = '".mysql_escape_string($_POST['sel'][$k])."'
 										WHERE `id` = '".$k."'");
 				if($query === false) {
@@ -201,8 +210,7 @@ pageHeader(array(l("Admin"),l('Clan Tag Patterns')), array(l("Admin")=>"index.ph
 				echo '</select>';
 				echo '</td>';
 
-				echo '<td>';
-				echo '</td>';
+				echo '<td><input type="checkbox" name="del[',$pat['id'],']" value="yes" /></td>';
 
 				echo '</tr>';
 			}
