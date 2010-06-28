@@ -5,7 +5,7 @@
  * @author Johannes 'Banana' Keßler
  * @copyright Johannes 'Banana' Keßler
  */
- 
+
 /**
  *
  * Original development:
@@ -46,12 +46,53 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+$return = false;
+if(isset($_POST['sub']['patterns'])) {
+	if(!empty($_POST['pat']) && !empty($_POST['sel'])) {
+		// update given patterns
+		foreach($_POST['pat'] as $k=>$v) {
+			$v = trim($v);
+			if(!empty($v) && isset($_POST['sel'][$k])) {
+				$query = mysql_query("UPDATE `".DB_PREFIX."_ClanTags`
+										SET `pattern` = '".mysql_escape_string($v)."',
+											`position` = '".mysql_escape_string($_POST['sel'][$k])."'
+										WHERE `id` = '".$k."'");
+				if($query === false) {
+					$return['status'] = "1";
+					$return['msg'] = l('Data could not be saved');
+				}
+			}
+		}
+	}
 
-if ($_POST) {
-	if ($edlist->update())
-		message("success", l("Operation successful"));
-	else
-		message("warning", $edlist->error());
+	if(isset($_POST['newpat'])) {
+		$newOne = trim($_POST['newpat']);
+		if(!empty($newOne) && !empty($_POST['newsel'])) {
+			$query = mysql_query("INSERT INTO `".DB_PREFIX."_ClanTags`
+									SET `pattern` = '".mysql_escape_string($newOne)."',
+										`position` = '".mysql_escape_string($_POST['newsel'])."'");
+			if($query === false) {
+				$return['status'] = "1";
+				$return['msg'] = l('Data could not be saved');
+			}
+		}
+	}
+
+	if($return === false) {
+		header('Location: index.php?mode=admin&task=clantags');
+	}
+
+}
+
+$patterns = false;
+// get the patterns
+$query = mysql_query("SELECT id,pattern,position
+		FROM `".DB_PREFIX."_ClanTags`
+		ORDER BY position, pattern, id");
+if(mysql_num_rows($query) > 0) {
+	while($result = mysql_fetch_assoc($query)) {
+		$patterns[] = $result;
+	}
 }
 
 pageHeader(array(l("Admin"),l('Clan Tag Patterns')), array(l("Admin")=>"index.php?mode=admin",l('Clan Tag Patterns')=>''));
@@ -72,7 +113,7 @@ pageHeader(array(l("Admin"),l('Clan Tag Patterns')), array(l("Admin")=>"index.ph
 		<?php echo l("Here you can define the patterns used to determine what clan a player is in. These patterns are applied to players' names when they connect or change name"); ?>.
 	</p>
 	<p>
-		<?php echo l("Special characters in the pattern"); ?>:<p>
+		<h2><?php echo l("Special characters in the pattern"); ?></h2>
 		<table border="0" cellspacing="0" cellpadding="4">
 			<tr>
 				<th><?php echo l('Character'); ?></th>
@@ -80,119 +121,112 @@ pageHeader(array(l("Admin"),l('Clan Tag Patterns')), array(l("Admin")=>"index.ph
 			</tr>
 
 			<tr>
-				<td><?php echo $g_options["font_normal"],'<tt>A</tt>', $g_options["fontend_normal"]; ?></td>
-				<td><?php echo $g_options["font_normal"],l('Matches one character. Character is required'), $g_options["fontend_normal"]; ?></td>
+				<td><tt>A</tt></td>
+				<td><?php echo l('Matches one character. Character is required'); ?></td>
 			</tr>
 
 			<tr>
-				<td><?php echo $g_options["font_normal"]; ?><tt>X</tt><?php echo $g_options["fontend_normal"]; ?></td>
-				<td><?php echo $g_options["font_normal"], l('Matches zero or one characters. Character is optional'), $g_options["fontend_normal"]; ?></td>
+				<td><tt>X</tt></td>
+				<td><?php echo l('Matches zero or one characters. Character is optional'); ?></td>
 			</tr>
 
 			<tr>
-				<td><?php echo $g_options["font_normal"]; ?><tt>a</tt><?php echo $g_options["fontend_normal"]; ?></td>
-				<td><?php echo $g_options["font_normal"], l('Matches literal A or a'), $g_options["fontend_normal"]; ?></td>
+				<td><tt>a</tt></td>
+				<td><?php echo l('Matches literal A or a'); ?></td>
 			</tr>
 
 			<tr>
-				<td><?php echo $g_options["font_normal"]; ?><tt>x</tt><?php echo $g_options["fontend_normal"]; ?></td>
-				<td><?php echo $g_options["font_normal"], l('Matches literal X or x'), $g_options["fontend_normal"]; ?></td>
+				<td><tt>x</tt></td>
+				<td><?php echo l('Matches literal X or x'); ?></td>
 			</tr>
-
 		</table>
 	</p>
+	<p>
+		<h2><?php echo l('Example patterns'); ?></h2>
+		<table border="0" cellspacing="0" cellpadding="4">
+			<tr>
+				<th><?php echo l('Pattern'); ?></th>
+				<th><?php echo l('Description'); ?></th>
+				<th><?php echo l('Example'); ?></th>
+			</tr>
+			<tr>
+				<td><tt>[AXXXXX]</tt></td>
+				<td><?php echo l('Matches 1 to 6 characters inside square braces'); ?></td>
+				<td><tt>[ZOOM]Player</tt></td>
+			</tr>
+
+			<tr>
+				<td><tt>{AAXX}</tt></td>
+				<td><?php echo l('Matches 2 to 4 characters inside curly braces'); ?></td>
+				<td><tt>{S3G}Player</tt></td>
+			</tr>
+
+			<tr>
+				<td><tt>rex>></tt></td>
+				<td><?php echo l('Matches the string rex>>, REX>>, etc.'); ?></td>
+				<td><tt>REX>>Tyranno</tt></td>
+			</tr>
+		</table>
+	</p>
+	<p>
+		<?php echo l('Avoid adding patterns to the database that are too generic. Always ensure you have at least one literal (non-special) character in the pattern -- for example if you were to add the pattern "AXXA", it would match any player with 2 or more letters in their name'); ?>!<br />
+		<br />
+		<?php echo l("The Match Position field sets which end of the player's name the clan tag is allowed to appear"); ?>.
+	</p>
+	<?php if(!empty($patterns)) { ?>
+	<form method="post" action="">
+	<table cellpadding="2" cellspacing="0" border="0">
+		<tr>
+			<th><?php echo l('Pattern'); ?></th>
+			<th><?php echo l('Match Position'); ?></th>
+			<th><?php echo l('Delete'); ?></th>
+		</tr>
+	<?php
+			foreach($patterns as $pat) {
+				echo '<tr>';
+
+				echo '<td><input type="text" size="30" name="pat[',$pat['id'],']" value="',$pat['pattern'],'"/></td>';
+
+				echo '<td>';
+				echo '<select name="sel[',$pat['id'],']">';
+					$selected = '';
+					if($pat['position'] == "EITHER") $selected = 'selected="1"';
+					echo '<option ',$selected,' value="EITHER">',l('EITHER'),'</option>';
+					$selected = '';
+					if($pat['position'] == "START") $selected = 'selected="1"';
+					echo '<option ',$selected,' value="START">',l('START'),'</option>';
+					$selected = '';
+					if($pat['position'] == "END") $selected = 'selected="1"';
+					echo '<option ',$selected,' value="END">',('END'),'</option>';
+				echo '</select>';
+				echo '</td>';
+
+				echo '<td>';
+				echo '</td>';
+
+				echo '</tr>';
+			}
+	?>
+		<tr>
+			<td>
+				<?php echo l('new'); ?> <input type="text" size="30" name="newpat" value="" />
+			</td>
+			<td colspan="2">
+				<select name="newsel">
+					<option value="EITHER">EITHER</option>
+					<option  value="START">START</option>
+					<option  value="END">END</option>
+				</select>
+			</td>
+		</tr>
+		<tr>
+			<td colspan="2">
+				<button type="submit" name="sub[patterns]" title="<?php echo l('Save'); ?>">
+					<?php echo l('Save'); ?>
+				</button>
+			</td>
+		</tr>
+	</table>
+	</form>
+	<?php } ?>
 </div>
-
-<p>
-<?php echo l("Here you can define the patterns used to determine what clan a player is in. These patterns are applied to players' names when they connect or change name"); ?>.
-</p>
-
-<?php echo l("Special characters in the pattern"); ?>:<p>
-
-<table border="0" cellspacing="0" cellpadding="4">
-
-<tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-	<td><?php echo $g_options["font_small"],l('Character'),$g_options["fontend_small"]; ?></td>
-	<td><?php echo $g_options["font_small"],l('Description'),$g_options["fontend_small"]; ?></td>
-</tr>
-
-<tr>
-	<td><?php echo $g_options["font_normal"],'<tt>A</tt>', $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"],l('Matches one character. Character is required'), $g_options["fontend_normal"]; ?></td>
-</tr>
-
-<tr>
-	<td><?php echo $g_options["font_normal"]; ?><tt>X</tt><?php echo $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"], l('Matches zero or one characters. Character is optional'), $g_options["fontend_normal"]; ?></td>
-</tr>
-
-<tr>
-	<td><?php echo $g_options["font_normal"]; ?><tt>a</tt><?php echo $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"], l('Matches literal A or a'), $g_options["fontend_normal"]; ?></td>
-</tr>
-
-<tr>
-	<td><?php echo $g_options["font_normal"]; ?><tt>x</tt><?php echo $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"], l('Matches literal X or x'), $g_options["fontend_normal"]; ?></td>
-</tr>
-
-</table><p>
-
-<?php echo l('Example patterns'); ?>:<p>
-
-<table border="0" cellspacing="0" cellpadding="4">
-
-<tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-	<td><?php echo $g_options["font_small"],l('Pattern'), $g_options["fontend_small"]; ?></td>
-	<td><?php echo $g_options["font_small"],l('Description'), $g_options["fontend_small"]; ?></td>
-	<td><?php echo $g_options["font_small"],l('Example'), $g_options["fontend_small"]; ?></td>
-</tr>
-
-<tr>
-	<td><?php echo $g_options["font_normal"]; ?><tt>[AXXXXX]</tt><?php echo $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"],l('Matches 1 to 6 characters inside square braces'), $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"]; ?><tt>[ZOOM]Player</tt><?php echo $g_options["fontend_normal"]; ?></td>
-</tr>
-
-<tr>
-	<td><?php echo $g_options["font_normal"]; ?><tt>{AAXX}</tt><?php echo $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"], l('Matches 2 to 4 characters inside curly braces'), $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"]; ?><tt>{S3G}Player</tt><?php echo $g_options["fontend_normal"]; ?></td>
-</tr>
-
-<tr>
-	<td><?php echo $g_options["font_normal"]; ?><tt>rex>></tt><?php echo $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"],l('Matches the string rex>>, REX>>, etc.'), $g_options["fontend_normal"]; ?></td>
-	<td><?php echo $g_options["font_normal"]; ?><tt>REX>>Tyranno</tt><?php echo $g_options["fontend_normal"]; ?></td>
-</tr>
-
-</table><p>
-
-<?php echo l('Avoid adding patterns to the database that are too generic. Always ensure you have at least one literal (non-special) character in the pattern -- for example if you were to add the pattern "AXXA", it would match any player with 2 or more letters in their name'); ?>!
-<p>
-
-<?php echo l("The Match Position field sets which end of the player's name the clan tag is allowed to appear"); ?>.<p>
-
-<?php
-
-	$query = mysql_query("
-		SELECT
-			id,
-			pattern,
-			position
-		FROM
-			".DB_PREFIX."_ClanTags
-		ORDER BY
-			position,
-			pattern,
-			id
-	");
-
-	$edlist->draw($query);
-?>
-
-<table width="75%" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td align="center"><input type="submit" value="  <?php echo l('Apply'); ?>  " class="submit"></td>
-</tr>
-</table>
