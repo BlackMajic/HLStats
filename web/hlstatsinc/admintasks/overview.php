@@ -65,7 +65,7 @@ pageHeader(array(l("Admin")), array(l("Admin")=>""));
 				<a href="<?php echo "index.php?mode=admin&task=clantags"; ?>"><?php echo l('Clan Tag Patterns'); ?></a>
 			</li>
 			<li>
-				<a href="<?php echo "index.php"; ?>"><?php echo l('Server Plugins'); ?></a>
+				<a href="<?php echo "index.php?mode=admin&task=plugins"; ?>"><?php echo l('Server Plugins'); ?></a>
 			</li>
 			<li>
 				<a href="<?php echo "index.php"; ?>"><?php echo l('Back to game overview'); ?></a>

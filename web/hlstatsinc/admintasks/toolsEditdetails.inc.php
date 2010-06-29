@@ -175,7 +175,6 @@ if(isset($_POST['submit']['searchForId'])) {
 
 pageHeader(array(l("Admin"),l('Edit Details')), array(l("Admin")=>"index.php?mode=admin",l('Edit Details')=>''));
 ?>
-
 <div id="sidebar">
 	<h1><?php echo l('Options'); ?></h1>
 	<div class="left-box">

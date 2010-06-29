@@ -88,7 +88,7 @@ if(isset($_POST['sub']['patterns'])) {
 	}
 
 	if($return === false) {
-		header('Location: index.php?mode=admin&task=clantags');
+		header('Location: index.php?mode=admin&task=clantags#tags');
 	}
 
 }
@@ -182,9 +182,20 @@ pageHeader(array(l("Admin"),l('Clan Tag Patterns')), array(l("Admin")=>"index.ph
 		<br />
 		<?php echo l("The Match Position field sets which end of the player's name the clan tag is allowed to appear"); ?>.
 	</p>
+	<a name="tags"></a>
+	<?php
+		if(!empty($return)) {
+			if($return['status'] === "1") {
+				echo '<div class="error">',$return['msg'],'</div>';
+			}
+			elseif($return['status'] === "2") {
+				echo '<div class="success">',$return['msg'],'</div>';
+			}
+		}
+	?>
 	<?php if(!empty($patterns)) { ?>
 	<form method="post" action="">
-	<table cellpadding="2" cellspacing="0" border="0">
+	<table cellpadding="2" cellspacing="0" border="1" width="100%">
 		<tr>
 			<th><?php echo l('Pattern'); ?></th>
 			<th><?php echo l('Match Position'); ?></th>
