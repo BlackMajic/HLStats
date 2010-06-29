@@ -78,7 +78,9 @@ pageHeader(array(l("Admin"),l('Users')), array(l("Admin")=>"index.php?mode=admin
 <div id="main">
 	<h1><?php echo l('Users'); ?></h1>
 	<p>
-		<?php echo l('Passwords are encrypted in the database and so cannot be viewed. However, you can change a user\'s password by entering a new plain text value in the Password field'); ?>
+		<?php echo l('Passwords are encrypted in the database and so cannot be viewed. However, you can change a user\'s password by entering a new plain text value in the Password field'); ?><br />
+		<br />
+		<?php echo l('Note: After changing the admin password you need to authenticate again.'); ?>
 	</p>
 	<?php
 		if(!empty($return)) {
