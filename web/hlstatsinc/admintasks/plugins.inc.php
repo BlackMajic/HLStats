@@ -58,6 +58,14 @@
 $return = false;
 
 if(isset($_POST['sub']['saveAddons'])) {
+	if(!empty($_POST['del'])) {
+		foreach($_POST['del'] as $k=>$v) {
+			$query = mysql_query("DELETE FROM `".DB_PREFIX."_Server_Addons`
+									WHERE `rule` = '".mysql_escape_string($k)."'");
+			unset($_POST['rule'][$k]);
+		}
+	}
+	
 	if(!empty($_POST['rule']) && !empty($_POST['add'])) {
 		// update given addons
 		foreach($_POST['rule'] as $k=>$v) {
@@ -72,6 +80,22 @@ if(isset($_POST['sub']['saveAddons'])) {
 					$return['status'] = "1";
 					$return['msg'] = l('Data could not be saved');
 				}
+			}
+		}
+	}
+
+	if(isset($_POST['newrule'])) {
+		$newOne = trim($_POST['newrule']);
+		$newAdd = trim($_POST['newadd']);
+		$newURL = trim($_POST['newurl']);
+		if(!empty($newOne) && !empty($newAdd)) {
+			$query = mysql_query("INSERT INTO `".DB_PREFIX."_Server_Addons`
+									SET `rule` = '".mysql_escape_string($newOne)."',
+										`addon` = '".mysql_escape_string($newAdd)."',
+										`url` = '".mysql_escape_string($newurl)."'");
+			if($query === false) {
+				$return['status'] = "1";
+				$return['msg'] = l('Data could not be saved');
 			}
 		}
 	}
