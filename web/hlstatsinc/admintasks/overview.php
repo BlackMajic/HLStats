@@ -46,6 +46,16 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
+$gameList = false;
+// get the games
+$query = mysql_query("SELECT code,name FROM `".DB_PREFIX."_Games`
+					ORDER BY name ASC");
+if(mysql_num_rows($query) > 0) {
+	while($result = mysql_fetch_assoc($query)) {
+		$gameList[] = $result;
+	}
+}
+
 pageHeader(array(l("Admin")), array(l("Admin")=>""));
 ?>
 <div id="sidebar">
@@ -70,6 +80,25 @@ pageHeader(array(l("Admin")), array(l("Admin")=>""));
 			<li>
 				<a href="<?php echo "index.php"; ?>"><?php echo l('Back to game overview'); ?></a>
 			</li>
+		</ul>
+	</div>
+	<h1><?php echo l('Games'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<?php
+			if(!empty($gameList)) {
+				foreach($gameList as $g) {
+			?>
+				<li>
+					<a href="index.php?mode=admin&task=gameoverview&code=<?php echo $g['code']; ?>"><?php echo $g['name']; ?></a>
+				</li>
+			<?php
+				}
+			} else { ?>
+			<li>
+				<a href="<?php echo "index.php?mode=admin&task=games"; ?>"><?php echo l('No games available'); ?></a>
+			</li>
+			<?php } ?>
 		</ul>
 	</div>
 </div>
