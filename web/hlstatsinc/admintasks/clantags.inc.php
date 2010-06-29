@@ -206,7 +206,7 @@ pageHeader(array(l("Admin"),l('Clan Tag Patterns')), array(l("Admin")=>"index.ph
 					echo '<option ',$selected,' value="START">',l('START'),'</option>';
 					$selected = '';
 					if($pat['position'] == "END") $selected = 'selected="1"';
-					echo '<option ',$selected,' value="END">',('END'),'</option>';
+					echo '<option ',$selected,' value="END">',l('END'),'</option>';
 				echo '</select>';
 				echo '</td>';
 
@@ -221,9 +221,9 @@ pageHeader(array(l("Admin"),l('Clan Tag Patterns')), array(l("Admin")=>"index.ph
 			</td>
 			<td colspan="2">
 				<select name="newsel">
-					<option value="EITHER">EITHER</option>
-					<option  value="START">START</option>
-					<option  value="END">END</option>
+					<option value="EITHER"><?php echo l('EITHER'); ?></option>
+					<option  value="START"><?php echo l('START'); ?></option>
+					<option  value="END"><?php echo l('END'); ?></option>
 				</select>
 			</td>
 		</tr>

@@ -219,6 +219,7 @@ Options updated successfully = Optionen erfolgreich gespeichert
 Operation successful = Aktion Erfolgreich
 
 Passwords are encrypted in the database and so cannot be viewed. However, you can change a user's password by entering a new plain text value in the Password field = Passwörter werden verschlüsselt in der Datenbank abgespeichert und können nicht wieder hergestellt werden. Es kann daher nur ein neues Passwort vergeben werden.
+Note: After changing the admin password you need to authenticate again. = Hinweis: Nach Änderung des Passwortes muss man sich neu anmelden.
 
 ERROR while importing this game = FEHLER beim Import dieses Spieles
 Import done = Import erfolgreich
@@ -244,9 +245,10 @@ Pattern = Muster
 Example patterns = Musterbeispiele
 Example = Beispiel
 Match Position = Muster Position
-EITHER = Beide
-START only = Nur Anfang
-END only = Nur Ende
+EITHER = A. oder E.
+START = Nur Anfang
+END = Nur Ende
+new = Neu
 Here you can define the patterns used to determine what clan a player is in. These patterns are applied to players' names when they connect or change name = Hier bestimmt man die Muster zur Erkennung der Spieler in welchem Clan diese sind. Diese Erkennung wird beim verbinden mit dem Spiel durchgeführt.
 Special characters in the pattern = Speizelle Zeichen innerhalb des Musters
 Character = Zeichen
