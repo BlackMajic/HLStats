@@ -25,6 +25,7 @@ th {
 	text-align: left;
 	font-weight: bold;
 	vertical-align: top;
+	background-color: #ccc;
 }
 .row-light {
 	background-color: #fff;

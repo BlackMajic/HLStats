@@ -1,5 +1,12 @@
 <?php
 /**
+ * manage the plugins which will be shown in server live view
+ * @package HLStats
+ * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
+ */
+ 
+/**
  *
  * Original development:
  * +
@@ -39,16 +46,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-   // Plugin adminstration
-
-	if ($auth->userdata["acclevel"] < 80) die ("Access denied!");
-
-	$edlist = new EditList("rule", DB_PREFIX."_Server_Addons", "game", false);
-	$edlist->columns[] = new EditListColumn("rule", "Rule", 25, true, "text", "", 64);
-	$edlist->columns[] = new EditListColumn("addon", "Addon", 25, true, "text", "", 64);
-	$edlist->columns[] = new EditListColumn("url", "URL", 40, true, "text", "", 255);
-
-
+/*
 	if ($_POST)
 	{
 		if ($edlist->update())
@@ -56,72 +54,162 @@
 		else
 			message("warning", $edlist->error());
 	}
+*/
+$return = false;
 
+if(isset($_POST['sub']['saveAddons'])) {
+	if(!empty($_POST['rule']) && !empty($_POST['add'])) {
+		// update given addons
+		foreach($_POST['rule'] as $k=>$v) {
+			$v = trim($v);
+			if(!empty($v) && isset($_POST['add'][$k])) {
+				$query = mysql_query("UPDATE `".DB_PREFIX."_Server_Addons`
+										SET `rule` = '".$v."',
+											`addon` = '".mysql_escape_string($_POST['add'][$k])."',
+											`url` = '".mysql_escape_string($_POST['url'][$k])."'
+										WHERE `rule` = '".$k."'");
+				if($query === false) {
+					$return['status'] = "1";
+					$return['msg'] = l('Data could not be saved');
+				}
+			}
+		}
+	}
+
+	if($return === false) {
+		header('Location: index.php?mode=admin&task=plugins#plugins');
+	}
+}
+
+$addons = false;
+// get the addons from db
+$query = mysql_query("SELECT rule,addon,url
+						FROM `".DB_PREFIX."_Server_Addons`
+						ORDER BY rule ASC");
+if(mysql_num_rows($query) > 0) {
+	unset($result);
+	while($result = mysql_fetch_assoc($query)) {
+		$addons[] = $result;
+	}
+}
+
+pageHeader(array(l("Admin"),l('Server Plugins')), array(l("Admin")=>"index.php?mode=admin",l('Server Plugins')=>''));
 ?>
-
-<?php echo l('Here you can define a list of addons (plugins) the HLStats live statistics page will detect'); ?>.<br>
-<?php echo l('When HLStats queries a server for the rules the server will return something like this'); ?>:<br><br>
-<table border="0" cellspacing="0" cellpadding="4">
-	<tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-		<td><?php echo $g_options["font_small"],l('Rule'), $g_options["fontend_small"]; ?></td>
-		<td><?php echo $g_options["font_small"],l('Value'), $g_options["fontend_small"]; ?></td>
-	</tr>
-	<tr>
-		<td><?php echo $g_options["font_normal"]; ?>mp_footsteps<?php echo $g_options["fontend_normal"]; ?></td>
-		<td><?php echo $g_options["font_normal"]; ?>1<?php echo $g_options["fontend_normal"]; ?></td>
-	</tr>
-	<tr>
-		<td><?php echo $g_options["font_normal"]; ?>sv_timelimit<?php echo $g_options["fontend_normal"]; ?></td>
-		<td><?php echo $g_options["font_normal"]; ?>30<?php echo $g_options["fontend_normal"]; ?></td>
-	</tr>
-</table><br>
-<br>
-<?php echo l("Addons usually create a cvar that is publicly available in the rules list. In most cases the cvar that shows the addons existance just shows the version of the addon. You can configure HLStats on this page to then show the proper name of the plugin and it's version on the live statistics page. For example"); ?>
-:<br><br>
-<table border="0" cellspacing="0" cellpadding="4">
-	<tr bgcolor="<?php echo $g_options["table_head_bgcolor"]; ?>">
-		<td><?php echo $g_options["font_small"], l('Rule'), $g_options["fontend_small"]; ?></td>
-		<td><?php echo $g_options["font_small"], l('Value'), $g_options["fontend_small"]; ?></td>
-		<td><?php echo $g_options["font_small"], l('Addon'), $g_options["fontend_small"]; ?></td>
-		<td><?php echo $g_options["font_small"], l('Version'), $g_options["fontend_small"]; ?></td>
-	</tr>
-	<tr>
-		<td><?php echo $g_options["font_normal"]; ?>cdversion<?php echo $g_options["fontend_normal"]; ?></td>
-		<td><?php echo $g_options["font_normal"]; ?>4.14<?php echo $g_options["fontend_normal"]; ?></td>
-		<td><?php echo $g_options["font_normal"]; ?>Cheating Death<?php echo $g_options["fontend_normal"]; ?></td>
-		<td><?php echo $g_options["font_normal"]; ?>4.14<?php echo $g_options["fontend_normal"]; ?></td>
-	</tr>
-	<tr>
-		<td><?php echo $g_options["font_normal"]; ?>hlguard_version<?php echo $g_options["fontend_normal"]; ?></td>
-		<td><?php echo $g_options["font_normal"]; ?>4.14<?php echo $g_options["fontend_normal"]; ?></td>
-		<td><?php echo $g_options["font_normal"]; ?>HLGuard<?php echo $g_options["fontend_normal"]; ?></td>
-		<td><?php echo $g_options["font_normal"]; ?>4.14<?php echo $g_options["fontend_normal"]; ?></td>
-	</tr>
-</table><br><br>
-
-<?php echo l('The value in the table above shows the addon version. To include the version in your proper name of the addon you can use a'); ?> <b>%</b>.<br />
-<?php echo l('If the addon happens to have a home page where more information can be found on the addon, you can put it in as the URL which will be linked to'); ?>.<br>
-<?php echo l('These default addons should help make understanding this feature easier'); ?>.<br><br>
-
-<?php
-
-	$query = mysql_query("
-		SELECT
-			rule,
-			addon,
-			url
-		FROM
-			".DB_PREFIX."_Server_Addons
-		ORDER BY
-			rule
-		ASC
-	");
-
-	$edlist->draw($query);
-?>
-
-<table width="75%" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td align="center"><input type="submit" value=" <?php echo l('Apply'); ?> " class="submit"></td>
-</tr>
-</table>
+<div id="sidebar">
+	<h1><?php echo l('Options'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>
+				<a href="<?php echo "index.php?mode=admin"; ?>"><?php echo l('Back to admin overview'); ?></a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="main">
+	<h1><?php echo l('Server Plugins'); ?></h1>
+	<p>
+		<?php echo l('Here you can define a list of addons (plugins) the HLStats live statistics page will detect'); ?>.<br>
+		<?php echo l('When HLStats queries a server for the rules the server will return something like this'); ?>:<br>
+		<table border="1" cellspacing="0" cellpadding="4">
+			<tr>
+				<th><?php echo l('Rule'); ?></th>
+				<th><?php echo l('Value'); ?></th>
+			</tr>
+			<tr>
+				<td>mp_footsteps</td>
+				<td>1</td>
+			</tr>
+			<tr>
+				<td>sv_timelimit</td>
+				<td>30</td>
+			</tr>
+		</table><br />
+		<br />
+		
+		<?php echo l("Addons usually create a cvar that is publicly available in the rules list. In most cases the cvar that shows the addons existance just shows the version of the addon. You can configure HLStats on this page to then show the proper name of the plugin and it's version on the live statistics page. For example"); ?>:<br />
+		<br />
+		<table border="1" cellspacing="0" cellpadding="4">
+			<tr>
+				<th><?php echo l('Rule'); ?></th>
+				<th><?php echo l('Value'); ?></th>
+				<th><?php echo l('Addon'); ?></th>
+				<th><?php echo l('Version'); ?></th>
+			</tr>
+			<tr>
+				<td>cdversion</td>
+				<td>4.14</td>
+				<td>Cheating Death</td>
+				<td>4.14</td>
+			</tr>
+			<tr>
+				<td>hlguard_version</td>
+				<td>4.14</td>
+				<td>HLGuard</td>
+				<td>4.14</td>
+			</tr>
+		</table><br />
+		<br />
+		<?php echo l('The value in the table above shows the addon version. To include the version in your proper name of the addon you can use a'); ?> <b>%</b>.<br />
+		<?php echo l('If the addon happens to have a home page where more information can be found on the addon, you can put it in as the URL which will be linked to'); ?>.<br>
+		<?php echo l('These default addons should help make understanding this feature easier'); ?>.<br>
+		<br>
+	</p>
+	<a name="plugins"></a>
+	<?php
+		if(!empty($return)) {
+			if($return['status'] === "1") {
+				echo '<div class="error">',$return['msg'],'</div>';
+			}
+			elseif($return['status'] === "2") {
+				echo '<div class="success">',$return['msg'],'</div>';
+			}
+		}
+	?>
+	<?php if(!empty($addons)) { ?>
+	<form method="post" action="">
+		<table cellpadding="2" cellspacing="0" border="1" width="100%">
+			<tr>
+				<th><?php echo l('Rule'); ?></td>
+				<th><?php echo l('Addon'); ?></td>
+				<th><?php echo l('URL'); ?></td>
+				<th><?php echo l('Delete'); ?></td>
+			</tr>
+			<?php foreach($addons as $addon) { ?>
+			<tr>
+				<td>
+					<input type="text" name="rule[<?php echo $addon['rule']; ?>]" value="<?php echo $addon['rule']; ?>" />
+				</td>
+				<td>
+					<input type="text" name="add[<?php echo $addon['rule']; ?>]" value="<?php echo $addon['addon']; ?>" />
+				</td>
+				<td>
+					<input type="text" name="url[<?php echo $addon['rule']; ?>]" value="<?php echo $addon['url']; ?>" />
+				</td>
+				<td>
+					<input type="checkbox" name="del[<?php echo $addon['rule']; ?>]" value="yes" />
+				</td>
+			</tr>
+			<?php } ?>
+			<tr>
+				<td>
+					<?php echo l('new'); ?>: <br/>
+					<input type="text" name="newrule" value="" />
+				</td>
+				<td>
+					<input type="text" name="newadd" value="" />
+				</td>
+				<td colspan="2">
+					<input type="text" name="newurl" value="" />
+				</td>
+			</tr>
+			<tr>
+				<td colspan="4" align="right">
+					<button type="submit" title="<?php echo l('Save'); ?>" name="sub[saveAddons]">
+						<?php echo l('Save'); ?>
+					</button>
+				</td>
+			</tr>
+		</table>
+	</form>
+	<?php } ?>
+</div>

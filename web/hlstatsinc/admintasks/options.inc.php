@@ -81,22 +81,7 @@ pageHeader(array(l("Admin"),l('Options')), array(l("Admin")=>"index.php?mode=adm
 	<div class="left-box">
 		<ul class="sidemenu">
 			<li>
-				<a style="color:#CC0001;" href="<?php echo "index.php?mode=admin&task=options"; ?>"><?php echo l('HLStats Options'); ?></a>
-			</li>
-			<li>
-				<a href="<?php echo "index.php"; ?>"><?php echo l('Admin Users'); ?></a>
-			</li>
-			<li>
-				<a href="<?php echo "index.php"; ?>"><?php echo l('Games'); ?></a>
-			</li>
-			<li>
-				<a href="<?php echo "index.php"; ?>"><?php echo l('Clan Tag Patterns'); ?></a>
-			</li>
-			<li>
-				<a href="<?php echo "index.php"; ?>"><?php echo l('Server Plugins'); ?></a>
-			</li>
-			<li>
-				<a href="<?php echo "index.php"; ?>"><?php echo l('Back to game overview'); ?></a>
+				<a href="<?php echo "index.php?mode=admin"; ?>"><?php echo l('Back to admin overview'); ?></a>
 			</li>
 		</ul>
 	</div>
