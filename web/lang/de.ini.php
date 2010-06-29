@@ -217,6 +217,7 @@ Title Font Closing Tag = Titel Schrift Ende
 Load Preset Style = Design verwenden
 Options updated successfully = Optionen erfolgreich gespeichert
 Operation successful = Aktion Erfolgreich
+No games available = Kein Spiel installiert
 
 Passwords are encrypted in the database and so cannot be viewed. However, you can change a user's password by entering a new plain text value in the Password field = Passwörter werden verschlüsselt in der Datenbank abgespeichert und können nicht wieder hergestellt werden. Es kann daher nur ein neues Passwort vergeben werden.
 Note: After changing the admin password you need to authenticate again. = Hinweis: Nach Änderung des Passwortes muss man sich neu anmelden.
@@ -559,3 +560,13 @@ Users = Benutzer
 Error with update = Fehler beim Update
 Gamesupport = Spielunterstützung
 Add game = Spiel hinzufügen
+
+Game Overview = Spielübersicht
+Add a server to accept data from. = Füge einen Game-Server hinzu um die Daten zu akzeptieren.
+Reset the statistics for this game. = Statistiken für dieses Spiel zurücksetzten.
+Manage the actions. = Verwaltung der Aktionen.
+Manage the teams. = Verwaltung der Teams.
+Manage the roles. = Verwaltung der Rollen.
+Manage the weapons. = Verwaltung der Waffen.
+Manage the award for each weapon. = Verwaltung der Auszeichnungen für jede Waffe.
+Manage the awards for each action. = Verwaltung der Auszeichnung für jede Aktion.
