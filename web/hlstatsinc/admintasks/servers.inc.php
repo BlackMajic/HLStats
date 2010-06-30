@@ -1,5 +1,12 @@
 <?php
 /**
+ * manage the server for a game
+ * @package HLStats
+ * @author Johannes 'Banana' Keßler
+ * @copyright Johannes 'Banana' Keßler
+ */
+
+/**
  *
  * Original development:
  * +
@@ -39,37 +46,129 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-	if ($auth->userdata["acclevel"] < 100) die ("Access denied!");
-
-	$edlist = new EditList("serverId", DB_PREFIX."_Servers", "server");
-	$edlist->columns[] = new EditListColumn("game", "Game", 0, true, "hidden", $gamecode);
-	$edlist->columns[] = new EditListColumn("address", "IP Address", 15, true, "ipaddress", "", 15);
-	$edlist->columns[] = new EditListColumn("port", "Port", 5, true, "text", "27015", 5);
-	$edlist->columns[] = new EditListColumn("name", "Server Name", 22, true, "text", "", 64);
-	$edlist->columns[] = new EditListColumn("rcon_password", "Rcon Password", 10, false, "text", "", 48);
-	$edlist->columns[] = new EditListColumn("defaultMap", "Default Server Map", 22, false, "text", "", 48);
-
-	$advanced = false;
-	if(!empty($_GET['advanced'])) {
-		if ($_GET['advanced'] == "1") {
-			$edlist->columns[] = new EditListColumn("publicaddress", "Public Address", 20, false, "text", "", 64);
-			$edlist->columns[] = new EditListColumn("statusurl", "Status URL", 20, false, "text", "", 255);
-			$advanced = true;
+$gc = false;
+$servers = false;
+// get the game, without it we can no do anyting
+if(isset($_GET['gc'])) {
+	$gc = trim($_GET['gc']);
+	$check = validateInput($gc,'nospace');
+	if($check === true) {
+		$query = mysql_query("SELECT s.serverId, s.address, s.port,
+								s.name AS serverName,
+								s.publicaddress, s.statusurl,
+								s.rcon_password, s.defaultMap,
+								g.name AS gameName
+							FROM `".DB_PREFIX."_Servers` AS s
+							LEFT JOIN `".DB_PREFIX."_Games` AS g ON g.code = s.game
+							WHERE s.game = '".mysql_escape_string($gc)."'
+							ORDER BY address ASC, port ASC");
+		if(mysql_num_rows($query) > 0) {
+			while($result = mysql_fetch_assoc($query)) {
+				$servers[] = $result;
+			}
 		}
 	}
+}
+else {
+	exit('Missing game code');
+}
 
-
-	if (isset($_POST['submitServer'])) {
-		if ($edlist->update())
-			message("success", l("Operation successful"));
-		else
-			message("warning", $edlist->error());
-	}
-
+pageHeader(array(l("Admin"),l('Servers')), array(l("Admin")=>"index.php?mode=admin",l('Servers')=>''));
 ?>
-<p><?php echo l('Enter the addresses of all servers that you want to accept data from'); ?></p>
-<p><?php echo l('HLStats can use Rcon to give feedback to users when they'); ?> <a href="index.php?mode=help#set"><?php echo l('update their profile'); ?></a> <?php echo l('if you enable Rcon support in hlstats.conf and specify an Rcon Password for each server'); ?>.</p>
-<p><?php echo l('The Default map is used to sepecify the map if HLStats is unable to determine the map'); ?>.</p>
+
+<div id="sidebar">
+	<h1><?php echo l('Options'); ?></h1>
+	<div class="left-box">
+		<ul class="sidemenu">
+			<li>
+				<a href="index.php?mode=admin&task=gameoverview&code=<?php echo $gc; ?>"><?php echo l('Back to game overview'); ?></a>
+			</li>
+			<li>
+				<a href="index.php?mode=admin"><?php echo l('Back to admin overview'); ?></a>
+			</li>
+		</ul>
+	</div>
+</div>
+<div id="main">
+	<h1><?php echo l('Servers for '); ?>: <?php echo $servers[0]['gameName']; ?></h1>
+	<p>
+		<?php echo l('Enter the addresses of all servers that you want to accept data from'); ?>
+	</p>
+	<p>
+		<?php echo l('HLStats can use Rcon to give feedback to users when they'); ?>
+		<a href="index.php?mode=help#set"><?php echo l('update their profile'); ?></a>
+		<?php echo l('if you enable Rcon support in hlstats.conf and specify an Rcon Password for each server'); ?>.
+	</p>
+	<p>
+		<?php echo l('The Default map is used to sepecify the map if HLStats is unable to determine the map'); ?>.
+	</p>
+	<?php if(!empty($servers)) { ?>
+	<table cellpadding="2" cellspacing="0" border="1" width="100%">
+		<tr>
+			<th>&nbsp;</th>
+			<th><?php echo l('IP Address'); ?> *</th>
+			<th><?php echo l('Port'); ?> *</th>
+			<th><?php echo l('Server Name'); ?> *</th>
+			<th><?php echo l('Rcon Password'); ?></th>
+			<th><?php echo l('Default Server Map'); ?></th>
+			<th><?php echo l('Delete'); ?></th>
+		</tr>
+	<?php foreach($servers as $s) { ?>
+		<tr>
+			<td><img src="hlstatsimg/server.gif" alt="<?php echo l('Server'); ?>" /></td>
+			<td>
+				<input size="10" type="text" name="server[<?php echo $s['serverId']; ?>]" value="<?php echo $s['address']; ?>" />
+			</td>
+			<td>
+				<input size="5" type="text" name="port[<?php echo $s['serverId']; ?>]" value="<?php echo $s['port']; ?>" />
+			</td>
+			<td>
+				<input size="25" type="text" name="name[<?php echo $s['serverId']; ?>]" value="<?php echo $s['serverName']; ?>" />
+			</td>
+			<td>
+				<input size="10"  type="text" name="rcon[<?php echo $s['serverId']; ?>]" value="<?php echo $s['rcon_password']; ?>" />
+			</td>
+			<td>
+				<input size="10"  type="text" name="map[<?php echo $s['serverId']; ?>]" value="<?php echo $s['defaultMap']; ?>" />
+			</td>
+			<td align="center">
+				<input type="checkbox" name="del[<?php echo $s['serverId']; ?>]" value="yes" />
+			</td>
+		</tr>
+	<?php } ?>
+		<tr>
+			<td><?php echo l('new'); ?></td>
+			<td>
+				<input size="10" type="text" name="newIP" value="" />
+			</td>
+			<td>
+				<input size="5" type="text" name="newport" value="" />
+			</td>
+			<td>
+				<input size="25" type="text" name="newname" value="" />
+			</td>
+			<td>
+				<input size="10"  type="text" name="newrcon" value="" />
+			</td>
+			<td colspan="2">
+				<input size="10"  type="text" name="newmap" value="" />
+			</td>
+
+		</tr>
+		<tr>
+			<td colspan="6">
+				<button type="submit" name="sub[saveServer]" title="<?php echo l('Save'); ?>">
+					<?php echo l('Save'); ?>
+				</button>
+			</td>
+		</tr>
+	</table>
+	<?php } ?>
+</div>
+
+
+
+
 
 <?php
 	if ($advanced === true) {
