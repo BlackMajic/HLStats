@@ -129,7 +129,7 @@ label {
 }
 input,select {
 	padding: 2px;
-	border:1px solid #eee;
+	border:1px solid #ddd;
 	font: normal 1em Verdana, sans-serif;
 	color:#777;
 }

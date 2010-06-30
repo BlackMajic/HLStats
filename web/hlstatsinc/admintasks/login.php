@@ -81,7 +81,7 @@ pageHeader(array(l("Admin")), array(l("Admin")=>""));
 	<div class="left-box">
 		<ul class="sidemenu">
 			<li>
-				<a href="<?php echo "index.php"; ?>"><?php echo l('Back to game overview'); ?></a>
+				<a href="<?php echo "index.php"; ?>"><?php echo l('Back to game statistics'); ?></a>
 			</li>
 		</ul>
 	</div>

@@ -53,6 +53,31 @@ if(isset($_GET['gc'])) {
 	$gc = trim($_GET['gc']);
 	$check = validateInput($gc,'nospace');
 	if($check === true) {
+
+		// update
+		if(!empty($_POST['server']) && !empty($_POST['port'])) {
+			// update given patterns
+			foreach($_POST['server'] as $k=>$v) {
+				$v = trim($v);
+				if(!empty($v) && isset($_POST['server'][$k])) {
+					$query = mysql_query("UPDATE `".DB_PREFIX."_Servers`
+											SET `address` = '".$v."',
+												`port` = '".mysql_escape_string(trim($_POST['port'][$k]))."',
+												`name` = '".mysql_escape_string(trim($_POST['name'][$k]))."',
+												`port` = '".mysql_escape_string(trim($_POST['port'][$k]))."',
+												`port` = '".mysql_escape_string(trim($_POST['port'][$k]))."',
+												`port` = '".mysql_escape_string(trim($_POST['port'][$k]))."',
+												`port` = '".mysql_escape_string(trim($_POST['port'][$k]))."'
+											WHERE `serverId` = '".$k."'");
+					if($query === false) {
+						$return['status'] = "1";
+						$return['msg'] = l('Data could not be saved');
+					}
+				}
+			}
+		}
+
+		// load the server
 		$query = mysql_query("SELECT s.serverId, s.address, s.port,
 								s.name AS serverName,
 								s.publicaddress, s.statusurl,
@@ -72,6 +97,8 @@ if(isset($_GET['gc'])) {
 else {
 	exit('Missing game code');
 }
+
+$rcol = "row-dark";
 
 pageHeader(array(l("Admin"),l('Servers')), array(l("Admin")=>"index.php?mode=admin",l('Servers')=>''));
 ?>
@@ -109,54 +136,61 @@ pageHeader(array(l("Admin"),l('Servers')), array(l("Admin")=>"index.php?mode=adm
 			<th><?php echo l('IP Address'); ?> *</th>
 			<th><?php echo l('Port'); ?> *</th>
 			<th><?php echo l('Server Name'); ?> *</th>
-			<th><?php echo l('Rcon Password'); ?></th>
-			<th><?php echo l('Default Server Map'); ?></th>
 			<th><?php echo l('Delete'); ?></th>
 		</tr>
 	<?php foreach($servers as $s) { ?>
 		<tr>
-			<td><img src="hlstatsimg/server.gif" alt="<?php echo l('Server'); ?>" /></td>
+			<td class="<?php echo toggleRowClass($rcol); ?>"><img src="hlstatsimg/server.gif" alt="<?php echo l('Server'); ?>" /></td>
 			<td>
 				<input size="10" type="text" name="server[<?php echo $s['serverId']; ?>]" value="<?php echo $s['address']; ?>" />
 			</td>
-			<td>
+			<td class="<?php echo ($rcol); ?>">
 				<input size="5" type="text" name="port[<?php echo $s['serverId']; ?>]" value="<?php echo $s['port']; ?>" />
 			</td>
-			<td>
+			<td class="<?php echo ($rcol); ?>">
 				<input size="25" type="text" name="name[<?php echo $s['serverId']; ?>]" value="<?php echo $s['serverName']; ?>" />
 			</td>
-			<td>
-				<input size="10"  type="text" name="rcon[<?php echo $s['serverId']; ?>]" value="<?php echo $s['rcon_password']; ?>" />
-			</td>
-			<td>
-				<input size="10"  type="text" name="map[<?php echo $s['serverId']; ?>]" value="<?php echo $s['defaultMap']; ?>" />
-			</td>
-			<td align="center">
+			<td align="center" class="<?php echo ($rcol); ?>">
 				<input type="checkbox" name="del[<?php echo $s['serverId']; ?>]" value="yes" />
 			</td>
 		</tr>
+		<tr>
+			<td class="<?php echo ($rcol); ?>">&nbsp;</td>
+			<td colspan="3" class="small <?php echo ($rcol); ?>">
+				<b><?php echo l('Rcon Password'); ?> :</b>
+				<input size="10"  type="text" name="rcon[<?php echo $s['serverId']; ?>]" value="<?php echo $s['rcon_password']; ?>" />&nbsp;
+				&nbsp;
+				<b><?php echo l('Default Server Map'); ?> :</b>
+				<input size="10"  type="text" name="map[<?php echo $s['serverId']; ?>]" value="<?php echo $s['defaultMap']; ?>" />
+			</td>
+			<td class="<?php echo ($rcol); ?>">&nbsp;</td>
+		</tr>
 	<?php } ?>
 		<tr>
-			<td><?php echo l('new'); ?></td>
-			<td>
+			<td class="<?php echo toggleRowClass($rcol); ?>"><?php echo l('new'); ?></td>
+			<td class="<?php echo ($rcol); ?>">
 				<input size="10" type="text" name="newIP" value="" />
 			</td>
-			<td>
+			<td class="<?php echo ($rcol); ?>">
 				<input size="5" type="text" name="newport" value="" />
 			</td>
-			<td>
+			<td class="<?php echo ($rcol); ?>">
 				<input size="25" type="text" name="newname" value="" />
 			</td>
-			<td>
-				<input size="10"  type="text" name="newrcon" value="" />
-			</td>
-			<td colspan="2">
-				<input size="10"  type="text" name="newmap" value="" />
-			</td>
-
 		</tr>
 		<tr>
-			<td colspan="6">
+			<td class="<?php echo ($rcol); ?>">&nbsp;</td>
+			<td colspan="3" class="small <?php echo ($rcol); ?>">
+				<b><?php echo l('Rcon Password'); ?> :</b>
+				<input size="10"  type="text" name="newrcon" value="" />&nbsp;
+				&nbsp;
+				<b><?php echo l('Default Server Map'); ?> :</b>
+				<input size="10"  type="text" name="newmap" value="" />
+			</td>
+			<td class="<?php echo ($rcol); ?>">&nbsp;</td>
+		</tr>
+		<tr>
+			<td colspan="5" align="right">
 				<button type="submit" name="sub[saveServer]" title="<?php echo l('Save'); ?>">
 					<?php echo l('Save'); ?>
 				</button>
@@ -165,50 +199,3 @@ pageHeader(array(l("Admin"),l('Servers')), array(l("Admin")=>"index.php?mode=adm
 	</table>
 	<?php } ?>
 </div>
-
-
-
-
-
-<?php
-	if ($advanced === true) {
-?>
-&gt;&gt; <?php echo l('Go to'); ?> <a href="index.php?mode=admin&admingame=<?php echo $gamecode; ?>&task=servers&advanced=0#servers"><?php echo l('Basic View'); ?></a><p>
-
-<?php echo l('The "Public Address" should be the address you want shown to users. If left blank, it will be generated from the IP Address and Port. If you are using any kind of log relaying utility (i.e. hlstats.pl will not be receiving data directly from the game servers), you will want to set the IP Address and Port to the address of the log relay program, and set the Public Address to the real address of the game server. You will need a separate log relay for each game server. You can specify a hostname (or anything at all) in the Public Address'); ?>.<p>
-<?php
-	}
-	else{
-?>
-&gt;&gt; <?php echo l('Go to'); ?> <a href="index.php?mode=admin&admingame=<?php echo $gamecode; ?>&task=servers&advanced=1&servers#servers"><?php echo l('Advanced View'); ?></a><p>
-<?php
-	}
-
-	$result = mysql_query("
-		SELECT
-			serverId,
-			address,
-			port,
-			name,
-			publicaddress,
-			statusurl,
-			rcon_password,
-			defaultMap
-		FROM
-			".DB_PREFIX."_Servers
-		WHERE
-			game='".mysql_escape_string($gamecode)."'
-		ORDER BY
-			address ASC,
-			port ASC
-	");
-
-	$edlist->draw($result);
-?>
-
-<input type="hidden" name="advanced" value="<?php echo $_GET['advanced']; ?>">
-<table width="75%" border="0" cellspacing="0" cellpadding="0">
-<tr>
-	<td align="center"><input type="submit" name="submitServer" value=" <?php echo l('Apply'); ?> " class="submit"></td>
-</tr>
-</table>
