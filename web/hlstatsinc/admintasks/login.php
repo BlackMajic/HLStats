@@ -1,6 +1,6 @@
 <?php
 /**
- * main admin file
+ * login to admin area
  * @package HLStats
  * @author Johannes 'Banana' Keßler
  * @copyright Johannes 'Banana' Keßler
@@ -103,27 +103,15 @@ pageHeader(array(l("Admin")), array(l("Admin")=>""));
 	}
 	?>
 	<form method="post">
-		<table cellpadding="2" cellspacing="0" border="0">
-			<tr>
-				<th><?php echo l('Username'); ?></th>
-				<td>
-					<input type="text" name="login[username]" value="" />
-				</td>
-			</tr>
-			<tr>
-				<th><?php echo l('Password'); ?></th>
-				<td>
-					<input type="password" name="login[pass]" value="" />
-				</td>
-			</tr>
-			<tr>
-				<td colspan="2">
-					<button type="submit" name="sub[auth]" title="<?php echo l('Login'); ?>">
-						<?php echo l('Login'); ?>
-					</button>
-				</td>
-			</tr>
-		</table>
+		<b><?php echo l('Username'); ?> :</b><br />
+		<input type="text" name="login[username]" value="" /><br />
+		<br />
+		<b><?php echo l('Password'); ?> :</b><br />
+		<input type="password" name="login[pass]" value="" /><br />
+		<br />
+		<button type="submit" name="sub[auth]" title="<?php echo l('Login'); ?>">
+			<?php echo l('Login'); ?>
+		</button>
 	</form>
 	<p><?php echo l('Please ensure cookies are enabled in your browser security options'); ?></p>
 </div>
